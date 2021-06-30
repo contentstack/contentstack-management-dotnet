@@ -274,5 +274,46 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             });
             Assert.IsNull(client.contentstackOptions.Authtoken);
         }
+
+        [TestMethod]
+        public void Should_Throw_If_Not_Loggedin()
+        {
+            User user = new User(client);
+            Assert.ThrowsException<InvalidOperationException>(() => user.GetUser());
+            Assert.ThrowsException<InvalidOperationException>(() => user.GetUserAsync());
+        }
+
+        [TestMethod]
+        public void Should_Return_Response_For_LoggedIn_User()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<String>();
+
+            User user = new User(client);
+            var response = user.GetUser();
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Return_Response_For_LoggedIn_User_Async()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<String>();
+
+            User user = new User(client);
+            var response = user.GetUserAsync().ContinueWith((response) =>
+            {
+                if (response.IsCompleted)
+                {
+                    var result = response.Result as ContentstackResponse;
+                    Assert.AreEqual(contentstackResponse.OpenResponse(), result.OpenResponse());
+                    Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), result.OpenJObjectResponse().ToString());
+                }
+            });
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace Contentstack.Management.Core.Utils
 
         #region Internal Message
         internal const string YouAreLoggedIn = "You are already logged in.";
+        internal const string YouAreNotLoggedIn = "You are need to login.";
         #endregion
     }
 }

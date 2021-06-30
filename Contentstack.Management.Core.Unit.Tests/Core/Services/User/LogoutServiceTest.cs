@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         {
             LogoutService logoutService = new LogoutService(serializer, _authtoken);
             Assert.IsNotNull(logoutService);
-
+            
             Assert.AreEqual("DELETE", logoutService.HttpMethod);
             Assert.AreEqual("user-session", logoutService.ResourcePath);
         }
@@ -41,7 +41,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         {
             LogoutService logoutService = new LogoutService(serializer, _authtoken);
             logoutService.ContentBody();
-            
+            Assert.AreEqual(_authtoken, logoutService.Headers["authtoken"]);
             Assert.IsNotNull(logoutService);
             Assert.IsNull(logoutService.Content);   
         }

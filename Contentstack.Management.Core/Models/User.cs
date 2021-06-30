@@ -59,6 +59,14 @@ namespace Contentstack.Management.Core.Models
                 throw new InvalidOperationException(CSConstants.YouAreLoggedIn);
             }
         }
+
+        private void ThrowIfNotLoggedIn()
+        {
+            if (string.IsNullOrEmpty(_client.contentstackOptions.Authtoken))
+            {
+                throw new InvalidOperationException(CSConstants.YouAreNotLoggedIn);
+            }
+        }
         #endregion
 
         #region LogoutMethod
@@ -132,7 +140,6 @@ namespace Contentstack.Management.Core.Models
             var resetPassword = new ResetPasswordService(_client.serializer, resetToken, password, confirmPassword);
 
             return _client.InvokeSync(resetPassword);
-
         }
 
         /// <summary>
@@ -151,5 +158,31 @@ namespace Contentstack.Management.Core.Models
             return _client.InvokeAsync<ResetPasswordService, ContentstackResponse>(resetPassword);
         }
         #endregion
+
+        /// <summary>
+        /// The Get user call returns comprehensive information of an existing user account.
+        /// </summary>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public ContentstackResponse GetUser()
+        {
+            ThrowIfNotLoggedIn();
+
+            var getUser = new GetLoggedInUserService(_client.serializer);
+
+            return _client.InvokeSync(getUser);
+        }
+
+        /// <summary>
+        /// The Get user call returns comprehensive information of an existing user account.
+        /// </summary>
+        /// <returns>The Task.</returns>
+        public Task<ContentstackResponse> GetUserAsync()
+        {
+            ThrowIfNotLoggedIn();
+
+            var getUser = new GetLoggedInUserService(_client.serializer);
+
+            return _client.InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
+        }
     }
 }
