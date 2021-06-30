@@ -178,12 +178,18 @@ namespace Contentstack.Management.Core.Services
             Uri requestUri = ContentstackUtilities.ComposeUrI(config.GetUri(), this);
             Headers["Content-Type"] = "application/json";
 
+            if (!string.IsNullOrEmpty(config.Authtoken))
+            {
+                Headers["authtoken"] = config.Authtoken;
+            }
+
             var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializer);
             contentstackHttpRequest.Method = new HttpMethod(HttpMethod);
             contentstackHttpRequest.RequestUri = requestUri;
 
             ContentBody();
 
+            contentstackHttpRequest.SetRequestHeaders(Headers);
             return contentstackHttpRequest;
         }
 

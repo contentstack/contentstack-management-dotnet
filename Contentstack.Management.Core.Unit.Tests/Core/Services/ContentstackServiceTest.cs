@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -254,8 +256,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         public void Return_HttpRequest_On_Create_HttpRequest()
         {
             var contentstackService = new ContentstackService(serializer);
-
-            Assert.IsNotNull(contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions()));
+            contentstackService.Headers["authtoken"] = "application/json";
+            ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
+            Assert.IsNotNull(httpClient);
+            IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("authtoken");
+            Assert.AreEqual("application/json", headerValues.FirstOrDefault());
         }
     }
 }

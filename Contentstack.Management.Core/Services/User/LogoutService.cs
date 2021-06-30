@@ -22,6 +22,11 @@ namespace Contentstack.Management.Core.Services.User
         }
         #endregion
 
+        public override void ContentBody()
+        {
+            Headers["authtoken"] = _authtoken;
+        }
+
         public override void OnResponse(IResponse httpResponse, ContentstackClientOptions config)
         {
             base.OnResponse(httpResponse, config);

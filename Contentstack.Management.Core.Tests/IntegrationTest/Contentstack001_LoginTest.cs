@@ -90,7 +90,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.IsNotNull(client.contentstackOptions.Authtoken);
                 Assert.IsNotNull(loginResponse);
             }
-            catch (ContentstackErrorException e)
+            catch (Exception e)
             {
                 Assert.Fail(e.Message);
             }
