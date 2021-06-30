@@ -1,0 +1,50 @@
+﻿HTTP/1.1 200 OK
+Date: Tue, 27 Apr 2021 13:28:24 GMT
+Content-Type: application/json
+Content-Length: 2
+Connection: keep-alive
+
+{
+    "notice": "Login Successful.",
+    "user": {
+        "uid": "bltaand",
+        "created_at": "2018-10-02T15:41:54.322Z",
+        "updated_at": "2021-04-27T13:27:12.718Z",
+        "email": "email@any.com",
+        "username": "username",
+        "first_name": "firstName",
+        "last_name": "lastName",
+        "org_uid": [],
+        "shared_org_uid": [
+            
+        ],
+        "active": true,
+        "profile_type": "developer",
+        "failed_attempts": 0,
+        "settings": {
+            "preferences": {
+                "global": [],
+                "stack": []
+            }
+        },
+        "authtoken": "authtoken",
+        "roles": [
+        ],
+        "organizations": [
+         
+            {
+                "uid": "bltorgid",
+                "name": "org_name",
+                "plan_id": "cs_personal_plan",
+                "expires_on": "2021-12-31T00:00:00.000Z",
+                "enabled": true,
+                "is_over_usage_allowed": true,
+                "created_at": "2018-07-02T08:54:07.777Z",
+                "updated_at": "2020-12-05T15:36:05.458Z",
+                "tags": [
+                    "unit"
+                ]
+            }
+        ]
+    }
+}
