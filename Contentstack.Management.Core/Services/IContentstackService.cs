@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using Contentstack.Management.Core.Http;
+using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Services
@@ -20,7 +21,7 @@ namespace Contentstack.Management.Core.Services
         /// <summary>
         /// Returns a dictionary of the parameters included in this request.
         /// </summary>
-        IDictionary<string, string> Parameters { get; }
+        ParameterCollection Parameters { get; }
 
         /// <summary>
         /// Returns a dictionary of the headers included in this request.

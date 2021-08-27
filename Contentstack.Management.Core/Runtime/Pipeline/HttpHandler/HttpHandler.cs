@@ -39,9 +39,9 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
                 executionContext.ResponseContext.httpResponse = await httpRequest.GetResponseAsync().ConfigureAwait(false);
                 executionContext.RequestContext.service.OnResponse(executionContext.ResponseContext.httpResponse, requestContext.config);
 
-                return await System.Threading.Tasks.Task.FromResult<T>((T)executionContext.ResponseContext);
+                return await System.Threading.Tasks.Task.FromResult<T>((T)executionContext.ResponseContext.httpResponse);
             }
-            catch
+            catch (Exception e)
             {
                 throw;
             }

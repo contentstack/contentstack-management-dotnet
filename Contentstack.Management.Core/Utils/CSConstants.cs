@@ -14,6 +14,8 @@ namespace Contentstack.Management.Core.Utils
         #region Internal Message
         internal const string YouAreLoggedIn = "You are already logged in.";
         internal const string YouAreNotLoggedIn = "You are need to login.";
+
+        internal const string MissingUID = "Uid should not be empty.";
         #endregion
     }
 }

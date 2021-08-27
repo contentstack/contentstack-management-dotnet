@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using Contentstack.Management.Core.Http;
+using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Contentstack.Management.Core.Utils;
@@ -261,6 +262,22 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
             Assert.IsNotNull(httpClient);
             IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("authtoken");
             Assert.AreEqual("application/json", headerValues.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void Should_Add_query_Parameter()
+        {
+            var parameter = new ParameterCollection();
+            parameter.Add("limit", 10);
+            parameter.Add("include", new List<string>() { "1", "2", "3" });
+            var contentstackService = new ContentstackService(serializer, parameter);
+            contentstackService.HttpMethod = HttpMethod.Post.ToString();
+            contentstackService.UseQueryString = true;
+
+            ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
+
+            Assert.IsNotNull(httpClient);
+            Assert.AreEqual("?include[]=1&include[]=2&include[]=3&limit=10", httpClient.RequestUri.Query);
         }
     }
 }

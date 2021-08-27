@@ -35,6 +35,8 @@
     <Folder Include="Models\" />
     <Folder Include="Runtime\Pipeline\" />
     <Folder Include="Runtime\Pipeline\HttpHandler\" />
+    <Folder Include="Queryable\" />
+    <Folder Include="Core\Services\Organization\" />
   </ItemGroup>
 
   <ItemGroup>

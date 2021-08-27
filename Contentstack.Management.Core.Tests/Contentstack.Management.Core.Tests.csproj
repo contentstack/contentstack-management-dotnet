@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IntegrationTest\" />
+    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.json">
