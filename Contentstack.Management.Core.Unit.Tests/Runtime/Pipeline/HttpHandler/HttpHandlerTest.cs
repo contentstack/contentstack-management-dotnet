@@ -142,7 +142,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline
             HttpHandler httpHandler = new HttpHandler(httpClient);
             try
             {
-                await httpHandler.InvokeAsync<ResponseContext>(context);
+                await httpHandler.InvokeAsync<ContentstackResponse>(context);
                 Assert.AreEqual(response.StatusCode, context.ResponseContext.httpResponse.StatusCode);
                 Assert.AreEqual(await response.Content.ReadAsStringAsync(), context.ResponseContext.httpResponse.OpenResponse());
                 Assert.IsNotNull(context.ResponseContext.httpResponse);
@@ -216,7 +216,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline
             HttpHandler httpHandler = new HttpHandler(httpClient);
             try
             {
-                await httpHandler.InvokeAsync<ResponseContext>(context);
+                await httpHandler.InvokeAsync<ContentstackResponse>(context);
                 Assert.AreEqual(response.StatusCode, context.ResponseContext.httpResponse.StatusCode);
                 Assert.AreEqual(await response.Content.ReadAsStringAsync(), context.ResponseContext.httpResponse.OpenResponse());
                 Assert.IsNotNull(context.ResponseContext.httpResponse);

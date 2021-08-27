@@ -1,4 +1,5 @@
 ﻿using System;
+using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Contentstack.Management.Core.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -81,5 +82,26 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
             Assert.AreEqual(string.Format("{0}content_type/ContentTypeUid/entries/EntryUid?limit=4&count=true", baseUri.AbsoluteUri), uri.AbsoluteUri);
         }
 
+        [TestMethod]
+        public void Return_Query_Parameters_On_ParameterCollection()
+        {
+            var param = new ParameterCollection();
+            param.Add("limit", 10);
+            param.Add("include", "type");
+
+            var result = ContentstackUtilities.GetQueryParameter(param);
+
+            Assert.AreEqual("include=type&limit=10", result);
+        }
+
+        [TestMethod]
+        public void Return_Empty_Query_Parameters_On_ParameterCollection()
+        {
+            var param = new ParameterCollection();
+
+            var result = ContentstackUtilities.GetQueryParameter(param);
+
+            Assert.AreEqual("", result);
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Contentstack.Management.Core.Http;
 using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
+using Contentstack.Management.Core.Queryable;
 
 namespace Contentstack.Management.Core.Services
 {
@@ -13,7 +14,7 @@ namespace Contentstack.Management.Core.Services
     {
 
         #region
-        readonly IDictionary<string, string> parametersFacade = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        internal readonly ParameterCollection collection;
         readonly IDictionary<string, string> headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         readonly IDictionary<string, string> pathResources = new Dictionary<string, string>(StringComparer.Ordinal);
         readonly IDictionary<string, string> queryResources = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -30,12 +31,13 @@ namespace Contentstack.Management.Core.Services
         #endregion
 
         #region Constructor
-        internal ContentstackService(JsonSerializer serializer)
+        internal ContentstackService(JsonSerializer serializer, ParameterCollection collection = null)
         {
             if (serializer == null)
             {
                 throw new ArgumentNullException("serializer");
             }
+            this.collection = collection ?? new ParameterCollection();
             _serializer = serializer;
         }
         #endregion
@@ -62,11 +64,11 @@ namespace Contentstack.Management.Core.Services
             }
         }
 
-        public IDictionary<string, string> Parameters
+        public ParameterCollection Parameters
         {
             get
             {
-                return parametersFacade;
+                return collection;
             }
         }
 

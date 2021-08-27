@@ -32,10 +32,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public void Should_Throw_On_Login_If_Already_Logged_In ()
         {
             client.contentstackOptions.Authtoken = _fixture.Create<string>();
-            User user = new User(client);
 
-            Assert.ThrowsException<InvalidOperationException>(() => user.Login(credentials));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => user.LoginAsync(credentials));
+            Assert.ThrowsException<InvalidOperationException>(() => client.Login(credentials));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => client.LoginAsync(credentials));
         }
 
         [TestMethod]
@@ -44,9 +43,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             var contentstackResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
 
-            User user = new User(client);
-
-            ContentstackResponse response = user.Login(credentials);
+            ContentstackResponse response = client.Login(credentials);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -59,9 +56,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             var contentstackResponse = MockResponse.CreateContentstackResponse("400Response.txt");
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
 
-            User user = new User(client);
-
-            ContentstackResponse response = user.Login(credentials);
+            ContentstackResponse response = client.Login(credentials);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -74,9 +69,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             var contentstackResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
 
-            User user = new User(client);
-
-            ContentstackResponse response = await user.LoginAsync(credentials);
+            ContentstackResponse response = await client.LoginAsync(credentials);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -89,9 +82,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             var contentstackResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
 
-            User user = new User(client);
-
-            var response = user.LoginAsync(credentials);
+            var response = client.LoginAsync(credentials);
 
             response.ContinueWith((t) =>
             {
@@ -108,10 +99,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Should_Throw_On_Null_Authtoken_LogOut()
         {
-            User user = new User(client);
-
-            Assert.ThrowsException<ArgumentNullException>(() => user.Logout());
-            Assert.ThrowsException<ArgumentNullException>(() => user.LogoutAsync());
+            Assert.ThrowsException<ArgumentNullException>(() => client.Logout());
+            Assert.ThrowsException<ArgumentNullException>(() => client.LogoutAsync());
         }
 
         [TestMethod]
@@ -121,8 +110,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
             client.contentstackOptions.Authtoken = _fixture.Create<string>();
 
-            User user = new User(client);
-            var response = user.Logout();
+            var response = client.Logout();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -136,9 +124,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
             client.contentstackOptions.Authtoken = _fixture.Create<string>();
 
-            User user = new User(client);
-
-            ContentstackResponse response = user.Logout();
+            ContentstackResponse response = client.Logout();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -152,8 +138,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
             client.contentstackOptions.Authtoken = _fixture.Create<string>();
 
-            User user = new User(client);
-            var response = await user.LogoutAsync();
+            var response = await client.LogoutAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -168,8 +153,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
             client.contentstackOptions.Authtoken = _fixture.Create<string>();
 
-            User user = new User(client);
-            _ = user.LogoutAsync().ContinueWith((response) =>
+            _ = client.LogoutAsync().ContinueWith((response) =>
               {
                   if (response.IsCompleted)
                   {
@@ -278,9 +262,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Should_Throw_If_Not_Loggedin()
         {
-            User user = new User(client);
-            Assert.ThrowsException<InvalidOperationException>(() => user.GetUser());
-            Assert.ThrowsException<InvalidOperationException>(() => user.GetUserAsync());
+            Assert.ThrowsException<InvalidOperationException>(() => client.GetUser());
+            Assert.ThrowsException<InvalidOperationException>(() => client.GetUserAsync());
         }
 
         [TestMethod]
@@ -290,8 +273,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
             client.contentstackOptions.Authtoken = _fixture.Create<String>();
 
-            User user = new User(client);
-            var response = user.GetUser();
+            var response = client.GetUser();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -304,8 +286,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
             client.contentstackOptions.Authtoken = _fixture.Create<String>();
 
-            User user = new User(client);
-            var response = user.GetUserAsync().ContinueWith((response) =>
+            var response = client.GetUserAsync().ContinueWith((response) =>
             {
                 if (response.IsCompleted)
                 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services;
 
 namespace Contentstack.Management.Core.Utils
@@ -28,11 +29,11 @@ namespace Contentstack.Management.Core.Utils
                 }
             }
 
-            //if (service.UseQueryString && service.Parameters.Count > 0)
-            //{
-            //    var queryString = ""; // TODO: Covert params to query string
-            //    sb.AppendFormat("{0}{1}", delim, queryString);
-            //}
+            if (service.UseQueryString && service.Parameters != null && service.Parameters.Count > 0)
+            {
+                var queryString = GetQueryParameter(service.Parameters);
+                sb.AppendFormat("{0}{1}", delim, queryString);
+            }
 
             var resourcePath = service.ResourcePath;
 
@@ -53,6 +54,30 @@ namespace Contentstack.Management.Core.Utils
                 : new Uri(requestUri.AbsoluteUri + "/" + parameterizedPath);
 
             return requestUri;
+        }
+
+        internal static string GetQueryParameter(ParameterCollection collection)
+        {
+            var sortedParameters = collection.GetSortedParametersList();
+
+            StringBuilder data = new StringBuilder(512);
+            foreach (var kvp in sortedParameters)
+            {
+                var key = kvp.Key;
+                var value = kvp.Value;
+                if (value != null)
+                {
+                    data.Append(key);
+                    data.Append('=');
+                    data.Append(value);
+                    data.Append('&');
+                }
+            }
+            var queryString = data.ToString();
+            if (queryString.Length == 0)
+                return string.Empty;
+
+            return queryString.Remove(queryString.Length - 1);
         }
 
         internal static string ResolvePathResource(string resourcePath, IDictionary<string, string> pathResources)

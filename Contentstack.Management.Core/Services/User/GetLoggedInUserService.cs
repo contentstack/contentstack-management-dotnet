@@ -1,11 +1,12 @@
 ﻿using System;
+using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Services.User
 {
     internal class GetLoggedInUserService: ContentstackService
     {
-        public GetLoggedInUserService(JsonSerializer serializer): base(serializer)
+        public GetLoggedInUserService(JsonSerializer serializer, ParameterCollection collection): base(serializer, collection)
         {
             this.ResourcePath = "user";
         }

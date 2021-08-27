@@ -15,6 +15,8 @@ using Contentstack.Management.Core.Abstractions;
 using Contentstack.Management.Core.Runtime.Contexts;
 using Contentstack.Management.Core.Runtime.Pipeline;
 using Contentstack.Management.Core.Http;
+using Contentstack.Management.Core.Services.User;
+using Contentstack.Management.Core.Queryable;
 
 namespace Contentstack.Management.Core
 {
@@ -220,12 +222,125 @@ namespace Contentstack.Management.Core
         #endregion
 
         /// <summary>
-        /// <see cref="Models.User" /> session consists of calls that will help you to sign in and sign out of your Contentstack account.
+        /// <see cref="Models.User" /> session consists of calls that will help you to update user of your Contentstack account.
         /// </summary>
         /// <returns>The <see cref="Models.User" />.</returns>
         public User User()
         {
             return new User(this);
+        }
+
+        /// <summary>
+        /// <see cref="Models.Organization" /> the top-level entity in the hierarchy of Contentstack, consisting of stacks and stack resources, and users.
+        /// <see cref="Models.Organization" />  allows easy management of projects as well as users within the Organization.
+        /// </summary>
+        /// <param name="uid">Organization uid.</param>
+        /// <returns>The <see cref="Models.User" />.</returns>
+        public Organization Organization(string uid = null)
+        {
+            return new Organization(this, uid);
+        }
+
+        #region LoginMethod
+        /// <summary>
+        /// The Log in to your account request is used to sign in to your Contentstack account and obtain the authtoken.
+        /// </summary>
+        /// <param name="credentials">User credentials for login.</param>
+        /// <param name="token">The optional 2FA token.</param>
+        /// <returns>The <see cref="ContentstackResponse" /></returns>
+        public ContentstackResponse Login(ICredentials credentials, string token = null)
+        {
+            ThrowIfAlreadyLoggedIn();
+            var Login = new LoginService(this.serializer, credentials, token);
+
+            return this.InvokeSync(Login);
+        }
+
+        /// <summary>
+        /// The Log in to your account request is used to sign in to your Contentstack account and obtain the authtoken.
+        /// </summary>
+        /// <param name="credentials">User credentials for login.</param>
+        /// <param name="token">The optional 2FA token.</param>
+        /// <returns>The Task.</returns>
+        public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string token = null)
+        {
+            ThrowIfAlreadyLoggedIn();
+            var Login = new LoginService(this.serializer, credentials, token);
+
+            return this.InvokeAsync<LoginService, ContentstackResponse>(Login);
+        }
+        #endregion
+
+        #region Throw Error
+
+        internal void ThrowIfAlreadyLoggedIn()
+        {
+            if (!string.IsNullOrEmpty(this.contentstackOptions.Authtoken))
+            {
+                throw new InvalidOperationException(CSConstants.YouAreLoggedIn);
+            }
+        }
+
+        internal void ThrowIfNotLoggedIn()
+        {
+            if (string.IsNullOrEmpty(this.contentstackOptions.Authtoken))
+            {
+                throw new InvalidOperationException(CSConstants.YouAreNotLoggedIn);
+            }
+        }
+        #endregion
+
+        #region LogoutMethod
+        /// <summary>
+        /// The Log out of your account call is used to sign out the user of Contentstack account
+        /// </summary>
+        /// <param name="authtoken">The optional authroken in case user want to logout.</param>
+        /// <returns>The <see cref="ContentstackResponse" /></returns>
+        public ContentstackResponse Logout(string authtoken = null)
+        {
+            var token = authtoken ?? this.contentstackOptions.Authtoken;
+            var logout = new LogoutService(this.serializer, token);
+
+            return this.InvokeSync(logout);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="authtoken">The optional authroken in case user want to logout.</param>
+        /// <returns>The Task.</returns>
+        public Task<ContentstackResponse> LogoutAsync(string authtoken = null)
+        {
+            var token = authtoken ?? this.contentstackOptions.Authtoken;
+            var logout = new LogoutService(this.serializer, token);
+
+            return this.InvokeAsync<LogoutService, ContentstackResponse>(logout);
+        }
+        #endregion
+
+        /// <summary>
+        /// The Get user call returns comprehensive information of an existing user account.
+        /// </summary>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public ContentstackResponse GetUser(ParameterCollection collection = null)
+        {
+            ThrowIfNotLoggedIn();
+
+            var getUser = new GetLoggedInUserService(this.serializer, collection);
+
+            return this.InvokeSync(getUser);
+        }
+
+        /// <summary>
+        /// The Get user call returns comprehensive information of an existing user account.
+        /// </summary>
+        /// <returns>The Task.</returns>
+        public Task<ContentstackResponse> GetUserAsync(ParameterCollection collection = null)
+        {
+            ThrowIfNotLoggedIn();
+
+            var getUser = new GetLoggedInUserService(this.serializer, collection);
+
+            return this.InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
         }
     }
 }

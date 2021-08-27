@@ -1,0 +1,56 @@
+﻿HTTP/1.1 200 OK
+Date: Tue, 27 Apr 2021 13:28:24 GMT
+Content-Type: application/json
+Content-Length: 2
+Connection: keep-alive
+
+{
+  "organizations":[
+    {
+      "uid":"uid",
+      "name":"Sample",
+      "plan_id":"cms_plan",
+      "owner_uid":"uid",
+      "enabled":true,
+      "is_over_usage_allowed":true,
+      "settings":{
+        "sso":{
+          "id":"sample-sso",
+          "strict":true,
+          "session_timeout":12,
+          "sso_roles":{
+            "enabled":false
+          },
+          "saml":{
+            "acs_url":"sso/saml2/sample-sso",
+            "entity_id":"contentstack.com",
+            "version":2,
+            "name_id_format":"Email Address",
+            "attributes":[
+              "email",
+              "first_name",
+              "last_name"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "uid":"uid",
+      "name":"Sample2",
+      "plan_id":"testing",
+      "owner_uid":"uid",
+      "is_transfer_set":false,
+      "enabled":true,
+      "is_over_usage_allowed":true,
+      "settings":{
+        "sso":{
+          "sso_roles":{
+            "enabled":false
+          }
+        }
+      },
+      "owner":true
+    }
+  ]
+}

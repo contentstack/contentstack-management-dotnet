@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using Contentstack.Management.Core.Http;
+using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services;
 using Contentstack.Management.Core.Unit.Tests.Utils;
 using Newtonsoft.Json;
@@ -12,12 +13,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
     internal class MockService : IContentstackService
     {
-        public MockService()
+        public MockService(ParameterCollection pairs = null)
         {
+            parameters = pairs;
             _serializer = JsonSerializer.Create(new JsonSerializerSettings());
         }
         #region
-        readonly IDictionary<string, string> parametersFacade = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        readonly ParameterCollection parameters = new ParameterCollection();
         readonly IDictionary<string, string> headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         readonly IDictionary<string, string> pathResources = new Dictionary<string, string>(StringComparer.Ordinal);
         readonly IDictionary<string, string> queryResources = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -53,11 +55,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             }
         }
 
-        public IDictionary<string, string> Parameters
+        public ParameterCollection Parameters
         {
             get
             {
-                return parametersFacade;
+                return parameters;
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Contentstack.Management.Core.Tests.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
@@ -29,9 +30,16 @@ namespace Contentstack.Management.Core.Tests
             return Config.GetSection("Contentstack:Credentials").Get<NetworkCredential>();
         });
 
+        private static readonly Lazy<OrganizationModel> organization =
+        new Lazy<OrganizationModel>(() =>
+        {
+            return Config.GetSection("Contentstack:Organization").Get<OrganizationModel>();
+        });
+
         public static ContentstackClient Client { get { return client.Value; } }
         public static IConfigurationRoot Config{ get { return config.Value; } }
         public static NetworkCredential Credential { get { return credential.Value; } }
+        public static OrganizationModel Organization { get { return organization.Value; } }
 
     }
 }
