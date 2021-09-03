@@ -18,19 +18,19 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ResetPasswordService(null, null, null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new ResetPasswordService(null, _fixture.Create<string>(), _fixture.Create<string>(), _fixture.Create<string>()));
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_Email()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ResetPasswordService(serializer, null, null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new ResetPasswordService(serializer, null, _fixture.Create<string>(), _fixture.Create<string>()));
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_Password()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ResetPasswordService(serializer, _fixture.Create<string>(), null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new ResetPasswordService(serializer, _fixture.Create<string>(), null, _fixture.Create<string>()));
         }
 
         [TestMethod]

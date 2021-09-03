@@ -17,7 +17,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new GetOrganizations(null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new GetOrganizations(null, null, _fixture.Create<string>()));
         }
 
         [TestMethod]
@@ -34,13 +34,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         [TestMethod]
         public void Should_Initialize_with_Organization_Uid()
         {
-            var getOrganisationService = new GetOrganizations(serializer, null, "org_uid");
+            var orgid = _fixture.Create<string>();
+            var getOrganisationService = new GetOrganizations(serializer, null, orgid);
 
             Assert.IsNotNull(getOrganisationService);
             Assert.AreEqual(true, getOrganisationService.UseQueryString);
             Assert.AreEqual("GET", getOrganisationService.HttpMethod);
             Assert.AreEqual("organizations/{organization_uid}", getOrganisationService.ResourcePath);
-            Assert.AreEqual("org_uid", getOrganisationService.PathResources["{organization_uid}"]);
+            Assert.AreEqual(orgid, getOrganisationService.PathResources["{organization_uid}"]);
         }
 
         [TestMethod]
