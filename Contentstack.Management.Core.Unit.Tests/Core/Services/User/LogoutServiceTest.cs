@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoFixture;
 using Contentstack.Management.Core.Services.User;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,11 +12,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
     {
         private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly string _authtoken = "authtoken";
+        private readonly IFixture _fixture = new Fixture();
 
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new LogoutService(null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new LogoutService(null, _fixture.Create<string>()));
         }
 
         [TestMethod]
@@ -59,7 +61,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         }
 
         [TestMethod]
-        public void Should_Not_Authtoken_From_Config_On_Success_Response_Different_Authtoken()
+        public void Should_Not_Remove_Authtoken_From_Config_On_Success_Response_Different_Authtoken()
         {
             LogoutService logoutService = new LogoutService(serializer, _authtoken);
             var config = new ContentstackClientOptions();

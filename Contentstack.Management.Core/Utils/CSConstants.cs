@@ -16,6 +16,9 @@ namespace Contentstack.Management.Core.Utils
         internal const string YouAreNotLoggedIn = "You are need to login.";
 
         internal const string MissingUID = "Uid should not be empty.";
+
+        internal const string RemoveUserEmailError = "Please enter email id to remove from org.";
+        internal const string OrgShareUIDMissing = "Please enter share uid to resend invitation.";
         #endregion
     }
 }

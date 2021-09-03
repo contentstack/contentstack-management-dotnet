@@ -19,7 +19,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Not_Allow_Null_serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new LoginService(null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new LoginService(null, credentials));
         }
 
         [TestMethod]

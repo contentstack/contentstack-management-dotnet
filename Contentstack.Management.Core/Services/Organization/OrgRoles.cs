@@ -4,11 +4,11 @@ using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Services.Organization
 {
-    internal class OrgRoles : ContentstackService
+    internal class OrganizationRolesService : ContentstackService
     {
         #region Internal
 
-        internal OrgRoles(JsonSerializer serializer, string uid, ParameterCollection collection) : base(serializer, collection)
+        internal OrganizationRolesService(JsonSerializer serializer, string uid, ParameterCollection collection) : base(serializer, collection)
         {
             if (uid == null)
             {
