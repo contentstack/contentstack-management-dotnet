@@ -56,6 +56,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => organization.GetInvitationsAsync());
             Assert.ThrowsException<InvalidOperationException>(() => organization.TransferOwnership(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => organization.TransferOwnershipAsync(null));
+            Assert.ThrowsException<InvalidOperationException>(() => organization.GetStacks());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => organization.GetStacksAsync());
         }
 
         [TestMethod]
@@ -76,6 +78,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => organization.GetInvitationsAsync());
             Assert.ThrowsException<InvalidOperationException>(() => organization.TransferOwnership(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => organization.TransferOwnershipAsync(null));
+            Assert.ThrowsException<InvalidOperationException>(() => organization.GetStacks(null));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => organization.GetStacksAsync(null));
         }
 
         [TestMethod]
@@ -320,6 +324,38 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Organization organization = new Organization(client, "org_uid");
 
             ContentstackResponse response = await organization.GetInvitationsAsync();
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.IsNotNull(client.contentstackOptions.Authtoken);
+        }
+
+
+        [TestMethod]
+        public void Should_Return_Get_Organization_Stacks()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("OrganizationResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Organization organization = new Organization(client, "org_uid");
+
+            ContentstackResponse response = organization.GetStacks();
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Return_Response_Get_Organization_StacksAsync_SuccessAsync()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("OrganizationResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Organization organization = new Organization(client, "org_uid");
+
+            ContentstackResponse response = await organization.GetStacksAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());

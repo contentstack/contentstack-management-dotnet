@@ -253,6 +253,26 @@ namespace Contentstack.Management.Core.Models
 
             return _client.InvokeAsync<TransferOwnershipService, ContentstackResponse>(service);
         }
+
+        public ContentstackResponse GetStacks(ParameterCollection collection = null)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfOrganizationUidNull();
+
+            var service = new OrganizationStackService(_client.serializer, this.uid, collection);
+
+            return _client.InvokeSync(service);
+        }
+
+        public Task<ContentstackResponse> GetStacksAsync(ParameterCollection collection = null)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfOrganizationUidNull();
+
+            var service = new OrganizationStackService(_client.serializer, this.uid, collection);
+
+            return _client.InvokeAsync<OrganizationStackService, ContentstackResponse>(service);
+        }
         #endregion
 
         #region Private

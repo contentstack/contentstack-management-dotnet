@@ -9,11 +9,11 @@ namespace Contentstack.Management.Core.Services.Organization
         #region Internal
         internal ResendInvitationService(JsonSerializer serializer, string uid, string shareUid) : base(serializer)
         {
-            if (shareUid == null)
+            if (string.IsNullOrEmpty(uid))
             {
                 throw new ArgumentNullException("uid");
             }
-            if (shareUid == null)
+            if (string.IsNullOrEmpty(shareUid))
             {
                 throw new ArgumentNullException("shareUid");
             }

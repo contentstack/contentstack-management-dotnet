@@ -8,10 +8,10 @@ namespace Contentstack.Management.Core.Services.Organization
     {
 
         #region Internal
-        internal OrganizationStackService(JsonSerializer serializer, string uid, ParameterCollection collection) : base(serializer, collection)
+        internal OrganizationStackService(JsonSerializer serializer, string uid, ParameterCollection collection = null) : base(serializer, collection)
         {
 
-            if (uid == null)
+            if (string.IsNullOrEmpty(uid))
             {
                 throw new ArgumentNullException("uid");
             }
