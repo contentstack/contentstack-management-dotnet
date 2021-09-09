@@ -10,12 +10,12 @@ namespace Contentstack.Management.Core.Services.Organization
         #region Internal
         internal TransferOwnershipService(JsonSerializer serializer, string uid, string email) : base(serializer)
         {
-            if (uid == null)
+            if (string.IsNullOrEmpty(uid))
             {
                 throw new ArgumentNullException("uid");
             }
 
-            if (email == null)
+            if (string.IsNullOrEmpty(email))
             {
                 throw new ArgumentNullException("email");
             }

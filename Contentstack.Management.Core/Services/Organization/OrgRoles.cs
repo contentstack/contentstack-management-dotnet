@@ -10,7 +10,7 @@ namespace Contentstack.Management.Core.Services.Organization
 
         internal OrganizationRolesService(JsonSerializer serializer, string uid, ParameterCollection collection) : base(serializer, collection)
         {
-            if (uid == null)
+            if (string.IsNullOrEmpty(uid))
             {
                 throw new ArgumentNullException("uid");
             }

@@ -16,7 +16,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ForgotPasswordService(null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new ForgotPasswordService(null, _fixture.Create<string>()));
         }
 
         [TestMethod]

@@ -17,12 +17,12 @@ namespace Contentstack.Management.Core.Services.Organization
         #region Internal
         internal UserInvitationService(JsonSerializer serializer, string uid, string httpMethod = "GET", ParameterCollection collection = null) : base(serializer, collection)
         {
-            if (uid == null)
+            if (string.IsNullOrEmpty(uid))
             {
                 throw new ArgumentNullException("uid");
             }
 
-            if (httpMethod == null)
+            if (string.IsNullOrEmpty(httpMethod))
             {
                 throw new ArgumentNullException("HttpMethod");
             }
@@ -49,6 +49,8 @@ namespace Contentstack.Management.Core.Services.Organization
         {
             this._removeUsers = emails;
         }
+
+        
 
         public override void ContentBody()
         {

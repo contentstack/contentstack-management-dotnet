@@ -170,7 +170,7 @@ namespace Contentstack.Management.Core.Services
         /// <returns>Returns true if the request has a body, else false.</returns>
         public bool HasRequestBody()
         {
-            return HttpMethod == "POST" || HttpMethod == "PUT" || HttpMethod == "PATCH";
+            return HttpMethod == "POST" || HttpMethod == "PUT" || HttpMethod == "PATCH" || HttpMethod == "DELETE";
         }
 
         public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config)

@@ -207,6 +207,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
             contentstackService.HttpMethod = HttpMethod.Patch.ToString();
 
             Assert.IsTrue(contentstackService.HasRequestBody());
+
+            contentstackService.HttpMethod = HttpMethod.Delete.ToString();
+
+            Assert.IsTrue(contentstackService.HasRequestBody());
         }
 
         [TestMethod]
@@ -215,10 +219,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
             var contentstackService = new ContentstackService(serializer);
 
             contentstackService.HttpMethod = HttpMethod.Get.ToString();
-
-            Assert.IsFalse(contentstackService.HasRequestBody());
-
-            contentstackService.HttpMethod = HttpMethod.Delete.ToString();
 
             Assert.IsFalse(contentstackService.HasRequestBody());
 
