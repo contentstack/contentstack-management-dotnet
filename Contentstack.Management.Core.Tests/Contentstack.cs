@@ -41,5 +41,6 @@ namespace Contentstack.Management.Core.Tests
         public static NetworkCredential Credential { get { return credential.Value; } }
         public static OrganizationModel Organization { get { return organization.Value; } }
 
+        public static StackModel Stack { get; set; }
     }
 }

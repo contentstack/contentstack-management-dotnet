@@ -12,7 +12,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     [TestClass]
     public class Contentstack002_OrganisationTest
     {
-        private Double Count;
+        private double _count;
         static string RoleUID = "";
         static string EmailSync = "testcs@contentstack.com";
         static string EmailAsync = "testcs_1@contentstack.com";
@@ -32,7 +32,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 var response = contentstackResponse.OpenJObjectResponse();
                 Assert.IsNotNull(response);
-                Count = (response["organizations"] as Newtonsoft.Json.Linq.JArray).Count;
+                _count = (response["organizations"] as Newtonsoft.Json.Linq.JArray).Count;
                 
             } catch (Exception e)
             {
@@ -53,7 +53,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 var response = contentstackResponse.OpenJObjectResponse();
                 Assert.IsNotNull(response);
-                Count = (response["organizations"] as Newtonsoft.Json.Linq.JArray).Count;
+                _count = (response["organizations"] as Newtonsoft.Json.Linq.JArray).Count;
 
             }
             catch (Exception e)

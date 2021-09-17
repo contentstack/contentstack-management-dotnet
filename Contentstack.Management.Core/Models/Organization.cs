@@ -197,14 +197,14 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Get all organization invitations call gives you a list of all the Organization invitations. 
         /// </summary>
-        /// <param name="collection">URI query parameters</param>
+        /// <param name="parameter">URI query parameters</param>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse GetInvitations(ParameterCollection collection = null)
+        public ContentstackResponse GetInvitations(ParameterCollection parameter = null)
         {
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var userInviteService = new UserInvitationService(_client.serializer, this.uid, "GET", collection);
+            var userInviteService = new UserInvitationService(_client.serializer, this.uid, "GET", parameter);
 
             return _client.InvokeSync(userInviteService);
         }
@@ -212,14 +212,14 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Get all organization invitations call gives you a list of all the Organization invitations. 
         /// </summary>
-        /// <param name="collection">URI query parameters</param>
+        /// <param name="parameter">URI query parameters</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> GetInvitationsAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> GetInvitationsAsync(ParameterCollection parameter = null)
         {
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var userInviteService = new UserInvitationService(_client.serializer, this.uid, "GET", collection);
+            var userInviteService = new UserInvitationService(_client.serializer, this.uid, "GET", parameter);
 
             return _client.InvokeAsync<UserInvitationService, ContentstackResponse>(userInviteService);
         }
@@ -253,23 +253,32 @@ namespace Contentstack.Management.Core.Models
 
             return _client.InvokeAsync<TransferOwnershipService, ContentstackResponse>(service);
         }
-
-        public ContentstackResponse GetStacks(ParameterCollection collection = null)
+        /// <summary>
+        /// The get Stacks call gets all the Stack within the Organization.
+        /// </summary>
+        /// <param name="parameters">URI query parameters</param>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public ContentstackResponse GetStacks(ParameterCollection parameter = null)
         {
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var service = new OrganizationStackService(_client.serializer, this.uid, collection);
+            var service = new OrganizationStackService(_client.serializer, this.uid, parameter);
 
             return _client.InvokeSync(service);
         }
 
-        public Task<ContentstackResponse> GetStacksAsync(ParameterCollection collection = null)
+        /// <summary>
+        /// The get Stacks call gets all the Stack within the Organization.
+        /// </summary>
+        /// <param name="parameter">URI query parameters</param>
+        /// <returns>The Task</returns>
+        public Task<ContentstackResponse> GetStacksAsync(ParameterCollection parameter = null)
         {
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var service = new OrganizationStackService(_client.serializer, this.uid, collection);
+            var service = new OrganizationStackService(_client.serializer, this.uid, parameter);
 
             return _client.InvokeAsync<OrganizationStackService, ContentstackResponse>(service);
         }

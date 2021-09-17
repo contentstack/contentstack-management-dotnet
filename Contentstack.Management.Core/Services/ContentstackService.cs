@@ -23,6 +23,7 @@ namespace Contentstack.Management.Core.Services
         byte[] content;
         //Stream contentStream;
         string httpMethod = "GET";
+        string managementToken = null;
         bool useQueryString = false;
 
         private bool _disposed = false;
@@ -31,12 +32,19 @@ namespace Contentstack.Management.Core.Services
         #endregion
 
         #region Constructor
-        internal ContentstackService(JsonSerializer serializer, ParameterCollection collection = null)
+        internal ContentstackService(JsonSerializer serializer, ParameterCollection collection = null, string apiKey = null, string managementToken = null)
         {
             if (serializer == null)
             {
                 throw new ArgumentNullException("serializer");
             }
+
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                this.Headers.Add("api_key", apiKey);
+            }
+
+            this.ManagementToken = managementToken;
             this.collection = collection ?? new ParameterCollection();
             _serializer = serializer;
         }
@@ -140,6 +148,18 @@ namespace Contentstack.Management.Core.Services
             }
         }
 
+        public string ManagementToken
+        {
+            get
+            {
+                return managementToken;
+            }
+            set
+            {
+                managementToken = value;
+            }
+        }
+
         public void AddQueryResource(string queryResource, string value)
         {
             ThrowIfDisposed();
@@ -180,7 +200,11 @@ namespace Contentstack.Management.Core.Services
             Uri requestUri = ContentstackUtilities.ComposeUrI(config.GetUri(), this);
             Headers["Content-Type"] = "application/json";
 
-            if (!string.IsNullOrEmpty(config.Authtoken))
+            if (!string.IsNullOrEmpty(this.ManagementToken))
+            {
+                Headers["authorization"] = this.ManagementToken;
+            }
+            else if (!string.IsNullOrEmpty(config.Authtoken))
             {
                 Headers["authtoken"] = config.Authtoken;
             }

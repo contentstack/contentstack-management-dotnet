@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using AutoFixture;
+using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services;
@@ -18,7 +20,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
     public class ContentstackServiceTest
     {
         JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
-
+        private readonly IFixture _fixture = new Fixture()
+            .Customize(new AutoMoqCustomization());
         [TestMethod]
         public void Should_Not_Allow_Null_serializer()
         {
@@ -259,9 +262,39 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
             var contentstackService = new ContentstackService(serializer);
             contentstackService.Headers["authtoken"] = "application/json";
             ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
-            Assert.IsNotNull(httpClient);
+
             IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("authtoken");
+            Assert.IsNotNull(httpClient);
             Assert.AreEqual("application/json", headerValues.FirstOrDefault());
+            Assert.IsFalse(httpClient.Request.Headers.Contains("authorization"));
+        }
+
+        [TestMethod]
+        public void Return_Management_Token_In_Header()
+        {
+            var token = _fixture.Create<string>();
+
+            var contentstackService = new ContentstackService(serializer, managementToken: token);
+            ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
+
+            IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("authorization");
+            Assert.IsNotNull(httpClient);
+            Assert.IsFalse(httpClient.Request.Headers.Contains("authtoken"));
+            Assert.AreEqual(token, headerValues.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void Return_API_Key_In_Header()
+        {
+            var apiKey = _fixture.Create<string>();
+
+            var contentstackService = new ContentstackService(serializer, apiKey: apiKey);
+            ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
+
+            IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("api_key");
+            Assert.IsNotNull(httpClient);
+            Assert.AreEqual(apiKey, contentstackService.Headers["api_key"]);
+            Assert.AreEqual(apiKey, headerValues.FirstOrDefault());
         }
 
         [TestMethod]
@@ -270,6 +303,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
             var parameter = new ParameterCollection();
             parameter.Add("limit", 10);
             parameter.Add("include", new List<string>() { "1", "2", "3" });
+
             var contentstackService = new ContentstackService(serializer, parameter);
             contentstackService.HttpMethod = HttpMethod.Post.ToString();
             contentstackService.UseQueryString = true;

@@ -27,6 +27,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         string resourcePath;
         byte[] content;
         string httpMethod = "GET";
+        string managementToken = null;
         bool useQueryString = false;
 
         private JsonSerializer _serializer { get; set; }
@@ -120,6 +121,18 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             get
             {
                 return queryResources;
+            }
+        }
+
+        public string ManagementToken
+        {
+            get
+            {
+                return managementToken;
+            }
+            set
+            {
+                managementToken = value;
             }
         }
 

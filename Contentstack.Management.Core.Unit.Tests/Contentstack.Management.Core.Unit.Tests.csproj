@@ -39,6 +39,7 @@
     <Folder Include="Runtime\Pipeline\HttpHandler\" />
     <Folder Include="Queryable\" />
     <Folder Include="Core\Services\Organization\" />
+    <Folder Include="Core\Services\Stack\" />
   </ItemGroup>
 
   <ItemGroup>

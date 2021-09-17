@@ -3,18 +3,18 @@ using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace Contentstack.Management.Core.Services.Organization
+namespace Contentstack.Management.Core.Services.Stack
 {
-    internal class TransferOwnershipService : ContentstackService
+    internal class StackOwnershipService : ContentstackService
     {
         private string _email;
 
         #region Internal
-        internal TransferOwnershipService(JsonSerializer serializer, string uid, string email) : base(serializer)
+        internal StackOwnershipService(JsonSerializer serializer, string apiKey, string email) : base(serializer, apiKey: apiKey)
         {
-            if (string.IsNullOrEmpty(uid))
+            if (string.IsNullOrEmpty(apiKey))
             {
-                throw new ArgumentNullException("uid");
+                throw new ArgumentNullException("apiKey");
             }
 
             if (string.IsNullOrEmpty(email))
@@ -22,9 +22,8 @@ namespace Contentstack.Management.Core.Services.Organization
                 throw new ArgumentNullException("email");
             }
             this._email = email;
-            this.ResourcePath = "/organizations/{organization_uid}/transfer-ownership";
+            this.ResourcePath = "/stacks/transfer_ownership";
             this.HttpMethod = "POST";
-            this.AddPathResource("{organization_uid}", uid);
         }
         #endregion
 
