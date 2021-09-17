@@ -241,6 +241,11 @@ namespace Contentstack.Management.Core
             return new Organization(this, uid);
         }
 
+
+        public Stack Stack(string uid = null)
+        {
+            return new Stack(this, uid);
+        }
         #region LoginMethod
         /// <summary>
         /// The Log in to your account request is used to sign in to your Contentstack account and obtain the authtoken.

@@ -41,7 +41,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
 
                 return await System.Threading.Tasks.Task.FromResult<T>((T)executionContext.ResponseContext.httpResponse);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

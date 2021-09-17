@@ -2,14 +2,14 @@
 using System.Text;
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using Contentstack.Management.Core.Services.Organization;
+using Contentstack.Management.Core.Services.Stack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
-namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
+namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
 {
     [TestClass]
-    public class TransferOwnershipServiceTest
+    public class StackOwnershipServiceTest
     {
         private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
@@ -18,42 +18,41 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new TransferOwnershipService(null, _fixture.Create<string>(), _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(null, _fixture.Create<string>(), _fixture.Create<string>()));
         }
 
         [TestMethod]
-        public void Should_Throw_On_Null_UID()
+        public void Should_Throw_On_Null_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new TransferOwnershipService(serializer, null, _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(serializer, null, _fixture.Create<string>()));
 
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_Email()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new TransferOwnershipService(serializer, _fixture.Create<string>(), null));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(serializer, _fixture.Create<string>(), null));
         }
 
         [TestMethod]
         public void Should_Initialize_with_Organization_Uid()
         {
-            var orgUid = _fixture.Create<string>();
+            var apiKey = _fixture.Create<string>();
             var email = _fixture.Create<string>();
-            var service = new TransferOwnershipService(serializer, orgUid, email);
+            var service = new StackOwnershipService(serializer, apiKey, email);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
-            Assert.AreEqual("/organizations/{organization_uid}/transfer-ownership", service.ResourcePath);
-            Assert.AreEqual(orgUid, service.PathResources["{organization_uid}"]);
+            Assert.AreEqual("/stacks/transfer_ownership", service.ResourcePath);
+            Assert.AreEqual(apiKey, service.Headers["api_key"]);
         }
 
         [TestMethod]
         public void Should_Return_Content_Of_Post_Method()
         {
-            var orgUid = _fixture.Create<string>();
+            var apiKey = _fixture.Create<string>();
             var email = _fixture.Create<string>();
-            var service = new TransferOwnershipService(serializer, orgUid, email);
-
+            var service = new StackOwnershipService(serializer, apiKey, email);
 
             service.ContentBody();
 

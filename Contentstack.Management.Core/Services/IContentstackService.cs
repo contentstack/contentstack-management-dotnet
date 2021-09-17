@@ -18,6 +18,12 @@ namespace Contentstack.Management.Core.Services
         /// </summary>
         bool UseQueryString { get; set; }
 
+
+        /// <summary>
+        /// Management Tokens are tokens that provide you with read-write access to the content of your stack.
+        /// </summary>
+        string ManagementToken { get; set; }
+
         /// <summary>
         /// Returns a dictionary of the parameters included in this request.
         /// </summary>
