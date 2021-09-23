@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Model;
@@ -14,7 +15,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private string _stackName = "DotNet Management Stack";
         private string _updatestackName = "DotNet Management SDK Stack";
         private string _description = "Integration testing Stack for DotNet Management SDK";
-
+        static string RoleUID = "";
+        static string EmailSync = "testcs@contentstack.com";
+        static string EmailAsync = "testcs_1@contentstack.com";
         static double Count = -1;
         
         private OrganizationModel _org = Contentstack.Organization;
@@ -181,6 +184,163 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.AreEqual(Contentstack.Stack.MasterLocale, model.Stack.MasterLocale);
                 Assert.AreEqual(Contentstack.Stack.Description, model.Stack.Description);
                 Assert.AreEqual(Contentstack.Stack.OrgUid, model.Stack.OrgUid);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test008_Add_Stack_Settings()
+        {
+            try
+            {
+                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                StackSettings settings = new StackSettings()
+                {
+                    StackVariables = new Dictionary<string, object>()
+                    {
+                        { "enforce_unique_urls", true },
+                        { "sys_rte_allowed_tags", "figure" }
+                    }
+                };
+
+                ContentstackResponse contentstackResponse = stack.AddSettings(settings);
+
+                var response = contentstackResponse.OpenJObjectResponse();
+                StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
+
+                Assert.IsNotNull(response);
+                Assert.AreEqual("Stack settings updated successfully.", model.Notice);
+                Assert.AreEqual(true, model.StackSettings.StackVariables["enforce_unique_urls"]);
+                Assert.AreEqual("figure", model.StackSettings.StackVariables["sys_rte_allowed_tags"]);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test009_Stack_Settings()
+        {
+            try
+            {
+                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+
+                ContentstackResponse contentstackResponse = stack.Settings();
+
+                var response = contentstackResponse.OpenJObjectResponse();
+                StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
+
+                Assert.IsNotNull(response);
+                Assert.IsNull(model.Notice);
+                Assert.AreEqual(true, model.StackSettings.StackVariables["enforce_unique_urls"]);
+                Assert.AreEqual("figure", model.StackSettings.StackVariables["sys_rte_allowed_tags"]);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test010_Reset_Stack_Settings()
+        {
+            try
+            {
+                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+
+                ContentstackResponse contentstackResponse = stack.ResetSettings();
+
+                var response = contentstackResponse.OpenJObjectResponse();
+                StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
+
+                Assert.IsNotNull(response);
+                Assert.AreEqual("Stack settings updated successfully.", model.Notice);
+                Assert.AreEqual(true, model.StackSettings.StackVariables["enforce_unique_urls"]);
+                Assert.AreEqual("figure", model.StackSettings.StackVariables["sys_rte_allowed_tags"]);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test011_Add_Stack_Settings_Async()
+        {
+            try
+            {
+                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                StackSettings settings = new StackSettings()
+                {
+                    Rte = new Dictionary<string, object>()
+                    {
+                        { "cs_only_breakline", true },
+                    }
+                };
+
+                ContentstackResponse contentstackResponse = await stack.AddSettingsAsync(settings);
+
+                var response = contentstackResponse.OpenJObjectResponse();
+                StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
+
+                Assert.IsNotNull(response);
+                Assert.AreEqual("Stack settings updated successfully.", model.Notice);
+                Assert.AreEqual(true, model.StackSettings.Rte["cs_only_breakline"]);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test012_Reset_Stack_Settings_Async()
+        {
+            try
+            {
+                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+
+                ContentstackResponse contentstackResponse = await stack.ResetSettingsAsync();
+
+                var response = contentstackResponse.OpenJObjectResponse();
+                StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
+
+                Assert.IsNotNull(response);
+                Assert.AreEqual("Stack settings updated successfully.", model.Notice);
+                Assert.AreEqual(true, model.StackSettings.StackVariables["enforce_unique_urls"]);
+                Assert.AreEqual("figure", model.StackSettings.StackVariables["sys_rte_allowed_tags"]);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test013_Stack_Settings_Async()
+        {
+            try
+            {
+                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+
+                ContentstackResponse contentstackResponse = await stack.SettingsAsync();
+
+                var response = contentstackResponse.OpenJObjectResponse();
+                StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
+
+                Assert.IsNotNull(response);
+                Assert.AreEqual(true, model.StackSettings.StackVariables["enforce_unique_urls"]);
+                Assert.AreEqual("figure", model.StackSettings.StackVariables["sys_rte_allowed_tags"]);
             }
             catch (Exception e)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Stack;
@@ -9,12 +10,15 @@ namespace Contentstack.Management.Core.Models
     public class Stack
     {
         private ContentstackClient _client;
-        public string APIKey;
+        public string APIKey { get; private set; }
+        public string ManagementToken { get; private set; }
+
         #region Constructor
         public Stack(ContentstackClient contentstackClient, string apiKey = null, string managementToken = null)
         {
             _client = contentstackClient;
-            this.APIKey = apiKey;
+            APIKey = apiKey;
+            ManagementToken = managementToken;
         }
         #endregion
 
@@ -59,7 +63,6 @@ namespace Contentstack.Management.Core.Models
             this.ThrowIfAPIKeyEmpty();
 
             var service = new FetchStackService(_client.serializer, parameters, this.APIKey);
-
             return _client.InvokeSync(service);
         }
 
@@ -187,6 +190,198 @@ namespace Contentstack.Management.Core.Models
 
             return _client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
         }
+
+        /// <summary>
+        /// The Update User Role API Request updates the roles of an existing user account.
+        /// </summary>
+        /// <param name="usersRole">List of users uid and roles to assign users.</param>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public ContentstackResponse UpdateUserRole(List<UserInvitation> usersRole)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+
+            var service = new UpdateUserRoleService(_client.serializer, usersRole, apiKey: this.APIKey);
+
+            return _client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// The Update User Role API Request updates the roles of an existing user account.
+        /// </summary>
+        /// <param name="usersRole"></param>
+        /// <returns>The Task</returns>
+        public Task<ContentstackResponse> UpdateUserRoleAsync(List<UserInvitation> usersRole)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+
+            var service = new UpdateUserRoleService(_client.serializer, usersRole, apiKey: this.APIKey);
+
+            return _client.InvokeAsync<UpdateUserRoleService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// The Get stack settings call retrieves the configuration settings of an existing stack.
+        /// </summary>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public ContentstackResponse Settings()
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+
+            var service = new StackSettingsService(_client.serializer, this.APIKey);
+
+            return _client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// The Get stack settings call retrieves the configuration settings of an existing stack.
+        /// </summary>
+        /// <returns>The Task</returns>
+        public Task<ContentstackResponse> SettingsAsync()
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+
+            var service = new StackSettingsService(_client.serializer, this.APIKey);
+
+            return _client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// The Reset stack settings call resets your stack to default settings, and additionally, lets you add parameters to or modify the settings of an existing stack.
+        /// </summary>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public ContentstackResponse ResetSettings()
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+
+            var service = new StackSettingsService(_client.serializer, this.APIKey, "POST", new StackSettings()
+            {
+                StackVariables = new Dictionary<string, object>(),
+                DiscreteVariables = new Dictionary<string, object>(),
+                Rte = new Dictionary<string, object>()
+            }); ;
+
+            return _client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// The Reset stack settings call resets your stack to default settings, and additionally, lets you add parameters to or modify the settings of an existing stack.
+        /// </summary>
+        /// <returns>The Task</returns>
+        public Task<ContentstackResponse> ResetSettingsAsync()
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+
+            var service = new StackSettingsService(_client.serializer, this.APIKey, "POST", new StackSettings()
+            {
+                StackVariables = new Dictionary<string, object>(),
+                DiscreteVariables = new Dictionary<string, object>(),
+                Rte = new Dictionary<string, object>()
+            });
+
+            return _client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// The Add stack settings request lets you add additional settings for your existing stack.
+        /// </summary>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public ContentstackResponse AddSettings(StackSettings settings)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+            if (settings == null)
+            {
+                throw new ArgumentNullException("Settings can not be null.");
+            }
+
+            var service = new StackSettingsService(_client.serializer, this.APIKey, "POST", settings); ;
+
+            return _client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// The Add stack settings request lets you add additional settings for your existing stack.
+        /// </summary>
+        /// <returns>The Task</returns>
+        public Task<ContentstackResponse> AddSettingsAsync(StackSettings settings)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+            if (settings == null)
+            {
+                throw new ArgumentNullException("Settings can not be null.");
+            }
+            var service = new StackSettingsService(_client.serializer, this.APIKey, "POST", settings);
+
+            return _client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
+        }
+
+        public ContentstackResponse Share(List<UserInvitation> invitations)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+            if (invitations == null)
+            {
+                throw new ArgumentNullException("Invitations can not be null.");
+            }
+
+            var service = new StackShareService(_client.serializer, this.APIKey); ;
+            service.AddUsers(invitations);
+
+            return _client.InvokeSync(service);
+        }
+
+        public Task<ContentstackResponse> ShareAsync(List<UserInvitation> invitations)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+            if (invitations == null)
+            {
+                throw new ArgumentNullException("Invitations can not be null.");
+            }
+
+            var service = new StackShareService(_client.serializer, this.APIKey);
+            service.AddUsers(invitations);
+
+            return _client.InvokeAsync<StackShareService, ContentstackResponse>(service);
+        }
+
+        public ContentstackResponse UnShare(string email)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+            if (email == null)
+            {
+                throw new ArgumentNullException("Email can not be null.");
+            }
+
+            var service = new StackShareService(_client.serializer, this.APIKey); ;
+            service.RemoveUsers(email);
+
+            return _client.InvokeSync(service);
+        }
+
+        public Task<ContentstackResponse> UnShareAsync(string email)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+            if (email == null)
+            {
+                throw new ArgumentNullException("Email can not be null.");
+            }
+
+            var service = new StackShareService(_client.serializer, this.APIKey);
+            service.RemoveUsers(email);
+
+            return _client.InvokeAsync<StackShareService, ContentstackResponse>(service);
+        }
+
         #endregion
 
         #region Throw Error
