@@ -43,7 +43,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
 
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
-            Assert.AreEqual("/stacks/transfer_ownership", service.ResourcePath);
+            Assert.AreEqual("stacks/transfer_ownership", service.ResourcePath);
             Assert.AreEqual(apiKey, service.Headers["api_key"]);
         }
 

@@ -10,7 +10,8 @@ namespace Contentstack.Management.Core.Services.Stack
         private string _email;
 
         #region Internal
-        internal StackOwnershipService(JsonSerializer serializer, string apiKey, string email) : base(serializer, apiKey: apiKey)
+        internal StackOwnershipService(JsonSerializer serializer, string apiKey, string email)
+            : base(serializer, apiKey: apiKey)
         {
             if (string.IsNullOrEmpty(apiKey))
             {
@@ -22,7 +23,7 @@ namespace Contentstack.Management.Core.Services.Stack
                 throw new ArgumentNullException("email");
             }
             this._email = email;
-            this.ResourcePath = "/stacks/transfer_ownership";
+            this.ResourcePath = "stacks/transfer_ownership";
             this.HttpMethod = "POST";
         }
         #endregion
