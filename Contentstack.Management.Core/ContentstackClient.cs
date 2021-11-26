@@ -242,10 +242,17 @@ namespace Contentstack.Management.Core
         }
 
 
-        public Stack Stack(string uid = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="apiKey">Stack API key</param>
+        /// <param name="managementToken">Stack Management token </param>
+        /// <returns></returns>
+        public Stack Stack(string apiKey = null, string managementToken = null)
         {
-            return new Stack(this, uid);
+            return new Stack(this, apiKey, managementToken);
         }
+
         #region LoginMethod
         /// <summary>
         /// The Log in to your account request is used to sign in to your Contentstack account and obtain the authtoken.
