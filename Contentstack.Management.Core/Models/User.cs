@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
-using Contentstack.Management.Core.Utils;
+﻿using System.Threading.Tasks;
 using Contentstack.Management.Core.Services.User;
 
 namespace Contentstack.Management.Core.Models
@@ -27,7 +24,14 @@ namespace Contentstack.Management.Core.Models
         /// The Forgot password call sends a request for a temporary password to log in to an account in case a user has forgotten the login password.
         /// </summary>
         /// <param name="email">The email for the account that user has forgotten the login password</param>
-        /// <returns>The <see cref="ContentstackResponse" /></returns>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// User user = client.User();
+        /// ContentstackResponse contentstackResponse = client.ForgotPassword(&quot;&lt;EMAIL&gt;&quot;);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse" />.</returns>
         public ContentstackResponse ForgotPassword(string email)
         {
             _client.ThrowIfAlreadyLoggedIn();
@@ -41,6 +45,13 @@ namespace Contentstack.Management.Core.Models
         /// The Forgot password call sends a request for a temporary password to log in to an account in case a user has forgotten the login password.
         /// </summary>
         /// <param name="email">The email for the account that user has forgotten the login password</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// User user = client.User();
+        /// ContentstackResponse contentstackResponse = await client.ForgotPasswordAsync(&quot;&lt;EMAIL&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task.</returns>
         public Task<ContentstackResponse> ForgotPasswordAsync(string email)
         {
@@ -57,6 +68,13 @@ namespace Contentstack.Management.Core.Models
         /// <param name="resetToken">The reset password token send to email.</param>
         /// <param name="password">The password for the account.</param>
         /// <param name="confirmPassword">The confirm password for the account.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// User user = client.User();
+        /// ContentstackResponse contentstackResponse = client.ResetPassword(&quot;&lt;REST_TOKEN&gt;&quot;, &quot;&lt;PASSWORD&gt;&quot;, &quot;&lt;CONFIRM_PASSWORD&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse ResetPassword(string resetToken, string password, string confirmPassword)
         {
@@ -73,6 +91,13 @@ namespace Contentstack.Management.Core.Models
         /// <param name="resetToken">The reset password token send to email.</param>
         /// <param name="password">The password for the account.</param>
         /// <param name="confirmPassword">The confirm password for the account.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// User user = client.User();
+        /// ContentstackResponse contentstackResponse = await client.ResetPasswordAsync(&quot;&lt;REST_TOKEN&gt;&quot;, &quot;&lt;PASSWORD&gt;&quot;, &quot;&lt;CONFIRM_PASSWORD&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task.</returns>
         public Task<ContentstackResponse> ResetPasswordAsync(string resetToken, string password, string confirmPassword)
         {

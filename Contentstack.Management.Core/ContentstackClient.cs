@@ -53,6 +53,16 @@ namespace Contentstack.Management.Core
         /// Initializes new instance of the <see cref="contentstackOptions"/> class.
         /// </summary>
         /// <param name="contentstackOptions">The <see cref="ContentstackClientOptions"/> used for this client.</param>
+        /// <example>
+        /// <pre><code>
+        /// var options = new ContentstackClientOptions()
+        /// {
+        ///       Host = &quot;&lt;API_HOST&gt;&quot;,
+        ///       Authtoken = &quot;&lt;AUTHTOKEN&gt;&quot;
+        /// }
+        /// ContentstackClient client = new ContentstackClient(new OptionsWrapper&lt;ContentstackClientOptions&gt;(options));
+        /// </code></pre>
+        /// </example>
         public ContentstackClient(IOptions<ContentstackClientOptions> contentstackOptions)
         {
             this.contentstackOptions = contentstackOptions.Value;
@@ -77,8 +87,13 @@ namespace Contentstack.Management.Core
         /// <param name="proxyHost">Host to use with a proxy.</param>
         /// <param name="proxyPort">Port to use with a proxy.</param>
         /// <param name="proxyCredentials">Credentials to use with a proxy.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         public ContentstackClient(
-            string authtoken=null,
+        string authtoken =null,
             string host = "api.contentstack.io",
             int port = 443,
             string version = "v3",
@@ -224,6 +239,12 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// <see cref="Models.User" /> session consists of calls that will help you to update user of your Contentstack account.
         /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// User user = client.User();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="Models.User" />.</returns>
         public User User()
         {
@@ -235,19 +256,31 @@ namespace Contentstack.Management.Core
         /// <see cref="Models.Organization" />  allows easy management of projects as well as users within the Organization.
         /// </summary>
         /// <param name="uid">Organization uid.</param>
-        /// <returns>The <see cref="Models.User" />.</returns>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Organization" />.</returns>
         public Organization Organization(string uid = null)
         {
             return new Organization(this, uid);
         }
 
-
         /// <summary>
-        /// 
+        /// <see cref="Models.Stack" /> is a space that stores the content of a project (a web or mobile property).
+        /// Within a stack, you can create content structures, content entries, users, etc. related to the project. 
         /// </summary>
         /// <param name="apiKey">Stack API key</param>
         /// <param name="managementToken">Stack Management token </param>
-        /// <returns></returns>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack Stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Stack" />.</returns>
         public Stack Stack(string apiKey = null, string managementToken = null)
         {
             return new Stack(this, apiKey, managementToken);
@@ -259,6 +292,13 @@ namespace Contentstack.Management.Core
         /// </summary>
         /// <param name="credentials">User credentials for login.</param>
         /// <param name="token">The optional 2FA token.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// NetworkCredential credentials = new NetworkCredential(&quot;&lt;EMAIL&gt;&quot;, &quot;&lt;PASSWORD&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = client.Login(credentials);
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse" /></returns>
         public ContentstackResponse Login(ICredentials credentials, string token = null)
         {
@@ -273,6 +313,13 @@ namespace Contentstack.Management.Core
         /// </summary>
         /// <param name="credentials">User credentials for login.</param>
         /// <param name="token">The optional 2FA token.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// NetworkCredential credentials = new NetworkCredential(&quot;&lt;EMAIL&gt;&quot;, &quot;&lt;PASSWORD&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.LoginAsync(credentials);
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task.</returns>
         public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string token = null)
         {
@@ -307,6 +354,12 @@ namespace Contentstack.Management.Core
         /// The Log out of your account call is used to sign out the user of Contentstack account
         /// </summary>
         /// <param name="authtoken">The optional authroken in case user want to logout.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.Logout();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse" /></returns>
         public ContentstackResponse Logout(string authtoken = null)
         {
@@ -319,6 +372,12 @@ namespace Contentstack.Management.Core
         /// 
         /// </summary>
         /// <param name="authtoken">The optional authroken in case user want to logout.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.LogoutAsync();
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task.</returns>
         public Task<ContentstackResponse> LogoutAsync(string authtoken = null)
         {
@@ -332,6 +391,12 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// The Get user call returns comprehensive information of an existing user account.
         /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.GetUser();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse GetUser(ParameterCollection collection = null)
         {
@@ -345,6 +410,12 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// The Get user call returns comprehensive information of an existing user account.
         /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.GetUserAsync();
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task.</returns>
         public Task<ContentstackResponse> GetUserAsync(ParameterCollection collection = null)
         {

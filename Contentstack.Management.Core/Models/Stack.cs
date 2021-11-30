@@ -27,6 +27,13 @@ namespace Contentstack.Management.Core.Models
         /// The Get all stacks call fetches the list of all stacks owned by and shared with a particular user account.
         /// </summary>
         /// <param name="parameters">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack();
+        /// ContentstackResponse contentstackResponse = stack.GetAll();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse GetAll(ParameterCollection parameters = null)
         {
@@ -42,6 +49,13 @@ namespace Contentstack.Management.Core.Models
         /// The Get all stacks call fetches the list of all stacks owned by and shared with a particular user account.
         /// </summary>
         /// <param name="collection">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack =  client.Stack();
+        /// ContentstackResponse contentstackResponse = await stack.GetAllAsync();
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> GetAllAsync(ParameterCollection parameters = null)
         {
@@ -56,6 +70,13 @@ namespace Contentstack.Management.Core.Models
         /// The Get a single stack call fetches comprehensive details of a specific stack.
         /// </summary>
         /// <param name="parameters">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.Fetch();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Fetch(ParameterCollection parameters = null)
         {
@@ -70,6 +91,13 @@ namespace Contentstack.Management.Core.Models
         /// The Get a single stack call fetches comprehensive details of a specific stack.
         /// </summary>
         /// <param name="parameters">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await stack.FetchAsync();
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> FetchAsync(ParameterCollection parameters = null)
         {
@@ -85,6 +113,13 @@ namespace Contentstack.Management.Core.Models
         /// The Transfer stack ownership to other users call sends the specified user an email invitation for accepting the ownership of a particular stack.
         /// </summary>
         /// <param name="email">The email id of user for transfer.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.TransferOwnership(&quot;&lt;EMAIL&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse TransferOwnership(string email)
         {
@@ -100,6 +135,13 @@ namespace Contentstack.Management.Core.Models
         /// The Transfer stack ownership to other users call sends the specified user an email invitation for accepting the ownership of a particular stack.
         /// </summary>
         /// <param name="email">The email id of user for transfer.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await stack.TransferOwnershipAsync(&quot;&lt;EMAIL&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> TransferOwnershipAsync(string email)
         {
@@ -118,6 +160,13 @@ namespace Contentstack.Management.Core.Models
         /// <param name="masterLocale">The Master Locale for Stack</param>
         /// <param name="organisationUid">The Organization Uid in which you want to create Stack.</param>
         /// <param name="description">The description for the Stack.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack();
+        /// ContentstackResponse contentstackResponse = stack.Create(&quot;&lt;STACK_NAME&gt;&quot;, &quot;&lt;LOCALE&gt;&quot;, &quot;&lt;ORG_UID&gt;&quot;, &quot;&lt;DESCRIPTION&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Create(string name, string masterLocale, string organisationUid, string description = null)
         {
@@ -139,6 +188,13 @@ namespace Contentstack.Management.Core.Models
         /// <param name="masterLocale">The Master Locale for Stack</param>
         /// <param name="organisationUid">The Organization Uid in which you want to create Stack.</param>
         /// <param name="description">The description for the Stack.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack();
+        /// ContentstackResponse contentstackResponse = await stack.CreateAsync(&quot;&lt;STACK_NAME&gt;&quot;, &quot;&lt;LOCALE&gt;&quot;, &quot;&lt;ORG_UID&gt;&quot;, &quot;&lt;DESCRIPTION&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> CreateAsync(string name, string masterLocale, string organisationUid, string description = null)
         {
@@ -160,6 +216,13 @@ namespace Contentstack.Management.Core.Models
         /// <param name="masterLocale">The Master Locale for Stack</param>
         /// <param name="organisationUid">The Organization Uid in which you want to create Stack.</param>
         /// <param name="description">The description for the Stack.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.Update(&quot;&lt;STACK_NAME&gt;&quot;, &quot;&lt;DESCRIPTION&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Update(string name, string description = null)
         {
@@ -179,6 +242,13 @@ namespace Contentstack.Management.Core.Models
         /// <param name="masterLocale">The Master Locale for Stack</param>
         /// <param name="organisationUid">The Organization Uid in which you want to create Stack.</param>
         /// <param name="description">The description for the Stack.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await stack.UpdateAsync(&quot;&lt;STACK_NAME&gt;&quot;, &quot;&lt;DESCRIPTION&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> UpdateAsync(string name, string description = null)
         {
@@ -195,6 +265,20 @@ namespace Contentstack.Management.Core.Models
         /// The Update User Role API Request updates the roles of an existing user account.
         /// </summary>
         /// <param name="usersRole">List of users uid and roles to assign users.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// UserInvitation invitation = new UserInvitation()
+        /// {
+        ///         Uid = &quot;&lt;USER_ID&gt;&quot;,
+        ///         Roles = new System.Collections.Generic.List&lt;string&gt;() { &quot;&lt;ROLE_UID&gt;&quot; }
+        /// };
+        /// ContentstackResponse contentstackResponse = stack.UpdateUserRole(new List&lt;UserInvitation&gt;() {
+        ///     invitation
+        /// });
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse UpdateUserRole(List<UserInvitation> usersRole)
         {
@@ -210,6 +294,20 @@ namespace Contentstack.Management.Core.Models
         /// The Update User Role API Request updates the roles of an existing user account.
         /// </summary>
         /// <param name="usersRole"></param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// UserInvitation invitation = new UserInvitation()
+        /// {
+        ///         Uid = &quot;&lt;USER_ID&gt;&quot;,
+        ///         Roles = new System.Collections.Generic.List&lt;string&gt;() { &quot;&lt;ROLE_UID&gt;&quot; }
+        /// };
+        /// ContentstackResponse contentstackResponse = await stack.UpdateUserRoleAsync(new List&lt;UserInvitation&gt;() {
+        ///     invitation
+        /// });
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> UpdateUserRoleAsync(List<UserInvitation> usersRole)
         {
@@ -224,6 +322,13 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Get stack settings call retrieves the configuration settings of an existing stack.
         /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.Settings();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Settings()
         {
@@ -238,6 +343,13 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Get stack settings call retrieves the configuration settings of an existing stack.
         /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await stack.SettingsAsync();
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> SettingsAsync()
         {
@@ -252,6 +364,13 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Reset stack settings call resets your stack to default settings, and additionally, lets you add parameters to or modify the settings of an existing stack.
         /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.Settings();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse ResetSettings()
         {
@@ -271,6 +390,13 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Reset stack settings call resets your stack to default settings, and additionally, lets you add parameters to or modify the settings of an existing stack.
         /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await stack.SettingsAsync();
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> ResetSettingsAsync()
         {
@@ -290,6 +416,13 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Add stack settings request lets you add additional settings for your existing stack.
         /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.Settings(&quot;&lt;STACK_SETTINGS&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse AddSettings(StackSettings settings)
         {
@@ -308,6 +441,13 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Add stack settings request lets you add additional settings for your existing stack.
         /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await stack.SettingsAsync(&quot;&lt;STACK_SETTINGS&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> AddSettingsAsync(StackSettings settings)
         {
@@ -321,7 +461,23 @@ namespace Contentstack.Management.Core.Models
 
             return _client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
-
+        /// <summary>
+        /// The Share a stack call shares a stack with the specified user to collaborate on the stack.
+        /// </summary>
+        /// <param name="invitations"></param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// UserInvitation invitation = new UserInvitation()
+        /// {
+        ///         Email = &quot;&lt;EMAIL&gt;&quot;,
+        ///         Roles = new System.Collections.Generic.List&lt;string&gt;() { &quot;&lt;ROLE_UID&gt;&quot; }
+        /// };
+        /// ContentstackResponse contentstackResponse = stack.Share(invitation);
+        /// </code></pre>
+        /// </example>
+        /// <returns></returns>
         public ContentstackResponse Share(List<UserInvitation> invitations)
         {
             _client.ThrowIfNotLoggedIn();
@@ -331,12 +487,28 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("Invitations can not be null.");
             }
 
-            var service = new StackShareService(_client.serializer, this.APIKey); ;
+            var service = new StackShareService(_client.serializer, this.APIKey);
             service.AddUsers(invitations);
 
             return _client.InvokeSync(service);
         }
-
+        /// <summary>
+        /// The Share a stack call shares a stack with the specified user to collaborate on the stack.
+        /// </summary>
+        /// <param name="invitations"></param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// UserInvitation invitation = new UserInvitation()
+        /// {
+        ///         Email = &quot;&lt;EMAIL&gt;&quot;,
+        ///         Roles = new System.Collections.Generic.List&lt;string&gt;() { &quot;&lt;ROLE_UID&gt;&quot; }
+        /// };
+        /// ContentstackResponse contentstackResponse = await stack.ShareAsync(invitation);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The Task</returns>
         public Task<ContentstackResponse> ShareAsync(List<UserInvitation> invitations)
         {
             _client.ThrowIfNotLoggedIn();
@@ -351,7 +523,18 @@ namespace Contentstack.Management.Core.Models
 
             return _client.InvokeAsync<StackShareService, ContentstackResponse>(service);
         }
-
+        /// <summary>
+        /// The Unshare a stack call unshares a stack with a user and removes the user account from the list of collaborators. 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = client.UnShare((&quot;&lt;EMAIL&gt;&quot;);
+        /// </code></pre>
+        /// </example>
+        /// <returns></returns>
         public ContentstackResponse UnShare(string email)
         {
             _client.ThrowIfNotLoggedIn();
@@ -367,6 +550,18 @@ namespace Contentstack.Management.Core.Models
             return _client.InvokeSync(service);
         }
 
+        /// <summary>
+        /// The Unshare a stack call unshares a stack with a user and removes the user account from the list of collaborators. 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.UnShareAsync(&quot;&lt;EMAIL&gt;&quot;);
+        /// </code></pre>
+        /// </example>
+        /// <returns></returns>
         public Task<ContentstackResponse> UnShareAsync(string email)
         {
             _client.ThrowIfNotLoggedIn();
