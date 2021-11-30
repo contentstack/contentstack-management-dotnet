@@ -24,6 +24,13 @@ namespace Contentstack.Management.Core.Models
         /// The Get all/single organizations call lists all organizations related to the system user in the order that they were created.
         /// </summary>
         /// <param name="parameters">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization();
+        /// ContentstackResponse contentstackResponse = organization.GetOrganizations();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse GetOrganizations(ParameterCollection parameters = null)
         {
@@ -38,6 +45,13 @@ namespace Contentstack.Management.Core.Models
         /// The Get all/single organizations call lists all organizations related to the system user in the order that they were created.
         /// </summary>
         /// <param name="parameters">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization();
+        /// ContentstackResponse contentstackResponse = await organization.GetOrganizationsAsync();
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> GetOrganizationsAsync(ParameterCollection parameters = null)
         {
@@ -52,6 +66,13 @@ namespace Contentstack.Management.Core.Models
         /// The Get all roles in an organization call gives the details of all the roles that are set to users in an Organization.
         /// </summary>
         /// <param name="parameters">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.Roles();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Roles(ParameterCollection parameters = null)
         {
@@ -67,6 +88,13 @@ namespace Contentstack.Management.Core.Models
         /// The Get all roles in an organization call gives the details of all the roles that are set to users in an Organization.
         /// </summary>
         /// <param name="parameters">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.RolesAsync();
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> RolesAsync(ParameterCollection parameters = null)
         {
@@ -83,6 +111,25 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="orgInvite">List of User invitation.</param>
         /// <param name="stackInvite">Stack uid with user invitation details.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// UserInvitation invitation = new UserInvitation()
+        /// {
+        ///         Email = &quot;&lt;EMAIL&gt;&quot;,
+        ///         Roles = new System.Collections.Generic.List&lt;string&gt;() { &quot;&lt;ROLE_UID&gt;&quot; }
+        /// };
+        /// ContentstackResponse contentstackResponse = organization.AddUser(new System.Collections.Generic.List&lt;UserInvitation&gt;()
+        ///     {
+        ///         invitation
+        ///     },
+        ///  new  Dictionary&lt;string, List&lt;UserInvitation&gt;&gt; ()
+        ///     {
+        ///           &quot;&lt;STACK_UID&gt;&quot;= invitation
+        ///     });
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse AddUser(List<UserInvitation> orgInvite, Dictionary<string, List<UserInvitation>> stackInvite)
         {
@@ -108,6 +155,26 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="orgInvite">List of User invitation.</param>
         /// <param name="stackInvite">Stack uid with user invitation details.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// UserInvitation invitation = new UserInvitation()
+        /// {
+        ///         Email = &quot;&lt;EMAIL&gt;&quot;,
+        ///         Roles = new System.Collections.Generic.List&lt;string&gt;() { &quot;&lt;ROLE_UID&gt;&quot; }
+        /// };
+        /// ContentstackResponse contentstackResponse = await organization.AddUserAsync(new System.Collections.Generic.List&lt;UserInvitation&gt;()
+        ///     {
+        ///         invitation
+        ///     },
+        ///  new  &lt;string, List&lt;UserInvitation&gt;&gt; ()
+        ///     {
+        ///           &quot;&lt;STACK_UID&gt;&quot;= invitation
+        ///     }
+        ///  );
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> AddUserAsync(List<UserInvitation> orgInvite, Dictionary<string, List<UserInvitation>> stackInvite)
         {
@@ -132,6 +199,13 @@ namespace Contentstack.Management.Core.Models
         /// The Remove users from organization request allows you to remove existing users from your organization.
         /// </summary>
         /// <param name="emails">List of emails to be remove from the Organization</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.RemoveUser(new List() { &quot;&lt;EMAIL&gt;&quot; });
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse RemoveUser(List<string> emails)
         {
@@ -150,6 +224,13 @@ namespace Contentstack.Management.Core.Models
         /// The Remove users from organization request allows you to remove existing users from your organization.
         /// </summary>
         /// <param name="emails">List of emails to be remove from the Organization</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.RemoveUserAsync(new List() { &quot;&lt;EMAIL&gt;&quot; });
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> RemoveUserAsync(List<string> emails)
         {
@@ -169,6 +250,13 @@ namespace Contentstack.Management.Core.Models
         /// Only the owner or the admin of the Organization can resend the invitation to add users to an Organization.
         /// </summary>
         /// <param name="shareUid">Uid for share invitation send to user.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.ResendInvitation(&quot;&lt;SHARE_UID&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse ResendInvitation(string shareUid)
         {
@@ -184,6 +272,13 @@ namespace Contentstack.Management.Core.Models
         /// Only the owner or the admin of the Organization can resend the invitation to add users to an Organization.
         /// </summary>
         /// <param name="shareUid">Uid for share invitation send to user.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.ResendInvitationAsync(&quot;&lt;SHARE_UID&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> ResendInvitationAsync(string shareUid)
         {
@@ -198,6 +293,13 @@ namespace Contentstack.Management.Core.Models
         /// The Get all organization invitations call gives you a list of all the Organization invitations. 
         /// </summary>
         /// <param name="parameter">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.GetInvitations();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse GetInvitations(ParameterCollection parameter = null)
         {
@@ -213,6 +315,13 @@ namespace Contentstack.Management.Core.Models
         /// The Get all organization invitations call gives you a list of all the Organization invitations. 
         /// </summary>
         /// <param name="parameter">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.GetInvitationsAsync();
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> GetInvitationsAsync(ParameterCollection parameter = null)
         {
@@ -228,6 +337,13 @@ namespace Contentstack.Management.Core.Models
         /// The Transfer organization ownership call transfers the ownership of an Organization to another user.
         /// </summary>
         /// <param name="email">The email id of user for transfer.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.TransferOwnership(&quot;&lt;EMAIL&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse TransferOwnership(string email)
         {
@@ -243,6 +359,13 @@ namespace Contentstack.Management.Core.Models
         /// The Transfer organization ownership call transfers the ownership of an Organization to another user.
         /// </summary>
         /// <param name="email">The email id of user for transfer.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.TransferOwnershipAsync(&quot;&lt;EMAIL&gt;&quot;);
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> TransferOwnershipAsync(string email)
         {
@@ -257,6 +380,13 @@ namespace Contentstack.Management.Core.Models
         /// The get Stacks call gets all the Stack within the Organization.
         /// </summary>
         /// <param name="parameters">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.GetStacks();
+        /// </code></pre>
+        /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse GetStacks(ParameterCollection parameter = null)
         {
@@ -272,6 +402,13 @@ namespace Contentstack.Management.Core.Models
         /// The get Stacks call gets all the Stack within the Organization.
         /// </summary>
         /// <param name="parameter">URI query parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.GetStacksAsync();
+        /// </code></pre>
+        /// </example>
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> GetStacksAsync(ParameterCollection parameter = null)
         {
