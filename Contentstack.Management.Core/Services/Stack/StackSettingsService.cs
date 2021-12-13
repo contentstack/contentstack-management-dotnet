@@ -12,9 +12,9 @@ namespace Contentstack.Management.Core.Services.Stack
 
         private StackSettings _settings;
 
-        internal StackSettingsService(JsonSerializer serializer, string apiKey, string method = "GET", StackSettings settings = null) : base(serializer, apiKey: apiKey)
+        internal StackSettingsService(JsonSerializer serializer, Core.Models.Stack stack, string method = "GET", StackSettings settings = null) : base(serializer, stack)
         {
-            if (apiKey == null)
+            if (stack.APIKey == null)
             {
                 throw new ArgumentNullException("API Key should be present.");
             }

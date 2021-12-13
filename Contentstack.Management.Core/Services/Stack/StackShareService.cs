@@ -13,9 +13,9 @@ namespace Contentstack.Management.Core.Services.Stack
 
         private string _removeUser;
 
-        internal StackShareService(JsonSerializer serializer, string apiKey) : base(serializer, apiKey: apiKey)
+        internal StackShareService(JsonSerializer serializer, Core.Models.Stack stack) : base(serializer, stack)
         {
-            if (string.IsNullOrEmpty(apiKey))
+            if (string.IsNullOrEmpty(stack.APIKey))
             {
                 throw new ArgumentNullException("apiKey");
             }

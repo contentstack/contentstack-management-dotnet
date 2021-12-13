@@ -20,13 +20,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackShareService(null, _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackShareService(null, new Management.Core.Models.Stack(null, _fixture.Create<string>())));
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackShareService(serializer, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackShareService(serializer, new Management.Core.Models.Stack(null)));
         }
 
         [TestMethod]
@@ -34,7 +34,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var apiKey = _fixture.Create<string>();
 
-            var service = new StackShareService(serializer, apiKey);
+            var service = new StackShareService(serializer, new Management.Core.Models.Stack(null, apiKey));
             service.ContentBody();
 
             Assert.IsNotNull(service);
@@ -56,7 +56,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             foreach (string role in userInvitation.Roles)
                 roles.Add($"\"{role}\"");
 
-            var service = new StackShareService(serializer, apiKey);           
+            var service = new StackShareService(serializer, new Management.Core.Models.Stack(null, apiKey));
             service.AddUsers(new List<UserInvitation>() { userInvitation });
             service.ContentBody();
 
@@ -73,7 +73,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             var apiKey = _fixture.Create<string>();
             var email = _fixture.Create<string>();
 
-            var service = new StackShareService(serializer, apiKey);
+            var service = new StackShareService(serializer, new Management.Core.Models.Stack(null, apiKey));
             service.RemoveUsers(email);
             service.ContentBody();
 

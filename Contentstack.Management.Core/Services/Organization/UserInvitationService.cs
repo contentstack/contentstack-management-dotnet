@@ -15,7 +15,7 @@ namespace Contentstack.Management.Core.Services.Organization
         private List<string> _removeUsers;
 
         #region Internal
-        internal UserInvitationService(JsonSerializer serializer, string uid, string httpMethod = "GET", ParameterCollection collection = null) : base(serializer, collection)
+        internal UserInvitationService(JsonSerializer serializer, string uid, string httpMethod = "GET", ParameterCollection collection = null) : base(serializer, collection: collection)
         {
             if (string.IsNullOrEmpty(uid))
             {

@@ -20,25 +20,25 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new UpdateUserRoleService(null, _fixture.Create<List<UserInvitation>>(), _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new UpdateUserRoleService(null, new Management.Core.Models.Stack(null, _fixture.Create<string>()), _fixture.Create<List<UserInvitation>>()));
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_UserInvite()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new UpdateUserRoleService(serializer, null, _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new UpdateUserRoleService(serializer, new Management.Core.Models.Stack(null, _fixture.Create<string>()), null));
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new UpdateUserRoleService(serializer, _fixture.Create<List<UserInvitation>>(), null));
+            Assert.ThrowsException<ArgumentNullException>(() => new UpdateUserRoleService(serializer, new Management.Core.Models.Stack(null), _fixture.Create<List<UserInvitation>>()));
         }
 
         [TestMethod]
         public void Should_Initialize_with_Data()
         {
-            var service = new UpdateUserRoleService(serializer, _fixture.Create<List<UserInvitation>>(), _fixture.Create<string>());
+            var service = new UpdateUserRoleService(serializer, new Management.Core.Models.Stack(null, _fixture.Create<string>()), _fixture.Create<List<UserInvitation>>());
 
             Assert.IsNotNull(service);
             Assert.AreEqual(false, service.UseQueryString);
@@ -50,7 +50,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Return_Content_Of_Post_Method()
         {
             var users = new List<UserInvitation>();
-            var service = new UpdateUserRoleService(serializer, users, _fixture.Create<string>());
+            var service = new UpdateUserRoleService(serializer, new Management.Core.Models.Stack(null, _fixture.Create<string>()), users);
 
             service.ContentBody();
 
@@ -68,7 +68,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             };
             var users = new List<UserInvitation>();
             users.Add(user);
-            var service = new UpdateUserRoleService(serializer, users, _fixture.Create<string>());
+            var service = new UpdateUserRoleService(serializer, new Management.Core.Models.Stack(null, _fixture.Create<string>()), users);
 
             service.ContentBody();
             var roles = new List<string>();

@@ -20,7 +20,6 @@ namespace Contentstack.Management.Core.Queryable
             this.Add(key, new DoubleParameterValue(value));
         }
 
-
         /// <summary>
         /// Adds a parameter with a string value.
         /// </summary>

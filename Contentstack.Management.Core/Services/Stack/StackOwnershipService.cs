@@ -10,10 +10,10 @@ namespace Contentstack.Management.Core.Services.Stack
         private string _email;
 
         #region Internal
-        internal StackOwnershipService(JsonSerializer serializer, string apiKey, string email)
-            : base(serializer, apiKey: apiKey)
+        internal StackOwnershipService(JsonSerializer serializer, Core.Models.Stack stack, string email)
+            : base(serializer, stack)
         {
-            if (string.IsNullOrEmpty(apiKey))
+            if (string.IsNullOrEmpty(stack.APIKey))
             {
                 throw new ArgumentNullException("apiKey");
             }

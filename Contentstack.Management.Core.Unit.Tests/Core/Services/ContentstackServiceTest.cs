@@ -274,7 +274,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         {
             var token = _fixture.Create<string>();
 
-            var contentstackService = new ContentstackService(serializer, managementToken: token);
+            var contentstackService = new ContentstackService(serializer, new Management.Core.Models.Stack(null, managementToken: token));
             ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
 
             IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("authorization");
@@ -288,7 +288,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         {
             var apiKey = _fixture.Create<string>();
 
-            var contentstackService = new ContentstackService(serializer, apiKey: apiKey);
+            var contentstackService = new ContentstackService(serializer, new Management.Core.Models.Stack(null, apiKey: apiKey));
             ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
 
             IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("api_key");
@@ -304,7 +304,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
             parameter.Add("limit", 10);
             parameter.Add("include", new List<string>() { "1", "2", "3" });
 
-            var contentstackService = new ContentstackService(serializer, parameter);
+            var contentstackService = new ContentstackService(serializer, collection: parameter);
             contentstackService.HttpMethod = HttpMethod.Post.ToString();
             contentstackService.UseQueryString = true;
 

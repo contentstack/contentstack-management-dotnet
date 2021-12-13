@@ -13,15 +13,15 @@ namespace Contentstack.Management.Core.Services.Stack
         #region Internal
         private List<UserInvitation> _users;
 
-        internal UpdateUserRoleService(JsonSerializer serializer, List<UserInvitation>userInvitation, string apiKey)
-            : base(serializer, apiKey: apiKey)
+        internal UpdateUserRoleService(JsonSerializer serializer, Core.Models.Stack stack, List<UserInvitation>userInvitation)
+            : base(serializer, stack)
         {
             if (userInvitation == null)
             {
                 throw new ArgumentNullException("Uid and roles should be present.");
             }
 
-            if (apiKey == null)
+            if (stack.APIKey == null)
             {
                 throw new ArgumentNullException("API Key should be present.");
             }

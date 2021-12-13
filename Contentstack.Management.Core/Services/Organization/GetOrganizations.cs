@@ -7,7 +7,7 @@ namespace Contentstack.Management.Core.Services.Organization
     {
         #region Internal
 
-        internal GetOrganizations(JsonSerializer serializer, ParameterCollection collection, string uid = null) : base(serializer, collection)
+        internal GetOrganizations(JsonSerializer serializer, ParameterCollection collection, string uid = null) : base(serializer, collection: collection)
         {
             this.ResourcePath = "organizations";
 

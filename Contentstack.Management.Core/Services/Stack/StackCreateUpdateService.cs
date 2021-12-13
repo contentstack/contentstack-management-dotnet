@@ -13,12 +13,12 @@ namespace Contentstack.Management.Core.Services.Stack
         #region Internal
         internal StackCreateUpdateService(
             JsonSerializer serializer,
+            Core.Models.Stack stack,
             string name,
             string masterLocale = null,
             string description = null,
-            string apiKey = null,
             string organizationUid = null)
-            : base(serializer, apiKey: apiKey)
+            : base(serializer, stack)
         {
             this.ResourcePath = "/stacks";
 
@@ -26,7 +26,7 @@ namespace Contentstack.Management.Core.Services.Stack
             _masterLocale = masterLocale;
             _description = description;
 
-            if (apiKey != null)
+            if (stack.APIKey != null)
             {
                 this.HttpMethod = "PUT";
             }

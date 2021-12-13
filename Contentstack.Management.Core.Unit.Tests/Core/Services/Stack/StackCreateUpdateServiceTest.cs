@@ -20,7 +20,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             Assert.ThrowsException<ArgumentNullException>(() => new StackCreateUpdateService(
                 null,
-                _fixture.Create<string>(),
+                new Management.Core.Models.Stack(null),
                 _fixture.Create<string>(),
                 _fixture.Create<string>(),
                 _fixture.Create<string>(),
@@ -32,10 +32,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             Assert.ThrowsException<ArgumentNullException>(() => new StackCreateUpdateService(
                 serializer,
+                new Management.Core.Models.Stack(null),
                 _fixture.Create<string>(),
                 _fixture.Create<string>(),
                 _fixture.Create<string>(),
-                null,
                 null));
         }
 
@@ -44,11 +44,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             Assert.ThrowsException<ArgumentNullException>(() => new StackCreateUpdateService(
                 serializer,
+                new Management.Core.Models.Stack(null),
                 null,
                 _fixture.Create<string>(),
                 _fixture.Create<string>(),
-                null,
-                _fixture.Create<string>()));
+                null));
         }
 
         [TestMethod]
@@ -56,11 +56,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             Assert.ThrowsException<ArgumentNullException>(() => new StackCreateUpdateService(
                 serializer,
+                new Management.Core.Models.Stack(null),
                 _fixture.Create<string>(),
                 null,
                 _fixture.Create<string>(),
-                null,
-                _fixture.Create<string>()));
+                null));
         }
 
         [TestMethod]
@@ -69,7 +69,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             var name = _fixture.Create<string>();
             var masterLocale = _fixture.Create<string>();
             var orgUID = _fixture.Create<string>();
-            var service = new StackCreateUpdateService(serializer, name, masterLocale, organizationUid: orgUID);
+            var service = new StackCreateUpdateService(serializer, new Management.Core.Models.Stack(null), name, masterLocale, organizationUid: orgUID);
             service.ContentBody();
 
             Assert.IsNotNull(service);
@@ -85,7 +85,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             var masterLocale = _fixture.Create<string>();
             var desc = _fixture.Create<string>();
             var orgUID = _fixture.Create<string>();
-            var service = new StackCreateUpdateService(serializer, name, masterLocale, desc, organizationUid: orgUID);
+            var service = new StackCreateUpdateService(serializer, new Management.Core.Models.Stack(null), name, masterLocale, desc, organizationUid: orgUID);
             service.ContentBody();
 
             Assert.IsNotNull(service);
@@ -99,7 +99,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var name = _fixture.Create<string>();
             var apiKey = _fixture.Create<string>();
-            var service = new StackCreateUpdateService(serializer, name, apiKey: apiKey);
+            var service = new StackCreateUpdateService(serializer, new Management.Core.Models.Stack(null, apiKey), name);
             service.ContentBody();
 
             Assert.IsNotNull(service);
@@ -114,7 +114,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             var name = _fixture.Create<string>();
             var desc = _fixture.Create<string>();
             var apiKey = _fixture.Create<string>();
-            var service = new StackCreateUpdateService(serializer, name, description: desc, apiKey: apiKey);
+            var service = new StackCreateUpdateService(serializer, new Management.Core.Models.Stack(null, apiKey), name, description: desc);
             service.ContentBody();
 
             Assert.IsNotNull(service);

@@ -18,20 +18,20 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(null, _fixture.Create<string>(), _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(null, new Management.Core.Models.Stack(null, _fixture.Create<string>()), _fixture.Create<string>()));
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(serializer, null, _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(serializer, new Management.Core.Models.Stack(null), _fixture.Create<string>()));
 
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_Email()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(serializer, _fixture.Create<string>(), null));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(serializer, new Management.Core.Models.Stack(null, _fixture.Create<string>()), null));
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var apiKey = _fixture.Create<string>();
             var email = _fixture.Create<string>();
-            var service = new StackOwnershipService(serializer, apiKey, email);
+            var service = new StackOwnershipService(serializer, new Management.Core.Models.Stack(null, apiKey), email);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -52,7 +52,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var apiKey = _fixture.Create<string>();
             var email = _fixture.Create<string>();
-            var service = new StackOwnershipService(serializer, apiKey, email);
+            var service = new StackOwnershipService(serializer, new Management.Core.Models.Stack(null, apiKey), email);
 
             service.ContentBody();
 
