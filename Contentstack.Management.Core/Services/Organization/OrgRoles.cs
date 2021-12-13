@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Services.Organization
     {
         #region Internal
 
-        internal OrganizationRolesService(JsonSerializer serializer, string uid, ParameterCollection collection) : base(serializer, collection)
+        internal OrganizationRolesService(JsonSerializer serializer, string uid, ParameterCollection collection) : base(serializer, collection: collection)
         {
             if (string.IsNullOrEmpty(uid))
             {

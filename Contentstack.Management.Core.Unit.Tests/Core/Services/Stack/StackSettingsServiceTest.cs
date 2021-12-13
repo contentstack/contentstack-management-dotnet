@@ -19,21 +19,21 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackSettingsService(null, _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackSettingsService(null, new Management.Core.Models.Stack(null, _fixture.Create<string>())));
 
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackSettingsService(serializer, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackSettingsService(serializer, new Management.Core.Models.Stack(null)));
         }
 
         [TestMethod]
         public void Should_Initialize_With_Get_Method()
         {
             var apiKey = _fixture.Create<string>();
-            var service = new StackSettingsService(serializer, apiKey);
+            var service = new StackSettingsService(serializer, new Management.Core.Models.Stack(null, apiKey));
             service.ContentBody();
 
             Assert.IsNotNull(service);
@@ -48,7 +48,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var apiKey = _fixture.Create<string>();
             var settings = _fixture.Create<StackSettings>();
-            var service = new StackSettingsService(serializer, apiKey, "POST", settings);
+            var service = new StackSettingsService(serializer, new Management.Core.Models.Stack(null, apiKey), "POST", settings);
             service.ContentBody();
 
             Assert.IsNotNull(service);

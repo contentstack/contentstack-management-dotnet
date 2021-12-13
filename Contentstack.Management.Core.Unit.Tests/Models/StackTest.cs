@@ -46,6 +46,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => stack.ShareAsync(new List<UserInvitation>()));
             Assert.ThrowsException<InvalidOperationException>(() => stack.UnShare(_fixture.Create<string>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => stack.UnShareAsync(_fixture.Create<string>()));
+
+            Assert.ThrowsException<InvalidOperationException>(() => stack.ContentType());
         }
 
         [TestMethod]
@@ -75,6 +77,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => stack.ShareAsync(new List<UserInvitation>()));
             Assert.ThrowsException<InvalidOperationException>(() => stack.UnShare(_fixture.Create<string>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => stack.UnShareAsync(_fixture.Create<string>()));
+
+            Assert.ThrowsException<InvalidOperationException>(() => stack.ContentType());
         }
 
         [TestMethod]

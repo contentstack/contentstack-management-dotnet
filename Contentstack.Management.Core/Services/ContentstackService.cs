@@ -32,19 +32,23 @@ namespace Contentstack.Management.Core.Services
         #endregion
 
         #region Constructor
-        internal ContentstackService(JsonSerializer serializer, ParameterCollection collection = null, string apiKey = null, string managementToken = null)
+        internal ContentstackService(JsonSerializer serializer, Core.Models.Stack stack = null, ParameterCollection collection = null)
         {
             if (serializer == null)
             {
                 throw new ArgumentNullException("serializer");
             }
 
-            if (!string.IsNullOrEmpty(apiKey))
+            if (stack != null)
             {
-                this.Headers.Add("api_key", apiKey);
-            }
+                if (!string.IsNullOrEmpty(stack.APIKey))
+                {
+                    this.Headers.Add("api_key", stack.APIKey);
+                }
 
-            this.ManagementToken = managementToken;
+                this.ManagementToken = stack.ManagementToken;
+            }
+            
             this.collection = collection ?? new ParameterCollection();
             _serializer = serializer;
         }

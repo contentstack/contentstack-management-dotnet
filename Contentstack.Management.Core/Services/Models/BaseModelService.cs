@@ -2,14 +2,14 @@
 using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json;
 
-namespace Contentstack.Management.Core.Services.Stack
+namespace Contentstack.Management.Core.Services.Models
 {
-    internal class FetchStackService : ContentstackService
+    internal class BaseModelService: ContentstackService
     {
         #region Internal
 
-        internal FetchStackService(JsonSerializer serializer, Core.Models.Stack stack, ParameterCollection collection = null)
-            : base(serializer, stack, collection)
+        internal BaseModelService(JsonSerializer serializer, Core.Models.Stack stack, ParameterCollection collection)
+            : base(serializer, stack: stack, collection)
         {
             this.ResourcePath = "stacks";
 

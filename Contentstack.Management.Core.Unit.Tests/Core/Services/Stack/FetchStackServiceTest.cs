@@ -2,6 +2,7 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Stack;
+using Contentstack.Management.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
@@ -17,13 +18,15 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new FetchStackService(null, null, _fixture.Create<string>()));
+            var stack = new Management.Core.Models.Stack(contentstackClient: null, apiKey: _fixture.Create<String>());
+            Assert.ThrowsException<ArgumentNullException>(() => new FetchStackService(null, stack));
         }
 
         [TestMethod]
         public void Should_Initialize_with_Serializer()
         {
-            var fetchStackService = new FetchStackService(serializer, null);
+            var stack = new Management.Core.Models.Stack(contentstackClient: null, apiKey: _fixture.Create<String>());
+            var fetchStackService = new FetchStackService(serializer, stack);
 
             Assert.IsNotNull(fetchStackService);
             Assert.AreEqual(true, fetchStackService.UseQueryString);
@@ -35,7 +38,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Initialize_with_Organization_Uid()
         {
             var apiKey = _fixture.Create<string>();
-            var fetchStackService = new FetchStackService(serializer, null, apiKey);
+            var stack = new Management.Core.Models.Stack(contentstackClient: null, apiKey);
+            var fetchStackService = new FetchStackService(serializer, stack);
 
             Assert.IsNotNull(fetchStackService);
             Assert.AreEqual(true, fetchStackService.UseQueryString);
@@ -48,7 +52,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         [TestMethod]
         public void Should_Initialize_with_Serializer_Empty_Param_Collection()
         {
-            var fetchStackService = new FetchStackService(serializer, new Management.Core.Queryable.ParameterCollection());
+            var stack = new Management.Core.Models.Stack(contentstackClient: null);
+
+            var fetchStackService = new FetchStackService(serializer, stack, new Management.Core.Queryable.ParameterCollection());
 
             Assert.IsNotNull(fetchStackService);
             Assert.AreEqual(true, fetchStackService.UseQueryString);

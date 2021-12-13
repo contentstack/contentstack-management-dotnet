@@ -4,19 +4,20 @@ using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Stack;
 using Contentstack.Management.Core.Utils;
+using Contentstack.Management.Core.Models;
 
 namespace Contentstack.Management.Core.Models
 {
     public class Stack
     {
-        private ContentstackClient _client;
+        internal ContentstackClient client;
         public string APIKey { get; private set; }
         public string ManagementToken { get; private set; }
 
         #region Constructor
         public Stack(ContentstackClient contentstackClient, string apiKey = null, string managementToken = null)
         {
-            _client = contentstackClient;
+            client = contentstackClient;
             APIKey = apiKey;
             ManagementToken = managementToken;
         }
@@ -37,12 +38,12 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse GetAll(ParameterCollection parameters = null)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyNotEmpty();
 
-            var service = new FetchStackService(_client.serializer, parameters);
+            var service = new FetchStackService(client.serializer, this, parameters);
 
-            return _client.InvokeSync(service);
+            return client.InvokeSync(service);
         }
 
         /// <summary>
@@ -59,12 +60,30 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> GetAllAsync(ParameterCollection parameters = null)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyNotEmpty();
 
-            var service = new FetchStackService(_client.serializer, parameters);
+            var service = new FetchStackService(client.serializer, this);
 
-            return _client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
+            return client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
+        }
+        /// <summary>
+        /// The Get all stacks call fetches the list of all stacks owned by and shared with a particular user account.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack =  client.Stack();
+        /// ContentstackResponse contentstackResponse = stack.Query().Find();
+        /// //Or
+        /// ContentstackResponse contentstackResponse = await stack.Query().FindAsync();
+        /// </code></pre>
+        /// </example>
+        /// 
+        /// <returns>The <see cref="Query"/>.</returns>
+        public Query Query()
+        {
+            return new Query(this, "stacks");
         }
         /// <summary>
         /// The Get a single stack call fetches comprehensive details of a specific stack.
@@ -80,11 +99,11 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Fetch(ParameterCollection parameters = null)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            var service = new FetchStackService(_client.serializer, parameters, this.APIKey);
-            return _client.InvokeSync(service);
+            var service = new FetchStackService(client.serializer, this, parameters);
+            return client.InvokeSync(service);
         }
 
         /// <summary>
@@ -101,12 +120,12 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> FetchAsync(ParameterCollection parameters = null)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            var service = new FetchStackService(_client.serializer, parameters, this.APIKey);
+            var service = new FetchStackService(client.serializer, this, parameters);
 
-            return _client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
+            return client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
         }
 
         /// <summary>
@@ -123,12 +142,12 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse TransferOwnership(string email)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            var service = new StackOwnershipService(_client.serializer, this.APIKey, email);
+            var service = new StackOwnershipService(client.serializer, this, email);
 
-            return _client.InvokeSync(service);
+            return client.InvokeSync(service);
         }
 
         /// <summary>
@@ -145,12 +164,12 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> TransferOwnershipAsync(string email)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            var service = new StackOwnershipService(_client.serializer, this.APIKey, email);
+            var service = new StackOwnershipService(client.serializer, this, email);
 
-            return _client.InvokeAsync<StackOwnershipService, ContentstackResponse>(service);
+            return client.InvokeAsync<StackOwnershipService, ContentstackResponse>(service);
         }
 
         /// <summary>
@@ -170,15 +189,15 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Create(string name, string masterLocale, string organisationUid, string description = null)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyNotEmpty();
             this.ThrowInvalideName(name);
             this.ThrowInvalideLocale(masterLocale);
             this.ThrowInvalideOrganizationUid(organisationUid);
 
-            var service = new StackCreateUpdateService(_client.serializer, name, masterLocale, description, organizationUid: organisationUid);
+            var service = new StackCreateUpdateService(client.serializer, this, name, masterLocale, description, organizationUid: organisationUid);
 
-            return _client.InvokeSync(service);
+            return client.InvokeSync(service);
         }
 
         /// <summary>
@@ -198,15 +217,15 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> CreateAsync(string name, string masterLocale, string organisationUid, string description = null)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyNotEmpty();
             this.ThrowInvalideName(name);
             this.ThrowInvalideLocale(masterLocale);
             this.ThrowInvalideOrganizationUid(organisationUid);
 
-            var service = new StackCreateUpdateService(_client.serializer, name, masterLocale, description, organizationUid: organisationUid);
+            var service = new StackCreateUpdateService(client.serializer, this, name, masterLocale, description, organizationUid: organisationUid);
 
-            return _client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
+            return client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
         }
 
         /// <summary>
@@ -226,13 +245,13 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Update(string name, string description = null)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
             this.ThrowInvalideName(name);
 
-            var service = new StackCreateUpdateService(_client.serializer, name, description: description, apiKey: this.APIKey);
+            var service = new StackCreateUpdateService(client.serializer, this, name, description: description);
 
-            return _client.InvokeSync(service);
+            return client.InvokeSync(service);
         }
 
         /// <summary>
@@ -252,13 +271,13 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> UpdateAsync(string name, string description = null)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
             this.ThrowInvalideName(name);
 
-            var service = new StackCreateUpdateService(_client.serializer, name, description: description, apiKey: this.APIKey);
+            var service = new StackCreateUpdateService(client.serializer, this, name, description: description);
 
-            return _client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
+            return client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
         }
 
         /// <summary>
@@ -282,12 +301,12 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse UpdateUserRole(List<UserInvitation> usersRole)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            var service = new UpdateUserRoleService(_client.serializer, usersRole, apiKey: this.APIKey);
+            var service = new UpdateUserRoleService(client.serializer, this, usersRole);
 
-            return _client.InvokeSync(service);
+            return client.InvokeSync(service);
         }
 
         /// <summary>
@@ -311,12 +330,12 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> UpdateUserRoleAsync(List<UserInvitation> usersRole)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            var service = new UpdateUserRoleService(_client.serializer, usersRole, apiKey: this.APIKey);
+            var service = new UpdateUserRoleService(client.serializer, this, usersRole);
 
-            return _client.InvokeAsync<UpdateUserRoleService, ContentstackResponse>(service);
+            return client.InvokeAsync<UpdateUserRoleService, ContentstackResponse>(service);
         }
 
         /// <summary>
@@ -332,12 +351,12 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Settings()
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(_client.serializer, this.APIKey);
+            var service = new StackSettingsService(client.serializer, this);
 
-            return _client.InvokeSync(service);
+            return client.InvokeSync(service);
         }
 
         /// <summary>
@@ -353,12 +372,12 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> SettingsAsync()
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(_client.serializer, this.APIKey);
+            var service = new StackSettingsService(client.serializer, this);
 
-            return _client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
+            return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
 
         /// <summary>
@@ -374,17 +393,17 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse ResetSettings()
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(_client.serializer, this.APIKey, "POST", new StackSettings()
+            var service = new StackSettingsService(client.serializer, this, "POST", new StackSettings()
             {
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
                 Rte = new Dictionary<string, object>()
             }); ;
 
-            return _client.InvokeSync(service);
+            return client.InvokeSync(service);
         }
 
         /// <summary>
@@ -400,17 +419,17 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> ResetSettingsAsync()
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(_client.serializer, this.APIKey, "POST", new StackSettings()
+            var service = new StackSettingsService(client.serializer, this, "POST", new StackSettings()
             {
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
                 Rte = new Dictionary<string, object>()
             });
 
-            return _client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
+            return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
 
         /// <summary>
@@ -426,16 +445,16 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse AddSettings(StackSettings settings)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
             if (settings == null)
             {
                 throw new ArgumentNullException("Settings can not be null.");
             }
 
-            var service = new StackSettingsService(_client.serializer, this.APIKey, "POST", settings); ;
+            var service = new StackSettingsService(client.serializer, this, "POST", settings); ;
 
-            return _client.InvokeSync(service);
+            return client.InvokeSync(service);
         }
 
         /// <summary>
@@ -451,15 +470,15 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> AddSettingsAsync(StackSettings settings)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
             if (settings == null)
             {
                 throw new ArgumentNullException("Settings can not be null.");
             }
-            var service = new StackSettingsService(_client.serializer, this.APIKey, "POST", settings);
+            var service = new StackSettingsService(client.serializer, this, "POST", settings);
 
-            return _client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
+            return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
         /// <summary>
         /// The Share a stack call shares a stack with the specified user to collaborate on the stack.
@@ -477,20 +496,20 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = stack.Share(invitation);
         /// </code></pre>
         /// </example>
-        /// <returns></returns>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Share(List<UserInvitation> invitations)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
             if (invitations == null)
             {
                 throw new ArgumentNullException("Invitations can not be null.");
             }
 
-            var service = new StackShareService(_client.serializer, this.APIKey);
+            var service = new StackShareService(client.serializer, this);
             service.AddUsers(invitations);
 
-            return _client.InvokeSync(service);
+            return client.InvokeSync(service);
         }
         /// <summary>
         /// The Share a stack call shares a stack with the specified user to collaborate on the stack.
@@ -511,17 +530,17 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> ShareAsync(List<UserInvitation> invitations)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
             if (invitations == null)
             {
                 throw new ArgumentNullException("Invitations can not be null.");
             }
 
-            var service = new StackShareService(_client.serializer, this.APIKey);
+            var service = new StackShareService(client.serializer, this);
             service.AddUsers(invitations);
 
-            return _client.InvokeAsync<StackShareService, ContentstackResponse>(service);
+            return client.InvokeAsync<StackShareService, ContentstackResponse>(service);
         }
         /// <summary>
         /// The Unshare a stack call unshares a stack with a user and removes the user account from the list of collaborators. 
@@ -534,20 +553,20 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = client.UnShare((&quot;&lt;EMAIL&gt;&quot;);
         /// </code></pre>
         /// </example>
-        /// <returns></returns>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse UnShare(string email)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
             if (email == null)
             {
                 throw new ArgumentNullException("Email can not be null.");
             }
 
-            var service = new StackShareService(_client.serializer, this.APIKey); ;
+            var service = new StackShareService(client.serializer, this); ;
             service.RemoveUsers(email);
 
-            return _client.InvokeSync(service);
+            return client.InvokeSync(service);
         }
 
         /// <summary>
@@ -561,20 +580,33 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = await client.UnShareAsync(&quot;&lt;EMAIL&gt;&quot;);
         /// </code></pre>
         /// </example>
-        /// <returns></returns>
+        /// <returns>The Task</returns>
         public Task<ContentstackResponse> UnShareAsync(string email)
         {
-            _client.ThrowIfNotLoggedIn();
+            client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
             if (email == null)
             {
                 throw new ArgumentNullException("Email can not be null.");
             }
 
-            var service = new StackShareService(_client.serializer, this.APIKey);
+            var service = new StackShareService(client.serializer, this);
             service.RemoveUsers(email);
 
-            return _client.InvokeAsync<StackShareService, ContentstackResponse>(service);
+            return client.InvokeAsync<StackShareService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        public ContentType ContentType(string uid = null)
+        {
+            client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+
+            return new ContentType(this, uid);
         }
 
         #endregion
