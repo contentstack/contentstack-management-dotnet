@@ -1,10 +1,12 @@
 ﻿using AutoFixture;
 using Contentstack.Management.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace Contentstack.Management.Core.Unit.Tests.Models
 {
+
     [TestClass]
-    public class ContentTypeTest
+    public class GlobalFieldTest
     {
         private Stack _stack;
         private readonly IFixture _fixture = new Fixture();
@@ -18,7 +20,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Initialize_ContentType()
         {
-            ContentType contentType = new ContentType(_stack, null);
+            GlobalField contentType = new GlobalField(_stack, null);
 
             Assert.IsNull(contentType.Uid);
         }
@@ -27,7 +29,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public void Initialize_ContentType_With_Uid()
         {
             string uid = _fixture.Create<string>();
-            ContentType contentType = new ContentType(_stack, uid);
+            GlobalField contentType = new GlobalField(_stack, uid);
 
             Assert.AreEqual(uid, contentType.Uid);
         }

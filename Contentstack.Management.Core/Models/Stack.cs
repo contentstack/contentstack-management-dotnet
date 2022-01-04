@@ -550,7 +550,7 @@ namespace Contentstack.Management.Core.Models
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.UnShare((&quot;&lt;EMAIL&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.UnShare((&quot;&lt;EMAIL&gt;&quot;);
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
@@ -577,7 +577,7 @@ namespace Contentstack.Management.Core.Models
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.UnShareAsync(&quot;&lt;EMAIL&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await stack.UnShareAsync(&quot;&lt;EMAIL&gt;&quot;);
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
@@ -597,10 +597,18 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// 
+        /// <see cref="Models.ContentType" /> defines the structure or schema of a page or a section of your web or mobile property.
+        /// To create content for your application, you are required to first create a content type, and then create entries using the content type. 
         /// </summary>
-        /// <param name="uid"></param>
-        /// <returns></returns>
+        /// <param name="uid"> Optional content type uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Fetch();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.ContentType"/></returns>
         public ContentType ContentType(string uid = null)
         {
             client.ThrowIfNotLoggedIn();
@@ -609,6 +617,26 @@ namespace Contentstack.Management.Core.Models
             return new ContentType(this, uid);
         }
 
+        /// <summary>
+        /// A <see cref="Models.GlobalField" /> is a reusable field (or group of fields) that you can define once and reuse in any content type within your stack.
+        /// This eliminates the need (and thereby time and efforts) to create the same set of fields repeatedly in multiple content types. 
+        /// </summary>
+        /// <param name="uid"> Optional global field uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).Fetch();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.GlobalField"/></returns>
+        public ContentType GlobalField(string uid = null)
+        {
+            client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+
+            return new ContentType(this, uid);
+        }
         #endregion
 
         #region Throw Error
