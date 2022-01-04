@@ -4,14 +4,15 @@ using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Services.Models
 {
-    internal class BaseModelService: ContentstackService
+    internal class FetchDeleteService: ContentstackService
     {
         #region Internal
 
-        internal BaseModelService(JsonSerializer serializer, Core.Models.Stack stack, ParameterCollection collection)
-            : base(serializer, stack: stack, collection)
+        internal FetchDeleteService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, string httpMethod = "GET")
+            : base(serializer, stack: stack)
         {
-            this.ResourcePath = "stacks";
+            this.ResourcePath = resourcePath;
+            this.HttpMethod = httpMethod;
 
             if (collection != null && collection.Count > 0)
             {
