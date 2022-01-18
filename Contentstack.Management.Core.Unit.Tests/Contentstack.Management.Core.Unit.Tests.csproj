@@ -40,6 +40,7 @@
     <Folder Include="Queryable\" />
     <Folder Include="Core\Services\Organization\" />
     <Folder Include="Core\Services\Stack\" />
+    <Folder Include="Core\Services\Models\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -337,5 +338,6 @@
     <None Remove="TestResults\Coverage-Contentstack-DotNet-Test-Case-30-Apr-2021\icon_search-plus.svg" />
     <None Remove="TestResults\Coverage-Contentstack-DotNet-Test-Case-30-Apr-2021\icon_sponsor.svg" />
     <None Remove="TestResults\Report-Contentstack-DotNet-Test-Case-30-Apr-2021.trx" />
+    <None Remove="Core\Services\Models\" />
   </ItemGroup>
 </Project>

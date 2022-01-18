@@ -48,7 +48,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
                 null,
                 _fixture.Create<string>(),
                 _fixture.Create<string>(),
-                null));
+                _fixture.Create<string>()));
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
                 _fixture.Create<string>(),
                 null,
                 _fixture.Create<string>(),
-                null));
+                _fixture.Create<string>()));
         }
 
         [TestMethod]

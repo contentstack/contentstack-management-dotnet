@@ -1,42 +1,47 @@
 ﻿using System.Collections.Generic;
-using Contentstack.Management.Core.Models;
+using Contentstack.Management.Core.Models.Fields;
 using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models
 {
     public class ContentModeling
     {
+        [JsonProperty(propertyName: "title")]
+        public string Title { get; set; }
+
+        [JsonProperty(propertyName: "uid")]
+        public string Uid { get; set; }
+
         [JsonProperty(propertyName: "field_rules")]
         public List<FieldRules> FieldRules { get; set; }
+
+        [JsonProperty(propertyName: "schema")]
+        public List<Field> Schema { get; set; }
+
+        [JsonProperty(propertyName: "options")]
+        public Option Options { get; set; }
     }
 
-    public class FieldRules
+    public class Option
     {
-        [JsonProperty(propertyName: "match_type")]
-        public string MatchType { get; set; }
-        [JsonProperty(propertyName: "actions")]
-        public List<Action> Actions { get; set; }
-        [JsonProperty(propertyName: "conditions")]
-        public List<Condition> conditions { get; set; }
-    }
 
-    public class Action
-    {
-        [JsonProperty(propertyName: "action")]
-        public string state { get; set; }
-        [JsonProperty(propertyName: "target_field")]
-        public string TargetField { get; set; }
-    }
+        [JsonProperty(propertyName: "title")]
+        public string Title { get; set; }
 
-    public class Condition
-    {
-        [JsonProperty(propertyName: "dataType")]
-        public string DataType { get; set; }
-        [JsonProperty(propertyName: "operand_field")]
-        public string OperandField { get; set; }
-        [JsonProperty(propertyName: "operator")]
-        public string Operator { get; set; }
-        [JsonProperty(propertyName: "value")]
-        public string Value { get; set; }
-    }
+        [JsonProperty(propertyName: "sub_title")]
+        public List<string> SubTitle { get; set; }
+
+        [JsonProperty(propertyName: "singleton")]
+        public bool Singleton { get; set; }
+
+        [JsonProperty(propertyName: "is_page")]
+        public bool IsPage { get; set; }
+
+        [JsonProperty(propertyName: "url_pattern")]
+        public List<FieldRules> UrlPattern { get; set; }
+
+        [JsonProperty(propertyName: "url_prefix")]
+        public List<FieldRules> UrlPrefix { get; set; }
+
+    }    
 }

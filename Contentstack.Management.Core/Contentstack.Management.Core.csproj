@@ -20,6 +20,7 @@
   <ItemGroup>
     <None Remove="Services\Models\" />
     <None Remove="IFieldRules\" />
+    <None Remove="Models\Fields\" />
   </ItemGroup>
   <ItemGroup>
       <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
@@ -42,6 +43,7 @@
     <Folder Include="Queryable\" />
     <Folder Include="Services\Stack\" />
     <Folder Include="Services\Models\" />
+    <Folder Include="Models\Fields\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Net.Http" Version="4.3.4" />

@@ -5,6 +5,7 @@ using Contentstack.Management.Core.Services.Stack;
 using Contentstack.Management.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Queryable;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
 {
@@ -53,8 +54,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Initialize_with_Serializer_Empty_Param_Collection()
         {
             var stack = new Management.Core.Models.Stack(contentstackClient: null);
+            var param = new ParameterCollection();
+            param.Add("limit", 10);
 
-            var fetchStackService = new FetchStackService(serializer, stack, new Management.Core.Queryable.ParameterCollection());
+            var fetchStackService = new FetchStackService(serializer, stack, param);
 
             Assert.IsNotNull(fetchStackService);
             Assert.AreEqual(true, fetchStackService.UseQueryString);

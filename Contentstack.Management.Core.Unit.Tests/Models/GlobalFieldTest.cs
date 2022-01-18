@@ -14,7 +14,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestInitialize]
         public void initialize()
         {
-            _stack = new Stack(new ContentstackClient());
+            _stack = new Stack(new ContentstackClient(), _fixture.Create<string>());
         }
 
         [TestMethod]

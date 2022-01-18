@@ -12,8 +12,13 @@ namespace Contentstack.Management.Core.Models
 
         internal string resourcePath;
 
-        public BaseModel(Stack stack, string fieldName, string uid)
+        public BaseModel(Stack stack, string fieldName, string uid = null)
         {
+            stack.ThrowIfAPIKeyEmpty();
+            if (fieldName == null)
+            {
+                throw new ArgumentNullException("Field name mandatory for service");
+            }
             this.stack = stack;
             this.fieldName = fieldName;
             Uid = uid;
