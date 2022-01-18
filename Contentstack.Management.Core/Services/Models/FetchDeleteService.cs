@@ -8,9 +8,17 @@ namespace Contentstack.Management.Core.Services.Models
     {
         #region Internal
 
-        internal FetchDeleteService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, string httpMethod = "GET")
-            : base(serializer, stack: stack)
+        internal FetchDeleteService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, string httpMethod = "GET", ParameterCollection collection = null)
+            : base(serializer, stack: stack, collection)
         {
+            if (stack.APIKey == null)
+            {
+                throw new ArgumentNullException("Should have API Key to perform this operation.");
+            }
+            if (resourcePath == null)
+            {
+                throw new ArgumentNullException("Should resource path for service.");
+            }
             this.ResourcePath = resourcePath;
             this.HttpMethod = httpMethod;
 

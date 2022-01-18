@@ -30,7 +30,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Initialize_with_Organization_Uid()
         {
             var orgId = _fixture.Create<string>();
-            var orgRoles = new OrganizationRolesService(serializer, orgId, null);
+            var collection = new Management.Core.Queryable.ParameterCollection();
+            collection.Add(_fixture.Create<string>(), false);
+
+            var orgRoles = new OrganizationRolesService(serializer, orgId, collection);
 
             Assert.IsNotNull(orgRoles);
             Assert.AreEqual(true, orgRoles.UseQueryString);

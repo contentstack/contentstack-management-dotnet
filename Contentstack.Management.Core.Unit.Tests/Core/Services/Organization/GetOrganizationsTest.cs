@@ -59,6 +59,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Initialize_with_Serializer_Param_Collection()
         {
             var collection = new Management.Core.Queryable.ParameterCollection();
+            collection.Add(_fixture.Create<string>(), false);
             var getOrganisationService = new GetOrganizations(serializer, collection);
 
             Assert.IsNotNull(getOrganisationService);

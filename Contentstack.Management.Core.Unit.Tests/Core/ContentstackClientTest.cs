@@ -18,6 +18,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Core
             Assert.IsNotNull(contentstackClient.LogManager);
             Assert.IsNotNull(contentstackClient.SerializerSettings);
             Assert.AreEqual(contentstackClient.User().GetType(), typeof(User));
+            Assert.AreEqual(contentstackClient.Organization().GetType(), typeof(Organization));
+            Assert.AreEqual(contentstackClient.Stack().GetType(), typeof(Stack));
             Assert.IsNotNull(contentstackClient.contentstackOptions);
         }
 

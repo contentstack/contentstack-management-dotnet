@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System;
+using AutoFixture;
 using Contentstack.Management.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Contentstack.Management.Core.Unit.Tests.Models
@@ -12,7 +13,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestInitialize]
         public void initialize()
         {
-            _stack = new Stack(new ContentstackClient());
+            _stack = new Stack(new ContentstackClient(), _fixture.Create<string>());
         }
 
         [TestMethod]
@@ -21,6 +22,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentType contentType = new ContentType(_stack, null);
 
             Assert.IsNull(contentType.Uid);
+            Assert.ThrowsException<InvalidOperationException>(() => contentType.Fetch());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => contentType.FetchAsync());
+            Assert.ThrowsException<InvalidOperationException>(() => contentType.Update(new ContentModeling()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => contentType.UpdateAsync(new ContentModeling()));
+            Assert.ThrowsException<InvalidOperationException>(() => contentType.Delete());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => contentType.DeleteAsync());
         }
 
         [TestMethod]
@@ -30,6 +37,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentType contentType = new ContentType(_stack, uid);
 
             Assert.AreEqual(uid, contentType.Uid);
+            Assert.ThrowsException<InvalidOperationException>(() => contentType.Create(new ContentModeling()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => contentType.CreateAsync(new ContentModeling()));
         }
     }
 }

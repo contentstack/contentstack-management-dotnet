@@ -79,6 +79,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         {
             var orgUid = _fixture.Create<string>();
             var collection = new Management.Core.Queryable.ParameterCollection();
+            collection.Add(_fixture.Create<string>(), _fixture.Create<string>());
             var service = new UserInvitationService(serializer, orgUid, "GET", collection);
 
             Assert.IsNotNull(service);
