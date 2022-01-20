@@ -26,25 +26,25 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Should_Throw_on_API_Key_Empty()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => new BaseModel<ContentModeling>(new Stack(null), _fixture.Create<string>()));
+            Assert.ThrowsException<InvalidOperationException>(() => new BaseModel<ContentModelling>(new Stack(null), _fixture.Create<string>()));
         }
 
         [TestMethod]
         public void Should_Throw_on_FieldName_Empty()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new BaseModel<ContentModeling>(_stack, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new BaseModel<ContentModelling>(_stack, null));
         }
 
         [TestMethod]
         public void Initialize_ContentType()
         {
-            BaseModel<ContentModeling> baseModel = new BaseModel<ContentModeling>(_stack, _fixture.Create<string>());
+            BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>());
 
             Assert.IsNull(baseModel.Uid);
             Assert.ThrowsException<InvalidOperationException>(() => baseModel.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => baseModel.Update(new ContentModeling()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.UpdateAsync(new ContentModeling()));
+            Assert.ThrowsException<InvalidOperationException>(() => baseModel.Update(new ContentModelling()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.UpdateAsync(new ContentModelling()));
             Assert.ThrowsException<InvalidOperationException>(() => baseModel.Delete());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.DeleteAsync());
 
@@ -53,20 +53,20 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public void Initialize_BaseModel_With_Uid()
         {
             string uid = _fixture.Create<string>();
-            BaseModel<ContentModeling> baseModel = new BaseModel<ContentModeling>(_stack, _fixture.Create<string>(), uid);
+            BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>(), uid);
 
             Assert.AreEqual(uid, baseModel.Uid);
-            Assert.ThrowsException<InvalidOperationException>(() => baseModel.Create(new ContentModeling()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.CreateAsync(new ContentModeling()));
+            Assert.ThrowsException<InvalidOperationException>(() => baseModel.Create(new ContentModelling()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.CreateAsync(new ContentModelling()));
         }
 
         [TestMethod]
         public void Should_Return_Mock_Response_On_Create()
         {
-            BaseModel<ContentModeling> baseModel = new BaseModel<ContentModeling>(_stack, _fixture.Create<string>());
+            BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>());
             baseModel.resourcePath = "/Path";
 
-            ContentstackResponse response = baseModel.Create(new ContentModeling());
+            ContentstackResponse response = baseModel.Create(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -75,10 +75,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public async System.Threading.Tasks.Task Should_Return_Mock_Response_On_CreateAsync()
         {
-            BaseModel<ContentModeling> baseModel = new BaseModel<ContentModeling>(_stack, _fixture.Create<string>());
+            BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>());
             baseModel.resourcePath = "/Path";
 
-            ContentstackResponse response = await baseModel.CreateAsync(new ContentModeling());
+            ContentstackResponse response = await baseModel.CreateAsync(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -87,10 +87,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Should_Return_Mock_Response_On_Update()
         {
-            BaseModel<ContentModeling> baseModel = new BaseModel<ContentModeling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
+            BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
             baseModel.resourcePath = "/Path";
 
-            ContentstackResponse response = baseModel.Update(new ContentModeling());
+            ContentstackResponse response = baseModel.Update(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -99,10 +99,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public async System.Threading.Tasks.Task Should_Return_Mock_Response_On_UpdateAsync()
         {
-            BaseModel<ContentModeling> baseModel = new BaseModel<ContentModeling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
+            BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
             baseModel.resourcePath = "/Path";
 
-            ContentstackResponse response = await baseModel.UpdateAsync(new ContentModeling());
+            ContentstackResponse response = await baseModel.UpdateAsync(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -111,7 +111,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Should_Return_Mock_Response_On_Fetch()
         {
-            BaseModel<ContentModeling> baseModel = new BaseModel<ContentModeling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
+            BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
             baseModel.resourcePath = "/Path";
 
             ContentstackResponse response = baseModel.Fetch();
@@ -123,7 +123,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public async System.Threading.Tasks.Task Should_Return_Mock_Response_On_FetchAsync()
         {
-            BaseModel<ContentModeling> baseModel = new BaseModel<ContentModeling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
+            BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
             baseModel.resourcePath = "/Path";
 
             ContentstackResponse response = await baseModel.FetchAsync();
@@ -135,7 +135,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Should_Return_Mock_Response_On_Delete()
         {
-            BaseModel<ContentModeling> baseModel = new BaseModel<ContentModeling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
+            BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
             baseModel.resourcePath = "/Path";
 
             ContentstackResponse response = baseModel.Delete();
@@ -147,7 +147,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public async System.Threading.Tasks.Task Should_Return_Mock_Response_On_DeleteAsync()
         {
-            BaseModel<ContentModeling> baseModel = new BaseModel<ContentModeling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
+            BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>(), _fixture.Create<string>());
             baseModel.resourcePath = "/Path";
 
             ContentstackResponse response = await baseModel.DeleteAsync();

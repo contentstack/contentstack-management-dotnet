@@ -20,21 +20,21 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateService<ContentModeling>(
+            Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateService<ContentModelling>(
                 null,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<string>(),
-                new ContentModeling(),
+                new ContentModelling(),
                 _fixture.Create<string>()));
         }
         [TestMethod]
         public void Should_Throw_On_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateService<ContentModeling>(
+            Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateService<ContentModelling>(
                 serializer,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<string>(),
-                new ContentModeling(),
+                new ContentModelling(),
                 _fixture.Create<string>()));
         }
 
@@ -43,11 +43,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         {
             var apiKey = _fixture.Create<string>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateService<ContentModeling>(
+            Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateService<ContentModelling>(
                 serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 null,
-                new ContentModeling(),
+                new ContentModelling(),
                 _fixture.Create<string>()));
         }
 
@@ -56,7 +56,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         {
             var apiKey = _fixture.Create<string>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateService<ContentModeling>(
+            Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateService<ContentModelling>(
                 serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 _fixture.Create<string>(),
@@ -69,11 +69,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         {
             var apiKey = _fixture.Create<string>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateService<ContentModeling>(
+            Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateService<ContentModelling>(
                 serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 _fixture.Create<string>(),
-                new ContentModeling(),
+                new ContentModelling(),
                 null));
         }
 
@@ -85,11 +85,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var fieldName = _fixture.Create<string>();
             var collection = new Management.Core.Queryable.ParameterCollection();
             collection.Add(_fixture.Create<string>(), false);
-            CreateUpdateService<ContentModeling> service = new CreateUpdateService<ContentModeling>(
+            CreateUpdateService<ContentModelling> service = new CreateUpdateService<ContentModelling>(
                 serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 resourcePath,
-                new ContentModeling(),
+                new ContentModelling(),
                 fieldName,
                 collection: collection);
             service.ContentBody();
