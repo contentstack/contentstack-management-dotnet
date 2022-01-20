@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Field
     {
         /// <summary>
