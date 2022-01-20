@@ -2,6 +2,7 @@
 using System.Net;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
+using Contentstack.Management.Core.Unit.Tests.Mokes.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Contentstack.Management.Core.Unit.Tests.Http
@@ -14,6 +15,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
         {
             ContentstackResponse contentstackHttpResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
 
+            Assert.IsNotNull(contentstackHttpResponse.ResponseBody);
             Assert.AreEqual(HttpStatusCode.OK, contentstackHttpResponse.StatusCode);
             Assert.AreEqual(1200, contentstackHttpResponse.ContentLength);
             Assert.AreEqual("application/json", contentstackHttpResponse.ContentType);
@@ -40,13 +42,21 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
         }
 
         [TestMethod]
+        public void Get_Typeed_Response()
+        {
+            ContentstackResponse contentstackHttpResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
+
+            Response response = contentstackHttpResponse.OpenTResponse<Response>();
+            Assert.AreEqual("Login Successful.", response.Notice);
+        }
+
+        [TestMethod]
         public void Get_Header_Value()
         {
             ContentstackResponse contentstackHttpResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
 
             Assert.AreEqual("Tue, 27 Apr 2021 13:28:24 GMT", contentstackHttpResponse.GetHeaderValue("Date"));
             Assert.AreEqual(string.Empty, contentstackHttpResponse.GetHeaderValue("Unknown"));
-
         }
 
         [TestMethod]
@@ -56,7 +66,20 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
 
             Assert.IsTrue(contentstackHttpResponse.IsHeaderPresent("Date"));
             Assert.IsFalse(contentstackHttpResponse.IsHeaderPresent("Unknown"));
+        }
 
+        [TestMethod]
+        public void Should_Throw_Object_Disposed_Exception_On_Object_Dispose()
+        {
+            ContentstackResponse contentstackHttpResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
+
+            contentstackHttpResponse.Dispose();
+
+            Assert.ThrowsException<ObjectDisposedException>(() => contentstackHttpResponse.OpenResponse());
+            Assert.ThrowsException<ObjectDisposedException>(() => contentstackHttpResponse.OpenJObjectResponse());
+            Assert.ThrowsException<ObjectDisposedException>(() => contentstackHttpResponse.OpenTResponse<StackModel>());
+
+            contentstackHttpResponse.Dispose();
         }
     }
 }

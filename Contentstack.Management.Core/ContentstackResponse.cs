@@ -172,7 +172,6 @@ namespace Contentstack.Management.Core
             ThrowIfDisposed();
             JObject jObject = OpenJObjectResponse();
             return jObject.ToObject<TResponse>(_serializer);
-            throw new ObjectDisposedException(GetType().FullName);
         }
 
 
