@@ -42,6 +42,7 @@
     <Folder Include="Core\Services\Stack\" />
     <Folder Include="Core\Services\Models\" />
     <Folder Include="Models\ContentModel\" />
+    <Folder Include="Mokes\Model\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -341,5 +342,6 @@
     <None Remove="TestResults\Report-Contentstack-DotNet-Test-Case-30-Apr-2021.trx" />
     <None Remove="Core\Services\Models\" />
     <None Remove="Models\ContentModel\" />
+    <None Remove="Mokes\Model\" />
   </ItemGroup>
 </Project>
