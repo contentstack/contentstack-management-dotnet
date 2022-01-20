@@ -21,7 +21,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
     {
         private Management.Core.Models.Stack _stack;
 
-        JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
             .Customize(new AutoMoqCustomization());
 
@@ -40,7 +39,29 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Should_Not_Allow_Null_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new QueryService(_stack, new ParameterCollection(), _fixture.Create<string>()));
+            var collection = new Management.Core.Queryable.ParameterCollection();
+
+            collection.Add(_fixture.Create<string>(), false);
+            Assert.ThrowsException<ArgumentNullException>(() => new QueryService(_stack, collection, _fixture.Create<string>()));
+        }
+
+        [TestMethod]
+        public void Should_Create_Content_Body()
+        {
+            var apiKey = _fixture.Create<string>();
+            var resourcePath = _fixture.Create<string>();
+            var collection = new ParameterCollection();
+
+            collection.Add(_fixture.Create<string>(), false);
+            QueryService service = new QueryService(
+                new Management.Core.Models.Stack(new ContentstackClient(), apiKey),
+                collection,
+                resourcePath
+                );
+
+            Assert.IsNotNull(service);
+            Assert.AreEqual("GET", service.HttpMethod);
+            Assert.AreEqual(resourcePath, service.ResourcePath);
         }
     }
 }

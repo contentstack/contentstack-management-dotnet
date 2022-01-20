@@ -260,12 +260,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         public void Return_HttpRequest_On_Create_HttpRequest()
         {
             var contentstackService = new ContentstackService(serializer);
-            contentstackService.Headers["authtoken"] = "application/json";
-            ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
+            var config = new ContentstackClientOptions();
+            config.Authtoken = _fixture.Create<string>();
+            ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), config);
 
             IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("authtoken");
             Assert.IsNotNull(httpClient);
-            Assert.AreEqual("application/json", headerValues.FirstOrDefault());
+            Assert.AreEqual(config.Authtoken, headerValues.FirstOrDefault());
             Assert.IsFalse(httpClient.Request.Headers.Contains("authorization"));
         }
 

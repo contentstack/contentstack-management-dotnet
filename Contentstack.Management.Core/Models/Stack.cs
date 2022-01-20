@@ -67,24 +67,7 @@ namespace Contentstack.Management.Core.Models
 
             return client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
         }
-        /// <summary>
-        /// The Get all stacks call fetches the list of all stacks owned by and shared with a particular user account.
-        /// </summary>
-        /// <example>
-        /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack =  client.Stack();
-        /// ContentstackResponse contentstackResponse = stack.Query().Find();
-        /// //Or
-        /// ContentstackResponse contentstackResponse = await stack.Query().FindAsync();
-        /// </code></pre>
-        /// </example>
-        /// 
-        /// <returns>The <see cref="Query"/>.</returns>
-        public Query Query()
-        {
-            return new Query(this, "stacks");
-        }
+        
         /// <summary>
         /// The Get a single stack call fetches comprehensive details of a specific stack.
         /// </summary>
@@ -630,12 +613,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.GlobalField"/></returns>
-        public ContentType GlobalField(string uid = null)
+        public GlobalField GlobalField(string uid = null)
         {
             client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
 
-            return new ContentType(this, uid);
+            return new GlobalField(this, uid);
         }
         #endregion
 
