@@ -17,7 +17,7 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Fetch();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Query().Find();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Query"/></returns>
