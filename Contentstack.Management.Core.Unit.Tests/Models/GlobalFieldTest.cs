@@ -33,8 +33,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.IsNull(globalField.Uid);
             Assert.ThrowsException<InvalidOperationException>(() => globalField.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => globalField.Update(new ContentModeling()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.UpdateAsync(new ContentModeling()));
+            Assert.ThrowsException<InvalidOperationException>(() => globalField.Update(new ContentModelling()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.UpdateAsync(new ContentModelling()));
             Assert.ThrowsException<InvalidOperationException>(() => globalField.Delete());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.DeleteAsync());
             Assert.AreEqual(globalField.Query().GetType(), typeof(Query));
@@ -47,14 +47,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             GlobalField globalField = new GlobalField(_stack, uid);
 
             Assert.AreEqual(uid, globalField.Uid);
-            Assert.ThrowsException<InvalidOperationException>(() => globalField.Create(new ContentModeling()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.CreateAsync(new ContentModeling()));
+            Assert.ThrowsException<InvalidOperationException>(() => globalField.Create(new ContentModelling()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.CreateAsync(new ContentModelling()));
             Assert.ThrowsException<InvalidOperationException>(() => globalField.Query());
         }
         [TestMethod]
         public void Should_Create_Content_Type()
         {
-            ContentstackResponse response = _stack.GlobalField().Create(new ContentModeling());
+            ContentstackResponse response = _stack.GlobalField().Create(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -63,7 +63,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public async System.Threading.Tasks.Task Should_Create_Content_Type_Async()
         {
-            ContentstackResponse response = await _stack.GlobalField().CreateAsync(new ContentModeling());
+            ContentstackResponse response = await _stack.GlobalField().CreateAsync(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -108,7 +108,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Should_Update_Content_Type()
         {
-            ContentstackResponse response = _stack.GlobalField(_fixture.Create<string>()).Update(new ContentModeling());
+            ContentstackResponse response = _stack.GlobalField(_fixture.Create<string>()).Update(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -117,7 +117,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public async System.Threading.Tasks.Task Should_Update_Content_Type_Async()
         {
-            ContentstackResponse response = await _stack.GlobalField(_fixture.Create<string>()).UpdateAsync(new ContentModeling());
+            ContentstackResponse response = await _stack.GlobalField(_fixture.Create<string>()).UpdateAsync(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());

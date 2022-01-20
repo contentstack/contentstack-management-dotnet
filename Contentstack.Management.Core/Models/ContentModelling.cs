@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Contentstack.Management.Core.Models
 {
     [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
-    public class ContentModeling
+    public class ContentModelling
     {
         [JsonProperty(propertyName: "title")]
         public string Title { get; set; }

@@ -3,7 +3,7 @@ using Contentstack.Management.Core.Queryable;
 
 namespace Contentstack.Management.Core.Models
 {
-    public class ContentType: BaseModel<ContentModeling>
+    public class ContentType: BaseModel<ContentModelling>
     {
         internal ContentType(Stack stack, string uid) 
             : base(stack, "content_type", uid)
@@ -39,7 +39,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override ContentstackResponse Create(ContentModeling model)
+        public override ContentstackResponse Create(ContentModelling model)
         {
             return base.Create(model);
         }
@@ -56,7 +56,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> CreateAsync(ContentModeling model)
+        public override Task<ContentstackResponse> CreateAsync(ContentModelling model)
         {
             return base.CreateAsync(model);
         }
@@ -73,7 +73,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override ContentstackResponse Update(ContentModeling model)
+        public override ContentstackResponse Update(ContentModelling model)
         {
             return base.Update(model);
         }
@@ -90,7 +90,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> UpdateAsync(ContentModeling model)
+        public override Task<ContentstackResponse> UpdateAsync(ContentModelling model)
         {
             return base.UpdateAsync(model);
         }
