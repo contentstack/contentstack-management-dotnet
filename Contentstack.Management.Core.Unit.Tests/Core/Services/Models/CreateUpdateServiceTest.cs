@@ -97,7 +97,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual(resourcePath, service.ResourcePath);
-            Assert.AreEqual($"{{\"{fieldName}\": {{\"title\":null,\"uid\":null,\"field_rules\":null,\"schema\":null,\"options\":null}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"{fieldName}\": {{}}}}", Encoding.Default.GetString(service.Content));
         }
     }
 }

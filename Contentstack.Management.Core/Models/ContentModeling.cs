@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models
 {
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class ContentModeling
     {
         [JsonProperty(propertyName: "title")]
@@ -22,9 +23,9 @@ namespace Contentstack.Management.Core.Models
         public Option Options { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Option
     {
-
         [JsonProperty(propertyName: "title")]
         public string Title { get; set; }
 
