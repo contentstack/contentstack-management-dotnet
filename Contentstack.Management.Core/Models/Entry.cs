@@ -1,14 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Contentstack.Management.Core.Abstractions;
 using Contentstack.Management.Core.Queryable;
 
 namespace Contentstack.Management.Core.Models
 {
-    public class ContentType: BaseModel<ContentModelling>
+    public class Entry: BaseModel<IEntry>
     {
-        internal ContentType(Stack stack, string uid) 
-            : base(stack, "content_type", uid)
+        internal Entry(Stack stack, string contentTyppe, string uid)
+            : base(stack, "entry", uid)
         {
-            resourcePath = uid != null ? "/content_types" : $"/content_types/{uid}";
+            resourcePath = uid != null ? $"/content_types/{contentTyppe}/entries" : $"/content_types/{contentTyppe}/entries/{uid}";
         }
 
         /// <summary>
@@ -17,7 +19,7 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType().Query().Find();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry().Query().Find();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Query"/></returns>
@@ -33,13 +35,13 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentTypeModel model = new ContentTypeModel(); // Add content type schema or fieldrules 
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType().Create(model);
+        /// EntryModel model = new EntryModel(); // Add field values
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry().Create(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override ContentstackResponse Create(ContentModelling model)
+        public override ContentstackResponse Create(IEntry model)
         {
             return base.Create(model);
         }
@@ -50,13 +52,13 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentTypeModel model = new ContentTypeModel(); // Add content type schema or fieldrules
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType().CreateAsync(model);
+        /// EntryModel model = new EntryModel(); // Add field values
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry().CreateAsync(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> CreateAsync(ContentModelling model)
+        public override Task<ContentstackResponse> CreateAsync(IEntry model)
         {
             return base.CreateAsync(model);
         }
@@ -67,13 +69,13 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentTypeModel model = new ContentTypeModel(); // Add content type schema or fieldrules
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Update(model);
+        /// EntryModel model = new EntryModel(); // Add field values
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Update(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override ContentstackResponse Update(ContentModelling model)
+        public override ContentstackResponse Update(IEntry model)
         {
             return base.Update(model);
         }
@@ -84,13 +86,13 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentTypeModel model = new ContentTypeModel(); // Add content type schema or fieldrules
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).UpdateAsync(model);
+        /// EntryModel model = new EntryModel(); // Add field values
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).UpdateAsync(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> UpdateAsync(ContentModelling model)
+        public override Task<ContentstackResponse> UpdateAsync(IEntry model)
         {
             return base.UpdateAsync(model);
         }
@@ -101,7 +103,7 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Fetch();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -116,7 +118,7 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).FetchAsync();
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).FetchAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
@@ -131,7 +133,7 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Delete();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Delete();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -146,35 +148,13 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).DeleteAsync();
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).DeleteAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> DeleteAsync()
         {
             return base.DeleteAsync();
-        }
-
-        /// <summary>
-        /// <see cref="Models.Entry" /> is the actual piece of content created using one of the defined content types.
-        /// </summary>
-        /// <example>
-        /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry().Query().Find();
-        /// </code></pre>
-        /// 
-        /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Fetch();
-        /// </code></pre>
-        /// </example>
-        /// <param name="uid">Optional entry uid for performing entry specific operation</param>
-        /// <returns></returns>
-        public Entry Entry(string uid = null)
-        {
-            ThrowIfUidEmpty();
-            return new Entry(stack, Uid, uid);
         }
     }
 }
