@@ -162,9 +162,11 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Delete Locale will delete specific localized entries by passing the locale codes.
         /// </summary>
+        /// <example>
+        /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// List<string> locales = new List<string>() { "hi-in", "mr-in", "es" }
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).DeleteMultipleLocal();
+        /// List&lt;string&gt; locales = new List&lt;string&gt;(); 
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).DeleteMultipleLocal(locales);
         /// </code></pre>
         /// </example>
         /// <param name="locales">Enter the code of the language to unlocalize the entry of that particular language.</param>
@@ -184,9 +186,11 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Delete Locale will delete specific localized entries by passing the locale codes.
         /// </summary>
+        /// <example>
+        /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// List<string> locales = new List<string>() { "hi-in", "mr-in", "es" }
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).DeleteMultipleLocalAsync();
+        /// List&lt;string&gt; locales = new List&lt;string&gt;(); 
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).DeleteMultipleLocalAsync(locales);
         /// </code></pre>
         /// </example>
         /// <param name="locales">Enter the code of the language to unlocalize the entry of that particular language.</param>
@@ -206,6 +210,8 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Localize an entry request allows you to localize an entry i.e., the entry will cease to fetch data from its fallback language and possess independent content specific to the selected locale.
         /// </summary>
+        /// <example>
+        /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// EntryModel model = new EntryModel(); // Add field values
         /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Localize(model, "hi-in");
@@ -230,6 +236,8 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Localize an entry request allows you to localize an entry i.e., the entry will cease to fetch data from its fallback language and possess independent content specific to the selected locale.
         /// </summary>
+        /// <example>
+        /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// EntryModel model = new EntryModel(); // Add field values
         /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).LocalizeAsync(model, "hi-in");
@@ -254,6 +262,8 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Unlocalize an entry request is used to unlocalize an existing entry. 
         /// </summary>
+        /// <example>
+        /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Unlocalize("hi-in");
         /// </code></pre>
@@ -276,6 +286,8 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Unlocalize an entry request is used to unlocalize an existing entry. 
         /// </summary>
+        /// <example>
+        /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).UnlocalizeAsync("hi-in");
         /// </code></pre>
@@ -298,6 +310,8 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Get languages of an entry call returns the details of all the languages that an entry exists in.
         /// </summary>
+        /// <example>
+        /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Locales();
         /// </code></pre>
@@ -315,6 +329,8 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Get languages of an entry call returns the details of all the languages that an entry exists in.
         /// </summary>
+        /// <example>
+        /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).LocalesAsync();
         /// </code></pre>
@@ -332,6 +348,8 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Get references of an entry call returns all the entries of content types that are referenced by a particular entry.
         /// </summary>
+        /// <example>
+        /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).References();
         /// </code></pre>
@@ -349,6 +367,8 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The Get references of an entry call returns all the entries of content types that are referenced by a particular entry.
         /// </summary>
+        /// <example>
+        /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).ReferencesAsync();
         /// </code></pre>
