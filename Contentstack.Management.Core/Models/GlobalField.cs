@@ -39,9 +39,9 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
         /// <returns></returns>
-        public override ContentstackResponse Create(ContentModelling model)
+        public override ContentstackResponse Create(ContentModelling model, ParameterCollection collection = null)
         {
-            return base.Create(model);
+            return base.Create(model, collection);
         }
 
         /// <summary>
@@ -56,9 +56,9 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> CreateAsync(ContentModelling model)
+        public override Task<ContentstackResponse> CreateAsync(ContentModelling model, ParameterCollection collection = null)
         {
-            return base.CreateAsync(model);
+            return base.CreateAsync(model, collection);
         }
 
         /// <summary>
@@ -73,9 +73,9 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
         /// <returns></returns>
-        public override ContentstackResponse Update(ContentModelling model)
+        public override ContentstackResponse Update(ContentModelling model, ParameterCollection collection = null)
         {
-            return base.Update(model);
+            return base.Update(model, collection);
         }
 
         /// <summary>
@@ -90,9 +90,9 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> UpdateAsync(ContentModelling model)
+        public override Task<ContentstackResponse> UpdateAsync(ContentModelling model, ParameterCollection collection = null)
         {
-            return base.UpdateAsync(model);
+            return base.UpdateAsync(model, collection);
         }
 
         /// <summary>
@@ -105,9 +105,9 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch()
+        public override ContentstackResponse Fetch(ParameterCollection collection = null)
         {
-            return base.Fetch();
+            return base.Fetch(collection);
         }
 
         /// <summary>
@@ -120,9 +120,9 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync()
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
         {
-            return base.FetchAsync();
+            return base.FetchAsync(collection);
         }
 
         /// <summary>
@@ -135,9 +135,9 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete()
+        public override ContentstackResponse Delete(ParameterCollection collection = null)
         {
-            return base.Delete();
+            return base.Delete(collection);
         }
 
         /// <summary>
@@ -150,9 +150,9 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync()
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
         {
-            return base.DeleteAsync();
+            return base.DeleteAsync(collection);
         }
     }
 }

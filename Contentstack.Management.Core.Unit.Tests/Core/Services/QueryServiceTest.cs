@@ -46,6 +46,23 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         }
 
         [TestMethod]
+        public void Should_QueryParam_Collection_null()
+        {
+            var apiKey = _fixture.Create<string>();
+            var resourcePath = _fixture.Create<string>();
+
+            QueryService service = new QueryService(
+                new Management.Core.Models.Stack(new ContentstackClient(), apiKey),
+                null,
+                resourcePath
+                );
+
+            Assert.IsNotNull(service);
+            Assert.AreEqual("GET", service.HttpMethod);
+            Assert.AreEqual(resourcePath, service.ResourcePath);
+        }
+
+        [TestMethod]
         public void Should_Create_Content_Body()
         {
             var apiKey = _fixture.Create<string>();
