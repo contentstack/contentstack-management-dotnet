@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
 
 namespace Contentstack.Management.Core.Models
@@ -24,76 +25,76 @@ namespace Contentstack.Management.Core.Models
             Uid = uid;
         }
 
-        public virtual ContentstackResponse Create(T model)
+        public virtual ContentstackResponse Create(T model, ParameterCollection collection = null)
         {
             ThrowIfUidNotEmpty();
 
-            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName);
+            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
-        public virtual Task<ContentstackResponse> CreateAsync(T model)
+        public virtual Task<ContentstackResponse> CreateAsync(T model, ParameterCollection collection = null)
         {
             ThrowIfUidNotEmpty();
             stack.client.ThrowIfNotLoggedIn();
 
-            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName);
+            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName, collection: collection);
 
             return stack.client.InvokeAsync<CreateUpdateService<T>, ContentstackResponse>(service);
         }
 
-        public virtual ContentstackResponse Update(T model)
+        public virtual ContentstackResponse Update(T model, ParameterCollection collection = null)
         {
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, "PUT");
+            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, "PUT", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
-        public virtual Task<ContentstackResponse> UpdateAsync(T model)
+        public virtual Task<ContentstackResponse> UpdateAsync(T model, ParameterCollection collection = null)
         {
             stack.client.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, "PUT");
+            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, "PUT", collection: collection);
 
             return stack.client.InvokeAsync<CreateUpdateService<T>, ContentstackResponse>(service);
         }
 
-        public virtual ContentstackResponse Fetch()
+        public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
         {
             stack.client.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
-        public virtual Task<ContentstackResponse> FetchAsync()
+        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
         {
             stack.client.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
 
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
-        public virtual ContentstackResponse Delete()
+        public virtual ContentstackResponse Delete(ParameterCollection collection = null)
         {
             stack.client.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
-        public virtual Task<ContentstackResponse> DeleteAsync()
+        public virtual Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
         {
             stack.client.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE", collection: collection);
 
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }

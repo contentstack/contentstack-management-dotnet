@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
 {
     [TestClass]
-    public class FetchDeleteServiceTest
+    public class FetchReferencesServiceTest
     {
         private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
@@ -17,7 +17,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new FetchDeleteService(
+            Assert.ThrowsException<ArgumentNullException>(() => new FetchReferencesService(
                 null,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<string>()));
@@ -26,7 +26,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         [TestMethod]
         public void Should_Throw_On_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new FetchDeleteService(
+            Assert.ThrowsException<ArgumentNullException>(() => new FetchReferencesService(
                 serializer,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<string>()));
@@ -35,7 +35,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         [TestMethod]
         public void Should_Throw_On_Resource_Path_Null()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new FetchDeleteService(
+            Assert.ThrowsException<ArgumentNullException>(() => new FetchReferencesService(
                 serializer,
                 new Management.Core.Models.Stack(null, _fixture.Create<string>()),
                 null));
@@ -50,15 +50,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var collection = new Management.Core.Queryable.ParameterCollection();
 
             collection.Add(_fixture.Create<string>(), false);
-            FetchDeleteService service = new FetchDeleteService(
+            FetchReferencesService service = new FetchReferencesService(
                 serializer,
                 new Management.Core.Models.Stack(null, apiKey),
-                resourcePath,
-                collection: collection);
+                resourcePath);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("GET", service.HttpMethod);
-            Assert.AreEqual(resourcePath, service.ResourcePath);
+            Assert.AreEqual($"{resourcePath}/references", service.ResourcePath);
         }
     }
 }
