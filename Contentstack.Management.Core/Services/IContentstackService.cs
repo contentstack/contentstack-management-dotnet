@@ -87,7 +87,7 @@ namespace Contentstack.Management.Core.Services
         /// <summary>
         /// Gets and Sets the content for this request.
         /// </summary>
-        byte[] Content
+        HttpContent Content
         {
             get;
             set;

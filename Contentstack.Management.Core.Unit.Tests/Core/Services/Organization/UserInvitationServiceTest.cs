@@ -71,7 +71,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
             service.ContentBody();
 
             Assert.IsNotNull(service);
-            Assert.AreEqual("", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual("", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
             service.ContentBody();
 
             Assert.IsNotNull(service);
-            Assert.AreEqual("{\"share\":{}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual("{\"share\":{}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -120,7 +120,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
                 roles.Add($"\"{role}\"");
 
             Assert.IsNotNull(service);
-            Assert.AreEqual($"{{\"share\":{{\"users\":{{\"{userInvitation.Email}\":[{string.Join(",", roles)}]}}}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"share\":{{\"users\":{{\"{userInvitation.Email}\":[{string.Join(",", roles)}]}}}}}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -146,7 +146,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
                 roles.Add($"\"{role}\"");
 
             Assert.IsNotNull(service);
-            Assert.AreEqual($"{{\"share\":{{\"stacks\":{{\"{userInvitation.Email}\":{{\"{stackID}\":[{string.Join(",", roles)}]}}}}}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"share\":{{\"stacks\":{{\"{userInvitation.Email}\":{{\"{stackID}\":[{string.Join(",", roles)}]}}}}}}}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -177,7 +177,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
                 roles.Add($"\"{role}\"");
 
             Assert.IsNotNull(service);
-            Assert.AreEqual($"{{\"share\":{{\"users\":{{\"{userInvitation.Email}\":[{string.Join(",", roles)}]}},\"stacks\":{{\"{userInvitation.Email}\":{{\"{stackID}\":[{string.Join(",", roles)}]}}}}}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"share\":{{\"users\":{{\"{userInvitation.Email}\":[{string.Join(",", roles)}]}},\"stacks\":{{\"{userInvitation.Email}\":{{\"{stackID}\":[{string.Join(",", roles)}]}}}}}}}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -189,7 +189,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
             Assert.IsNotNull(service);
             service.ContentBody();
 
-            Assert.AreEqual("", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual("", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -207,7 +207,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
             service.ContentBody();
 
             Assert.IsNotNull(service);
-            Assert.AreEqual($"{{\"emails\":[{string.Join(",", email)}]}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"emails\":[{string.Join(",", email)}]}}", Encoding.Default.GetString(service.ByteContent));
         }
     }
 }

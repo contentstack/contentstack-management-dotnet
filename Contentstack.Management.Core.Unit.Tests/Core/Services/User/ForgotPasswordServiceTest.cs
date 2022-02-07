@@ -43,7 +43,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
             forgotPasswordService.ContentBody();
 
             Assert.IsNotNull(forgotPasswordService);
-            Assert.AreEqual($"{{\"user\":{{\"email\":\"{_email}\"}}}}", Encoding.Default.GetString(forgotPasswordService.Content));
+            Assert.AreEqual($"{{\"user\":{{\"email\":\"{_email}\"}}}}", Encoding.Default.GetString(forgotPasswordService.ByteContent));
         }
     }
 }

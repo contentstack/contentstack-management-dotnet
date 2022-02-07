@@ -37,7 +37,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
             Assert.IsNotNull(loginService);
             Assert.AreEqual("POST", loginService.HttpMethod);
             Assert.AreEqual("user-session", loginService.ResourcePath);
-            Assert.AreEqual("{\"user\":{\"email\":\"name\",\"password\":\"password\"}}", Encoding.Default.GetString(loginService.Content));
+            Assert.AreEqual("{\"user\":{\"email\":\"name\",\"password\":\"password\"}}", Encoding.Default.GetString(loginService.ByteContent));
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
             loginService.ContentBody();
 
             Assert.IsNotNull(loginService);
-            Assert.AreEqual("{\"user\":{\"email\":\"name\",\"password\":\"password\",\"tfa_token\":\"token\"}}", Encoding.Default.GetString(loginService.Content));
+            Assert.AreEqual("{\"user\":{\"email\":\"name\",\"password\":\"password\",\"tfa_token\":\"token\"}}", Encoding.Default.GetString(loginService.ByteContent));
         }
 
         [TestMethod]

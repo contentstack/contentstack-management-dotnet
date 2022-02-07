@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -50,6 +52,27 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
             Assert.IsNotNull(contentstackService);
             Assert.IsNull(contentstackService.Content);
             Assert.IsNotNull(contentstackService.Serializer);
+        }
+
+        [TestMethod]
+        public void Return_Content_data()
+        {
+            var contentstackService = new ContentstackService(serializer);
+
+            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            {
+                JsonWriter writer = new JsonTextWriter(stringWriter);
+                writer.WriteStartObject();
+                writer.WritePropertyName("user");
+                writer.WriteValue("test_Mock_user");
+                writer.WriteEndObject();
+
+                string snippet = stringWriter.ToString();
+                contentstackService.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+            }
+            contentstackService.WriteContentByte();
+            Assert.IsNotNull(contentstackService.Content);
+
         }
 
         [TestMethod]

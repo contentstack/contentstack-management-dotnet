@@ -54,7 +54,7 @@ namespace Contentstack.Management.Core.Services.Models
 
                     Serializer.Serialize(writer, _typedModel);
                     string snippet = $"{{\"{_fieldName}\": {stringWriter.ToString()}}}";
-                    this.Content = System.Text.Encoding.UTF8.GetBytes(snippet);
+                    this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
                 }
             }
             

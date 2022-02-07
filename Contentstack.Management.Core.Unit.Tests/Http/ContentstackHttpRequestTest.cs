@@ -65,11 +65,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
 
             var testContent = _fixture.Create<string>();
             byte[] bytes = Encoding.ASCII.GetBytes(testContent);
-
+            HttpContent content = new ByteArrayContent(bytes);
             Assert.ThrowsException<ObjectDisposedException>(() => _httpRequest.GetResponse());
             Assert.ThrowsExceptionAsync<ObjectDisposedException>(() => _httpRequest.GetResponseAsync());
             Assert.ThrowsException<ObjectDisposedException>(() => _httpRequest.GetRequestContent());
-            Assert.ThrowsException<ObjectDisposedException>(() => _httpRequest.WriteToRequestBody(bytes, new Dictionary<string, string>()));
+            Assert.ThrowsException<ObjectDisposedException>(() => _httpRequest.WriteToRequestBody(content, new Dictionary<string, string>()));
 
             _httpRequest.Dispose();
         }
@@ -102,8 +102,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
         {
             var testContent = _fixture.Create<string>();
             byte[] bytes = Encoding.ASCII.GetBytes(testContent);
+            HttpContent content = new ByteArrayContent(bytes);
 
-            _httpRequest.WriteToRequestBody(bytes, new Dictionary<string, string>() { { HeadersKey.ContentTypeHeader, "application/json" } });
+            _httpRequest.WriteToRequestBody(content, new Dictionary<string, string>() { { HeadersKey.ContentTypeHeader, "application/json" } });
 
             Assert.AreEqual(testContent, await _httpRequest.GetRequestContent().ReadAsStringAsync());
         }
