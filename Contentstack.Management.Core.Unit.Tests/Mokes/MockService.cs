@@ -26,6 +26,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
 
         string resourcePath;
         byte[] content;
+        HttpContent httpContent;
         string httpMethod = "GET";
         string managementToken = null;
         bool useQueryString = false;
@@ -92,7 +93,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             }
         }
 
-        public byte[] Content
+        public byte[] ByteContent
         {
             get
             {
@@ -103,7 +104,19 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
                 content = value;
             }
         }
-        
+
+        public HttpContent Content
+        {
+            get
+            {
+                return httpContent;
+            }
+            set
+            {
+                httpContent = value;
+            }
+        }
+
         public string HttpMethod
         {
             get
@@ -167,6 +180,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             contentstackHttpRequest.Method = new HttpMethod(HttpMethod);
             contentstackHttpRequest.RequestUri = new Uri("https://localhost.com");
             ContentBody();
+            WriteContentByte();
             return contentstackHttpRequest;
         }
 
@@ -181,7 +195,15 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
                 writer.WriteEndObject();
 
                 string snippet = stringWriter.ToString();
-                this.Content = System.Text.Encoding.UTF8.GetBytes(snippet);
+                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+            }
+        }
+        internal void WriteContentByte()
+        {
+            if (ByteContent != null && ByteContent.Length > 0)
+            {
+                Content = new ByteArrayContent(ByteContent);
+                Content.Headers.ContentLength = ByteContent.Length;
             }
         }
 

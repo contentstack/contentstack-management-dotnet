@@ -38,7 +38,7 @@ namespace Contentstack.Management.Core.Services.Organization
                 writer.WriteValue(_email);
                 writer.WriteEndObject();
                 string snippet = stringWriter.ToString();
-                this.Content = System.Text.Encoding.UTF8.GetBytes(snippet);
+                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
             }
         }
     }

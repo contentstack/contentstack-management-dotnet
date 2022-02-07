@@ -57,7 +57,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             Assert.AreEqual(apiKey, service.Headers["api_key"]);
             var json = JsonConvert.SerializeObject(settings);
 
-            Assert.AreEqual($"{{\"stack_settings\":{json.ToString()}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"stack_settings\":{json.ToString()}}}", Encoding.Default.GetString(service.ByteContent));
         }
     }
 }

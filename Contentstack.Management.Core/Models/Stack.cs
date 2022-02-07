@@ -599,6 +599,25 @@ namespace Contentstack.Management.Core.Models
 
             return new ContentType(this, uid);
         }
+        /// <summary>
+        /// <see cref="Models.Asset"/> efer to all the media files (images, videos, PDFs, audio files, and so on) uploaded in your Contentstack repository for future use. 
+        /// </summary>
+        /// <param name="uid">Optional asset uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.Asset(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Fetch();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Asset"/></returns>
+        public Asset Asset(string uid = null)
+        {
+            client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+
+            return new Asset(this, uid);
+        }
 
         /// <summary>
         /// A <see cref="Models.GlobalField" /> is a reusable field (or group of fields) that you can define once and reuse in any content type within your stack.

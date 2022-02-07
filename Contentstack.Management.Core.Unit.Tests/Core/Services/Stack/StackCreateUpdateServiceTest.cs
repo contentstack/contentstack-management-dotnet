@@ -75,7 +75,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual("/stacks", service.ResourcePath);
-            Assert.AreEqual($"{{\"stack\":{{\"name\":\"{name}\",\"master_locale\":\"{masterLocale}\"}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"stack\":{{\"name\":\"{name}\",\"master_locale\":\"{masterLocale}\"}}}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual("/stacks", service.ResourcePath);
-            Assert.AreEqual($"{{\"stack\":{{\"name\":\"{name}\",\"description\":\"{desc}\",\"master_locale\":\"{masterLocale}\"}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"stack\":{{\"name\":\"{name}\",\"description\":\"{desc}\",\"master_locale\":\"{masterLocale}\"}}}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -105,7 +105,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             Assert.IsNotNull(service);
             Assert.AreEqual("PUT", service.HttpMethod);
             Assert.AreEqual("/stacks", service.ResourcePath);
-            Assert.AreEqual($"{{\"stack\":{{\"name\":\"{name}\"}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"stack\":{{\"name\":\"{name}\"}}}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -120,7 +120,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             Assert.IsNotNull(service);
             Assert.AreEqual("PUT", service.HttpMethod);
             Assert.AreEqual("/stacks", service.ResourcePath);
-            Assert.AreEqual($"{{\"stack\":{{\"name\":\"{name}\",\"description\":\"{desc}\"}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"stack\":{{\"name\":\"{name}\",\"description\":\"{desc}\"}}}}", Encoding.Default.GetString(service.ByteContent));
         }
     }
 }

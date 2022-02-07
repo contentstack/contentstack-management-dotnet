@@ -58,7 +58,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
             service.ContentBody();
 
             Assert.IsNotNull(service);
-            Assert.AreEqual($"{{\"transfer_to\":\"{email}\"}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"transfer_to\":\"{email}\"}}", Encoding.Default.GetString(service.ByteContent));
         }
     }
 }

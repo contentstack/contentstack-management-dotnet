@@ -165,10 +165,9 @@ namespace Contentstack.Management.Core.Http
         /// Writes a stream to the request body.
         /// </summary>
         /// <param name="content">The destination where the content stream is written.</param>
-        public void WriteToRequestBody(byte[] content)
+        public void WriteToRequestBody(HttpContent content)
         {
-            _request.Content = new ByteArrayContent(content);
-            _request.Content.Headers.ContentLength = content.Length;
+            _request.Content = content;
         }
 
         /// <summary>
@@ -186,7 +185,7 @@ namespace Contentstack.Management.Core.Http
         /// </summary>
         /// <param name="content">The destination where the content stream is written.</param>
         /// <param name="contentHeaders">A dictionary of header names and values.</param>
-        public void WriteToRequestBody(byte[] content, IDictionary<string, string> contentHeaders)
+        public void WriteToRequestBody(HttpContent content, IDictionary<string, string> contentHeaders)
         {
             ThrowIfDisposed();
             WriteToRequestBody(content);

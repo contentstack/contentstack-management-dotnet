@@ -55,7 +55,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             service.ContentBody();
 
             Assert.IsNotNull(service);
-            Assert.AreEqual("{\"users\":{}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual("{\"users\":{}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
                 roles.Add($"\"{role}\"");
 
             Assert.IsNotNull(service);
-            Assert.AreEqual($"{{\"users\":{{\"{user.Uid}\":[{string.Join(",", roles)}]}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"users\":{{\"{user.Uid}\":[{string.Join(",", roles)}]}}}}", Encoding.Default.GetString(service.ByteContent));
         }
     }
 }

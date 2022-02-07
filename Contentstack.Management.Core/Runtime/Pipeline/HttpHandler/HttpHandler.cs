@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
 
                 httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config);
 
-                if (requestContext.service.HasRequestBody() && requestContext.service.Content != null && requestContext.service.Content.Length > 0)
+                if (requestContext.service.HasRequestBody() && requestContext.service.Content != null)
                 {
                     httpRequest.WriteToRequestBody(requestContext.service.Content, requestContext.service.Headers);
                 }
@@ -61,7 +61,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
 
                 httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config);
 
-                if (requestContext.service.HasRequestBody() && requestContext.service.Content != null && requestContext.service.Content.Length > 0)
+                if (requestContext.service.HasRequestBody() && requestContext.service.Content != null)
                 {
                     httpRequest.WriteToRequestBody(requestContext.service.Content, requestContext.service.Headers);
                 }

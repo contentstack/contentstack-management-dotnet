@@ -122,7 +122,7 @@ namespace Contentstack.Management.Core.Services.Organization
                         break;
                 }
                 string snippet = stringWriter.ToString();
-                this.Content = System.Text.Encoding.UTF8.GetBytes(snippet);
+                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
             }
         }
         #endregion

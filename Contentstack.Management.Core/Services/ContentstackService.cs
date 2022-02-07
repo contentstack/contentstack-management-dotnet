@@ -7,6 +7,7 @@ using Contentstack.Management.Core.Http;
 using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Queryable;
+using System.Net.Http.Headers;
 
 namespace Contentstack.Management.Core.Services
 {
@@ -20,8 +21,9 @@ namespace Contentstack.Management.Core.Services
         readonly IDictionary<string, string> queryResources = new Dictionary<string, string>(StringComparer.Ordinal);
 
         string resourcePath;
-        byte[] content;
-        //Stream contentStream;
+        byte[] byteContent;
+        HttpContent httpContent;
+
         string httpMethod = "GET";
         string managementToken = null;
         bool useQueryString = false;
@@ -120,26 +122,23 @@ namespace Contentstack.Management.Core.Services
             }
         }
 
-        public byte[] Content
+        public byte[] ByteContent
         {
-            get
-            {
-                return content;
-            }
+            get { return byteContent; }
             set
             {
-                content = value;
+                byteContent = value;
             }
         }
-        //public bool SetContentFromParameters { get; set; }
-        //public Stream ContentStream
-        //{
-        //    get { return contentStream; }
-        //    set
-        //    {
-        //        contentStream = value;
-        //    }
-        //}
+
+        public HttpContent Content
+        {
+            get { return httpContent; }
+            set
+            {
+                httpContent = value;
+            }
+        }
         public string HttpMethod
         {
             get
@@ -200,7 +199,9 @@ namespace Contentstack.Management.Core.Services
         public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config)
         {
             ThrowIfDisposed();
-
+            httpClient.DefaultRequestHeaders
+            .Accept
+            .Add(new MediaTypeWithQualityHeaderValue("image/jpeg"));
             Uri requestUri = ContentstackUtilities.ComposeUrI(config.GetUri(), this);
             Headers["Content-Type"] = "application/json";
 
@@ -218,12 +219,22 @@ namespace Contentstack.Management.Core.Services
             contentstackHttpRequest.RequestUri = requestUri;
 
             ContentBody();
+            WriteContentByte();
 
             contentstackHttpRequest.SetRequestHeaders(Headers);
             return contentstackHttpRequest;
         }
 
         public virtual void ContentBody(){}
+
+        internal void WriteContentByte()
+        {
+            if (ByteContent != null && ByteContent.Length > 0)
+            {
+                Content = new ByteArrayContent(ByteContent);
+                Content.Headers.ContentLength = ByteContent.Length;
+            }
+        }
 
         public virtual void OnResponse(IResponse httpResponse, ContentstackClientOptions config) { }
 

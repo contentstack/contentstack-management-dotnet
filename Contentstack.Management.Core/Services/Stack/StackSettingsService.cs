@@ -29,7 +29,7 @@ namespace Contentstack.Management.Core.Services.Stack
             {
                 case "POST":
                     string snippet = $"{{\"stack_settings\":{JsonConvert.SerializeObject(_settings)}}}";
-                    Content = System.Text.Encoding.UTF8.GetBytes(snippet);
+                    ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
                     break;
                 default:
                     break;

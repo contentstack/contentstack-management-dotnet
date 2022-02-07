@@ -60,7 +60,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
             resetPasswordService.ContentBody();
 
             Assert.IsNotNull(resetPasswordService);
-            Assert.AreEqual($"{{\"user\":{{\"reset_password_token\":\"{resetToken}\",\"password\":\"{password}\",\"password_confirmation\":\"{password}\"}}}}", Encoding.Default.GetString(resetPasswordService.Content));
+            Assert.AreEqual($"{{\"user\":{{\"reset_password_token\":\"{resetToken}\",\"password\":\"{password}\",\"password_confirmation\":\"{password}\"}}}}", Encoding.Default.GetString(resetPasswordService.ByteContent));
         }
     }
 }

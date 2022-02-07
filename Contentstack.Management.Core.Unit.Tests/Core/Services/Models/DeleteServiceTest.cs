@@ -92,7 +92,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             Assert.IsNotNull(service);
             Assert.AreEqual("DELETE", service.HttpMethod);
             Assert.AreEqual(resourcePath, service.ResourcePath);
-            Assert.AreEqual($"{{\"{fieldName}\": {{\"title\":\"{service.model.Title}\"}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"{fieldName}\": {{\"title\":\"{service.model.Title}\"}}}}", Encoding.Default.GetString(service.ByteContent));
         }
     }
 }

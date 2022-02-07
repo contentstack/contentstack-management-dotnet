@@ -64,7 +64,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual("stacks/share", service.ResourcePath);
             Assert.AreEqual(apiKey, service.Headers["api_key"]);
-            Assert.AreEqual($"{{\"emails\":[\"{userInvitation.Email}\"],\"roles\":{{\"{userInvitation.Email}\":[{string.Join(",", roles)}]}}}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"emails\":[\"{userInvitation.Email}\"],\"roles\":{{\"{userInvitation.Email}\":[{string.Join(",", roles)}]}}}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual("stacks/unshare", service.ResourcePath);
-            Assert.AreEqual($"{{\"email\":\"{email}\"}}", Encoding.Default.GetString(service.Content));
+            Assert.AreEqual($"{{\"email\":\"{email}\"}}", Encoding.Default.GetString(service.ByteContent));
         }
     }
 }

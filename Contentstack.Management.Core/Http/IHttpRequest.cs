@@ -46,6 +46,6 @@ namespace Contentstack.Management.Core.Http
         /// </summary>
         /// <param name="content">The content stream to be written.</param>
         /// <param name="contentHeaders">HTTP content headers.</param>
-        void WriteToRequestBody(byte[] content, IDictionary<string, string> contentHeaders);
+        void WriteToRequestBody(HttpContent content, IDictionary<string, string> contentHeaders);
     }
 }

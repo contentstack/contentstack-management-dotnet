@@ -16,6 +16,7 @@
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -343,5 +344,6 @@
     <None Remove="Core\Services\Models\" />
     <None Remove="Models\ContentModel\" />
     <None Remove="Mokes\Model\" />
+    <None Remove="Microsoft.AspNetCore.Http" />
   </ItemGroup>
 </Project>
