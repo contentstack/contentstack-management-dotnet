@@ -37,6 +37,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => Asset.UpdateAsync(_assetModel));
             Assert.ThrowsException<InvalidOperationException>(() => Asset.Delete());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => Asset.DeleteAsync());
+            Assert.ThrowsException<InvalidOperationException>(() => Asset.Publish(_fixture.Create<PublishUnpublishDetails>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => Asset.PublishAsync(_fixture.Create<PublishUnpublishDetails>()));
+            Assert.ThrowsException<InvalidOperationException>(() => Asset.Unpublish(_fixture.Create<PublishUnpublishDetails>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => Asset.UnpublishAsync(_fixture.Create<PublishUnpublishDetails>()));
             Assert.AreEqual(Asset.Query().GetType(), typeof(Query));
         }
 
@@ -138,6 +142,41 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public async System.Threading.Tasks.Task Should_Delete_Asset_Async()
         {
             ContentstackResponse response = await _stack.Asset(_fixture.Create<string>()).DeleteAsync();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Publish_Asset()
+        {
+            ContentstackResponse response = _stack.Asset(_fixture.Create<string>()).Publish(_fixture.Create<PublishUnpublishDetails>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Publish_Asset_Async()
+        {
+            ContentstackResponse response = await _stack.Asset(_fixture.Create<string>()).PublishAsync(_fixture.Create<PublishUnpublishDetails>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+        [TestMethod]
+        public void Should_Unpublish_Asset()
+        {
+            ContentstackResponse response = _stack.Asset(_fixture.Create<string>()).Unpublish(_fixture.Create<PublishUnpublishDetails>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Unpublish_Asset_Async()
+        {
+            ContentstackResponse response = await _stack.Asset(_fixture.Create<string>()).UnpublishAsync(_fixture.Create<PublishUnpublishDetails>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
