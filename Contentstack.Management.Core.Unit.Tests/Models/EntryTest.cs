@@ -47,6 +47,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.LocalesAsync());
             Assert.ThrowsException<InvalidOperationException>(() => entry.References());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.ReferencesAsync());
+            Assert.ThrowsException<InvalidOperationException>(() => entry.Publish(_fixture.Create<PublishUnpublishDetails>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.PublishAsync(_fixture.Create<PublishUnpublishDetails>()));
+            Assert.ThrowsException<InvalidOperationException>(() => entry.Unpublish(_fixture.Create<PublishUnpublishDetails>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.UnpublishAsync(_fixture.Create<PublishUnpublishDetails>()));
             Assert.AreEqual(entry.Query().GetType(), typeof(Query));
         }
 
@@ -237,6 +241,41 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public async System.Threading.Tasks.Task Should_Get_References_Entry_Async()
         {
             ContentstackResponse response = await _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).ReferencesAsync();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Publish_Entry()
+        {
+            ContentstackResponse response = _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).Publish(_fixture.Create<PublishUnpublishDetails>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Publish_Entry_Async()
+        {
+            ContentstackResponse response = await _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).PublishAsync(_fixture.Create<PublishUnpublishDetails>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+        [TestMethod]
+        public void Should_Unpublish_Entry()
+        {
+            ContentstackResponse response = _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).Unpublish(_fixture.Create<PublishUnpublishDetails>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Unpublish_Entry_Async()
+        {
+            ContentstackResponse response = await _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).UnpublishAsync(_fixture.Create<PublishUnpublishDetails>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());

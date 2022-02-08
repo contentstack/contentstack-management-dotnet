@@ -97,6 +97,42 @@ namespace Contentstack.Management.Core.Models
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
+        public virtual ContentstackResponse Publish(PublishUnpublishDetails details)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
+            return stack.client.InvokeSync(service);
+        }
+
+        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
+            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
+        }
+
+        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
+            return stack.client.InvokeSync(service);
+        }
+
+        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
+            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
+        }
+
         #region Throw Error
 
         internal void ThrowIfUidNotEmpty()

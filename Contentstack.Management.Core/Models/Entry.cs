@@ -382,5 +382,89 @@ namespace Contentstack.Management.Core.Models
             var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath);
             return stack.client.InvokeAsync<FetchReferencesService, ContentstackResponse>(service);
         }
+
+        /// <summary>
+        /// The Publish an entry request lets you publish an entry either immediately or schedule it for a later date/time.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Publish(new PublishUnpublishDetails());
+        /// </code></pre>
+        /// </example>
+        /// <param name="details">Publish/Unpublish details.</param>
+        /// <param name="locale">Locale for entry to be publish</param>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string locale = null)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "entry", locale);
+            return stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// The Publish an entry request lets you publish an entry either immediately or schedule it for a later date/time.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).PublishAsync(new PublishUnpublishDetails(), "en-us");
+        /// </code></pre>
+        /// </example>
+        /// <param name="details">Publish/Unpublish details.</param>
+        /// <param name="locale">Locale for entry to be publish</param>
+        /// <returns>The Task</returns>
+        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string locale = null)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "entry", locale);
+            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// The Unpublish an entry call will unpublish an entry at once, and also, gives you the provision to unpublish an entry automatically at a later date/time.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Unpublish(new PublishUnpublishDetails());
+        /// </code></pre>
+        /// </example>
+        /// <param name="details">Publish/Unpublish details.</param>
+        /// <param name="locale">Locale for entry to be publish</param>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string locale = null)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
+            return stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// The Unpublish an entry call will unpublish an entry at once, and also, gives you the provision to unpublish an entry automatically at a later date/time.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).UnpublishAsync(new PublishUnpublishDetails(), "en-us");
+        /// </code></pre>
+        /// </example>
+        /// <param name="details">Publish/Unpublish details.</param>
+        /// <param name="locale">Locale for entry to be publish</param>
+        /// <returns>The Task</returns>
+        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string locale = null)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
+            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
+        }
     }
 }
