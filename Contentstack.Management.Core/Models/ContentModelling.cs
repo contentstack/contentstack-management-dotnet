@@ -39,10 +39,10 @@ namespace Contentstack.Management.Core.Models
         public bool IsPage { get; set; }
 
         [JsonProperty(propertyName: "url_pattern")]
-        public List<FieldRules> UrlPattern { get; set; }
+        public string UrlPattern { get; set; }
 
         [JsonProperty(propertyName: "url_prefix")]
-        public List<FieldRules> UrlPrefix { get; set; }
+        public string UrlPrefix { get; set; }
 
     }    
 }

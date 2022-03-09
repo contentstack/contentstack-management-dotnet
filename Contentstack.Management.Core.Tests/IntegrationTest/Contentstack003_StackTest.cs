@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoFixture;
+using System.IO;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,15 +10,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     [TestClass]
     public class Contentstack003_StackTest
     {
-        private readonly IFixture _fixture = new Fixture();
         private readonly string _locale = "en-us";
         private string _stackName = "DotNet Management Stack";
         private string _updatestackName = "DotNet Management SDK Stack";
         private string _description = "Integration testing Stack for DotNet Management SDK";
-        static string RoleUID = "";
-        static string EmailSync = "testcs@contentstack.com";
-        static string EmailAsync = "testcs_1@contentstack.com";
-        static double Count = -1;
         
         private OrganizationModel _org = Contentstack.Organization;
 
@@ -34,7 +29,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 var response = contentstackResponse.OpenJObjectResponse();
                 Assert.IsNotNull(response);
-                Count = (response["stacks"] as Newtonsoft.Json.Linq.JArray).Count;
             }
             catch (Exception e)
             {
@@ -54,8 +48,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 var response = contentstackResponse.OpenJObjectResponse();
                 Assert.IsNotNull(response);
-                Count = (response["stacks"] as Newtonsoft.Json.Linq.JArray).Count;
-
             }
             catch (Exception e)
             {
@@ -95,10 +87,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = Contentstack.Client.Stack("blt6d48233910fadde8");
                 ContentstackResponse contentstackResponse = stack.Update(_updatestackName);
 
                 var response = contentstackResponse.OpenJObjectResponse();
+                File.WriteAllText("./stackApiKey.txt", contentstackResponse.OpenResponse());
+
                 StackResponse model = contentstackResponse.OpenTResponse<StackResponse>();
                 Contentstack.Stack = model.Stack;
 

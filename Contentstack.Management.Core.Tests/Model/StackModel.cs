@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Tests.Model
 {
@@ -22,5 +24,12 @@ namespace Contentstack.Management.Core.Tests.Model
     public class StackResponse
     {
         public StackModel Stack { get; set; }
+
+        public static StackResponse getStack(JsonSerializer serializer)
+        {
+            string response = File.ReadAllText("./stackApiKey.txt");
+            JObject jObject = JObject.Parse(response);
+            return jObject.ToObject<StackResponse>(serializer);
+        }
     }
 }

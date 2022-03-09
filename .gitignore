@@ -24,3 +24,4 @@ packages/
 */mono**
 */appSettings.json
 api_referece/*
+.sonarqube/

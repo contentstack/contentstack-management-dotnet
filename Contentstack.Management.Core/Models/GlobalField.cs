@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Models
         internal GlobalField(Stack stack, string uid)
             : base(stack, "global_field", uid)
         {
-            resourcePath = uid != null ? "/global_fields" : $"/global_fields/{uid}";
+            resourcePath = uid == null ? "/global_fields" : $"/global_fields/{uid}";
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentModeling model = new ContentModeling() // Add global field schema or fieldrules 
+        /// ContentModeling model = new ContentModeling() // Add global field schema or field rules 
         /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField().Create(model);
         /// </code></pre>
         /// </example>
@@ -50,7 +50,7 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentModeling model = new ContentModeling() // Add global field schema or fieldrules
+        /// ContentModeling model = new ContentModeling() // Add global field schema or field rules
         /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField().CreateAsync(model);
         /// </code></pre>
         /// </example>
@@ -67,7 +67,7 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentModeling model = new ContentModeling() // Add global field schema or fieldrules
+        /// ContentModeling model = new ContentModeling() // Add global field schema or field rules
         /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).Update(model);
         /// </code></pre>
         /// </example>
@@ -84,7 +84,7 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentModeling model = new ContentModeling() // Add global field schema or fieldrules
+        /// ContentModeling model = new ContentModeling() // Add global field schema or field rules
         /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).UpdateAsync(model);
         /// </code></pre>
         /// </example>

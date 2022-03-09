@@ -28,6 +28,11 @@
   <ItemGroup>
     <Folder Include="IntegrationTest\" />
     <Folder Include="Model\" />
+    <Folder Include="Mock\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Mock\*.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.json">

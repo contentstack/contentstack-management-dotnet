@@ -47,7 +47,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, "PUT", collection: collection);
+            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName, "PUT", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -56,7 +56,7 @@ namespace Contentstack.Management.Core.Models
             stack.client.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, "PUT", collection: collection);
+            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName, "PUT", collection: collection);
 
             return stack.client.InvokeAsync<CreateUpdateService<T>, ContentstackResponse>(service);
         }

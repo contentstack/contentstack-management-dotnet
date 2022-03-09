@@ -48,7 +48,15 @@ namespace Contentstack.Management.Core.Services
                     this.Headers.Add("api_key", stack.APIKey);
                 }
 
+                if (!string.IsNullOrEmpty(stack.BranchUid))
+                {
+                    Headers.Add("branch", stack.BranchUid);
+                }
+
                 this.ManagementToken = stack.ManagementToken;
+            }else
+            {
+                this.ManagementToken = null;
             }
             
             this.collection = collection ?? new ParameterCollection();
