@@ -1,0 +1,73 @@
+﻿[
+  {
+    "display_name": "Title",
+    "uid": "title",
+    "data_type": "text",
+    "mandatory": true,
+    "unique": true,
+    "field_metadata": {
+      "_default": true,
+      "version": 3
+    },
+    "non_localizable": false,
+    "multiple": false,
+    "fldUid": "title"
+  },
+  {
+    "display_name": "URL",
+    "uid": "url",
+    "data_type": "text",
+    "mandatory": true,
+    "field_metadata": {
+      "_default": true,
+      "version": 3
+    },
+    "non_localizable": false,
+    "multiple": false,
+    "unique": false,
+    "fldUid": "url"
+  },
+  {
+    "data_type": "text",
+    "display_name": "Single line textbox",
+    "abstract": "Name, title, email address, any short text",
+    "uid": "single_line",
+    "field_metadata": {
+      "description": "",
+      "default_value": ""
+    },
+    "class": "high-lighter",
+    "format": "",
+    "error_messages": { "format": "" },
+    "fldUid": "single_line"
+  },
+  {
+    "data_type": "text",
+    "display_name": "Multi line textbox",
+    "abstract": "Descriptions, paragraphs, long text",
+    "uid": "multi_line",
+    "field_metadata": {
+      "description": "",
+      "default_value": "",
+      "multiline": true
+    },
+    "class": "high-lighter",
+    "format": "",
+    "error_messages": {
+      "format": ""
+    },
+    "fldUid": "multi_line"
+  },
+  {
+    "data_type": "text",
+    "display_name": "Markdown",
+    "abstract": "Input text in markdown language",
+    "uid": "markdown",
+    "field_metadata": {
+      "description": "",
+      "markdown": true
+    },
+    "class": "high-lighter",
+    "fldUid": "markdown"
+  }
+]

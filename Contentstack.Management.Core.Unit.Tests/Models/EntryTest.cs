@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using AutoFixture;
+using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Unit.Tests.Models.ContentModel;
@@ -51,6 +53,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.PublishAsync(_fixture.Create<PublishUnpublishDetails>()));
             Assert.ThrowsException<InvalidOperationException>(() => entry.Unpublish(_fixture.Create<PublishUnpublishDetails>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.UnpublishAsync(_fixture.Create<PublishUnpublishDetails>()));
+            Assert.ThrowsException<InvalidOperationException>(() => entry.Export(_fixture.Create<string>()));
             Assert.AreEqual(entry.Query().GetType(), typeof(Query));
         }
 
@@ -276,6 +279,49 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public async System.Threading.Tasks.Task Should_Unpublish_Entry_Async()
         {
             ContentstackResponse response = await _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).UnpublishAsync(_fixture.Create<PublishUnpublishDetails>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Export_Entry()
+        {
+            var filePath = "entry.json";
+            _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).Export(filePath, new ParameterCollection());
+            var text = File.ReadAllText(filePath);
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), text);
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), text);
+        }
+
+        [TestMethod]
+        public void Should_Export_Throw_OnError()
+        {
+            var client = new ContentstackClient();
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            
+            Assert.ThrowsException<ContentstackErrorException>(() => stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).Export(_fixture.Create<string>(), new ParameterCollection()));
+            
+        }
+
+        [TestMethod]
+        public void Should_Import_Entryr()
+        {
+            var filePath = "entry.json";
+            ContentstackResponse response = _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).Import(filePath, new ParameterCollection());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_ImportAsync_Entry()
+        {
+            var filePath = "entry.json";
+            ContentstackResponse response = await _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).ImportAsync(filePath, new ParameterCollection());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());

@@ -21,6 +21,7 @@
     <None Remove="Services\Models\" />
     <None Remove="IFieldRules\" />
     <None Remove="Models\Fields\" />
+    <None Remove="Services\Models\Versioning\" />
   </ItemGroup>
   <ItemGroup>
       <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
@@ -44,6 +45,7 @@
     <Folder Include="Services\Stack\" />
     <Folder Include="Services\Models\" />
     <Folder Include="Models\Fields\" />
+    <Folder Include="Services\Models\Versioning\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Net.Http" Version="4.3.4" />

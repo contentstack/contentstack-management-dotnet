@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Models
         internal ContentType(Stack stack, string uid) 
             : base(stack, "content_type", uid)
         {
-            resourcePath = uid != null ? "/content_types" : $"/content_types/{uid}";
+            resourcePath = uid == null ? "/content_types" : $"/content_types/{uid}";
         }
 
         /// <summary>

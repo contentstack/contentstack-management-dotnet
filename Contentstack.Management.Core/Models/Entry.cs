@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Abstractions;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -12,7 +15,7 @@ namespace Contentstack.Management.Core.Models
         internal Entry(Stack stack, string contentTyppe, string uid)
             : base(stack, "entry", uid)
         {
-            resourcePath = uid != null ? $"/content_types/{contentTyppe}/entries" : $"/content_types/{contentTyppe}/entries/{uid}";
+            resourcePath = uid == null ? $"/content_types/{contentTyppe}/entries" : $"/content_types/{contentTyppe}/entries/{uid}";
         }
 
         /// <summary>
@@ -32,6 +35,22 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
+        /// The Version on Entry will allow to fetch all version, delete specific version or naming the asset version.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry().Version().GetAll();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Query"/></returns>
+        public Version Version(int? versionNumber = null)
+        {
+            ThrowIfUidEmpty();
+            return new Version(stack, resourcePath, "entry", versionNumber);
+        }
+
+        /// <summary>
         /// The Create entry with JSON RTE request shows you how to add a JSON RTE field while creating a content type.
         /// </summary>
         /// <example>
@@ -41,8 +60,8 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry().Create(model);
         /// </code></pre>
         /// </example>
-        /// <param name="model">IContentType for updating Content Type.</param>
-        /// <returns></returns>
+        /// <param name="model">IEntry for createing Entry.</param>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public override ContentstackResponse Create(IEntry model, ParameterCollection collection = null)
         {
             return base.Create(model, collection);
@@ -58,8 +77,8 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry().CreateAsync(model);
         /// </code></pre>
         /// </example>
-        /// <param name="model">IContentType for updating Content Type.</param>
-        /// <returns></returns>
+        /// <param name="model">IEntry for createing Entry.</param>
+        /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> CreateAsync(IEntry model, ParameterCollection collection = null)
         {
             return base.CreateAsync(model);
@@ -75,8 +94,8 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Update(model);
         /// </code></pre>
         /// </example>
-        /// <param name="model">IContentType for updating Content Type.</param>
-        /// <returns></returns>
+        /// <param name="model">IEntry for updating entry.</param>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public override ContentstackResponse Update(IEntry model, ParameterCollection collection = null)
         {
             return base.Update(model, collection);
@@ -92,8 +111,8 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).UpdateAsync(model);
         /// </code></pre>
         /// </example>
-        /// <param name="model">IContentType for updating Content Type.</param>
-        /// <returns></returns>
+        /// <param name="model">IEntry for updating entry.</param>
+        /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> UpdateAsync(IEntry model, ParameterCollection collection = null)
         {
             return base.UpdateAsync(model, collection);
@@ -465,6 +484,91 @@ namespace Contentstack.Management.Core.Models
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// The Import an entry call is used to import an entry.
+        /// To import an entry, you need to upload a JSON file that has entry data in the format that fits the schema of the content type it is being imported to.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Import(&quot;PATH/TO/FILE&quot;);
+        /// </code></pre>
+        /// </example>
+        /// <param name="filePath">Path to file you want to import</param>
+        /// <param name="collection">Query parameter.</param>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        public ContentstackResponse Import(string filePath, ParameterCollection collection = null)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+
+            var text = File.ReadAllText(filePath);
+            var service = new ImportExportService(stack.client.serializer, stack, resourcePath, true, "POST", collection);
+            service.ByteContent = System.Text.Encoding.UTF8.GetBytes(text);
+
+            return stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// The Import an entry call is used to import an entry.
+        /// To import an entry, you need to upload a JSON file that has entry data in the format that fits the schema of the content type it is being imported to.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).ImportAsync(&quot;PATH/TO/FILE&quot;);
+        /// </code></pre>
+        /// </example>
+        /// <param name="filePath">Path to file you want to import</param>
+        /// <param name="collection">Query parameter.</param>
+        /// <returns>The Task</returns>
+        public Task<ContentstackResponse> ImportAsync(string filePath, ParameterCollection collection = null)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var text = File.ReadAllText(filePath);
+            var service = new ImportExportService(stack.client.serializer, stack, resourcePath, isImport: true, "POST", collection);
+            service.ByteContent = System.Text.Encoding.UTF8.GetBytes(text);
+            return stack.client.InvokeAsync<ImportExportService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// The Export an entry call is used to export an entry. The exported entry data is saved in a downloadable JSON file/
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).Import(&quot;PATH/TO/FILE&quot;);
+        /// </code></pre>
+        /// </example>
+        /// <param name="filePath">Path to file you want to export entry.</param>
+        /// <param name="collection">Query parameter.</param>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        public ContentstackResponse Export(string filePath, ParameterCollection collection = null)
+        {
+            stack.client.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            try
+            {
+                var service = new ImportExportService(stack.client.serializer, stack, resourcePath, collection: collection);
+                ContentstackResponse response = stack.client.InvokeSync(service);
+                if (response.IsSuccessStatusCode)
+                {
+                    using (StreamWriter file = File.CreateText(filePath))
+                    using (JsonTextWriter writer = new JsonTextWriter(file))
+                    {
+                        JObject json = response.OpenJObjectResponse();
+                        json.WriteTo(writer);
+                    }
+                }
+                return response;
+            } catch
+            {
+                throw;
+            }
         }
     }
 }

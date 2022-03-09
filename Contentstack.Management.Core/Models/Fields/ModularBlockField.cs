@@ -18,6 +18,8 @@ namespace Contentstack.Management.Core.Models.Fields
         public string Uid { get; set; }
         [JsonProperty(propertyName: "autoEdit")]
         public bool AutoEdit { get; set; }
+        [JsonProperty(propertyName: "blockType")]
+        public bool BlockType { get; set; }
         [JsonProperty(propertyName: "schema")]
         public List<Field> Schema { get; set; }
     }

@@ -40,7 +40,7 @@ namespace Contentstack.Management.Core.Models.Fields
         /// Lets you enable either the basic, custom, or advanced editor to enter your content.
         /// </summary>
         [JsonProperty(propertyName: "rich_text_type")]
-        public bool RichTextType { get; set; }
+        public string RichTextType { get; set; }
 
         /// <summary>
         /// If you choose the Custom editor, then the options key lets you specify the formatting options you prefer for your RTE toolbar,

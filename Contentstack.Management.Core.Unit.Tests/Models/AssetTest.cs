@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
@@ -54,6 +53,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsException<InvalidOperationException>(() => Asset.Create(_assetModel));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => Asset.CreateAsync(_assetModel));
             Assert.ThrowsException<InvalidOperationException>(() => Asset.Query());
+            Assert.ThrowsException<InvalidOperationException>(() => Asset.Folder());
         }
 
         [TestMethod]

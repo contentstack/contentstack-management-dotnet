@@ -13,13 +13,15 @@ namespace Contentstack.Management.Core.Models
         internal ContentstackClient client;
         public string APIKey { get; private set; }
         public string ManagementToken { get; private set; }
+        public string BranchUid { get; private set; }
 
         #region Constructor
-        public Stack(ContentstackClient contentstackClient, string apiKey = null, string managementToken = null)
+        public Stack(ContentstackClient contentstackClient, string apiKey = null, string managementToken = null, string branchUid = null)
         {
             client = contentstackClient;
             APIKey = apiKey;
             ManagementToken = managementToken;
+            BranchUid = branchUid;
         }
         #endregion
 
@@ -63,7 +65,7 @@ namespace Contentstack.Management.Core.Models
             client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyNotEmpty();
 
-            var service = new FetchStackService(client.serializer, this);
+            var service = new FetchStackService(client.serializer, this, parameters);
 
             return client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
         }
@@ -682,6 +684,29 @@ namespace Contentstack.Management.Core.Models
             }
         }
 
+        internal void ThrowIfAlreadyLoggedIn()
+        {
+            if (!string.IsNullOrEmpty(this.ManagementToken))
+            {
+                throw new InvalidOperationException(CSConstants.YouAreLoggedIn);
+            }
+            else
+            {
+                client.ThrowIfAlreadyLoggedIn();
+            }
+        }
+
+        internal void ThrowIfNotLoggedIn()
+        {
+            if (string.IsNullOrEmpty(this.ManagementToken))
+            {
+                throw new InvalidOperationException(CSConstants.YouAreNotLoggedIn);
+            }
+            else
+            {
+                client.ThrowIfNotLoggedIn();
+            }
+        }
         #endregion
     }
 }
