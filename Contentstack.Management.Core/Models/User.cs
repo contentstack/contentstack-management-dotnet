@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Models
     /// </summary>
     public class User
     {
-        private ContentstackClient _client;
+        private readonly ContentstackClient _client;
 
         #region Constructor
         internal User(ContentstackClient contentstackClient)

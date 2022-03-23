@@ -21,22 +21,22 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// This is http response status code of REST request to Contentstack.
         /// </summary>
-        public HttpStatusCode StatusCode;
+        public HttpStatusCode StatusCode { get; set; }
 
         /// <summary>
         /// This is http response Header of REST request to Contentstack.
         /// </summary>
-        public HttpResponseHeaders Header;
+        public HttpResponseHeaders Header { get; set; }
 
         /// <summary>
         /// This is http response phrase code of REST request to Contentstack.
         /// </summary>
-        public string ReasonPhrase;
+        public string ReasonPhrase { get; set; }
 
         /// <summary>
         /// This is error message.
         /// </summary>
-        public new string Message;
+        public new string Message { get; set; }
 
         /// <summary>
         /// This is error message.

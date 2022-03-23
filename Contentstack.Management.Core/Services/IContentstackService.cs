@@ -98,21 +98,6 @@ namespace Contentstack.Management.Core.Services
         /// </summary>
         string GetHeaderValue(string headerName);
 
-        ///// <summary>
-        ///// Flag that signals that Content was and should be set
-        ///// from the Parameters collection.
-        ///// </summary>
-        //bool SetContentFromParameters { get; set; }
-
-        ///// <summary>
-        ///// Gets and sets the content stream.
-        ///// </summary>
-        //Stream ContentStream
-        //{
-        //    get;
-        //    set;
-        //}
-
         IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config);
         void OnResponse(IResponse httpResponse, ContentstackClientOptions config);
         bool HasRequestBody();

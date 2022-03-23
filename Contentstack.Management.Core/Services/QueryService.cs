@@ -19,7 +19,7 @@ namespace Contentstack.Management.Core.Services
 
             if (string.IsNullOrEmpty(stack.APIKey))
             {
-                throw new ArgumentNullException("Stack API Key");
+                throw new ArgumentNullException("stack", "API Key should be present.");
             }
             if (collection != null && collection.Count > 0)
             {

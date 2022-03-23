@@ -10,8 +10,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
         [TestMethod]
         public void Test_Constants()
         {
-            Assert.AreEqual(HeadersKey.UserAgentHeader, "User-Agent");
-            Assert.AreEqual(HeadersKey.XUserAgentHeader, "X-User-Agent");
+            Assert.AreEqual("User-Agent", HeadersKey.UserAgentHeader);
+            Assert.AreEqual("X-User-Agent", HeadersKey.XUserAgentHeader);
         }
     }
 }

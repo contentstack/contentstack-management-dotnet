@@ -9,7 +9,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
     public class HttpHandler: IPipelineHandler
     {
         #region Private
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
         #endregion
 
         #region Constructor
@@ -41,8 +41,12 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
 
                 return await System.Threading.Tasks.Task.FromResult<T>((T)executionContext.ResponseContext.httpResponse);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                if (LogManager != null)
+                {
+                    LogManager.Error(e, "Http request error", new object());
+                }
                 throw;
             }
             finally
@@ -70,8 +74,12 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
 
                 executionContext.RequestContext.service.OnResponse(executionContext.ResponseContext.httpResponse, requestContext.config);
             }
-            catch
+            catch (Exception e)
             {
+                if (LogManager != null)
+                {
+                    LogManager.Error(e, "Http request error", new object());
+                }
                 throw;
             }
             finally

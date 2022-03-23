@@ -27,10 +27,9 @@ namespace Contentstack.Management.Core.Log
         public bool IsInfoEnabled { get; set; } = true;
 
         #region Constructor
-        public Logger(Type declaringType)
+        protected Logger(Type declaringType)
         {
             DeclaringType = declaringType;
-            IsEnabled = true;
         }
         #endregion
 

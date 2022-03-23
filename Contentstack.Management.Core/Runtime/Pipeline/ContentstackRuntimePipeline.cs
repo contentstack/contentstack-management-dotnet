@@ -11,7 +11,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
         #region Private members
 
         bool _disposed;
-        ILogManager _logManager;
+        readonly ILogManager _logManager;
 
         // The top-most handler in the pipeline.
         IPipelineHandler _handler;
@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
                 throw new ArgumentNullException("handler");
 
             if (logManager == null)
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException("logManager");
 
             _handler = handler;
             _handler.LogManager = logManager;
@@ -87,7 +87,6 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
                 while (handler != null)
                 {
                     //TODO to add multiple Handler Dispose
-                    //var innerHandler = handler.InnerHandler;
                     var disposable = handler as IDisposable;
                     if (disposable != null)
                     {

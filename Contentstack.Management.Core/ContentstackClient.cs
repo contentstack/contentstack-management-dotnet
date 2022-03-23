@@ -40,7 +40,7 @@ namespace Contentstack.Management.Core
 
         #region Public
 
-        public LogManager LogManager;
+        public LogManager LogManager { get; set; }
         /// <summary>
         /// Get and Set method for deserialization.
         /// </summary>
@@ -142,15 +142,14 @@ namespace Contentstack.Management.Core
             {
                 _httpClient.Timeout = contentstackOptions.Timeout;
                 _httpClient.MaxResponseContentBufferSize = contentstackOptions.MaxResponseContentBufferSize;
-            }
-
-            if (contentstackOptions.DisableLogging)
-            {
-                LogManager = LogManager.EmptyLogger;
-            }
-            else
-            {
-                LogManager = LogManager.GetLogManager(this.GetType());
+                if (contentstackOptions.DisableLogging)
+                {
+                    LogManager = LogManager.EmptyLogger;
+                }
+                else
+                {
+                    LogManager = LogManager.GetLogManager(this.GetType());
+                }
             }
 
             this.SerializerSettings.DateParseHandling = DateParseHandling.None;
@@ -158,7 +157,7 @@ namespace Contentstack.Management.Core
             this.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
             this.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
-            foreach (Type t in CSMJsonConverterAttribute.GetCustomAttribute(typeof(CSMJsonConverterAttribute)))
+            foreach (Type t in CsmJsonConverterAttribute.GetCustomAttribute(typeof(CsmJsonConverterAttribute)))
             {
                 SerializerSettings.Converters.Add((JsonConverter)Activator.CreateInstance(t));
             }

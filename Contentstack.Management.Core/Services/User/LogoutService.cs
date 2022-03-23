@@ -5,7 +5,7 @@ namespace Contentstack.Management.Core.Services.User
 {
     internal class LogoutService : ContentstackService
     {
-        private string _authtoken;
+        private readonly string _authtoken;
 
         #region Constructor
         public LogoutService(JsonSerializer serializer, string authtoken): base(serializer)

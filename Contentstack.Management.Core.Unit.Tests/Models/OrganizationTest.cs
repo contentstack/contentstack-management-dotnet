@@ -24,7 +24,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         {
             Organization organization = new Organization(client);
 
-            Assert.IsNull(organization.uid);
+            Assert.IsNull(organization.Uid);
             Assert.IsNotNull(organization);
         }
 
@@ -33,7 +33,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         {
             Organization organization = new Organization(client, "org_uid");
 
-            Assert.AreEqual("org_uid", organization.uid);
+            Assert.AreEqual("org_uid", organization.Uid);
             Assert.IsNotNull(organization);
         }
 

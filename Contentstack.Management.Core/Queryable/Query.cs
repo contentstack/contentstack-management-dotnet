@@ -8,19 +8,19 @@ namespace Contentstack.Management.Core.Queryable
 {
     public class Query
     {
-        private Stack _stack;
-        private string _resourcePath;
-        private ParameterCollection _collection = new ParameterCollection();
+        private readonly Stack _stack;
+        private readonly string _resourcePath;
+        private readonly ParameterCollection _collection = new ParameterCollection();
         internal Query(Stack stack, string resourcePath)
         {
             if(stack == null)
             {
-                throw new ArgumentNullException("Stack can not be null");
+                throw new ArgumentNullException("stack", "Stack can not be null");
             }
 
             if (resourcePath== null)
             {
-                throw new ArgumentNullException("Respource path can not be null");
+                throw new ArgumentNullException("resourcePath", "Respource path can not be null");
             }
             _stack = stack;
             _resourcePath = resourcePath;

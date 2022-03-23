@@ -7,24 +7,13 @@ namespace Contentstack.Management.Core.Models
 {
     public class AssetModel: IUploadInterface
     {
-        public string Title;
-        public string Description;
-        public string ParentUID;
-        public string Tags;
-        public string FileName;
-        public string ContentType
-        {
-            get
-            {
-                return contentType;
-            }
-            set
-            {
-                contentType = value;
-            }
-        }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string ParentUID { get; set; }
+        public string Tags { get; set; }
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
 
-        internal string contentType;
         internal ByteArrayContent byteArray;
 
         public AssetModel(string fileName, string filePath, string contentType, string title = null, string description = null, string parentUID = null, string tags = null):
@@ -40,11 +29,11 @@ namespace Contentstack.Management.Core.Models
         {
             if (fileName == null)
             {
-                throw new ArgumentNullException("File name can not be null.");
+                throw new ArgumentNullException("fileName", "File name can not be null.");
             }
             if (byteArray == null)
             {
-                throw new ArgumentNullException("Uploading content can not be null.");
+                throw new ArgumentNullException("byteArray", "Uploading content can not be null.");
             }
             FileName = fileName;
             Title = title;

@@ -17,7 +17,7 @@ namespace Contentstack.Management.Core.Services.Stack
         {
             if (string.IsNullOrEmpty(stack.APIKey))
             {
-                throw new ArgumentNullException("apiKey");
+                throw new ArgumentNullException("stack", "API Key should be present.");
             }
             HttpMethod = "POST";
         }

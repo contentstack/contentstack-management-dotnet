@@ -19,8 +19,8 @@ namespace Contentstack.Management.Core
         string[] _headerNames;
         Dictionary<string, string> _headers;
         HashSet<string> _headerNamesSet;
-        HttpResponseMessage _response;
-        JsonSerializer _serializer;
+        private readonly HttpResponseMessage _response;
+        private readonly JsonSerializer _serializer;
 
         #region Public
         /// <summary>
@@ -102,22 +102,22 @@ namespace Contentstack.Management.Core
             List<string> headerNames = new List<string>();
             _headers = new Dictionary<string, string>(10, StringComparer.OrdinalIgnoreCase);
 
-            foreach (KeyValuePair<string, IEnumerable<string>> kvp in response.Headers)
+            foreach (string key in response.Headers.Select((kvp) => kvp.Key))
             {
-                headerNames.Add(kvp.Key);
-                var headerValue = GetFirstHeaderValue(response.Headers, kvp.Key);
-                _headers.Add(kvp.Key, headerValue);
+                headerNames.Add(key);
+                var headerValue = GetFirstHeaderValue(response.Headers, key);
+                _headers.Add(key, headerValue);
             }
 
             if (response.Content != null)
             {
-                foreach (var kvp in response.Content.Headers)
+                foreach (var key in response.Content.Headers.Select((kvp) => kvp.Key))
                 {
-                    if (!headerNames.Contains(kvp.Key))
+                    if (!headerNames.Contains(key))
                     {
-                        headerNames.Add(kvp.Key);
-                        var headerValue = GetFirstHeaderValue(response.Content.Headers, kvp.Key);
-                        _headers.Add(kvp.Key, headerValue);
+                        headerNames.Add(key);
+                        var headerValue = GetFirstHeaderValue(response.Content.Headers, key);
+                        _headers.Add(key, headerValue);
                     }
                 }
             }

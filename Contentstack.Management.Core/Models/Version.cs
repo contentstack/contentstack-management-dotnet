@@ -7,13 +7,16 @@ namespace Contentstack.Management.Core.Models
 {
     public class Version
     {
-        public int? Number;
         internal Stack stack;
         internal string resourcePath;
         internal string fieldName;
+
+        public int? Number { get; set; }
+
         public Version(Stack stack, string resourcePath, string fieldName, int? number)
         {
-            this.resourcePath = number == null ? $"{resourcePath}/versions": $"{resourcePath}/versions/{Number}/name";
+            this.resourcePath = number == null ? $"{resourcePath}/versions": $"{resourcePath}/versions/{number}/name";
+            Number = number;
             this.stack = stack;
             this.fieldName = fieldName;
         }

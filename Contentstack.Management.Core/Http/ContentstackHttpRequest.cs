@@ -15,9 +15,9 @@ namespace Contentstack.Management.Core.Http
     {
         #region Private
         private bool _disposed = false;
-        private HttpClient _httpClient;
-        private HttpRequestMessage _request;
-        private JsonSerializer _serializer;
+        private readonly HttpClient _httpClient;
+        private readonly HttpRequestMessage _request;
+        private readonly JsonSerializer _serializer;
         #endregion
 
         #region Public
@@ -137,12 +137,9 @@ namespace Contentstack.Management.Core.Http
             }
             catch (HttpRequestException httpException)
             {
-                if (httpException.InnerException != null)
+                if (httpException.InnerException is IOException)
                 {
-                    if (httpException.InnerException is IOException)
-                    {
-                        throw httpException.InnerException;
-                    }
+                    throw httpException.InnerException;
                 }
                 throw;
             }

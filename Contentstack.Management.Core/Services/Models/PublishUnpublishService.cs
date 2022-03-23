@@ -16,22 +16,22 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
             }
 
             if (details == null)
             {
-                throw new ArgumentNullException("Should publish details for service.");
+                throw new ArgumentNullException("details", "Should publish details for service.");
             }
 
             if (resourcePath == null)
             {
-                throw new ArgumentNullException("Should resource path for service.");
+                throw new ArgumentNullException("resourcePath", "Should resource path for service.");
             }
 
             if (fieldName == null)
             {
-                throw new ArgumentNullException("Should field name for service.");
+                throw new ArgumentNullException("fieldName", "Should field name for service.");
             }
 
             this.ResourcePath = resourcePath;
@@ -54,8 +54,8 @@ namespace Contentstack.Management.Core.Services.Models
                 {
                     writer.WritePropertyName("locales");
                     writer.WriteStartArray();
-                    foreach (string locale in details.Locales)
-                        writer.WriteValue(locale);
+                    foreach (string code in details.Locales)
+                        writer.WriteValue(code);
 
                     writer.WriteEndArray();
                 }

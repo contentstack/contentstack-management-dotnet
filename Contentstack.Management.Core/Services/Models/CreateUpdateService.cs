@@ -8,8 +8,8 @@ namespace Contentstack.Management.Core.Services.Models
 {
     internal class CreateUpdateService<T> : ContentstackService
     {
-        private T _typedModel;
-        private string fieldName;
+        private readonly T _typedModel;
+        private readonly string fieldName;
         #region Internal
 
         internal CreateUpdateService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, T dataModel, string fieldName, string httpMethod = "POST", ParameterCollection collection = null)
@@ -17,19 +17,19 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
             }
             if (resourcePath == null)
             {
-                throw new ArgumentNullException("Should resource path for service.");
+                throw new ArgumentNullException("resourcePath", "Should resource path for service.");
             }
             if (dataModel == null)
             {
-                throw new ArgumentNullException("Data model is mandatory for service");
+                throw new ArgumentNullException("dataModel", "Data model is mandatory for service");
             }
             if (fieldName == null)
             {
-                throw new ArgumentNullException("Name mandatory for service");
+                throw new ArgumentNullException("fieldName", "Name mandatory for service");
             }
             this.ResourcePath = resourcePath;
             this.HttpMethod = httpMethod;
