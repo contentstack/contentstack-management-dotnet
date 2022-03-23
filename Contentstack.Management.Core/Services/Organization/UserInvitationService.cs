@@ -50,8 +50,6 @@ namespace Contentstack.Management.Core.Services.Organization
             this._removeUsers = emails;
         }
 
-        
-
         public override void ContentBody()
         {
             using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
@@ -59,70 +57,85 @@ namespace Contentstack.Management.Core.Services.Organization
                 switch (this.HttpMethod)
                 {
                     case "POST":
-                        {
-                            JsonWriter writer = new JsonTextWriter(stringWriter);
-                            writer.WriteStartObject();
-                            writer.WritePropertyName("share");
-                            writer.WriteStartObject();
-                            if (this._organizationInvite != null && this._organizationInvite.Count > 0)
-                            {
-                                writer.WritePropertyName("users");
-                                writer.WriteStartObject();
-                                foreach (UserInvitation invitation in this._organizationInvite)
-                                {
-                                    writer.WritePropertyName(invitation.Email);
-                                    writer.WriteStartArray();
-                                    foreach (string role in invitation.Roles)
-                                        writer.WriteValue(role);
-
-                                    writer.WriteEndArray();
-
-                                }
-                                writer.WriteEndObject();
-
-                            }
-                            if (this._stackInvite != null && this._stackInvite.Keys.Count > 0)
-                            {
-                                writer.WritePropertyName("stacks");
-                                writer.WriteStartObject();
-                                foreach (string key in this._stackInvite.Keys)
-                                {
-                                    foreach (UserInvitation invitation in this._stackInvite[key])
-                                    {
-                                        writer.WritePropertyName(invitation.Email);
-                                        writer.WriteStartObject();
-                                        writer.WritePropertyName(key);
-                                        writer.WriteStartArray();
-                                        foreach (string role in invitation.Roles)
-                                            writer.WriteValue(role);
-                                        writer.WriteEndArray();
-                                        writer.WriteEndObject();
-                                    }
-                                }
-                                writer.WriteEndObject();
-                            }
-                            writer.WriteEndObject();
-                            writer.WriteEndObject();
-                        }
+                        addUserJsonWriter(stringWriter);
                         break;
                     case "DELETE":
-                        if (this._removeUsers != null && this._removeUsers.Count > 0)
-                        {
-                            JsonWriter writer = new JsonTextWriter(stringWriter);
-                            writer.WriteStartObject();
-                            writer.WritePropertyName("emails");
-                            writer.WriteStartArray();
-                            foreach (string email in _removeUsers)
-                                writer.WriteValue(email);
-                            writer.WriteEndArray();
-                            writer.WriteEndObject();
-                        }
+                        removeUserJsonWriter(stringWriter);
                         break;
                     default:
                         break;
                 }
                 string snippet = stringWriter.ToString();
                 this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+            }
+        }
+        #endregion
+
+        #region Private
+        private void removeUserJsonWriter(StringWriter stringWriter)
+        {
+            if (this._removeUsers != null && this._removeUsers.Count > 0)
+            {
+                JsonWriter writer = new JsonTextWriter(stringWriter);
+                writer.WriteStartObject();
+                writer.WritePropertyName("emails");
+                writer.WriteStartArray();
+                foreach (string email in _removeUsers)
+                    writer.WriteValue(email);
+                writer.WriteEndArray();
+                writer.WriteEndObject();
+            }
+        }
+
+        private void addUserJsonWriter(StringWriter stringWriter)
+        {
+            JsonWriter writer = new JsonTextWriter(stringWriter);
+            writer.WriteStartObject();
+            writer.WritePropertyName("share");
+            writer.WriteStartObject();
+            if (this._organizationInvite != null && this._organizationInvite.Count > 0)
+            {
+                writer.WritePropertyName("users");
+                writer.WriteStartObject();
+                foreach (UserInvitation invitation in this._organizationInvite)
+                {
+                    writer.WritePropertyName(invitation.Email);
+                    writer.WriteStartArray();
+                    foreach (string role in invitation.Roles)
+                        writer.WriteValue(role);
+
+                    writer.WriteEndArray();
+
+                }
+                writer.WriteEndObject();
+
+            }
+            if (this._stackInvite != null && this._stackInvite.Keys.Count > 0)
+            {
+                writer.WritePropertyName("stacks");
+                writer.WriteStartObject();
+                foreach (string key in this._stackInvite.Keys)
+                {
+                    UserInvitationJsonWriter(writer, key);
+                }
+                writer.WriteEndObject();
+            }
+            writer.WriteEndObject();
+            writer.WriteEndObject();
+        }
+
+        private void UserInvitationJsonWriter(JsonWriter writer, string key)
+        {
+            foreach (UserInvitation invitation in this._stackInvite[key])
+            {
+                writer.WritePropertyName(invitation.Email);
+                writer.WriteStartObject();
+                writer.WritePropertyName(key);
+                writer.WriteStartArray();
+                foreach (string role in invitation.Roles)
+                    writer.WriteValue(role);
+                writer.WriteEndArray();
+                writer.WriteEndObject();
             }
         }
         #endregion
