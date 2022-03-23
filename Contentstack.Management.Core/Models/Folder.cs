@@ -8,9 +8,10 @@ namespace Contentstack.Management.Core.Models
     public class Folder
     {
         internal Stack stack;
-        public string Uid;
-
         internal string resourcePath;
+
+        public string Uid { get; set; }
+
 
         internal Folder(Stack stack, string uid = null)
         {

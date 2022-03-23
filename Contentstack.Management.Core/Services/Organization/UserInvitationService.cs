@@ -24,7 +24,7 @@ namespace Contentstack.Management.Core.Services.Organization
 
             if (string.IsNullOrEmpty(httpMethod))
             {
-                throw new ArgumentNullException("HttpMethod");
+                throw new ArgumentNullException("httpMethod");
             }
             if (collection != null && collection.Count > 0)
             {

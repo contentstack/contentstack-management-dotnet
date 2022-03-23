@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 namespace Contentstack.Management.Core.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class CSMJsonConverterAttribute : Attribute
+    public class CsmJsonConverterAttribute : Attribute
     {
 
         private readonly string name;
@@ -44,7 +44,7 @@ namespace Contentstack.Management.Core.Attributes
         /// </summary>
         /// <param name="name">Name for the JsonConverter</param>
         /// <param name="isAutoloadEnable"> To enable autoload in ContentstackClient. Default is Enable.</param>
-        public CSMJsonConverterAttribute(string name, bool isAutoloadEnable = true)
+        public CsmJsonConverterAttribute(string name, bool isAutoloadEnable = true)
         {
             this.name = name;
             this.isAutoloadEnable = isAutoloadEnable;
@@ -56,23 +56,22 @@ namespace Contentstack.Management.Core.Attributes
                 List<Type> result = new List<Type>();
                 foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    GetType(assembly, attribute, result);
+                    GetType(assembly, result);
                 }
                 _types[attribute] = result;
             }
             return _types[attribute].ToArray();
         }
 
-        private static void GetType(Assembly assembly, Type attribute, List<Type> types)
+        private static void GetType(Assembly assembly, List<Type> types)
         {
             try
             {
                 foreach (Type type in assembly.GetTypes())
                 {
-                    var objectType = type.GetCustomAttributes(attribute, true);
-                    foreach (var attr in type.GetCustomAttributes(typeof(CSMJsonConverterAttribute)))
+                    foreach (var attr in type.GetCustomAttributes(typeof(CsmJsonConverterAttribute)))
                     {
-                        CSMJsonConverterAttribute ctdAttr = attr as CSMJsonConverterAttribute;
+                        CsmJsonConverterAttribute ctdAttr = attr as CsmJsonConverterAttribute;
                         Trace.Assert(ctdAttr != null, "cast is null");
                         if (ctdAttr.isAutoloadEnable)
                         {
@@ -81,7 +80,11 @@ namespace Contentstack.Management.Core.Attributes
                     }
                 }
             }
-            catch { }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
     

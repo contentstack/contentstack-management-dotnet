@@ -7,7 +7,7 @@ namespace Contentstack.Management.Core.Services.Organization
 {
     internal class TransferOwnershipService : ContentstackService
     {
-        private string _email;
+        private readonly string _email;
 
         #region Internal
         internal TransferOwnershipService(JsonSerializer serializer, string uid, string email) : base(serializer)

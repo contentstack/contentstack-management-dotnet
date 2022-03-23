@@ -11,19 +11,19 @@ namespace Contentstack.Management.Core.Services.Stack
     internal class UpdateUserRoleService : ContentstackService
     {
         #region Internal
-        private List<UserInvitation> _users;
+        private readonly List<UserInvitation> _users;
 
         internal UpdateUserRoleService(JsonSerializer serializer, Core.Models.Stack stack, List<UserInvitation>userInvitation)
             : base(serializer, stack)
         {
             if (userInvitation == null)
             {
-                throw new ArgumentNullException("Uid and roles should be present.");
+                throw new ArgumentNullException("userInvitation", "Uid and roles should be present.");
             }
 
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("API Key should be present.");
+                throw new ArgumentNullException("stack", "API Key should be present.");
             }
             this.ResourcePath = "stacks/users/roles";
             this.HttpMethod = "POST";

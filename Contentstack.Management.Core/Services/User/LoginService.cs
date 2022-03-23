@@ -11,8 +11,8 @@ namespace Contentstack.Management.Core.Services.User
     internal class LoginService : ContentstackService
     {
         #region Private
-        private ICredentials _credentials;
-        private string _token;
+        private readonly ICredentials _credentials;
+        private readonly string _token;
         #endregion
 
         #region Constructor

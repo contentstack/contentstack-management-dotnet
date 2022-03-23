@@ -7,9 +7,10 @@ namespace Contentstack.Management.Core.Services.Stack
 {
     internal class StackCreateUpdateService : ContentstackService
     {
-        private string _name;
-        private string _masterLocale;
-        private string _description;
+        private readonly string _name;
+        private readonly string _masterLocale;
+        private readonly string _description;
+
         #region Internal
         internal StackCreateUpdateService(
             JsonSerializer serializer,
@@ -34,18 +35,18 @@ namespace Contentstack.Management.Core.Services.Stack
             {
                 if (masterLocale == null)
                 {
-                    throw new ArgumentNullException("Should have Master Locale while creating the Stack.");
+                    throw new ArgumentNullException("masterLocale", "Should have Master Locale while creating the Stack.");
                 }
                 if (_name == null)
                 {
-                    throw new ArgumentNullException("Name for stack is mandatory while creating the Stack.");
+                    throw new ArgumentNullException("name", "Name for stack is mandatory while creating the Stack.");
                 }
                 this.Headers.Add("organization_uid", organizationUid);
                 this.HttpMethod = "POST";
             }
             else 
             {
-                throw new ArgumentNullException("Should have API Key or Organization UID to perform this operation.");
+                throw new ArgumentNullException("stack", "Should have API Key or Organization UID to perform this operation.");
             }
         }
 

@@ -7,8 +7,8 @@ namespace Contentstack.Management.Core.Services.Models
 {
     internal class CreateUpdateFolderService : ContentstackService
     {
-        private string _name;
-        private string _parentUId;
+        private readonly string _name;
+        private readonly string _parentUId;
 
         #region Internal
         internal CreateUpdateFolderService(
@@ -21,11 +21,11 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
             }
             if (name == null)
             {
-                throw new ArgumentNullException("Should have folder name.");
+                throw new ArgumentNullException("name", "Should have folder name.");
             }
             this.ResourcePath = "/assets/folders";
 

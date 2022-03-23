@@ -15,19 +15,19 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
             }
             if (resourcePath == null)
             {
-                throw new ArgumentNullException("Should have resource path for service.");
+                throw new ArgumentNullException("resourcePath", "Should have resource path for service.");
             }
             if (fieldName == null)
             {
-                throw new ArgumentNullException("Should have field name for service.");
+                throw new ArgumentNullException("fieldName", "Should have field name for service.");
             }
             if (model == null)
             {
-                throw new ArgumentNullException("Should have model for service.");
+                throw new ArgumentNullException("model", "Should have model for service.");
             }
             this.ResourcePath = resourcePath;
             this.HttpMethod = "DELETE";

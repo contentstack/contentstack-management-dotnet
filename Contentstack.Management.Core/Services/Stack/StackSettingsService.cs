@@ -10,13 +10,13 @@ namespace Contentstack.Management.Core.Services.Stack
     {
         #region Internal
 
-        private StackSettings _settings;
+        private readonly StackSettings _settings;
 
         internal StackSettingsService(JsonSerializer serializer, Core.Models.Stack stack, string method = "GET", StackSettings settings = null) : base(serializer, stack)
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("API Key should be present.");
+                throw new ArgumentNullException("stack", "API Key should be present.");
             }
             ResourcePath = "stacks/settings";
             HttpMethod = method;

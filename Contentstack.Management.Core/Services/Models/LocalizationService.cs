@@ -8,9 +8,9 @@ namespace Contentstack.Management.Core.Services.Models
 {
     internal class LocalizationService<T> : ContentstackService
     {
-        private T _typedModel;
-        private string _fieldName;
-        private bool _shouldUnlocalize;
+        private readonly T _typedModel;
+        private readonly string _fieldName;
+        private readonly bool _shouldUnlocalize;
         #region Internal
 
         internal LocalizationService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, T dataModel, string fieldName, ParameterCollection collection = null, bool shouldUnlocalize = false)
@@ -18,19 +18,19 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
             }
             if (resourcePath == null)
             {
-                throw new ArgumentNullException("Should resource path for service.");
+                throw new ArgumentNullException("resourcePath", "Should resource path for service.");
             }
-            if (shouldUnlocalize == false && dataModel == null)
+            if (!shouldUnlocalize && dataModel == null)
             {
-                throw new ArgumentNullException("Data model is mandatory for service");
+                throw new ArgumentNullException("dataModel", "Data model is mandatory for service");
             }
             if (fieldName == null)
             {
-                throw new ArgumentNullException("Name mandatory for service");
+                throw new ArgumentNullException("fieldName", "Name mandatory for service");
             }
             this.ResourcePath = shouldUnlocalize ? $"{resourcePath}/unlocalize" : resourcePath;
             this.HttpMethod = shouldUnlocalize ? "POST": "PUT";
@@ -46,7 +46,7 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            if (_shouldUnlocalize == false)
+            if (!_shouldUnlocalize)
             {
                 using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
                 {

@@ -56,11 +56,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Internal
             LogManager.InfoFormat("TEST");
             LogManager.Flush();
 
-            Assert.AreEqual(customLogger.DebugCount, 1);
-            Assert.AreEqual(customLogger.DebugFormatCount, 1);
-            Assert.AreEqual(customLogger.ErrorCount, 1);
-            Assert.AreEqual(customLogger.InfoFormatCount, 1);
-            Assert.AreEqual(customLogger.FlushCount, 1);
+            Assert.AreEqual(1, customLogger.DebugCount);
+            Assert.AreEqual(1, customLogger.DebugFormatCount);
+            Assert.AreEqual(1, customLogger.ErrorCount);
+            Assert.AreEqual(1, customLogger.InfoFormatCount);
+            Assert.AreEqual(1, customLogger.FlushCount);
         }
 
         [TestMethod]
@@ -74,11 +74,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Internal
             LogManager.InfoFormat("TEST");
             LogManager.Flush();
 
-            Assert.AreEqual(customLogger.DebugCount, 0);
-            Assert.AreEqual(customLogger.DebugFormatCount, 0);
-            Assert.AreEqual(customLogger.ErrorCount, 0);
-            Assert.AreEqual(customLogger.InfoFormatCount, 0);
-            Assert.AreEqual(customLogger.FlushCount, 1);
+            Assert.AreEqual(0, customLogger.DebugCount);
+            Assert.AreEqual(0, customLogger.DebugFormatCount);
+            Assert.AreEqual(0, customLogger.ErrorCount);
+            Assert.AreEqual(0, customLogger.InfoFormatCount);
+            Assert.AreEqual(1, customLogger.FlushCount);
         }
 
         [TestMethod]
@@ -86,11 +86,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Internal
         {
             LogManager.Debug(null, "TEST");
 
-            Assert.AreEqual(customLogger.DebugCount, 1);
-            Assert.AreEqual(customLogger.DebugFormatCount, 0);
-            Assert.AreEqual(customLogger.ErrorCount, 0);
-            Assert.AreEqual(customLogger.InfoFormatCount, 0);
-            Assert.AreEqual(customLogger.FlushCount, 0);
+            Assert.AreEqual(1, customLogger.DebugCount);
+            Assert.AreEqual(0, customLogger.DebugFormatCount);
+            Assert.AreEqual(0, customLogger.ErrorCount);
+            Assert.AreEqual(0, customLogger.InfoFormatCount);
+            Assert.AreEqual(0, customLogger.FlushCount);
         }
 
         [TestMethod]
@@ -98,11 +98,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Internal
         {
             LogManager.DebugFormat("TEST");
 
-            Assert.AreEqual(customLogger.DebugCount, 0);
-            Assert.AreEqual(customLogger.DebugFormatCount, 1);
-            Assert.AreEqual(customLogger.ErrorCount, 0);
-            Assert.AreEqual(customLogger.InfoFormatCount, 0);
-            Assert.AreEqual(customLogger.FlushCount, 0);
+            Assert.AreEqual(0, customLogger.DebugCount);
+            Assert.AreEqual(1, customLogger.DebugFormatCount);
+            Assert.AreEqual(0, customLogger.ErrorCount);
+            Assert.AreEqual(0, customLogger.InfoFormatCount);
+            Assert.AreEqual(0, customLogger.FlushCount);
         }
 
         [TestMethod]
@@ -110,11 +110,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Internal
         {
             LogManager.Error(new ArgumentNullException("logger"), "TEST");
 
-            Assert.AreEqual(customLogger.DebugCount, 0);
-            Assert.AreEqual(customLogger.DebugFormatCount, 0);
-            Assert.AreEqual(customLogger.ErrorCount, 1);
-            Assert.AreEqual(customLogger.InfoFormatCount, 0);
-            Assert.AreEqual(customLogger.FlushCount, 0);
+            Assert.AreEqual(0, customLogger.DebugCount);
+            Assert.AreEqual(0, customLogger.DebugFormatCount);
+            Assert.AreEqual(1, customLogger.ErrorCount);
+            Assert.AreEqual(0, customLogger.InfoFormatCount);
+            Assert.AreEqual(0, customLogger.FlushCount);
         }
 
         [TestMethod]
@@ -122,11 +122,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Internal
         {
             LogManager.InfoFormat("TEST");
 
-            Assert.AreEqual(customLogger.DebugCount, 0);
-            Assert.AreEqual(customLogger.DebugFormatCount, 0);
-            Assert.AreEqual(customLogger.ErrorCount, 0);
-            Assert.AreEqual(customLogger.InfoFormatCount, 1);
-            Assert.AreEqual(customLogger.FlushCount, 0);
+            Assert.AreEqual(0, customLogger.DebugCount);
+            Assert.AreEqual(0, customLogger.DebugFormatCount);
+            Assert.AreEqual(0, customLogger.ErrorCount);
+            Assert.AreEqual(1, customLogger.InfoFormatCount);
+            Assert.AreEqual(0, customLogger.FlushCount);
         }
 
         [TestMethod]
@@ -135,11 +135,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Internal
             customLogger.IsDebugEnabled = false;
             LogManager.Debug(null, "TEST");
 
-            Assert.AreEqual(customLogger.DebugCount, 0);
-            Assert.AreEqual(customLogger.DebugFormatCount, 0);
-            Assert.AreEqual(customLogger.ErrorCount, 0);
-            Assert.AreEqual(customLogger.InfoFormatCount, 0);
-            Assert.AreEqual(customLogger.FlushCount, 0);
+            Assert.AreEqual(0, customLogger.DebugCount);
+            Assert.AreEqual(0, customLogger.DebugFormatCount);
+            Assert.AreEqual(0, customLogger.ErrorCount);
+            Assert.AreEqual(0, customLogger.InfoFormatCount);
+            Assert.AreEqual(0, customLogger.FlushCount);
         }
 
         [TestMethod]
@@ -148,11 +148,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Internal
             customLogger.IsDebugEnabled = false;
             LogManager.DebugFormat("TEST");
 
-            Assert.AreEqual(customLogger.DebugCount, 0);
-            Assert.AreEqual(customLogger.DebugFormatCount, 0);
-            Assert.AreEqual(customLogger.ErrorCount, 0);
-            Assert.AreEqual(customLogger.InfoFormatCount, 0);
-            Assert.AreEqual(customLogger.FlushCount, 0);
+            Assert.AreEqual(0, customLogger.DebugCount);
+            Assert.AreEqual(0, customLogger.DebugFormatCount);
+            Assert.AreEqual(0, customLogger.ErrorCount);
+            Assert.AreEqual(0, customLogger.InfoFormatCount);
+            Assert.AreEqual(0, customLogger.FlushCount);
         }
 
         [TestMethod]
@@ -161,11 +161,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Internal
             customLogger.IsErrorEnabled = false;
             LogManager.Error(new ArgumentNullException("logger"), "TEST");
 
-            Assert.AreEqual(customLogger.DebugCount, 0);
-            Assert.AreEqual(customLogger.DebugFormatCount, 0);
-            Assert.AreEqual(customLogger.ErrorCount, 0);
-            Assert.AreEqual(customLogger.InfoFormatCount, 0);
-            Assert.AreEqual(customLogger.FlushCount, 0);
+            Assert.AreEqual(0, customLogger.DebugCount);
+            Assert.AreEqual(0, customLogger.DebugFormatCount);
+            Assert.AreEqual(0, customLogger.ErrorCount);
+            Assert.AreEqual(0, customLogger.InfoFormatCount);
+            Assert.AreEqual(0, customLogger.FlushCount);
         }
 
         [TestMethod]
@@ -174,11 +174,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Internal
             customLogger.IsInfoEnabled = false;
             LogManager.InfoFormat("TEST");
 
-            Assert.AreEqual(customLogger.DebugCount, 0);
-            Assert.AreEqual(customLogger.DebugFormatCount, 0);
-            Assert.AreEqual(customLogger.ErrorCount, 0);
-            Assert.AreEqual(customLogger.InfoFormatCount, 0);
-            Assert.AreEqual(customLogger.FlushCount, 0);
+            Assert.AreEqual(0, customLogger.DebugCount);
+            Assert.AreEqual(0, customLogger.DebugFormatCount);
+            Assert.AreEqual(0, customLogger.ErrorCount);
+            Assert.AreEqual(0, customLogger.InfoFormatCount);
+            Assert.AreEqual(0, customLogger.FlushCount);
         }
     }
 }

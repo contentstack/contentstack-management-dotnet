@@ -81,7 +81,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> CreateAsync(IEntry model, ParameterCollection collection = null)
         {
-            return base.CreateAsync(model);
+            return base.CreateAsync(model, collection);
         }
 
         /// <summary>
@@ -565,8 +565,9 @@ namespace Contentstack.Management.Core.Models
                     }
                 }
                 return response;
-            } catch
+            } catch (Exception e)
             {
+                Console.WriteLine(e);
                 throw;
             }
         }

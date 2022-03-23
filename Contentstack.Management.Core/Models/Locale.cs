@@ -60,7 +60,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> CreateAsync(ILocale model, ParameterCollection collection = null)
         {
-            return base.CreateAsync(model);
+            return base.CreateAsync(model, collection);
         }
 
         /// <summary>

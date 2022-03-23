@@ -11,16 +11,16 @@ namespace Contentstack.Management.Core.Unit.Tests.Attributes
         [TestMethod]
         public void Should_Autoload_Converters()
         {
-            foreach (Type type in CSMJsonConverterAttribute.GetCustomAttribute(typeof(CSMJsonConverterAttribute)))
+            foreach (Type type in CsmJsonConverterAttribute.GetCustomAttribute(typeof(CsmJsonConverterAttribute)))
             {
-                Assert.AreEqual(type.Name, "CustomJsonConverter");
-                Assert.AreNotEqual(type.Name, "CustomConverter");
-                foreach (var attr in type.GetCustomAttributes(typeof(CSMJsonConverterAttribute)))
+                Assert.AreEqual("CustomJsonConverter", type.Name);
+                Assert.AreNotEqual("CustomConverter", type.Name);
+                foreach (var attr in type.GetCustomAttributes(typeof(CsmJsonConverterAttribute)))
                 {
-                    CSMJsonConverterAttribute ctdAttr = attr as CSMJsonConverterAttribute;
-                    Assert.AreEqual(ctdAttr.Name, "CustomAutoload");
-                    Assert.AreNotEqual(ctdAttr.Name, "CustomManualLoad");
-                    Assert.AreEqual(ctdAttr.IsAutoloadEnable, true);
+                    CsmJsonConverterAttribute ctdAttr = attr as CsmJsonConverterAttribute;
+                    Assert.AreEqual("CustomAutoload", ctdAttr.Name);
+                    Assert.AreNotEqual("CustomManualLoad", ctdAttr.Name);
+                    Assert.AreEqual(true, ctdAttr.IsAutoloadEnable);
 
                 }
             }

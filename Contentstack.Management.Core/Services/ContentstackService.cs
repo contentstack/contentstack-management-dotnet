@@ -20,13 +20,7 @@ namespace Contentstack.Management.Core.Services
         readonly IDictionary<string, string> pathResources = new Dictionary<string, string>(StringComparer.Ordinal);
         readonly IDictionary<string, string> queryResources = new Dictionary<string, string>(StringComparer.Ordinal);
 
-        string resourcePath;
-        byte[] byteContent;
-        HttpContent httpContent;
-
-        string httpMethod = "GET";
-        string managementToken = null;
-        bool useQueryString = false;
+        private bool _useQueryString = false;
 
         private bool _disposed = false;
         private JsonSerializer _serializer { get; set; }
@@ -78,11 +72,11 @@ namespace Contentstack.Management.Core.Services
             {
                 if (HttpMethod == "GET")
                     return true;
-                return useQueryString;
+                return _useQueryString;
             }
             set
             {
-                useQueryString = value;
+                _useQueryString = value;
             }
         }
 
@@ -110,18 +104,6 @@ namespace Contentstack.Management.Core.Services
             }
         }
 
-        public string ResourcePath
-        {
-            get
-            {
-                return resourcePath;
-            }
-            set
-            {
-                resourcePath = value;
-            }
-        }
-
         public IDictionary<string, string> PathResources
         {
             get
@@ -130,46 +112,11 @@ namespace Contentstack.Management.Core.Services
             }
         }
 
-        public byte[] ByteContent
-        {
-            get { return byteContent; }
-            set
-            {
-                byteContent = value;
-            }
-        }
-
-        public HttpContent Content
-        {
-            get { return httpContent; }
-            set
-            {
-                httpContent = value;
-            }
-        }
-        public string HttpMethod
-        {
-            get
-            {
-                return httpMethod;
-            }
-            set
-            {
-                httpMethod = value;
-            }
-        }
-
-        public string ManagementToken
-        {
-            get
-            {
-                return managementToken;
-            }
-            set
-            {
-                managementToken = value;
-            }
-        }
+        public string ResourcePath { get; set; }
+        public byte[] ByteContent { get; set; }
+        public HttpContent Content { get; set; }
+        public string HttpMethod { get; set; } = "GET";
+        public string ManagementToken { get; set; }
 
         public void AddQueryResource(string queryResource, string value)
         {

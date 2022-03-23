@@ -386,7 +386,7 @@ namespace Contentstack.Management.Core.Models
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
                 Rte = new Dictionary<string, object>()
-            }); ;
+            });
 
             return client.InvokeSync(service);
         }
@@ -434,10 +434,10 @@ namespace Contentstack.Management.Core.Models
             this.ThrowIfAPIKeyEmpty();
             if (settings == null)
             {
-                throw new ArgumentNullException("Settings can not be null.");
+                throw new ArgumentNullException("settings", "Settings can not be null.");
             }
 
-            var service = new StackSettingsService(client.serializer, this, "POST", settings); ;
+            var service = new StackSettingsService(client.serializer, this, "POST", settings);
 
             return client.InvokeSync(service);
         }
@@ -459,7 +459,7 @@ namespace Contentstack.Management.Core.Models
             this.ThrowIfAPIKeyEmpty();
             if (settings == null)
             {
-                throw new ArgumentNullException("Settings can not be null.");
+                throw new ArgumentNullException("settings", "Settings can not be null.");
             }
             var service = new StackSettingsService(client.serializer, this, "POST", settings);
 
@@ -488,7 +488,7 @@ namespace Contentstack.Management.Core.Models
             this.ThrowIfAPIKeyEmpty();
             if (invitations == null)
             {
-                throw new ArgumentNullException("Invitations can not be null.");
+                throw new ArgumentNullException("invitations", "Invitations can not be null.");
             }
 
             var service = new StackShareService(client.serializer, this);
@@ -519,7 +519,7 @@ namespace Contentstack.Management.Core.Models
             this.ThrowIfAPIKeyEmpty();
             if (invitations == null)
             {
-                throw new ArgumentNullException("Invitations can not be null.");
+                throw new ArgumentNullException("invitations", "Invitations can not be null.");
             }
 
             var service = new StackShareService(client.serializer, this);
@@ -545,10 +545,10 @@ namespace Contentstack.Management.Core.Models
             this.ThrowIfAPIKeyEmpty();
             if (email == null)
             {
-                throw new ArgumentNullException("Email can not be null.");
+                throw new ArgumentNullException("email", "Email can not be null.");
             }
 
-            var service = new StackShareService(client.serializer, this); ;
+            var service = new StackShareService(client.serializer, this);
             service.RemoveUsers(email);
 
             return client.InvokeSync(service);
@@ -572,7 +572,7 @@ namespace Contentstack.Management.Core.Models
             this.ThrowIfAPIKeyEmpty();
             if (email == null)
             {
-                throw new ArgumentNullException("Email can not be null.");
+                throw new ArgumentNullException("email", "Email can not be null.");
             }
 
             var service = new StackShareService(client.serializer, this);
@@ -684,7 +684,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentNullException("Invalide name for the Stack.");
+                throw new ArgumentNullException("name", "Invalide name for the Stack.");
             }
         }
 
@@ -692,7 +692,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(locale))
             {
-                throw new ArgumentNullException("Invalide name for the Stack.");
+                throw new ArgumentNullException("locale", "Invalide name for the Stack.");
             }
         }
 
@@ -700,7 +700,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(uid))
             {
-                throw new ArgumentNullException("Invalide Organization UID.");
+                throw new ArgumentNullException("uid", "Invalide Organization UID.");
             }
         }
 

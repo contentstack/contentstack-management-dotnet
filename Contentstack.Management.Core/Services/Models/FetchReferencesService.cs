@@ -9,11 +9,11 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
             }
             if (resourcePath == null)
             {
-                throw new ArgumentNullException("Should resource path for service.");
+                throw new ArgumentNullException("resourcePath", "Should resource path for service.");
             }
             this.ResourcePath = $"{resourcePath}/references";
             this.HttpMethod = "GET";

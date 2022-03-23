@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
-    [CSMJsonConverter("CustomAutoload")]
+    [CsmJsonConverter("CustomAutoload")]
     public class CustomJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
@@ -23,7 +23,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         }
     }
 
-    [CSMJsonConverter("CustomManualLoad", false)]
+    [CsmJsonConverter("CustomManualLoad", false)]
     public class CustomConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)

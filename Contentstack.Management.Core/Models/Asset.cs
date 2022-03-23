@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Models
     public class Asset
     {
         internal Stack stack;
-        public string Uid;
+        public string Uid { get; set; }
 
         internal string resourcePath;
 

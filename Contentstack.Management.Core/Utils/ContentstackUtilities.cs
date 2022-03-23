@@ -6,7 +6,7 @@ using Contentstack.Management.Core.Services;
 
 namespace Contentstack.Management.Core.Utils
 {
-    internal class ContentstackUtilities
+    internal static class ContentstackUtilities
     {
         internal static Uri ComposeUrI(Uri baseUri, IContentstackService service)
         {
@@ -51,7 +51,7 @@ namespace Contentstack.Management.Core.Utils
             var hasSlash = requestUri.AbsoluteUri.EndsWith("/", StringComparison.Ordinal) || parameterizedPath.StartsWith("/", StringComparison.Ordinal);
             requestUri = hasSlash
                 ? new Uri(requestUri.AbsoluteUri + parameterizedPath)
-                : new Uri(requestUri.AbsoluteUri + "/" + parameterizedPath);
+                : new Uri(requestUri.AbsoluteUri + $"/{parameterizedPath}");
 
             return requestUri;
         }

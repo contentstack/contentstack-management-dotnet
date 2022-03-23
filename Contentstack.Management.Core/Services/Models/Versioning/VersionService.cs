@@ -20,15 +20,15 @@ namespace Contentstack.Management.Core.Services.Models.Versioning
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
             }
             if (resourcePath == null)
             {
-                throw new ArgumentNullException("Should resource path for service.");
+                throw new ArgumentNullException("resourcePath", "Should resource path for service.");
             }
             if (fieldName == null)
             {
-                throw new ArgumentNullException("Should resource path for service.");
+                throw new ArgumentNullException("fieldName", "Should resource path for service.");
             }
             this.fieldName = fieldName;
             this.ResourcePath = resourcePath;
@@ -63,7 +63,7 @@ namespace Contentstack.Management.Core.Services.Models.Versioning
                         writer.WriteValue(locale);
                     }
 
-                    if (force == true)
+                    if (force)
                     {
                         writer.WritePropertyName("force");
                         writer.WriteValue(force);
