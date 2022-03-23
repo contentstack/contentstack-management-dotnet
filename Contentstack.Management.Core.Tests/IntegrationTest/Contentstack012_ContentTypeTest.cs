@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using AutoFixture;
+﻿using System.Collections.Generic;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,6 +11,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private Stack _stack;
         private ContentModelling _singlePage;
         private ContentModelling _multiPage;
+
         [TestInitialize]
         public void Initialize ()
         {

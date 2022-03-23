@@ -582,6 +582,26 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
+        /// Contentstack has a sophisticated multilingual capability. It allows you to create and publish entries in any language.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.Locale(&quot;&lt;LOCALE_CODE&gt;&quot;).Fetch();
+        /// </code></pre>
+        /// </example>
+        /// <param name="code">Locale code fot language</param>
+        /// <returns>The <see cref="Models.Locale"/></returns>
+        public Locale Locale(string code = null)
+        {
+            client.ThrowIfNotLoggedIn();
+            this.ThrowIfAPIKeyEmpty();
+
+            return new Locale(this, code);
+        }
+
+        /// <summary>
         /// <see cref="Models.ContentType" /> defines the structure or schema of a page or a section of your web or mobile property.
         /// To create content for your application, you are required to first create a content type, and then create entries using the content type. 
         /// </summary>
