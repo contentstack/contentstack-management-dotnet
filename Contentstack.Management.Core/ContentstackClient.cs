@@ -122,7 +122,7 @@ namespace Contentstack.Management.Core
         )){}
         #endregion
 
-        protected virtual void Initialize()
+        protected void Initialize()
         {
             var httpClientHandler = new HttpClientHandler();
 

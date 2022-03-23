@@ -56,26 +56,32 @@ namespace Contentstack.Management.Core.Attributes
                 List<Type> result = new List<Type>();
                 foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    try
-                    {
-                        foreach (Type type in assembly.GetTypes())
-                        {
-                            var objectType = type.GetCustomAttributes(attribute, true);
-                            foreach (var attr in type.GetCustomAttributes(typeof(CSMJsonConverterAttribute)))
-                            {
-                                CSMJsonConverterAttribute ctdAttr = attr as CSMJsonConverterAttribute;
-                                Trace.Assert(ctdAttr != null, "cast is null");
-                                if (ctdAttr.isAutoloadEnable)
-                                {
-                                    result.Add(type);
-                                }
-                            }
-                        }
-                    } catch {}
+                    GetType(assembly, attribute, result);
                 }
                 _types[attribute] = result;
             }
             return _types[attribute].ToArray();
+        }
+
+        private static void GetType(Assembly assembly, Type attribute, List<Type> types)
+        {
+            try
+            {
+                foreach (Type type in assembly.GetTypes())
+                {
+                    var objectType = type.GetCustomAttributes(attribute, true);
+                    foreach (var attr in type.GetCustomAttributes(typeof(CSMJsonConverterAttribute)))
+                    {
+                        CSMJsonConverterAttribute ctdAttr = attr as CSMJsonConverterAttribute;
+                        Trace.Assert(ctdAttr != null, "cast is null");
+                        if (ctdAttr.isAutoloadEnable)
+                        {
+                            types.Add(type);
+                        }
+                    }
+                }
+            }
+            catch { }
         }
     }
     
