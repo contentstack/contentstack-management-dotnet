@@ -53,6 +53,8 @@ namespace Contentstack.Management.Core.Models
             Tags = tags;
             ContentType = contentType;
             this.byteArray = byteArray;
+            this.byteArray.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(ContentType);
+
         }
 
         static private byte[] getBytes(Stream stream)
@@ -72,6 +74,7 @@ namespace Contentstack.Management.Core.Models
             MultipartFormDataContent content = new MultipartFormDataContent();
 
             content.Add(byteArray, "asset[upload]", FileName);
+
             if (Title != null)
             {
                 content.Add(new StringContent(Title), "asset[title]", Title);
