@@ -22,6 +22,8 @@
     <None Remove="IFieldRules\" />
     <None Remove="Models\Fields\" />
     <None Remove="Services\Models\Versioning\" />
+    <None Remove="Models\CustomExtension\" />
+    <None Remove="Models\Token\" />
   </ItemGroup>
   <ItemGroup>
       <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
@@ -46,6 +48,8 @@
     <Folder Include="Services\Models\" />
     <Folder Include="Models\Fields\" />
     <Folder Include="Services\Models\Versioning\" />
+    <Folder Include="Models\CustomExtension\" />
+    <Folder Include="Models\Token\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Net.Http" Version="4.3.4" />

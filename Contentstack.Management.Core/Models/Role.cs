@@ -1,28 +1,26 @@
-﻿using System;
-using System.Threading.Tasks;
-using Contentstack.Management.Core.Abstractions;
+﻿using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 
 namespace Contentstack.Management.Core.Models
 {
-    public class Locale: BaseModel<LocaleModel>
+    public class Role : BaseModel<RoleModel>
     {
-        internal Locale(Stack stack, string code = null)
-            : base(stack, "locale", code)
+        internal Role(Stack stack, string uid = null)
+           : base(stack, "role", uid)
         {
-            resourcePath = code == null ? $"/locales" : $"/locales/{code}";
+            resourcePath = uid == null ? "/roles" : $"/roles/{uid}";
         }
 
         /// <summary>
-        /// The Query on locale allow to get the list of all languages (along with the language codes) available for a stack.
+        /// The Query on Role request returns comprehensive information about all roles created in a stack.
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Locale().Query().Find();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Role().Query().Find();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Query"/></returns>
+        /// <returns>The <see cref="Queryable.Query"/></returns>
         public Query Query()
         {
             ThrowIfUidNotEmpty();
@@ -30,80 +28,80 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// This call lets you add a new language to your stack. You can either add a supported language or a custom language of your choice.
+        /// The Create request creates a new role in a stack.
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// LocaleModel model = new LocaleModel(); // Add field values
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Locale().Create(model);
+        /// RoleModel model = new RoleModel();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Role().Create(model);
         /// </code></pre>
         /// </example>
-        /// <param name="model">LocaleModel for createing Locale.</param>
+        /// <param name="model">Role Model for creating Role.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Create(LocaleModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(RoleModel model, ParameterCollection collection = null)
         {
             return base.Create(model, collection);
         }
 
         /// <summary>
-        /// This call lets you add a new language to your stack. You can either add a supported language or a custom language of your choice.
+        /// The Create request creates a new role in a stack.
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// LocaleModel model = new LocaleModel(); // Add field values
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Locale().CreateAsync(model);
+        /// RoleModel model = new RoleModel();
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Role().CreateAsync(model);
         /// </code></pre>
         /// </example>
-        /// <param name="model">LocaleModel for createing Locale.</param>
+        /// <param name="model">Role Model for creating Role.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> CreateAsync(LocaleModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(RoleModel model, ParameterCollection collection = null)
         {
             return base.CreateAsync(model, collection);
         }
 
         /// <summary>
-        /// The Update language call will let you update the details (such as display name) and the fallback language of an existing language of your stack.
+        /// The Update request creates a new role in a stack.
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// LocaleModel model = new LocaleModel(); // Add field values
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Locale().Update(model);
+        /// RoleModel model = new RoleModel();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Role(&quot;&lt;ROLE_UID&gt;&quot;).Update(model);
         /// </code></pre>
         /// </example>
-        /// <param name="model">LocaleModel for updating locale.</param>
+        /// <param name="model">Role Model for creating Role.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Update(LocaleModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(RoleModel model, ParameterCollection collection = null)
         {
             return base.Update(model, collection);
         }
 
         /// <summary>
-        /// The Update language call will let you update the details (such as display name) and the fallback language of an existing language of your stack.
+        /// The Update request creates a new role in a stack.
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// LocaleModel model = new LocaleModel(); // Add field values
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Locale().UpdateAsync(model);
+        /// RoleModel model = new RoleModel();
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Role(&quot;&lt;ROLE_UID&gt;&quot;).UpdateAsync(model);
         /// </code></pre>
         /// </example>
-        /// <param name="model">LocaleModel for updating locale.</param>
+        /// <param name="model">Role Model for creating Role.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> UpdateAsync(LocaleModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(RoleModel model, ParameterCollection collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
 
         /// <summary>
-        /// The Get a language call returns information about a specific language available on the stack.
+        /// The Fetch request returns comprehensive information on a specific role.
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Locale(&quot;&lt;LOCALE_CODE&gt;&quot;).Fetch();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Role(&quot;&lt;ROLE_UID&gt;&quot;).Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -113,12 +111,12 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// The Get a language call returns information about a specific language available on the stack.
+        /// The Fetch request returns comprehensive information on a specific role.
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Locale(&quot;&lt;LOCALE_CODE&gt;&quot;).FetchAsync();
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Role(&quot;&lt;ROLE_UID&gt;&quot;).FetchAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
@@ -128,12 +126,12 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// The Delete language call deletes an existing language from your stack.
+        /// The Delete call deletes an existing role from your stack
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Locale(&quot;&lt;LOCALE_CODE&gt;&quot;).Delete();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Role(&quot;&lt;ROLE_UID&gt;&quot;).Delete();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -143,12 +141,12 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// The Delete language call deletes an existing language from your stack.
+        /// The Delete call deletes an existing role from your stack
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Locale(&quot;&lt;LOCALE_CODE&gt;&quot;).DeleteAsync();
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Role(&quot;&lt;ROLE_UID&gt;&quot;).DeleteAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>

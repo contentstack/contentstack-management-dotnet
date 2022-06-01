@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.Fields
@@ -7,5 +8,7 @@ namespace Contentstack.Management.Core.Models.Fields
     {
         [JsonProperty(propertyName: "reference_to")]
         public object ReferenceTo { get; set; }
+        [JsonProperty(propertyName: "plugins")]
+        public List<string> Plugins { get; set; }
     }
 }

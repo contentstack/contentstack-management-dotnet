@@ -192,7 +192,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public ContentstackResponse DeleteMultipleLocal(List<string> locales)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new DeleteService<Dictionary<string, List<string>>>(stack.client.serializer, stack, resourcePath, "entry", new Dictionary<string, List<string>>()
@@ -216,7 +216,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> DeleteMultipleLocalAsync(List<string> locales)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new DeleteService<Dictionary<string, List<string>>>(stack.client.serializer, stack, resourcePath, "entry", new Dictionary<string, List<string>>()
@@ -241,7 +241,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public ContentstackResponse Localize(IEntry model, string locale)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             ParameterCollection collection = new ParameterCollection();
@@ -267,7 +267,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> LocalizeAsync(IEntry model, string locale)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             ParameterCollection collection = new ParameterCollection();
@@ -291,7 +291,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public ContentstackResponse Unlocalize(string locale)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             ParameterCollection collection = new ParameterCollection();
@@ -315,7 +315,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> UnlocalizeAsync(string locale)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             ParameterCollection collection = new ParameterCollection();
@@ -338,7 +338,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public ContentstackResponse Locales()
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new LocaleService(stack.client.serializer, stack, resourcePath);
@@ -357,7 +357,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> LocalesAsync()
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new LocaleService(stack.client.serializer, stack, resourcePath);
@@ -376,7 +376,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public ContentstackResponse References()
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath);
@@ -395,7 +395,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> ReferencesAsync()
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath);
@@ -416,7 +416,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string locale = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "entry", locale);
@@ -437,7 +437,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string locale = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "entry", locale);
@@ -458,7 +458,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string locale = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
@@ -479,7 +479,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string locale = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
@@ -501,7 +501,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public ContentstackResponse Import(string filePath, ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
 
             var text = File.ReadAllText(filePath);
             var service = new ImportExportService(stack.client.serializer, stack, resourcePath, true, "POST", collection);
@@ -525,7 +525,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> ImportAsync(string filePath, ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var text = File.ReadAllText(filePath);
@@ -548,7 +548,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public ContentstackResponse Export(string filePath, ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             try

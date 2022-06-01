@@ -19,7 +19,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             client = new ContentstackClient();
         }
 
-
         [TestMethod]
         public void Initialize_Stack()
         {
@@ -48,6 +47,16 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => stack.UnShareAsync(_fixture.Create<string>()));
 
             Assert.ThrowsException<InvalidOperationException>(() => stack.ContentType());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Asset());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.GlobalField());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Locale());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Extension());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Label());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Environment());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.DeliveryToken());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.ManagementTokens());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Role());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Release());
         }
 
         [TestMethod]
@@ -79,6 +88,16 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => stack.UnShareAsync(_fixture.Create<string>()));
 
             Assert.ThrowsException<InvalidOperationException>(() => stack.ContentType());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Asset());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.GlobalField());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Locale());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Extension());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Label());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Environment());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.DeliveryToken());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.ManagementTokens());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Role());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Release());
         }
 
         [TestMethod]

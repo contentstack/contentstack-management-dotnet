@@ -57,7 +57,7 @@ namespace Contentstack.Management.Core.Models
         public virtual Task<ContentstackResponse> CreateAsync(string name, string parentUid = null)
         {
             ThrowIfUidNotEmpty();
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
 
             var service = new CreateUpdateFolderService(stack.client.serializer, stack, name, null, parentUid);
             return stack.client.InvokeAsync<CreateUpdateFolderService, ContentstackResponse>(service);
@@ -97,7 +97,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual Task<ContentstackResponse> UpdateAsync(string name, string parentUid = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new CreateUpdateFolderService(stack.client.serializer, stack, name, null, parentUid);
@@ -117,7 +117,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
@@ -137,7 +137,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
@@ -157,7 +157,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual ContentstackResponse Delete()
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
@@ -177,7 +177,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual Task<ContentstackResponse> DeleteAsync()
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");

@@ -106,7 +106,7 @@ namespace Contentstack.Management.Core.Models
         public virtual Task<ContentstackResponse> CreateAsync(AssetModel model, ParameterCollection collection = null)
         {
             ThrowIfUidNotEmpty();
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
 
             var service = new UploadService(stack.client.serializer, stack, resourcePath, model);
             return stack.client.InvokeAsync<UploadService, ContentstackResponse>(service);
@@ -148,7 +148,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual Task<ContentstackResponse> UpdateAsync(AssetModel model, ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new UploadService(stack.client.serializer, stack, resourcePath, model, "PUT");
@@ -168,7 +168,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
@@ -188,7 +188,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
@@ -208,7 +208,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual ContentstackResponse Delete()
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
@@ -228,7 +228,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual Task<ContentstackResponse> DeleteAsync()
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
@@ -248,7 +248,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual ContentstackResponse Publish(PublishUnpublishDetails details)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
@@ -268,7 +268,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
@@ -288,7 +288,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
@@ -308,7 +308,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
