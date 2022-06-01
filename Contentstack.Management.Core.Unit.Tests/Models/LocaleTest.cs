@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using AutoFixture;
-using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Unit.Tests.Models.ContentModel;
@@ -33,6 +30,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Locale locale = new Locale(_stack);
 
             Assert.IsNull(locale.Uid);
+            Asset.Equals($"/locales", locale.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => locale.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => locale.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => locale.Update(_fixture.Create<LocaleModel>()));
@@ -49,6 +47,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Locale locale = new Locale(_stack, code);
 
             Assert.AreEqual(code, locale.Uid);
+            Asset.Equals($"/locales/{locale.Uid}", locale.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => locale.Create(_fixture.Create<LocaleModel>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => locale.CreateAsync(_fixture.Create<LocaleModel>()));
             Assert.ThrowsException<InvalidOperationException>(() => locale.Query());

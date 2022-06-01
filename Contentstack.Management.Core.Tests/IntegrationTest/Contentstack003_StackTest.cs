@@ -87,7 +87,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             try
             {
-                Stack stack = Contentstack.Client.Stack("blt6d48233910fadde8");
+                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
                 ContentstackResponse contentstackResponse = stack.Update(_updatestackName);
 
                 var response = contentstackResponse.OpenJObjectResponse();

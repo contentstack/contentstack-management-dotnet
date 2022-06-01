@@ -37,7 +37,7 @@ namespace Contentstack.Management.Core.Models
         public virtual Task<ContentstackResponse> CreateAsync(T model, ParameterCollection collection = null)
         {
             ThrowIfUidNotEmpty();
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
 
             var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName, collection: collection);
 
@@ -54,7 +54,7 @@ namespace Contentstack.Management.Core.Models
 
         public virtual Task<ContentstackResponse> UpdateAsync(T model, ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName, "PUT", collection: collection);
@@ -64,7 +64,7 @@ namespace Contentstack.Management.Core.Models
 
         public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
@@ -73,7 +73,7 @@ namespace Contentstack.Management.Core.Models
 
         public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
@@ -83,7 +83,7 @@ namespace Contentstack.Management.Core.Models
 
         public virtual ContentstackResponse Delete(ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE", collection: collection);
@@ -92,7 +92,7 @@ namespace Contentstack.Management.Core.Models
 
         public virtual Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
         {
-            stack.client.ThrowIfNotLoggedIn();
+            stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE", collection: collection);

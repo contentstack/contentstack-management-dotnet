@@ -33,6 +33,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Entry entry = new Entry(_stack, _fixture.Create<string>(), null);
 
             Assert.IsNull(entry.Uid);
+            Asset.Equals($"/entries", entry.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => entry.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => entry.Update(_fixture.Create<EntryModel>()));
@@ -64,6 +65,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Entry entry = new Entry(_stack, _fixture.Create<string>(), uid);
 
             Assert.AreEqual(uid, entry.Uid);
+            Asset.Equals($"/entries/{entry.Uid}", entry.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => entry.Create(_fixture.Create<EntryModel>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.CreateAsync(_fixture.Create<EntryModel>()));
             Assert.ThrowsException<InvalidOperationException>(() => entry.Query());
@@ -301,13 +303,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             client.contentstackOptions.Authtoken = _fixture.Create<string>();
             Stack stack = new Stack(client, _fixture.Create<string>());
 
-            
             Assert.ThrowsException<ContentstackErrorException>(() => stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).Export(_fixture.Create<string>(), new ParameterCollection()));
-            
         }
 
         [TestMethod]
-        public void Should_Import_Entryr()
+        public void Should_Import_Entry()
         {
             var filePath = "entry.json";
             ContentstackResponse response = _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).Import(filePath, new ParameterCollection());

@@ -4,12 +4,12 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Environment = Contentstack.Management.Core.Models.Environment;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models
 {
-
     [TestClass]
-    public class GlobalFieldTest
+    public class EnvironmentTest
     {
         private Stack _stack;
         private readonly IFixture _fixture = new Fixture();
@@ -26,118 +26,119 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         }
 
         [TestMethod]
-        public void Initialize_GlobalField()
+        public void Initialize_Environment()
         {
-            GlobalField globalField = new GlobalField(_stack);
+            Environment environment = new Environment(_stack);
 
-            Assert.IsNull(globalField.Uid);
-            Asset.Equals($"/global_fields", globalField.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => globalField.Fetch());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => globalField.Update(new ContentModelling()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.UpdateAsync(new ContentModelling()));
-            Assert.ThrowsException<InvalidOperationException>(() => globalField.Delete());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.DeleteAsync());
-            Assert.AreEqual(globalField.Query().GetType(), typeof(Query));
+            Assert.IsNull(environment.Uid);
+            Asset.Equals($"/environments", environment.resourcePath);
+            Assert.ThrowsException<InvalidOperationException>(() => environment.Fetch());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => environment.FetchAsync());
+            Assert.ThrowsException<InvalidOperationException>(() => environment.Update(_fixture.Create<EnvironmentModel>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => environment.UpdateAsync(_fixture.Create<EnvironmentModel>()));
+            Assert.ThrowsException<InvalidOperationException>(() => environment.Delete());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => environment.DeleteAsync());
+            Assert.AreEqual(environment.Query().GetType(), typeof(Query));
         }
 
         [TestMethod]
-        public void Initialize_GlobalField_With_Uid()
+        public void Initialize_Environment_With_Uid()
         {
-            string uid = _fixture.Create<string>();
-            GlobalField globalField = new GlobalField(_stack, uid);
+            string code = _fixture.Create<string>();
+            Environment environment = new Environment(_stack, code);
 
-            Assert.AreEqual(uid, globalField.Uid);
-            Asset.Equals($"/global_fields/{globalField.Uid}", globalField.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => globalField.Create(new ContentModelling()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.CreateAsync(new ContentModelling()));
-            Assert.ThrowsException<InvalidOperationException>(() => globalField.Query());
+            Assert.AreEqual(code, environment.Uid);
+            Asset.Equals($"/environments/{environment.Uid}", environment.resourcePath);
+            Assert.ThrowsException<InvalidOperationException>(() => environment.Create(_fixture.Create<EnvironmentModel>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => environment.CreateAsync(_fixture.Create<EnvironmentModel>()));
+            Assert.ThrowsException<InvalidOperationException>(() => environment.Query());
         }
+
         [TestMethod]
-        public void Should_Create_Content_Type()
+        public void Should_Create_Environment()
         {
-            ContentstackResponse response = _stack.GlobalField().Create(new ContentModelling());
+            ContentstackResponse response = _stack.Environment().Create(_fixture.Create<EnvironmentModel>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task Should_Create_Content_Type_Async()
+        public async System.Threading.Tasks.Task Should_Create_Environment_Async()
         {
-            ContentstackResponse response = await _stack.GlobalField().CreateAsync(new ContentModelling());
+            ContentstackResponse response = await _stack.Environment().CreateAsync(_fixture.Create<EnvironmentModel>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public void Should_Query_Content_Type()
+        public void Should_Query_Environment()
         {
-            ContentstackResponse response = _stack.GlobalField().Query().Find();
+            ContentstackResponse response = _stack.Environment().Query().Find();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task Should_Query_Content_Type_Async()
+        public async System.Threading.Tasks.Task Should_Query_Environment_Async()
         {
-            ContentstackResponse response = await _stack.GlobalField().Query().FindAsync();
+            ContentstackResponse response = await _stack.Environment().Query().FindAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public void Should_Fetch_Content_Type()
+        public void Should_Fetch_Environment()
         {
-            ContentstackResponse response = _stack.GlobalField(_fixture.Create<string>()).Fetch();
+            ContentstackResponse response = _stack.Environment(_fixture.Create<string>()).Fetch();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task Should_Find_Content_Type_Async()
+        public async System.Threading.Tasks.Task Should_Find_Environment_Async()
         {
-            ContentstackResponse response = await _stack.GlobalField(_fixture.Create<string>()).FetchAsync();
+            ContentstackResponse response = await _stack.Environment(_fixture.Create<string>()).FetchAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public void Should_Update_Content_Type()
+        public void Should_Update_Environment()
         {
-            ContentstackResponse response = _stack.GlobalField(_fixture.Create<string>()).Update(new ContentModelling());
+            ContentstackResponse response = _stack.Environment(_fixture.Create<string>()).Update(_fixture.Create<EnvironmentModel>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task Should_Update_Content_Type_Async()
+        public async System.Threading.Tasks.Task Should_Update_Environment_Async()
         {
-            ContentstackResponse response = await _stack.GlobalField(_fixture.Create<string>()).UpdateAsync(new ContentModelling());
+            ContentstackResponse response = await _stack.Environment(_fixture.Create<string>()).UpdateAsync(_fixture.Create<EnvironmentModel>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public void Should_Delete_Content_Type()
+        public void Should_Delete_Environment()
         {
-            ContentstackResponse response = _stack.GlobalField(_fixture.Create<string>()).Delete();
+            ContentstackResponse response = _stack.Environment(_fixture.Create<string>()).Delete();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task Should_Delete_Content_Type_Async()
+        public async System.Threading.Tasks.Task Should_Delete_Environment_Async()
         {
-            ContentstackResponse response = await _stack.GlobalField(_fixture.Create<string>()).DeleteAsync();
+            ContentstackResponse response = await _stack.Environment(_fixture.Create<string>()).DeleteAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());

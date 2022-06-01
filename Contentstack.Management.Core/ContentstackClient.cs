@@ -17,6 +17,7 @@ using Contentstack.Management.Core.Runtime.Pipeline;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Services.User;
 using Contentstack.Management.Core.Queryable;
+using Environment = System.Environment;
 
 namespace Contentstack.Management.Core
 {

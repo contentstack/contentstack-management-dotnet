@@ -5,7 +5,7 @@ namespace Contentstack.Management.Core.Models
 {
     public class GlobalField : BaseModel<ContentModelling>
     {
-        internal GlobalField(Stack stack, string uid)
+        internal GlobalField(Stack stack, string uid = null)
             : base(stack, "global_field", uid)
         {
             resourcePath = uid == null ? "/global_fields" : $"/global_fields/{uid}";
@@ -17,10 +17,10 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).Fetch();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField().Query().Find();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Query"/></returns>
+        /// <returns>The <see cref="Queryable.Query"/></returns>
         public Query Query()
         {
             ThrowIfUidNotEmpty();
@@ -38,7 +38,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public override ContentstackResponse Create(ContentModelling model, ParameterCollection collection = null)
         {
             return base.Create(model, collection);
@@ -55,7 +55,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
-        /// <returns></returns>
+        /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> CreateAsync(ContentModelling model, ParameterCollection collection = null)
         {
             return base.CreateAsync(model, collection);
@@ -72,7 +72,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public override ContentstackResponse Update(ContentModelling model, ParameterCollection collection = null)
         {
             return base.Update(model, collection);
@@ -89,7 +89,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
-        /// <returns></returns>
+        /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> UpdateAsync(ContentModelling model, ParameterCollection collection = null)
         {
             return base.UpdateAsync(model, collection);

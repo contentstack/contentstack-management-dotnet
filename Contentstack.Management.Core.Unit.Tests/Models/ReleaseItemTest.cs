@@ -5,15 +5,16 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace Contentstack.Management.Core.Unit.Tests.Models
 {
     [TestClass]
-    public class FolderTest
+    public class ReleaseItemTest
     {
         private Stack _stack;
         private readonly IFixture _fixture = new Fixture();
         private ContentstackResponse _contentstackResponse;
-
+        private string _releaseUID;
         [TestInitialize]
         public void initialize()
         {
@@ -22,103 +23,102 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(_contentstackResponse));
             client.contentstackOptions.Authtoken = _fixture.Create<string>();
             _stack = new Stack(client, _fixture.Create<string>());
+            _releaseUID = _fixture.Create<string>();
         }
 
         [TestMethod]
-        public void Initialize_Folder()
+        public void Initialize_ReleaseItem()
         {
-            Folder folder = new Folder(_stack, null);
+            ReleaseItem releaseItem = new ReleaseItem(_stack, _releaseUID);
 
-            Assert.IsNull(folder.Uid);
-            Asset.Equals($"/assets/folders", folder.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => folder.Fetch());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => folder.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => folder.Update(_fixture.Create<string>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => folder.UpdateAsync(_fixture.Create<string>()));
-            Assert.ThrowsException<InvalidOperationException>(() => folder.Delete());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => folder.DeleteAsync());
+            
+            Asset.Equals($"/releases/{_releaseUID}/items", releaseItem.resourcePath);
         }
 
         [TestMethod]
-        public void Initialize_Folder_With_Uid()
+        public void Initialize_ReleaseItem_Without_Uid()
         {
-            string uid = _fixture.Create<string>();
-            Folder folder = new Folder(_stack, uid);
+            
+            ReleaseItem releaseItem = new ReleaseItem(_stack, null);
 
-            Assert.AreEqual(uid, folder.Uid);
-            Asset.Equals($"/assets/folders/{folder.Uid}", folder.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => folder.Create(_fixture.Create<string>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => folder.CreateAsync(_fixture.Create<string>()));
+            Asset.Equals($"/releases/{_releaseUID}/items", releaseItem.resourcePath);
+            Assert.ThrowsException<InvalidOperationException>(() => releaseItem.Delete(_fixture.Create<List<ReleaseItemModel>>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => releaseItem.DeleteAsync(_fixture.Create<List<ReleaseItemModel>>()));
+            Assert.ThrowsException<InvalidOperationException>(() => releaseItem.Create(_fixture.Create<ReleaseItemModel>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => releaseItem.CreateAsync(_fixture.Create<ReleaseItemModel>()));
+            Assert.ThrowsException<InvalidOperationException>(() => releaseItem.CreateMultiple(_fixture.Create<List<ReleaseItemModel>>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => releaseItem.CreateMultipleAsync(_fixture.Create< List<ReleaseItemModel>>()));
+            Assert.ThrowsException<InvalidOperationException>(() => releaseItem.GetAll());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => releaseItem.GetAllAsync());
         }
 
         [TestMethod]
-        public void Should_Create_Folder()
+        public void Should_Create_ReleaseItem()
         {
-            ContentstackResponse response = _stack.Asset().Folder().Create(_fixture.Create<string>());
+            ContentstackResponse response = _stack.Release(_releaseUID).Item().Create(_fixture.Create<ReleaseItemModel>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task Should_Create_Folder_Async()
+        public async System.Threading.Tasks.Task Should_Create_Release_Async()
         {
-            ContentstackResponse response = await _stack.Asset().Folder().CreateAsync(_fixture.Create<string>());
+            ContentstackResponse response = await _stack.Release(_releaseUID).Item().CreateAsync(_fixture.Create<ReleaseItemModel>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public void Should_Fetch_Folder()
+        public void Should_Create_Multiple_Release_Item()
         {
-            ContentstackResponse response = _stack.Asset().Folder(_fixture.Create<string>()).Fetch();
+            ContentstackResponse response = _stack.Release(_releaseUID).Item().CreateMultiple(_fixture.Create<List<ReleaseItemModel>>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task Should_Find_Folder_Async()
+        public async System.Threading.Tasks.Task Should_Create_Multiple_Release_Item_Async()
         {
-            ContentstackResponse response = await _stack.Asset().Folder(_fixture.Create<string>()).FetchAsync();
+            ContentstackResponse response = await _stack.Release(_releaseUID).Item().CreateMultipleAsync(_fixture.Create<List<ReleaseItemModel>>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public void Should_Update_Folder()
+        public void Should_Query_ReleaseItem()
         {
-
-            ContentstackResponse response = _stack.Asset().Folder(_fixture.Create<string>()).Update(_fixture.Create<string>());
+            ContentstackResponse response = _stack.Release(_releaseUID).Item().GetAll();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task Should_Update_Folder_Async()
+        public async System.Threading.Tasks.Task Should_Query_Release_Async()
         {
-            ContentstackResponse response = await _stack.Asset().Folder(_fixture.Create<string>()).UpdateAsync(_fixture.Create<string>());
+            ContentstackResponse response = await _stack.Release(_releaseUID).Item().GetAllAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public void Should_Delete_Folder()
+        public void Should_Delete_ReleaseItem()
         {
-            ContentstackResponse response = _stack.Asset().Folder(_fixture.Create<string>()).Delete();
+            ContentstackResponse response = _stack.Release(_releaseUID).Item().Delete(_fixture.Create<List<ReleaseItemModel>>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task Should_Delete_Folder_Async()
+        public async System.Threading.Tasks.Task Should_Delete_Release_Async()
         {
-            ContentstackResponse response = await _stack.Asset().Folder(_fixture.Create<string>()).DeleteAsync();
+            ContentstackResponse response = await _stack.Release(_releaseUID).Item().DeleteAsync(_fixture.Create<List<ReleaseItemModel>>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());

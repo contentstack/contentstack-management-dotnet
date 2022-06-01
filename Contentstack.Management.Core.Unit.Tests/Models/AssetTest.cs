@@ -30,6 +30,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Asset Asset = new Asset(_stack, null);
 
             Assert.IsNull(Asset.Uid);
+            Asset.Equals($"/assets", Asset.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => Asset.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => Asset.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => Asset.Update(_assetModel));
@@ -50,6 +51,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Asset Asset = new Asset(_stack, uid);
 
             Assert.AreEqual(uid, Asset.Uid);
+            Asset.Equals($"/assets/{Asset.Uid}", Asset.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => Asset.Create(_assetModel));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => Asset.CreateAsync(_assetModel));
             Assert.ThrowsException<InvalidOperationException>(() => Asset.Query());

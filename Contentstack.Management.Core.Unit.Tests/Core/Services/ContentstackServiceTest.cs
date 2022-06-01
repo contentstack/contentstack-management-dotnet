@@ -322,6 +322,20 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         }
 
         [TestMethod]
+        public void Return_Branch_ID_In_Header()
+        {
+            var token = _fixture.Create<string>();
+
+            var contentstackService = new ContentstackService(serializer, new Management.Core.Models.Stack(null, branchUid: token));
+            ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
+
+            IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("branch");
+            Assert.IsNotNull(httpClient);
+            Assert.AreEqual(token, contentstackService.Headers["branch"]);
+            Assert.AreEqual(token, headerValues.FirstOrDefault());
+        }
+
+        [TestMethod]
         public void Should_Add_query_Parameter()
         {
             var parameter = new ParameterCollection();

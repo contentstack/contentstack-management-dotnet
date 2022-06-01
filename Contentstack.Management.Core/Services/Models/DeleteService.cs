@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -10,8 +11,8 @@ namespace Contentstack.Management.Core.Services.Models
         internal string fieldName;
         internal T model;
 
-        internal DeleteService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, string fieldName, T model)
-            : base(serializer, stack: stack)
+        internal DeleteService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, string fieldName, T model, ParameterCollection collection = null)
+            : base(serializer, stack: stack, collection: collection)
         {
             if (stack.APIKey == null)
             {
@@ -31,6 +32,7 @@ namespace Contentstack.Management.Core.Services.Models
             }
             this.ResourcePath = resourcePath;
             this.HttpMethod = "DELETE";
+            this.UseQueryString = true;
             this.fieldName = fieldName;
             this.model = model;
         }
