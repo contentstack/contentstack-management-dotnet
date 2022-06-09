@@ -30,7 +30,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Release release = new Release(_stack);
 
             Assert.IsNull(release.Uid);
-            Asset.Equals("/releases", release.resourcePath);
+            Assert.AreEqual("/releases", release.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => release.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => release.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => release.Update(_fixture.Create<ReleaseModel>()));
@@ -51,7 +51,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Release release = new Release(_stack, code);
 
             Assert.AreEqual(code, release.Uid);
-            Asset.Equals($"/releases/{release.Uid}", release.resourcePath);
+            Assert.AreEqual($"/releases/{release.Uid}", release.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => release.Create(_fixture.Create<ReleaseModel>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => release.CreateAsync(_fixture.Create<ReleaseModel>()));
             Assert.ThrowsException<InvalidOperationException>(() => release.Query());

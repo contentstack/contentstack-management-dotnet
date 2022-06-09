@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             GlobalField globalField = new GlobalField(_stack);
 
             Assert.IsNull(globalField.Uid);
-            Asset.Equals($"/global_fields", globalField.resourcePath);
+            Assert.AreEqual($"/global_fields", globalField.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => globalField.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => globalField.Update(new ContentModelling()));
@@ -48,7 +48,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             GlobalField globalField = new GlobalField(_stack, uid);
 
             Assert.AreEqual(uid, globalField.Uid);
-            Asset.Equals($"/global_fields/{globalField.Uid}", globalField.resourcePath);
+            Assert.AreEqual($"/global_fields/{globalField.Uid}", globalField.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => globalField.Create(new ContentModelling()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.CreateAsync(new ContentModelling()));
             Assert.ThrowsException<InvalidOperationException>(() => globalField.Query());

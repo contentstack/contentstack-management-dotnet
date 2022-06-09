@@ -57,6 +57,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsException<InvalidOperationException>(() => stack.ManagementTokens());
             Assert.ThrowsException<InvalidOperationException>(() => stack.Role());
             Assert.ThrowsException<InvalidOperationException>(() => stack.Release());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.PublishQueue());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.AuditLog());
         }
 
         [TestMethod]

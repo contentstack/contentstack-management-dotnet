@@ -706,7 +706,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// A publishing <see cref="Models.Environment" /> corresponds to one or more deployment servers or a content delivery destination where the entries need to be published.
         /// </summary>
-        /// <param name="uid">Optional, label uid.</param>
+        /// <param name="uid">Optional, environment uid.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
@@ -726,7 +726,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// You can use <see cref="Models.Token.DeliveryToken" /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
         /// </summary>
-        /// <param name="uid">Optional, label uid.</param>
+        /// <param name="uid">Optional, delivery token uid.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
@@ -746,7 +746,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// You can use <see cref="Models.Token.ManagementToken" /> to authenticate Content Management API (CMA) requests over your stack content.
         /// </summary>
-        /// <param name="uid">Optional, label uid.</param>
+        /// <param name="uid">Optional, management token uid.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
@@ -766,7 +766,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// A <see cref="Models.Role" /> collection of permissions that will be applicable to all the users who are assigned this role.
         /// </summary>
-        /// <param name="uid">Optional, label uid.</param>
+        /// <param name="uid">Optional, role uid.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
@@ -786,7 +786,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// A <see cref="Models.Release" /> is a set of entries and assets that needs to be deployed (published or unpublished) all at once to a particular environment.
         /// </summary>
-        /// <param name="uid">Optional, label uid.</param>
+        /// <param name="uid">Optional, release uid.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
@@ -803,6 +803,46 @@ namespace Contentstack.Management.Core.Models
             return new Release(this, uid);
         }
 
+        /// <summary>
+        /// A <see cref="Models.PublishQueue" /> displays the historical and current details of activities such as publish, unpublish, or delete that can be performed on entries and/or assets.
+        /// It also shows details of Release deployments. These details include time, entry, content type, version, language, user, environment, and status.
+        /// </summary>
+        /// <param name="uid">Optional, publish queue uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.PublishQueue(&quot;&lt;PUBLISH_QUEUE_UID&gt;&quot;).Fetch();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.PublishQueue" /></returns>
+        public PublishQueue PublishQueue(string uid = null)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new PublishQueue(this, uid);
+        }
+
+        /// <summary>
+        /// A <see cref="Models.AuditLog" /> displays a record of all the activities performed in a stack and helps you keep a track of all published items, updates, deletes, and current status of the existing content.
+        /// </summary>
+        /// <param name="uid">Optional, audit log uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.AuditLog(&quot;&lt;AUDIT_LOG_UID&gt;&quot;).Fetch();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.AuditLog" /></returns>
+        public AuditLog AuditLog(string uid = null)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new AuditLog(this, uid);
+        }
         #endregion
 
         #region Throw Error

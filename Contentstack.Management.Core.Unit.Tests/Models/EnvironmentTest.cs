@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Environment environment = new Environment(_stack);
 
             Assert.IsNull(environment.Uid);
-            Asset.Equals($"/environments", environment.resourcePath);
+            Assert.AreEqual($"/environments", environment.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => environment.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => environment.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => environment.Update(_fixture.Create<EnvironmentModel>()));
@@ -48,7 +48,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Environment environment = new Environment(_stack, code);
 
             Assert.AreEqual(code, environment.Uid);
-            Asset.Equals($"/environments/{environment.Uid}", environment.resourcePath);
+            Assert.AreEqual($"/environments/{environment.Uid}", environment.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => environment.Create(_fixture.Create<EnvironmentModel>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => environment.CreateAsync(_fixture.Create<EnvironmentModel>()));
             Assert.ThrowsException<InvalidOperationException>(() => environment.Query());

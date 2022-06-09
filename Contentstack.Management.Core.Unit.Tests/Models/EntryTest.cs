@@ -30,10 +30,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Initialize_Entry()
         {
-            Entry entry = new Entry(_stack, _fixture.Create<string>(), null);
+            var contentTypeUID = _fixture.Create<string>();
+            Entry entry = new Entry(_stack, contentTypeUID, null);
 
             Assert.IsNull(entry.Uid);
-            Asset.Equals($"/entries", entry.resourcePath);
+            Assert.AreEqual($"/content_types/{contentTypeUID}/entries", entry.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => entry.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => entry.Update(_fixture.Create<EntryModel>()));
@@ -62,10 +63,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public void Initialize_Entry_With_Uid()
         {
             string uid = _fixture.Create<string>();
-            Entry entry = new Entry(_stack, _fixture.Create<string>(), uid);
+            var contentTypeUID = _fixture.Create<string>();
+            Entry entry = new Entry(_stack, contentTypeUID, uid);
 
             Assert.AreEqual(uid, entry.Uid);
-            Asset.Equals($"/entries/{entry.Uid}", entry.resourcePath);
+            Assert.AreEqual($"/content_types/{contentTypeUID}/entries/{uid}", entry.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => entry.Create(_fixture.Create<EntryModel>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.CreateAsync(_fixture.Create<EntryModel>()));
             Assert.ThrowsException<InvalidOperationException>(() => entry.Query());

@@ -29,7 +29,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentType contentType = new ContentType(_stack, null);
 
             Assert.IsNull(contentType.Uid);
-            Asset.Equals($"/content_types", contentType.resourcePath);
+            Assert.AreEqual($"/content_types", contentType.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => contentType.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => contentType.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => contentType.Update(new ContentModelling()));
@@ -48,7 +48,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentType contentType = new ContentType(_stack, uid);
 
             Assert.AreEqual(uid, contentType.Uid);
-            Asset.Equals($"/content_types/{contentType.Uid}", contentType.resourcePath);
+            Assert.AreEqual($"/content_types/{contentType.Uid}", contentType.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => contentType.Create(new ContentModelling()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => contentType.CreateAsync(new ContentModelling()));
             Assert.ThrowsException<InvalidOperationException>(() => contentType.Query());
