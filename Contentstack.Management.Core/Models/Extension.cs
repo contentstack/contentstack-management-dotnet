@@ -19,7 +19,7 @@ namespace Contentstack.Management.Core.Models
 
             this.stack = stack;
             Uid = uid;
-            resourcePath = uid == null ? "/assets" : $"/assets/{uid}";
+            resourcePath = uid == null ? "/extensions" : $"/extensions/{uid}";
         }
 
         /// <summary>

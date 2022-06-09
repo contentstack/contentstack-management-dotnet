@@ -30,7 +30,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Role role = new Role(_stack);
 
             Assert.IsNull(role.Uid);
-            Asset.Equals("/roles", role.resourcePath);
+            Assert.AreEqual("/roles", role.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => role.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => role.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => role.Update(_fixture.Create<RoleModel>()));
@@ -47,7 +47,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Role role = new Role(_stack, code);
 
             Assert.AreEqual(code, role.Uid);
-            Asset.Equals($"/roles/{role.Uid}", role.resourcePath);
+            Assert.AreEqual($"/roles/{role.Uid}", role.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => role.Create(_fixture.Create<RoleModel>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => role.CreateAsync(_fixture.Create<RoleModel>()));
             Assert.ThrowsException<InvalidOperationException>(() => role.Query());

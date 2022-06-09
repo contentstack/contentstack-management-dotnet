@@ -281,9 +281,9 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Stack" />.</returns>
-        public Stack Stack(string apiKey = null, string managementToken = null)
+        public Stack Stack(string apiKey = null, string managementToken = null, string branchUid = null)
         {
-            return new Stack(this, apiKey, managementToken);
+            return new Stack(this, apiKey, managementToken, branchUid);
         }
 
         #region LoginMethod

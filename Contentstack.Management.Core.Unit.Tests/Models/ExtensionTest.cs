@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using AutoFixture;
-using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Models.CustomExtension;
 using Contentstack.Management.Core.Queryable;
-using Contentstack.Management.Core.Unit.Tests.Models.ContentModel;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Contentstack.Management.Core.Unit.Tests.Models
@@ -34,7 +30,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Extension extension = new Extension(_stack, null);
 
             Assert.IsNull(extension.Uid);
-            Asset.Equals($"/extensions/", extension.resourcePath);
+            Assert.AreEqual($"/extensions", extension.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => extension.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => extension.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => extension.Update(_fixture.Create<ExtensionModel>()));
@@ -53,7 +49,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             CustomFieldModel model = new CustomFieldModel("../../../../README.md", "application/text", _fixture.Create<string>(), _fixture.Create<string>());
 
             Assert.AreEqual(uid, extension.Uid);
-            Asset.Equals($"/extensions/{extension.Uid}", extension.resourcePath);
+            Assert.AreEqual($"/extensions/{extension.Uid}", extension.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => extension.Query());
             Assert.ThrowsException<InvalidOperationException>(() => extension.Create(_fixture.Create<ExtensionModel>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => extension.CreateAsync(_fixture.Create<ExtensionModel>()));

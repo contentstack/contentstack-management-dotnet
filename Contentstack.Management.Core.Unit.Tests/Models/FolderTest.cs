@@ -30,7 +30,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Folder folder = new Folder(_stack, null);
 
             Assert.IsNull(folder.Uid);
-            Asset.Equals($"/assets/folders", folder.resourcePath);
+            Assert.AreEqual($"/assets/folders", folder.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => folder.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => folder.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => folder.Update(_fixture.Create<string>()));
@@ -46,7 +46,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Folder folder = new Folder(_stack, uid);
 
             Assert.AreEqual(uid, folder.Uid);
-            Asset.Equals($"/assets/folders/{folder.Uid}", folder.resourcePath);
+            Assert.AreEqual($"/assets/folders/{folder.Uid}", folder.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => folder.Create(_fixture.Create<string>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => folder.CreateAsync(_fixture.Create<string>()));
         }

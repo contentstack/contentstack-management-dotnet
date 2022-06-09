@@ -32,7 +32,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ReleaseItem releaseItem = new ReleaseItem(_stack, _releaseUID);
 
             
-            Asset.Equals($"/releases/{_releaseUID}/items", releaseItem.resourcePath);
+            Assert.AreEqual($"/releases/{_releaseUID}/items", releaseItem.resourcePath);
         }
 
         [TestMethod]
@@ -41,7 +41,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             
             ReleaseItem releaseItem = new ReleaseItem(_stack, null);
 
-            Asset.Equals($"/releases/{_releaseUID}/items", releaseItem.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => releaseItem.Delete(_fixture.Create<List<ReleaseItemModel>>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => releaseItem.DeleteAsync(_fixture.Create<List<ReleaseItemModel>>()));
             Assert.ThrowsException<InvalidOperationException>(() => releaseItem.Create(_fixture.Create<ReleaseItemModel>()));

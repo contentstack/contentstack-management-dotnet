@@ -29,7 +29,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Label label = new Label(_stack);
 
             Assert.IsNull(label.Uid);
-            Asset.Equals($"/labels", label.resourcePath);
+            Assert.AreEqual($"/labels", label.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => label.Fetch());
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => label.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => label.Update(_fixture.Create<LabelModel>()));
@@ -46,7 +46,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Label label = new Label(_stack, code);
 
             Assert.AreEqual(code, label.Uid);
-            Asset.Equals($"/labels/{label.Uid}", label.resourcePath);
+            Assert.AreEqual($"/labels/{label.Uid}", label.resourcePath);
             Assert.ThrowsException<InvalidOperationException>(() => label.Create(_fixture.Create<LabelModel>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => label.CreateAsync(_fixture.Create<LabelModel>()));
             Assert.ThrowsException<InvalidOperationException>(() => label.Query());
