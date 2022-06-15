@@ -803,6 +803,27 @@ namespace Contentstack.Management.Core.Models
             return new Release(this, uid);
         }
 
+
+        /// <summary>
+        /// A <see cref="Models.Workflow" /> is a tool that allows you to streamline the process of content creation and publishing, and lets you manage the content lifecycle of your project smoothly.
+        /// </summary>
+        /// <param name="uid">Optional, workflow uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.Workflow(&quot;&lt;WORKFLOW_UID&gt;&quot;).Fetch();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Workflow" /></returns>
+        public Workflow Workflow(string uid = null)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new Workflow(this, uid);
+        }
+
         /// <summary>
         /// A <see cref="Models.PublishQueue" /> displays the historical and current details of activities such as publish, unpublish, or delete that can be performed on entries and/or assets.
         /// It also shows details of Release deployments. These details include time, entry, content type, version, language, user, environment, and status.

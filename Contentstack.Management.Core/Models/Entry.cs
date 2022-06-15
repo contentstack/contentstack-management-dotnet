@@ -571,5 +571,104 @@ namespace Contentstack.Management.Core.Models
                 throw;
             }
         }
+
+        /// <summary>
+        /// The Set Entry Workflow Stage request allows you to either set a particular workflow stage of an entry or update the workflow stage details of an entry.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// EntryWorkflowStage model = new EntryWorkflowStage();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).SetWorkflow(model);
+        /// </code></pre>
+        /// </example>
+        /// <param name="model"><see cref="EntryWorkflowStage"/> object.</param>
+        /// <param name="collection">Query parameter.</param>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        public ContentstackResponse SetWorkflow(EntryWorkflowStage model, ParameterCollection collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            Dictionary<string, EntryWorkflowStage> dict = new Dictionary<string, EntryWorkflowStage>()
+            {
+                { "workflow_stage", model}
+            };
+            var service = new CreateUpdateService<Dictionary<string, EntryWorkflowStage>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            return stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// The Set Entry Workflow Stage request allows you to either set a particular workflow stage of an entry or update the workflow stage details of an entry.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// EntryWorkflowStage model = new EntryWorkflowStage();
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).SetWorkflowAsync(model);
+        /// </code></pre>
+        /// </example>
+        /// <param name="model"><see cref="EntryWorkflowStage"/> object.</param>
+        /// <param name="collection">Query parameter.</param>
+        /// <returns>The Task.</returns>
+        public Task<ContentstackResponse> SetWorkflowAsync(EntryWorkflowStage model, ParameterCollection collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            Dictionary<string, EntryWorkflowStage> dict = new Dictionary<string, EntryWorkflowStage>()
+            {
+                { "workflow_stage", model}
+            };
+            var service = new CreateUpdateService<Dictionary<string, EntryWorkflowStage>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            return stack.client.InvokeAsync<CreateUpdateService<Dictionary<string, EntryWorkflowStage>>, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// This multipurpose request allows you to either send a publish request or accept/reject a received publish request.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// EntryPublishAction model = new EntryPublishAction();
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).PublishRequest(model);
+        /// </code></pre>
+        /// </example>
+        /// <param name="publishAction"><see cref="EntryPublishAction"/> object.</param>
+        /// <param name="collection">Query parameter.</param>
+        /// <returns></returns>
+        public ContentstackResponse PublishRequest(EntryPublishAction publishAction, ParameterCollection collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            Dictionary<string, EntryPublishAction> dict = new Dictionary<string, EntryPublishAction>()
+            {
+                { "publishing_rule", publishAction}
+            };
+            var service = new CreateUpdateService<Dictionary<string, EntryPublishAction>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            return stack.client.InvokeSync(service);
+        }
+        /// <summary>
+        /// This multipurpose request allows you to either send a publish request or accept/reject a received publish request.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// EntryPublishAction model = new EntryPublishAction();
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Entry(&quot;&lt;ENTRY_UID&gt;&quot;).PublishRequest(model);
+        /// </code></pre>
+        /// </example>
+        /// <param name="publishAction"><see cref="EntryPublishAction"/> object.</param>
+        /// <param name="collection">Query parameter.</param>
+        /// <returns></returns>
+        public Task<ContentstackResponse> PublishRequestAsync(EntryPublishAction publishAction, ParameterCollection collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            Dictionary<string, EntryPublishAction> dict = new Dictionary<string, EntryPublishAction>()
+            {
+                { "publishing_rule", publishAction}
+            };
+            var service = new CreateUpdateService<Dictionary<string, EntryPublishAction>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            return stack.client.InvokeAsync<CreateUpdateService<Dictionary<string, EntryPublishAction>>, ContentstackResponse>(service);
+        }
     }
 }
