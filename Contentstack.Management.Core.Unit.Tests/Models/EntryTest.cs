@@ -55,6 +55,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.PublishAsync(_fixture.Create<PublishUnpublishDetails>()));
             Assert.ThrowsException<InvalidOperationException>(() => entry.Unpublish(_fixture.Create<PublishUnpublishDetails>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.UnpublishAsync(_fixture.Create<PublishUnpublishDetails>()));
+            Assert.ThrowsException<InvalidOperationException>(() => entry.SetWorkflow(_fixture.Create<EntryWorkflowStage>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.SetWorkflowAsync(_fixture.Create<EntryWorkflowStage>()));
+            Assert.ThrowsException<InvalidOperationException>(() => entry.PublishRequest(_fixture.Create<EntryPublishAction>()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => entry.PublishRequestAsync(_fixture.Create<EntryPublishAction>()));
             Assert.ThrowsException<InvalidOperationException>(() => entry.Export(_fixture.Create<string>()));
             Assert.AreEqual(entry.Query().GetType(), typeof(Query));
         }
@@ -324,6 +328,44 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         {
             var filePath = "entry.json";
             ContentstackResponse response = await _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).ImportAsync(filePath, new ParameterCollection());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Set_Entry_Workflow_Stage()
+        {
+            ContentstackResponse response = _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).SetWorkflow(_fixture.Create<EntryWorkflowStage>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Set_Entry_Workflow_Stage_Async()
+        {
+            ContentstackResponse response = await _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).SetWorkflowAsync(_fixture.Create<EntryWorkflowStage>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Set_Entry_Publish_Request_Action()
+        {
+            ContentstackResponse response = _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).PublishRequest(_fixture.Create<EntryPublishAction>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Set_Entry_Publish_Request_Action_Async()
+        {
+            ContentstackResponse response = await _stack.ContentType(_fixture.Create<string>()).Entry(_fixture.Create<string>()).PublishRequestAsync(_fixture.Create<EntryPublishAction>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
