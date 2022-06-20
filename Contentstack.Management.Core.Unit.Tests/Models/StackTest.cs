@@ -58,6 +58,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsException<InvalidOperationException>(() => stack.Role());
             Assert.ThrowsException<InvalidOperationException>(() => stack.Release());
             Assert.ThrowsException<InvalidOperationException>(() => stack.Workflow());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Webhook());
             Assert.ThrowsException<InvalidOperationException>(() => stack.PublishQueue());
             Assert.ThrowsException<InvalidOperationException>(() => stack.AuditLog());
         }
@@ -102,6 +103,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsException<InvalidOperationException>(() => stack.Role());
             Assert.ThrowsException<InvalidOperationException>(() => stack.Release());
             Assert.ThrowsException<InvalidOperationException>(() => stack.Workflow());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.Webhook());
             Assert.ThrowsException<InvalidOperationException>(() => stack.PublishQueue());
             Assert.ThrowsException<InvalidOperationException>(() => stack.AuditLog());
         }
