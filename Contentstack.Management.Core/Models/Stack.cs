@@ -844,6 +844,25 @@ namespace Contentstack.Management.Core.Models
 
             return new PublishQueue(this, uid);
         }
+        /// <summary>
+        /// A <see cref="Models.Webhook" /> a mechanism that sends real-time information to any third-party app or service to keep your application in sync with your Contentstack account. 
+        /// </summary>
+        /// <param name="uid">Optional, webhook uid uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.Webhook(&quot;&lt;WEBHOOK_UID&gt;&quot;).Fetch();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.AuditLog" /></returns>
+        public Webhook Webhook(string uid = null)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new Webhook(this, uid);
+        }
 
         /// <summary>
         /// A <see cref="Models.AuditLog" /> displays a record of all the activities performed in a stack and helps you keep a track of all published items, updates, deletes, and current status of the existing content.
