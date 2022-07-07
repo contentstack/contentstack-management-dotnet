@@ -7,6 +7,7 @@ namespace Contentstack.Management.Core.Utils
         #region Internal Constants
         internal const long ContentBufferSize = 1024 * 1024 * 1024;
         internal readonly static TimeSpan Timeout = TimeSpan.FromSeconds(30);
+        internal readonly static TimeSpan Delay = TimeSpan.FromMilliseconds(300);
         internal const string Slash = "/";
         internal const char SlashChar = '/';
         #endregion

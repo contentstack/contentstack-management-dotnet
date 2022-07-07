@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Internal;
 using Contentstack.Management.Core.Log;
@@ -39,9 +40,47 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
             _logManager = logManager;
         }
 
+        public ContentstackRuntimePipeline(List<IPipelineHandler> handlers, ILogManager logManager)
+        {
+            if (handlers == null || handlers.Count == 0)
+                throw new ArgumentNullException("handler");
+
+            if (logManager == null)
+                throw new ArgumentNullException("logManager");
+
+            foreach (IPipelineHandler handler in handlers)
+            {
+                AddHanlder(handler);
+            }
+            _handler.LogManager = logManager;
+
+            _logManager = logManager;
+        }
+
         public void AddLogger(Logger logger)
         {
             _logManager.AddLogger(logger);
+        }
+
+        public void AddHanlder(IPipelineHandler handler)
+        {
+            if (handler == null)
+                throw new ArgumentNullException("handler");
+
+            ThrowIfDisposed();
+
+            var currentHanler = handler;
+            while (currentHanler.InnerHandler != null)
+            {
+                currentHanler = currentHanler.InnerHandler;
+            }
+
+            if (_handler != null)
+            {
+                currentHanler.InnerHandler = _handler;
+            }
+
+            _handler = currentHanler;
         }
 
         public System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext)
@@ -86,13 +125,13 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
                 var handler = this.Handler;
                 while (handler != null)
                 {
-                    //TODO to add multiple Handler Dispose
+                    var innerHandler = handler.InnerHandler;
                     var disposable = handler as IDisposable;
                     if (disposable != null)
                     {
                         disposable.Dispose();
                     }
-                    handler = null;
+                    handler = innerHandler;
                 }
 
                 _disposed = true;

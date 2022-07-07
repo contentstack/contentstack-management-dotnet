@@ -18,6 +18,8 @@ using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Services.User;
 using Contentstack.Management.Core.Queryable;
 using Environment = System.Environment;
+using System.Collections.Generic;
+using Contentstack.Management.Core.Runtime.Pipeline.RertyHandler;
 
 namespace Contentstack.Management.Core
 {
@@ -168,7 +170,12 @@ namespace Contentstack.Management.Core
         {
             HttpHandler httpClientHandler = new HttpHandler(_httpClient);
 
-            this.ContentstackPipeline = new ContentstackRuntimePipeline(httpClientHandler, LogManager);
+            var retryPolicy = contentstackOptions.RetryPolicy ?? new DefaultRetryPolicy(contentstackOptions.RetryLimit, contentstackOptions.RetryDelay);
+            this.ContentstackPipeline = new ContentstackRuntimePipeline(new List<IPipelineHandler>()
+            {
+                httpClientHandler,
+                new RetryHandler(retryPolicy)
+            }, LogManager);
         }
 
         internal ContentstackResponse InvokeSync<TRequest>(TRequest request) where TRequest : IContentstackService

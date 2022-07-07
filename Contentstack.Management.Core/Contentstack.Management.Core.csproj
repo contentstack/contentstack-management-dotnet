@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net471;net472;</TargetFrameworks>
     <PackageId>contentstack.management.csharp</PackageId>
-    <PackageVersion>0.1.0</PackageVersion>
+    <PackageVersion>0.1.0-alpha</PackageVersion>
     <Authors>Contentstack</Authors>
     <Copyright>Copyright © 2012-2021 Contentstack. All Rights Reserved</Copyright>
     <Owners>Contentstack </Owners>
@@ -15,6 +15,7 @@
     <Description>.NET SDK for the Contentstack Content Management API.</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageTags>v0.1.0</PackageTags>
+    <ReleaseVersion>0.1.0-alpha</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +25,7 @@
     <None Remove="Services\Models\Versioning\" />
     <None Remove="Models\CustomExtension\" />
     <None Remove="Models\Token\" />
+    <None Remove="Runtime\Pipeline\RertyHandler\" />
   </ItemGroup>
   <ItemGroup>
       <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
@@ -50,10 +52,11 @@
     <Folder Include="Services\Models\Versioning\" />
     <Folder Include="Models\CustomExtension\" />
     <Folder Include="Models\Token\" />
+    <Folder Include="Runtime\Pipeline\RertyHandler\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 </Project>

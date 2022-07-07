@@ -8,6 +8,7 @@ namespace Contentstack.Management.Core.Runtime.Contexts
     {
         IContentstackService service { get; set; }
         ContentstackClientOptions config { get; set; }
+        int Retries { get; set; }
     }
 
 }

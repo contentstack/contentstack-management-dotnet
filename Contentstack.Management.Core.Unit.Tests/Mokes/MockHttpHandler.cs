@@ -7,6 +7,19 @@ using Contentstack.Management.Core.Runtime.Pipeline;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
+    public class MockRetryHadler : PipelineHandler
+    {
+        public override Task<T> InvokeAsync<T>(IExecutionContext executionContext)
+        {
+            return base.InvokeAsync<T>(executionContext);
+        }
+
+        public override void InvokeSync(IExecutionContext executionContext)
+        {
+            base.InvokeSync(executionContext);
+        }
+    }
+
     public class MockHttpHandler : IPipelineHandler
     {
         private ContentstackResponse _response;
@@ -17,6 +30,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         }
 
         public ILogManager LogManager { get; set; }
+        public IPipelineHandler InnerHandler { get; set; }
 
         public async Task<T> InvokeAsync<T>(IExecutionContext executionContext) 
         {
