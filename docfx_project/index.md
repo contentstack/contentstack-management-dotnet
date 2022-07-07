@@ -1,99 +1,138 @@
-
-# Contentstack - .Net SDK
+# Contentstack - .Net Management SDK
 
 .NET SDK for Contentstack's Content Delivery API
 
-Contentstack is a headless CMS with an API-first approach. It is a CMS that developers can use to build powerful cross-platform applications in their favorite languages. Build your application frontend, and Contentstack will take care of the rest.  [Read More](https://www.contentstack.com/).
+Contentstack provides a .NET Management SDK (that uses Content Management APIs) that developers can use to manage the content of your Contentstack account. 
+This includes creating, updating, deleting, and fetching content of your account.
 
-For more details about the namespaces and classes navigate menu to left.
+> Note: The Contentstack .NET Management SDK supports .NET v3.1 or above.
+In order to integrate your .NET app with Contentstack .NET Management SDK, follow the steps mentioned in the Get Started guide.
+ 
+ 
+## Get Started with .NET Management SDK
 
-## Prerequisites
+This guide will help you get started with Contentstack .NET Management SDK (that uses Content Management APIs) to manage apps powered by Contentstack. 
+This includes operations such as creating, updating, deleting, and fetching content of your Contentstack account.
 
-To get started with C#, you will need:
+### Prerequisite
+You need .NET version 3.1 or above installed to use the Contentstack .NET Management SDK.
 
-.net platform, IDE (Visual Studio) and NuGet.
-
-## SDK installation and setup
-
-The .Net SDK provided by contentstack.io is available for Xamarin, Windows Phone and legacy .Net applications. You can integrate contentstack with your application by following these steps.
-
-Open the terminal and install the contentstack module via 'Package Manager' command
-
-``` console
-PM> Install-Package contentstack.csharp
+### Installation
+Open the terminal and install the contentstack module via “Package Manager” command:
+ ```sh
+ PM> Install-Package contentstack.management.core
 ```
-And via ‘.Net CLI’
-``` console
-dotnet add package contentstack.csharp
+ 
+And via “.Net CLI”
+
+```sh
+dotnet add package contentstack.management.core
 ```
-To use the module in your application, you need to first Add Namespace to your class
-``` cs
-using Contentstack.Core; // ContentstackClient 
-using Contentstack.Core.Models; // Stack, Query, Entry, Asset, ContentType, ContentstackCollection
-using Contentstack.Core.Configuration; // ContentstackOptions
-```
-## Initialize SDK
-
-You will need to specify the API key, Access token, and Environment Name of your stack to initialize the SDK:
-
-``` cs
-// Initialize the Contentstack 
-ContentstackClient stack = new ContentstackClient("api_key", "access_token", "enviroment_name");
-```
-
-or:
-
-``` cs
-//
-var options = new ContentstackOptions()
+ 
+### To import the SDK, use the following code:
+``` c#
+using Contentstack.Management.Core
+ContentstackClient client = new ContentstackClient();
+``` 
+Or
+``` c#
+ContentstackClientOptions options = new ContentstackClientOptions();
+ContentstackClient client = new ContentstackClient(new OptionsWrapper<ContentstackClientOptions>(options));
+``` 
+### Authentication
+To use the SDK, you need to authenticate users. You can do this by using an authtoken, credentials, or a management token (stack-level token). 
+Let's discuss each of them in detail.
+#### Authtoken
+An authtoken is a read-write token used to make authorized CMA requests, and it is a user-specific token.
+``` c#
+ContentstackClientOptions options = new ContentstackClientOptions() {
+Authtoken: ‘AUTHTOKEN’
+};
+ContentstackClient client = new ContentstackClient(new OptionsWrapper<ContentstackClientOptions>(options));
+ ```
+#### Login
+To log in to Contentstack, provide your credentials as shown below.
+``` c#
+NetworkCredential credentials = new NetworkCredential("EMAIL", "PASSWORD");
+ContentstackClient client = new ContentstackClient();
+try
 {
-    ApiKey = "<api_key>",
-    AccessToken = "<access_token>"
-    Environment = "<environment>"
+    ContentstackResponse contentstackResponse = client.Login(credentials);
+} catch (Exception e)
+{
+ 
 }
-ContentstackClient stack = new ContentstackClient(options);
-```
+ ```
+#### Management Token
+Management tokens are stack-level tokens with no users attached to them.
+``` c#
+ContentstackClient client = new ContentstackClient();
 
-Once you have initialized the SDK, you can start getting content in your app.
-
-## Basic Queries
-
-### Get a Single Entry
-
-To retrieve a single entry from a content type, use the code snippet given below:
-``` cs
-Entry entry = client.ContentType("blog").Entry("blta464e9fbd048668c");
-entry.Fetch<Product>().ContinueWith((t) => { 
-    if (!t.IsFaulted) { 
-        Console.WriteLine("entry:" + t.Result);  
-    } 
-});
-```
-
-### Get Multiple Entries
-
-To retrieve multiple entries of a particular content type, use the code snippet given below:
-``` cs
-
-Query query = client.ContentType("blog").Query(); 
-query.Where("title", "welcome"); 
-query.IncludeSchema(); 
-query.IncludeCount(); 
-query.ToJSON(); 
-query.Find<Product>().ContinueWith((t) => { 
-    if (!t.IsFaulted) { 
-        ContentstackCollection<Product> result = t.Result; 
-        Console.WriteLine("result" + result.items); 
-    } 
-});
-```
-## Example
-
-To help you get started, we have created a sample console application that is powered by Contentstack .NET SDK. Click on the link below to read the tutorial of the app.
-
-[.NET News Console App](https://contentstack.com/docs/example-apps/build-a-news-app-using-contentstack-dot-net-sdk)
-
-## Helpful Links
+client.Stack("API_KEY", "MANAGEMENT_TOKEN");
+ ```
+ 
+ 
+### Initialize your SDK
+To use the .NET CMA SDK, you need to first initialize it.
+``` c#
+using Contentstack.Management.Core
+ContentstackClientOptions options = new ContentstackClientOptions() {
+Authtoken: "AUTHTOKEN"
+};
+ContentstackClient client = new ContentstackClient(new OptionsWrapper<ContentstackClientOptions>(options));
+``` 
+### For Setting the branch:
+If you want to initialize SDK in a particular branch use the code given below:
+``` c#
+using Contentstack.Management.Core
+ 
+ContentstackClient client = new ContentstackClient();
+client.Stack("API_KEY", "MANAGEMENT_TOKEN", "BRANCH");
+ ```
+### Proxy Configuration
+Contentstack allows you to define HTTP proxy for your requests with the .NET Management SDK. 
+A proxied request allows you to anonymously access public URLs even from within a corporate firewall through a proxy server.
+Here is the basic syntax of the proxy settings that you can pass within fetchOptions of the .NET Management SDK:
+``` c#
+var contentstackConfig = new ContentstackClientOptions();
+contentstackConfig.ProxyHost = "http://127.0.0.1"
+contentstackConfig.ProxyPort = 9000;
+contentstackConfig.ProxyCredentials = new NetworkCredential(userName: "username", password: "password");
+ContentstackClient client = new ContentstackClient(new OptionsWrapper<ContentstackClientOptions>(options));
+ ```
+ 
+### Fetch Stack Details
+To fetch your stack details through the SDK, use the following code:
+``` c#
+using Contentstack.Management.Core
+ 
+ContentstackClient client = new ContentstackClient();
+Stack stack = client.Stack("API_KEY");
+ContentstackResponse contentstackResponse = stack.Fetch();
+var response = contentstackResponse.OpenJObjectResponse();
+ ```
+### Create an Entry
+You can use the following code to create an entry in a specific content type of a stack through the SDK:
+``` c#
+EntryModel entry = new EntryModel() {
+ Title: 'Sample Entry',
+ Url: '/sampleEntry'
+}
+ContentstackClient client = new ContentstackClient();
+Stack stack = client.Stack("API_KEY");
+ContentstackResponse contentstackResponse = stack.ContentType(“CONTENT_TYPE_UID”).Entry().Create(entry);
+ ```
+### Upload Assets
+Use the following code snippet to upload assets to your stack through the SDK:
+``` c#
+ContentstackClient client = new ContentstackClient();
+Stack stack = client.Stack("API_KEY");
+ 
+var path = Path.Combine(Environment.CurrentDirectory, "path/to/file");
+AssetModel asset = new AssetModel("Asset Title", path, "application/json");
+ContentstackResponse response = stack.Asset().Create(asset);
+ ```
+ ## Helpful Links
 
 -   [Contentstack Website](https://www.contentstack.com/)
 -   [Official Documentation](https://contentstack.com/docs)

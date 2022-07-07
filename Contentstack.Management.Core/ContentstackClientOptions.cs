@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Net;
+using Contentstack.Management.Core.Runtime.Pipeline.RertyHandler;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core
@@ -46,6 +47,7 @@ namespace Contentstack.Management.Core
 
         /// <summary>
         /// Gets or sets the timespan to wait before the request times out.
+        /// The default value for time out is 30 seconds.
         /// </summary>
         public TimeSpan Timeout { get; set; } = CSConstants.Timeout;
 
@@ -55,6 +57,25 @@ namespace Contentstack.Management.Core
         /// The default value is true
         /// </summary>
         public bool RetryOnError { get; set; } = true;
+
+        /// <summary>
+        /// Returns the flag indicating how many retry HTTP requests an SDK should
+        /// make for a single SDK operation invocation before giving up.
+        /// The default value is 5.
+        /// </summary>
+        public int RetryLimit { get; set; } = 5;
+
+        /// <summary>
+        /// Returns the flag indicating delay in retrying HTTP requests.
+        /// The default value is 300ms.
+        /// </summary>
+        public TimeSpan RetryDelay { get; set; } = CSConstants.Delay;
+
+        /// <summary>
+        /// The retry policy which specifies when 
+        /// a retry should be performed.
+        /// </summary>
+        public RetryPolicy RetryPolicy { get; set; }
 
         /// <summary>
         /// Host for the Proxy.

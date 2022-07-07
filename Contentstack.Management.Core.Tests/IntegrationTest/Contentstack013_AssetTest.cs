@@ -28,11 +28,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test001_Should_Create_Asset()
         {
+            
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
 
-            var path = Path.Combine(Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
-
-            AssetModel asset = new AssetModel("contentTypeSchema.json", path, "application/json");
-            ContentstackResponse response = _stack.Asset().Create(asset);
+                AssetModel asset = new AssetModel("contentTypeSchema.json", path, "application/json");
+                ContentstackResponse response = _stack.Asset().Create(asset);
             
         }
 

@@ -15,6 +15,12 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
         ILogManager LogManager { get; set; }
 
         /// <summary>
+        /// The inner handler which is called after the current 
+        /// handler completes it's processing.
+        /// </summary>
+        IPipelineHandler InnerHandler { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="executionContext"></param>

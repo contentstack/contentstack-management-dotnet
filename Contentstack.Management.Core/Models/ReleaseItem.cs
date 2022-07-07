@@ -114,7 +114,7 @@ namespace Contentstack.Management.Core.Models
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// ReleaseItemModel model = new ReleaseItemModel();
-        /// List&lt;ReleaseItemModel&gt; models = new List<ReleaseItemModel>()
+        /// List&lt;ReleaseItemModel&gt; models = new List&lt;ReleaseItemModel&gt;()
         /// {
         ///     model,
         /// };
@@ -139,12 +139,12 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Relase(&quot;&lt;RELEASE_UID&gt;&quot;).Item().CreateMultipleAsync(models);
         /// ReleaseItemModel model = new ReleaseItemModel();
-        /// List&lt;ReleaseItemModel&gt; models = new List<ReleaseItemModel>()
+        /// List&lt;ReleaseItemModel&gt; models = new List&lt;ReleaseItemModel&gt;()
         /// {
         ///     model,
         /// };
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Relase(&quot;&lt;RELEASE_UID&gt;&quot;).Item().CreateMultipleAsync(models);
         /// </code></pre>
         /// </example>
         /// <param name="model">ReleaseItem Model for creating ReleaseItem.</param>
@@ -165,8 +165,9 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// List&lt;string&gt items = new List&lt;string&gt();
-        /// items.append("$all");
+        /// List&lt;string&gt; items = new List&lt;string&gt;(){
+        /// &quot;&lt;$all&gt;&quot;
+        /// }
         /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Release(&quot;&lt;RELEASE_UID&gt;&quot;).Item().UpdateReleaseItem(items);
         /// </code></pre>
         /// </example>
@@ -186,8 +187,9 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// List&lt;string&gt items = new List&lt;string&gt();
-        /// items.append("$all");
+        /// List&lt;string&gt; items = new List&lt;string&gt;(){
+        /// &quot;&lt;$all&gt;&quot;
+        /// }
         /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Release(&quot;&lt;RELEASE_UID&gt;&quot;).Item().UpdateReleaseItemAsync(items);
         /// </code></pre>
         /// </example>

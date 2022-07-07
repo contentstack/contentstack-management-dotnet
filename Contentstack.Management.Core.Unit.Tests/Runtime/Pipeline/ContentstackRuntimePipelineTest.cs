@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Internal;
 using Contentstack.Management.Core.Runtime.Contexts;
@@ -23,7 +24,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline
         [TestMethod]
         public void Should_Throw_ArgumentNullException_On_Null_PipelineHandle()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ContentstackRuntimePipeline(null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new ContentstackRuntimePipeline(handler: null, null));
+        }
+
+        [TestMethod]
+        public void Should_Throw_ArgumentNullException_On_Null_PipelineHandlers()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => new ContentstackRuntimePipeline(handlers: null, null));
         }
 
         [TestMethod]
@@ -58,6 +65,21 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline
             var pipeline = new ContentstackRuntimePipeline(handler, LogManager.GetLogManager(typeof(ContentstackRuntimePipelineTest)));
             pipeline.Dispose();
 
+            Assert.IsTrue(handler.disposed);
+        }
+
+        [TestMethod]
+        public void Should_Dispose_If_Handlers_Disposable_On_Dispose()
+        {
+            var handler = new MockHttpHandlerDisposable(response);
+            var handler2 = new MockHttpHandlerDisposable(response);
+            var pipeline = new ContentstackRuntimePipeline(new List<IPipelineHandler>()
+            {
+                handler,
+                handler2
+            }, LogManager.GetLogManager(typeof(ContentstackRuntimePipelineTest)));
+            pipeline.Dispose();
+            Assert.IsTrue(handler2.disposed);
             Assert.IsTrue(handler.disposed);
         }
 
@@ -106,6 +128,32 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline
         public async System.Threading.Tasks.Task Return_Response_On_InvokeAsync()
         {
             var pipeline = new ContentstackRuntimePipeline(new MockHttpHandler(response), LogManager.GetLogManager(typeof(ContentstackRuntimePipelineTest)));
+            await pipeline.InvokeAsync<ContentstackResponse>(context);
+
+            Assert.AreEqual(response, context.ResponseContext.httpResponse);
+            Assert.AreEqual(response.StatusCode, context.ResponseContext.httpResponse.StatusCode);
+            Assert.AreEqual(response.ContentType, context.ResponseContext.httpResponse.ContentType);
+            Assert.AreEqual(response.ContentLength, context.ResponseContext.httpResponse.ContentLength);
+            Assert.AreEqual(response.OpenResponse(), context.ResponseContext.httpResponse.OpenResponse());
+        }
+
+        [TestMethod]
+        public void Return_Response_For_Multiple_On_InvokeSync()
+        {
+            var pipeline = new ContentstackRuntimePipeline(new List<IPipelineHandler>() { new MockHttpHandler(response), new MockRetryHadler() }, LogManager.GetLogManager(typeof(ContentstackRuntimePipelineTest)));
+            pipeline.InvokeSync(context);
+
+            Assert.AreEqual(response, context.ResponseContext.httpResponse);
+            Assert.AreEqual(response.StatusCode, context.ResponseContext.httpResponse.StatusCode);
+            Assert.AreEqual(response.ContentType, context.ResponseContext.httpResponse.ContentType);
+            Assert.AreEqual(response.ContentLength, context.ResponseContext.httpResponse.ContentLength);
+            Assert.AreEqual(response.OpenResponse(), context.ResponseContext.httpResponse.OpenResponse());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Return_Response_For_Multiple_On_InvokeAsync()
+        {
+            var pipeline = new ContentstackRuntimePipeline(new List<IPipelineHandler>() { new MockHttpHandler(response), new MockRetryHadler() }, LogManager.GetLogManager(typeof(ContentstackRuntimePipelineTest)));
             await pipeline.InvokeAsync<ContentstackResponse>(context);
 
             Assert.AreEqual(response, context.ResponseContext.httpResponse);

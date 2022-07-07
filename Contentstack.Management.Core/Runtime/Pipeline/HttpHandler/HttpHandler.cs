@@ -21,6 +21,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
 
         #region Public
         public ILogManager LogManager { get; set; }
+        public IPipelineHandler InnerHandler { get; set; }
 
         public async System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext)
         {
