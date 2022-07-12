@@ -1,0 +1,22 @@
+apiRules:
+- exclude:
+    uidRegex: ^Contentstack\.Management\.Core\.Abstractions
+- exclude:
+    uidRegex: ^Contentstack\.Management\.Core\.Http
+- exclude:
+    uidRegex: ^Contentstack\.Management\.Core\.Internal
+- exclude:
+    uidRegex: ^Contentstack\.Management\.Core\.Log
+- exclude:
+    uidRegex: ^Contentstack\.Management\.Core\.Runtime\.Contexts
+- exclude:
+    uidRegex: ^Contentstack\.Management\.Core\.Utils
+- exclude:
+    uidRegex: ^Contentstack\.Management\.Core\.Attributes
+- exclude:
+    uidRegex: ^Contentstack\.Management\.Core\.Runtime\.Pipeline\.ContentstackRuntimePipeline
+    type: Class
+- exclude:
+    uidRegex: ^Contentstack\.Management\.Core\.Runtime\.Pipeline\.HttpHandler
+    type: Class
+    
