@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Runtime.Contexts;
 
-namespace Contentstack.Management.Core.Runtime.Pipeline.RertyHandler
+namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
 {
     public abstract partial class RetryPolicy
     {

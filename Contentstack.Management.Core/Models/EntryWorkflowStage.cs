@@ -14,13 +14,13 @@ namespace Contentstack.Management.Core.Models
         [JsonProperty(propertyName: "notify")]
         public bool Notify { get; set; } = true;
         [JsonProperty(propertyName: "assigned_to")]
-        public List<AssignUser> AssignedTo;
+        public List<AssignToUser> AssignedTo;
         [JsonProperty(propertyName: "assigned_by_roles")]
-        public List<AssignRole> AssignedByRoles;
+        public List<AssignByRole> AssignedByRoles;
     }
 
     [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
-    public class AssignUser
+    public class AssignToUser
     {
         [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Models
     }
 
     [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
-    public class AssignRole
+    public class AssignByRole
     {
         [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }

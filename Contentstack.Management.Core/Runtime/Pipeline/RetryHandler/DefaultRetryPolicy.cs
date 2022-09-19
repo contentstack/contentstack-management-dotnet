@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Contentstack.Management.Core.Runtime.Contexts;
 
-namespace Contentstack.Management.Core.Runtime.Pipeline.RertyHandler
+namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
 {
     public partial class DefaultRetryPolicy : RetryPolicy
     {
