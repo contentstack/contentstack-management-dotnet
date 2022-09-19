@@ -15,7 +15,7 @@
     <Description>.NET SDK for the Contentstack Content Management API.</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageTags>v0.1.0</PackageTags>
-    <ReleaseVersion>0.1.0-alpha</ReleaseVersion>
+    <ReleaseVersion>0.1.0</ReleaseVersion>
     <RootNamespace>Contentstack.Management.ASPNETCore</RootNamespace>
   </PropertyGroup>
 
