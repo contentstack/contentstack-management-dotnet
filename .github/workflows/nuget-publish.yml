@@ -6,7 +6,7 @@ on:
     types: [created]
 
 jobs:
-  publish-npm:  
+  publish-nuget:  
     runs-on: windows-latest
     steps:
       - name: Checkout repository
