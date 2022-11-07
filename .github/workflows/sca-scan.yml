@@ -6,9 +6,11 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout repository
+        uses: actions/checkout@master
       - name: Run Dotnet Restore
-        run: dotnet restore
+        run: |
+          dotnet restore
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/dotnet@master
         env:
