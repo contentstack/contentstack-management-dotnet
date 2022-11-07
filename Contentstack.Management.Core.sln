@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.808.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contentstack.Management.Core", "Contentstack.Management.Core\Contentstack.Management.Core.csproj", "{8480D607-4249-4DA5-B782-429FE1E53672}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contentstack.Management.Core", "Contentstack.Management.Core\contentstack.management.core.csproj", "{8480D607-4249-4DA5-B782-429FE1E53672}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contentstack.Management.Core.Tests", "Contentstack.Management.Core.Tests\Contentstack.Management.Core.Tests.csproj", "{FB3B9D93-5524-479A-85B5-2A7C24304D19}"
 EndProject
@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{AE5BBF5C-B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contentstack.Management.Core.Unit.Tests", "Contentstack.Management.Core.Unit.Tests\Contentstack.Management.Core.Unit.Tests.csproj", "{E0456E4C-F70F-4CDC-B0E9-76CCCF351514}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contentstack.Management.ASPNETCore", "Contentstack.Management.ASPNETCore\Contentstack.Management.ASPNETCore.csproj", "{C90C9782-D041-43A1-B13E-21B72B9A6BE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contentstack.Management.ASPNETCore", "Contentstack.Management.ASPNETCore\contentstack.management.aspnetcore.csproj", "{C90C9782-D041-43A1-B13E-21B72B9A6BE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
