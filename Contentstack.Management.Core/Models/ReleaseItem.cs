@@ -168,7 +168,7 @@ namespace Contentstack.Management.Core.Models
         /// List&lt;string&gt; items = new List&lt;string&gt;(){
         /// &quot;&lt;$all&gt;&quot;
         /// }
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Release(&quot;&lt;RELEASE_UID&gt;&quot;).Item().UpdateReleaseItem(items);
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Release(&quot;&lt;RELEASE_UID&gt;&quot;).Item().UpdateReleaseItem(items);
         /// </code></pre>
         /// </example>
         /// <param name="items">Release items to update or &quot;$all&quot; for updating all release items</param>

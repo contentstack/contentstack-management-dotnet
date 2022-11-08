@@ -19,7 +19,7 @@ using Contentstack.Management.Core.Services.User;
 using Contentstack.Management.Core.Queryable;
 using Environment = System.Environment;
 using System.Collections.Generic;
-using Contentstack.Management.Core.Runtime.Pipeline.RertyHandler;
+using Contentstack.Management.Core.Runtime.Pipeline.RetryHandler;
 
 namespace Contentstack.Management.Core
 {
@@ -53,7 +53,7 @@ namespace Contentstack.Management.Core
 
         #region Constructor
         /// <summary>
-        /// Initializes new instance of the <see cref="contentstackOptions"/> class.
+        /// Initializes new instance of the <see cref="ContentstackClient"/> class.
         /// </summary>
         /// <param name="contentstackOptions">The <see cref="ContentstackClientOptions"/> used for this client.</param>
         /// <example>
@@ -77,7 +77,7 @@ namespace Contentstack.Management.Core
         this(new OptionsWrapper<ContentstackClientOptions>(contentstackOptions)){}
 
         /// <summary>
-        /// Initializes new instance of the <see cref="contentstackOptions"/> class.
+        /// Initializes new instance of the <see cref="ContentstackClient"/> class.
         /// </summary>
         /// <param name="authtoken">The optional Authtoken for making CMA call</param>
         /// <param name="host">The optional host name for the API.</param>
@@ -364,7 +364,7 @@ namespace Contentstack.Management.Core
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Logout();
+        /// ContentstackResponse contentstackResponse = client.Logout();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse" /></returns>
@@ -401,7 +401,7 @@ namespace Contentstack.Management.Core
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.GetUser();
+        /// ContentstackResponse contentstackResponse = client.GetUser();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>

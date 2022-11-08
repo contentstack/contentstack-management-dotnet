@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Net;
-using Contentstack.Management.Core.Runtime.Pipeline.RertyHandler;
+using Contentstack.Management.Core.Runtime.Pipeline.RetryHandler;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core

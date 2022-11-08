@@ -166,7 +166,7 @@ namespace Contentstack.Management.Core.Models
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Release(&quot;&lt;RELEASE_UID&gt;&quot;).Item();
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Release(&quot;&lt;RELEASE_UID&gt;&quot;).Item().GetAll();
         /// </code></pre>
         /// </example>
         /// <param name="uid">Release Item UID</param>
