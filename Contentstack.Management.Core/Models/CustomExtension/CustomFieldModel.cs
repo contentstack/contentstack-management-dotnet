@@ -34,6 +34,10 @@ namespace Contentstack.Management.Core.Models.CustomExtension
             {
                 throw new ArgumentNullException("byteArray", "Uploading content can not be null.");
             }
+            if (title == null)
+            {
+                throw new ArgumentNullException("title", "Title for widget is required.");
+            }
             Title = title;
             DataType = dataType;
             Multiple = isMultiple;
@@ -60,22 +64,19 @@ namespace Contentstack.Management.Core.Models.CustomExtension
         {
             MultipartFormDataContent content = new MultipartFormDataContent();
 
-            content.Add(byteArray, "extension[upload]");
-
-            if (Title != null)
-            {
-                content.Add(new StringContent(Title), "extension[title]", Title);
-            }
+            content.Add(byteArray, "extension[upload]", Title);
+            content.Add(new StringContent(Title), "extension[title]");
+            
             if (DataType != null)
             {
-                content.Add(new StringContent(DataType), "extension[data_type]", DataType);
+                content.Add(new StringContent(DataType), "extension[data_type]");
             }
             if (Tags != null)
             {
-                content.Add(new StringContent(Tags), "extension[tags]", Tags);
+                content.Add(new StringContent(Tags), "extension[tags]");
             }
-            content.Add(new StringContent(Multiple ? "true" : "false"), "extension[multiple]", Multiple ? "true" : "false");
-            content.Add(new StringContent("field"), "extension[type]", "field");
+            content.Add(new StringContent(Multiple ? "true" : "false"), "extension[multiple]");
+            content.Add(new StringContent("field"), "extension[type]");
 
             return content;
         }

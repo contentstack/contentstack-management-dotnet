@@ -35,6 +35,10 @@ namespace Contentstack.Management.Core.Models.CustomExtension
             {
                 throw new ArgumentNullException("byteArray", "Uploading content can not be null.");
             }
+            if (title == null)
+            {
+                throw new ArgumentNullException("title", "Title for widget is required.");
+            }
             Title = title;
             Tags = tags;
             Scope = scope;
@@ -60,15 +64,12 @@ namespace Contentstack.Management.Core.Models.CustomExtension
         {
             MultipartFormDataContent content = new MultipartFormDataContent();
 
-            content.Add(byteArray, "extension[upload]");
+            content.Add(byteArray, "extension[upload]", Title);
+            content.Add(new StringContent(Title), "extension[title]");
 
-            if (Title != null)
+            if (Tags != null)
             {
-                content.Add(new StringContent(Title), "extension[title]", Title);
-            }
-              if (Tags != null)
-            {
-                content.Add(new StringContent(Tags), "extension[tags]", Tags);
+                content.Add(new StringContent(Tags), "extension[tags]");
             }
             if (Scope != null)
             {
@@ -85,7 +86,7 @@ namespace Contentstack.Management.Core.Models.CustomExtension
                     content.Add(jsonPart, "extension[scope]", snippet);
                 }
             }
-            content.Add(new StringContent("widget"), "extension[type]", "widget");
+            content.Add(new StringContent("widget"), "extension[type]");
             return content;
         }
     }
