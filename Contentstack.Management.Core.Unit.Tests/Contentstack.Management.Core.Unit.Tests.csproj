@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Contentstack.Management.Core\Contentstack.Management.Core.csproj" />
+    <ProjectReference Include="..\Contentstack.Management.Core\contentstack.management.core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utils\" />

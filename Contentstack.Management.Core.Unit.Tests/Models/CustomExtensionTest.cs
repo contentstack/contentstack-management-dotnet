@@ -110,7 +110,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         {
             var title = _fixture.Create<string>();
             var tags = _fixture.Create<string>();
-            DashboardWidgetModel assetModel = new DashboardWidgetModel("../../../../README.md", "application/text", title, tags);
+            DashboardWidgetModel assetModel = new DashboardWidgetModel("../../../../README.md", "application/text", title, isEnable: true, defaultWidth: "half", tags: tags);
 
             var content = assetModel.GetHttpContent();
             var stringContent = await content.ReadAsStringAsync();
@@ -118,6 +118,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.IsTrue(stringContent.Contains(title));
             Assert.IsTrue(stringContent.Contains(tags));
             Assert.IsTrue(stringContent.Contains("dashboard"));
+            Assert.IsTrue(stringContent.Contains("true"));
+            Assert.IsTrue(stringContent.Contains("half"));
             Assert.IsFalse(stringContent.Contains("widget"));
             Assert.IsFalse(stringContent.Contains("field"));
 

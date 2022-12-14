@@ -16,18 +16,18 @@ namespace Contentstack.Management.Core.Models.CustomExtension
         internal ByteArrayContent byteArray;
 
         public DashboardWidgetModel(string filePath, string contentType, string title, bool isEnable = false, string defaultWidth = null, string tags = null) :
-            this(File.OpenRead(filePath), contentType, title, isEnable, tags)
+            this(File.OpenRead(filePath), contentType, title, isEnable, defaultWidth, tags)
         { }
 
-        public DashboardWidgetModel(Stream stream, string contentType, string title, bool isEnable, string tags = null) :
-            this(getBytes(stream), contentType, title, isEnable, tags)
+        public DashboardWidgetModel(Stream stream, string contentType, string title, bool isEnable = false, string defaultWidth = null, string tags = null) :
+            this(getBytes(stream), contentType, title, isEnable, defaultWidth, tags)
         { }
 
-        public DashboardWidgetModel(byte[] bytes, string contentType, string title, bool isEnable, string tags = null) :
-            this(getByteArray(bytes), contentType, title, isEnable, tags)
+        public DashboardWidgetModel(byte[] bytes, string contentType, string title, bool isEnable = false, string defaultWidth = null, string tags = null) :
+            this(getByteArray(bytes), contentType, title, isEnable, defaultWidth, tags)
         { }
 
-        public DashboardWidgetModel(ByteArrayContent byteArray, string contentType, string title, bool isEnable, string tags = null)
+        public DashboardWidgetModel(ByteArrayContent byteArray, string contentType, string title, bool isEnable = false, string defaultWidth = null, string tags = null)
         {
 
             if (byteArray == null)
@@ -41,6 +41,8 @@ namespace Contentstack.Management.Core.Models.CustomExtension
             Title = title;
             Tags = tags;
             ContentType = contentType;
+            DefaultWidth = defaultWidth;
+            Enable = isEnable;
             this.byteArray = byteArray;
             this.byteArray.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(ContentType);
 
