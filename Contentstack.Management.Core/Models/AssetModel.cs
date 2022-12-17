@@ -66,19 +66,23 @@ namespace Contentstack.Management.Core.Models
 
             if (Title != null)
             {
-                content.Add(new StringContent(Title), "asset[title]", Title);
+                content.Add(new StringContent(Title), "asset[title]");
             }
             if (Description != null)
             {
-                content.Add(new StringContent(Description), "asset[description]", Description);
+                content.Add(new StringContent(Description), "asset[description]");
             }
             if (ParentUID != null)
             {
-                content.Add(new StringContent(ParentUID), "asset[parent_uid]", ParentUID);
+                StringContent contenst = new StringContent(ParentUID);
+                //contenst.Headers.Remove("Content-Type");
+                //contenst.Headers.ContentType.CharSet = string.Empty;
+                //contenst.Headers.Add("Content-Type", content.Headers.ContentType.ToString());
+                content.Add(contenst, "asset[parent_uid]");
             }
             if (Tags != null)
             {
-                content.Add(new StringContent(Tags), "asset[tags]", Tags);
+                content.Add(new StringContent(Tags), "asset[tags]");
             }
             return content;
         }

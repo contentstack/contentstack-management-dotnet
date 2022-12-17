@@ -36,7 +36,7 @@ namespace Contentstack.Management.Core
         private HttpClient _httpClient;
         private bool _disposed = false;
 
-        private string Version => "0.1.0";
+        private string Version => "0.1.1";
         private string xUserAgent { get => $"contentstack-management-dotnet/{Version}"; }
         #endregion
 

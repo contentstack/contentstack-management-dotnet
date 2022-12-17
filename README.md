@@ -112,20 +112,20 @@ StackResponse model = contentstackResponse.OpenTResponse<StackResponse>();
 You can use the following code to create an entry in a specific content type of a stack through the SDK:
 ```c#
 EntryModel entry = new EntryModel() {
-   Title: 'Sample Entry',
-   Url: '/sampleEntry'
+   Title: "Sample Entry",
+   Url: "/sampleEntry"
 }
 ContentstackClient client = new ContentstackClient();
-Stack stack = client.Stack("'API_KEY'");
+Stack stack = client.Stack("API_KEY");
 ContentstackResponse contentstackResponse = stack.ContentType("CONTENT_TYPE_UID").Entry().Create(entry);
 ```
 #### Upload Assets
 Use the following code snippet to upload assets to your stack through the SDK:
 ```c#
 ContentstackClient client = new ContentstackClient();
-Stack stack = client.Stack("'API_KEY'");
+Stack stack = client.Stack("API_KEY");
 
 var path = Path.Combine(Environment.CurrentDirectory, "path/to/file");
-AssetModel asset = new AssetModel("'Asset Title", path, "application/json");
+AssetModel asset = new AssetModel("Asset Title", path, "application/json");
 ContentstackResponse response = stack.Asset().Create(asset);
 ```
