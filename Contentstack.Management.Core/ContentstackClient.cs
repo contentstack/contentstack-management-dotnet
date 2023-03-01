@@ -14,7 +14,6 @@ using Contentstack.Management.Core.Attributes;
 using Contentstack.Management.Core.Abstractions;
 using Contentstack.Management.Core.Runtime.Contexts;
 using Contentstack.Management.Core.Runtime.Pipeline;
-using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Services.User;
 using Contentstack.Management.Core.Queryable;
 using Environment = System.Environment;
@@ -26,7 +25,7 @@ namespace Contentstack.Management.Core
     /// <summary>
     /// Contentstack Client for interacting with Contentstack Management API.
     /// </summary>
-    public class ContentstackClient: IContentstackClient
+    public class ContentstackClient : IContentstackClient
     {
         internal ContentstackRuntimePipeline ContentstackPipeline { get; set; }
         internal ContentstackClientOptions contentstackOptions;
@@ -36,8 +35,8 @@ namespace Contentstack.Management.Core
         private HttpClient _httpClient;
         private bool _disposed = false;
 
-        private string Version => "0.1.1";
-        private string xUserAgent { get => $"contentstack-management-dotnet/{Version}"; }
+        private string Version => "0.1.2";
+        private string xUserAgent => $"contentstack-management-dotnet/{Version}";
         #endregion
 
 
@@ -74,7 +73,8 @@ namespace Contentstack.Management.Core
         }
 
         public ContentstackClient(ContentstackClientOptions contentstackOptions) :
-        this(new OptionsWrapper<ContentstackClientOptions>(contentstackOptions)){}
+        this(new OptionsWrapper<ContentstackClientOptions>(contentstackOptions))
+        { }
 
         /// <summary>
         /// Initializes new instance of the <see cref="ContentstackClient"/> class.
@@ -96,7 +96,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         public ContentstackClient(
-        string authtoken =null,
+        string authtoken = null,
             string host = "api.contentstack.io",
             int port = 443,
             string version = "v3",
@@ -122,14 +122,16 @@ namespace Contentstack.Management.Core
             ProxyPort = proxyPort,
             ProxyCredentials = proxyCredentials
         }
-        )){}
+        ))
+        { }
         #endregion
 
         protected void Initialize()
         {
-            var httpClientHandler = new HttpClientHandler();
-
-            httpClientHandler.Proxy = contentstackOptions.GetWebProxy();
+            HttpClientHandler httpClientHandler = new HttpClientHandler
+            {
+                Proxy = contentstackOptions.GetWebProxy()
+            };
 
             _httpClient = new HttpClient(httpClientHandler);
 
@@ -145,20 +147,13 @@ namespace Contentstack.Management.Core
             {
                 _httpClient.Timeout = contentstackOptions.Timeout;
                 _httpClient.MaxResponseContentBufferSize = contentstackOptions.MaxResponseContentBufferSize;
-                if (contentstackOptions.DisableLogging)
-                {
-                    LogManager = LogManager.EmptyLogger;
-                }
-                else
-                {
-                    LogManager = LogManager.GetLogManager(this.GetType());
-                }
+                LogManager = contentstackOptions.DisableLogging ? LogManager.EmptyLogger : LogManager.GetLogManager(GetType());
             }
 
-            this.SerializerSettings.DateParseHandling = DateParseHandling.None;
-            this.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-            this.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            this.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            SerializerSettings.DateParseHandling = DateParseHandling.None;
+            SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+            SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+            SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
             foreach (Type t in CsmJsonConverterAttribute.GetCustomAttribute(typeof(CsmJsonConverterAttribute)))
             {
@@ -170,8 +165,8 @@ namespace Contentstack.Management.Core
         {
             HttpHandler httpClientHandler = new HttpHandler(_httpClient);
 
-            var retryPolicy = contentstackOptions.RetryPolicy ?? new DefaultRetryPolicy(contentstackOptions.RetryLimit, contentstackOptions.RetryDelay);
-            this.ContentstackPipeline = new ContentstackRuntimePipeline(new List<IPipelineHandler>()
+            RetryPolicy retryPolicy = contentstackOptions.RetryPolicy ?? new DefaultRetryPolicy(contentstackOptions.RetryLimit, contentstackOptions.RetryDelay);
+            ContentstackPipeline = new ContentstackRuntimePipeline(new List<IPipelineHandler>()
             {
                 httpClientHandler,
                 new RetryHandler(retryPolicy)
@@ -182,15 +177,15 @@ namespace Contentstack.Management.Core
         {
             ThrowIfDisposed();
 
-            var context = new ExecutionContext(
+            ExecutionContext context = new ExecutionContext(
                 new RequestContext()
                 {
-                    config = this.contentstackOptions,
+                    config = contentstackOptions,
                     service = request
                 },
                 new ResponseContext());
 
-            return (ContentstackResponse)this.ContentstackPipeline.InvokeSync(context).httpResponse;
+            return (ContentstackResponse)ContentstackPipeline.InvokeSync(context).httpResponse;
         }
 
         internal Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request)
@@ -199,14 +194,14 @@ namespace Contentstack.Management.Core
         {
             ThrowIfDisposed();
 
-            var context = new ExecutionContext(
+            ExecutionContext context = new ExecutionContext(
               new RequestContext()
               {
-                  config = this.contentstackOptions,
+                  config = contentstackOptions,
                   service = request
               },
               new ResponseContext());
-            return this.ContentstackPipeline.InvokeAsync<TResponse>(context);
+            return ContentstackPipeline.InvokeAsync<TResponse>(context);
         }
 
         #region Dispose methods
@@ -222,14 +217,15 @@ namespace Contentstack.Management.Core
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
+            {
                 return;
+            }
 
             if (disposing)
             {
                 _httpClient.Dispose();
             }
-            if (ContentstackPipeline != null)
-                ContentstackPipeline.Dispose();
+            ContentstackPipeline?.Dispose();
 
             _disposed = true;
 
@@ -238,8 +234,10 @@ namespace Contentstack.Management.Core
         private void ThrowIfDisposed()
         {
             //_httpClient.SendAsync
-            if (this._disposed)
+            if (_disposed)
+            {
                 throw new ObjectDisposedException(GetType().FullName);
+            }
         }
         #endregion
 
@@ -310,9 +308,9 @@ namespace Contentstack.Management.Core
         public ContentstackResponse Login(ICredentials credentials, string token = null)
         {
             ThrowIfAlreadyLoggedIn();
-            var Login = new LoginService(this.serializer, credentials, token);
+            LoginService Login = new LoginService(serializer, credentials, token);
 
-            return this.InvokeSync(Login);
+            return InvokeSync(Login);
         }
 
         /// <summary>
@@ -331,9 +329,9 @@ namespace Contentstack.Management.Core
         public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string token = null)
         {
             ThrowIfAlreadyLoggedIn();
-            var Login = new LoginService(this.serializer, credentials, token);
+            LoginService Login = new LoginService(serializer, credentials, token);
 
-            return this.InvokeAsync<LoginService, ContentstackResponse>(Login);
+            return InvokeAsync<LoginService, ContentstackResponse>(Login);
         }
         #endregion
 
@@ -341,7 +339,7 @@ namespace Contentstack.Management.Core
 
         internal void ThrowIfAlreadyLoggedIn()
         {
-            if (!string.IsNullOrEmpty(this.contentstackOptions.Authtoken))
+            if (!string.IsNullOrEmpty(contentstackOptions.Authtoken))
             {
                 throw new InvalidOperationException(CSConstants.YouAreLoggedIn);
             }
@@ -349,7 +347,7 @@ namespace Contentstack.Management.Core
 
         internal void ThrowIfNotLoggedIn()
         {
-            if (string.IsNullOrEmpty(this.contentstackOptions.Authtoken))
+            if (string.IsNullOrEmpty(contentstackOptions.Authtoken))
             {
                 throw new InvalidOperationException(CSConstants.YouAreNotLoggedIn);
             }
@@ -370,10 +368,10 @@ namespace Contentstack.Management.Core
         /// <returns>The <see cref="ContentstackResponse" /></returns>
         public ContentstackResponse Logout(string authtoken = null)
         {
-            var token = authtoken ?? this.contentstackOptions.Authtoken;
-            var logout = new LogoutService(this.serializer, token);
+            string token = authtoken ?? contentstackOptions.Authtoken;
+            LogoutService logout = new LogoutService(serializer, token);
 
-            return this.InvokeSync(logout);
+            return InvokeSync(logout);
         }
         /// <summary>
         /// 
@@ -388,10 +386,10 @@ namespace Contentstack.Management.Core
         /// <returns>The Task.</returns>
         public Task<ContentstackResponse> LogoutAsync(string authtoken = null)
         {
-            var token = authtoken ?? this.contentstackOptions.Authtoken;
-            var logout = new LogoutService(this.serializer, token);
+            string token = authtoken ?? contentstackOptions.Authtoken;
+            LogoutService logout = new LogoutService(serializer, token);
 
-            return this.InvokeAsync<LogoutService, ContentstackResponse>(logout);
+            return InvokeAsync<LogoutService, ContentstackResponse>(logout);
         }
         #endregion
 
@@ -409,9 +407,9 @@ namespace Contentstack.Management.Core
         {
             ThrowIfNotLoggedIn();
 
-            var getUser = new GetLoggedInUserService(this.serializer, collection);
+            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection);
 
-            return this.InvokeSync(getUser);
+            return InvokeSync(getUser);
         }
 
         /// <summary>
@@ -428,9 +426,9 @@ namespace Contentstack.Management.Core
         {
             ThrowIfNotLoggedIn();
 
-            var getUser = new GetLoggedInUserService(this.serializer, collection);
+            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection);
 
-            return this.InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
+            return InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
         }
     }
 }
