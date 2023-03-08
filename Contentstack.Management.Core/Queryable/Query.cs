@@ -84,10 +84,14 @@ namespace Contentstack.Management.Core.Queryable
         {
             _stack.client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
-            foreach (var kvp in collection)
+            if (collection != null)
             {
-                _collection.Add(kvp.Key, kvp.Value);
+                foreach (var kvp in collection)
+                {
+                    _collection.Add(kvp.Key, kvp.Value);
+                }
             }
+            
             var service = new QueryService(_stack, _collection, _resourcePath);
             return _stack.client.InvokeSync(service);
         }
@@ -100,9 +104,12 @@ namespace Contentstack.Management.Core.Queryable
         {
             _stack.client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
-            foreach (var kvp in collection)
+            if (collection != null)
             {
-                _collection.Add(kvp.Key, kvp.Value);
+                foreach (var kvp in collection)
+                {
+                    _collection.Add(kvp.Key, kvp.Value);
+                }
             }
             var service = new QueryService(_stack, _collection, _resourcePath);
 
