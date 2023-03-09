@@ -80,11 +80,18 @@ namespace Contentstack.Management.Core.Queryable
         /// The Find all object call fetches the list of all objects owned by a particular user account.
         /// </summary>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse Find()
+        public ContentstackResponse Find(ParameterCollection collection = null)
         {
             _stack.client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
-
+            if (collection != null)
+            {
+                foreach (var kvp in collection)
+                {
+                    _collection.Add(kvp.Key, kvp.Value);
+                }
+            }
+            
             var service = new QueryService(_stack, _collection, _resourcePath);
             return _stack.client.InvokeSync(service);
         }
@@ -93,11 +100,17 @@ namespace Contentstack.Management.Core.Queryable
         /// The Find all object call fetches the list of all objects owned by a particular user account.
         /// </summary>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> FindAsync()
+        public Task<ContentstackResponse> FindAsync(ParameterCollection collection = null)
         {
             _stack.client.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
-
+            if (collection != null)
+            {
+                foreach (var kvp in collection)
+                {
+                    _collection.Add(kvp.Key, kvp.Value);
+                }
+            }
             var service = new QueryService(_stack, _collection, _resourcePath);
 
             return _stack.client.InvokeAsync<QueryService, ContentstackResponse>(service);

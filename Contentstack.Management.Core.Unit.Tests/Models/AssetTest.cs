@@ -79,7 +79,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Should_Query_Asset()
         {
-            ContentstackResponse response = _stack.Asset().Query().Find();
+            ParameterCollection collection = new ParameterCollection();
+
+            collection.Add("limit", 10);
+            ContentstackResponse response = _stack.Asset().Query().Find(collection);
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
