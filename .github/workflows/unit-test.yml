@@ -18,11 +18,11 @@ jobs:
         if: success() || failure()
         with:
           name: DotNet unit Tests
-          path: Contentstack.Management.Core.Unit.Tests/TestResults/Report-Contentstack-DotNet-Test-Case.trx
+          path: ./Contentstack.Management.Core.Unit.Tests/TestResults/Report-Contentstack-DotNet-Test-Case.trx
           reporter: jest-junit
           fail-on-error: true
       - name: Coverage report 
         uses: lucassabreu/comment-coverage-clover@main
         with:       
           name: Unit test Coverage report   
-          file: Contentstack.Management.Core.Unit.Tests/TestResults/**/coverage.cobertura.xml
+          file: ./Contentstack.Management.Core.Unit.Tests/TestResults/**/coverage.cobertura.xml
