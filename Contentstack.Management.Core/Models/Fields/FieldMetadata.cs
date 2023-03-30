@@ -82,4 +82,12 @@ namespace Contentstack.Management.Core.Models.Fields
         public bool RefMultiple { get; set; }
 
     }
+    public class FileFieldMetadata: FieldMetadata
+    {
+        /// <summary>
+        /// Allows you to set single or multiple reference to Reference field.
+        /// </summary>
+        [JsonProperty(propertyName: "image")]
+        public bool AllowOnlyImage { get; set; }
+    }
 }
