@@ -7,6 +7,7 @@
 #  Copyright © 2023 Contentstack. All rights reserved.
 
 echo "Removing files"
+rm -rf "./Contentstack.Management.Core.Unit.Tests/TestResults"
 
 FILE_NAME="Contentstack-DotNet-Test-Case"
 
