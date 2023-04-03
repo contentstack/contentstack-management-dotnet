@@ -28,4 +28,4 @@ jobs:
         if: success() || failure()
         with:       
           name: Unit test Coverage report   
-          file: ./Contentstack.Management.Core.Unit.Tests/TestResults/**/coverage.cobertura.xml
+          file: ./Contentstack.Management.Core.Unit.Tests/TestResults/coverage.cobertura.xml
