@@ -12,9 +12,9 @@ jobs:
       - name: Setup .NET Core @ Latest
         uses: actions/setup-dotnet@v1
       - name: Build solution and run unit test
-        run: |
-          sh ./Scripts/run-unit-test-case.sh
-          cp "./**/**/coverage.cobertura.xml" "./Contentstack.Management.Core.Unit.Tests/TestResults"
+        run: sh ./Scripts/run-unit-test-case.sh
+      - name: Copy coverage file to TestResult
+        run: cp "./**/**/coverage.cobertura.xml" "./Contentstack.Management.Core.Unit.Tests/TestResults"
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()
@@ -28,4 +28,4 @@ jobs:
         if: success() || failure()
         with:       
           name: Unit test Coverage report   
-          file: ./Contentstack.Management.Core.Unit.Tests/TestResults/coverage.cobertura.xml
+          file: ./Contentstack.Management.Core.Unit.Tests/TestResults/**/coverage.cobertura.xml
