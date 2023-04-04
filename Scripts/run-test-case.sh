@@ -4,7 +4,7 @@
 #  Contentstack
 #
 #  Created by Uttam Ukkoji on 12/04/21.
-#  Copyright © 2020 Contentstack. All rights reserved.
+#  Copyright © 2023 Contentstack. All rights reserved.
 
 echo "Removing files"
 

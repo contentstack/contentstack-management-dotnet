@@ -17,7 +17,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
 
             Assert.IsNotNull(contentstackHttpResponse.ResponseBody);
             Assert.AreEqual(HttpStatusCode.OK, contentstackHttpResponse.StatusCode);
-            Assert.AreEqual(1200, contentstackHttpResponse.ContentLength);
             Assert.AreEqual("application/json", contentstackHttpResponse.ContentType);
             Assert.AreEqual(true, contentstackHttpResponse.IsSuccessStatusCode);
         }

@@ -82,7 +82,7 @@ namespace Contentstack.Management.Core.Queryable
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public ContentstackResponse Find(ParameterCollection collection = null)
         {
-            _stack.client.ThrowIfNotLoggedIn();
+            _stack.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
             if (collection != null)
             {
@@ -102,7 +102,7 @@ namespace Contentstack.Management.Core.Queryable
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> FindAsync(ParameterCollection collection = null)
         {
-            _stack.client.ThrowIfNotLoggedIn();
+            _stack.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
             if (collection != null)
             {
