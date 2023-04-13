@@ -45,6 +45,7 @@
     <Folder Include="Core\Services\Models\" />
     <Folder Include="Models\ContentModel\" />
     <Folder Include="Mokes\Model\" />
+    <Folder Include="Core\Services\App\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -346,5 +347,6 @@
     <None Remove="Models\ContentModel\" />
     <None Remove="Mokes\Model\" />
     <None Remove="Microsoft.AspNetCore.Http" />
+    <None Remove="Core\Services\App\" />
   </ItemGroup>
 </Project>
