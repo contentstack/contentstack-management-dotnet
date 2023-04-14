@@ -33,7 +33,7 @@ namespace Contentstack.Management.Core.Unit.Tests
             Assert.IsFalse(contentstackConfig.DisableLogging);
             Assert.AreEqual(1073741824, contentstackConfig.MaxResponseContentBufferSize);
             Assert.AreEqual(30, contentstackConfig.Timeout.Seconds);
-            Assert.AreEqual("https://api.contentstack.io/v3", contentstackConfig.GetUri().AbsoluteUri);
+            Assert.AreEqual("https://api.contentstack.io/v3", contentstackConfig.GetUri(contentstack.management.core.Http.VersionStrategy.URLPath).AbsoluteUri);
 
         }
 
@@ -77,7 +77,7 @@ namespace Contentstack.Management.Core.Unit.Tests
             Assert.IsFalse(contentstackConfig.DisableLogging);
             Assert.AreEqual(1073741824, contentstackConfig.MaxResponseContentBufferSize);
             Assert.AreEqual(30, contentstackConfig.Timeout.Seconds);
-            Assert.AreEqual($"https://{Host}/v3", contentstackConfig.GetUri().AbsoluteUri);
+            Assert.AreEqual($"https://{Host}/v3", contentstackConfig.GetUri(contentstack.management.core.Http.VersionStrategy.URLPath).AbsoluteUri);
 
         }
 
@@ -205,7 +205,7 @@ namespace Contentstack.Management.Core.Unit.Tests
             Assert.IsFalse(contentstackConfig.DisableLogging);
             Assert.AreEqual(1073741824, contentstackConfig.MaxResponseContentBufferSize);
             Assert.AreEqual(30, contentstackConfig.Timeout.Seconds);
-            Assert.AreEqual("https://api.contentstack.io/v4", contentstackConfig.GetUri().AbsoluteUri);
+            Assert.AreEqual("https://api.contentstack.io/v4", contentstackConfig.GetUri(contentstack.management.core.Http.VersionStrategy.URLPath).AbsoluteUri);
         }
 
         [TestMethod]

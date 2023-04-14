@@ -430,7 +430,7 @@ namespace Contentstack.Management.Core.Models
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;);
+        /// App app = organization.App(&quot;&lt;APP_UID&gt;&quot;);
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.App"/></returns>

@@ -32,12 +32,8 @@ namespace contentstack.management.core.Services.App
             this.ResourcePath = resourcePath;
             this.HttpMethod = httpMethod;
             this.versionStrategy = Http.VersionStrategy.None;
-            if (orgUid != null)
-            {
-                Headers["organization_uid"] = orgUid;
-            }
+            Headers["organization_uid"] = orgUid;
             
-
             if (collection != null && collection.Count > 0)
             {
                 this.UseQueryString = true;
