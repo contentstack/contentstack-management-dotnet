@@ -116,7 +116,7 @@ namespace Contentstack.Management.Core.Models
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).FindAll(content);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).FindAll();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
@@ -134,7 +134,7 @@ namespace Contentstack.Management.Core.Models
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).FindAllAsync(content);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).FindAllAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Task"/></returns>
@@ -291,6 +291,88 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
             var service = new FetchDeleteAppsService(client.serializer, orgUid, resourcePathOAuth, collection: collection);
             return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// The Create installation call is used to initiate the installation of the app
+        /// </summary>
+        /// <param name="jObject"> Json Object for app installation config</param>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).Install(content);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse Install(JObject jObject, ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new CreateUpdateAppsService(client.serializer, orgUid, $"{resourcePath}/install", jObject, collection: collection);
+            return client.InvokeSync(service);
+        }
+        /// <summary>
+        /// The Create installation call is used to initiate the installation of the app
+        /// </summary>
+        /// <param name="jObject"> Json Object for app installation config</param>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).InstallAsync(content);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> InstallAsync(JObject jObject, ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new CreateUpdateAppsService(client.serializer, orgUid, $"{resourcePath}/install", jObject, collection: collection);
+            return client.InvokeAsync<CreateUpdateAppsService, ContentstackResponse>(service);
+        }
+        /// <summary>
+        /// The Reinstall call is used to upgrade the installation of an app.
+        /// </summary>
+        /// <param name="jObject"> Json Object for app installation config</param>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).Reinstall(content);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse Reinstall(JObject jObject, ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new CreateUpdateAppsService(client.serializer, orgUid, $"{resourcePath}/reinstall", jObject, collection: collection);
+            return client.InvokeSync(service);
+        }
+        /// <summary>
+        /// The Reinstall call is used to upgrade the installation of an app.
+        /// </summary>
+        /// <param name="jObject"> Json Object for app installation config</param>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).ReinstallAsync(content);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> ReinstallAsync(JObject jObject, ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new CreateUpdateAppsService(client.serializer, orgUid, $"{resourcePath}/reinstall", jObject, collection: collection);
+            return client.InvokeAsync<CreateUpdateAppsService, ContentstackResponse>(service);
+        }
+
+        public Installation Installation(string uid = null)
+        {
+            return new Installation(client, orgUid, this.uid, uid);
         }
         #endregion
 

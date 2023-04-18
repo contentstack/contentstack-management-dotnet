@@ -45,6 +45,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.UpdateOAuthAsync(null));
             Assert.ThrowsException<InvalidOperationException>(() => app.FetchOAuth(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.FetchOAuthAsync(null));
+            Assert.ThrowsException<InvalidOperationException>(() => app.Install(null));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.InstallAsync(null));
+            Assert.ThrowsException<InvalidOperationException>(() => app.Reinstall(null));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.ReinstallAsync(null));
         }
 
         [TestMethod]
@@ -199,6 +203,53 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             string uid = _fixture.Create<string>();
             App app = new App(client, orgUid, uid);
             ContentstackResponse response = await app.FetchOAuthAsync();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+        [TestMethod]
+        public void Should_Install_App()
+        {
+            string orgUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            App app = new App(client, orgUid, uid);
+            ContentstackResponse response = app.Install(_fixture.Create<JObject>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Install_App_Async()
+        {
+            string orgUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            App app = new App(client, orgUid, uid);
+            ContentstackResponse response = await app.InstallAsync(_fixture.Create<JObject>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Reinstall_App()
+        {
+            string orgUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            App app = new App(client, orgUid, uid);
+            ContentstackResponse response = app.Reinstall(_fixture.Create<JObject>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Reinstall_App_Async()
+        {
+            string orgUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            App app = new App(client, orgUid, uid);
+            ContentstackResponse response = await app.ReinstallAsync(_fixture.Create<JObject>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
