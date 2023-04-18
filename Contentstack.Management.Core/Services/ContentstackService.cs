@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Queryable;
 using System.Net.Http.Headers;
+using contentstack.management.core.Http;
 
 namespace Contentstack.Management.Core.Services
 {
@@ -21,6 +22,7 @@ namespace Contentstack.Management.Core.Services
         readonly IDictionary<string, string> queryResources = new Dictionary<string, string>(StringComparer.Ordinal);
 
         private bool _useQueryString = false;
+        internal VersionStrategy versionStrategy = VersionStrategy.URLPath;
 
         private bool _disposed = false;
         private JsonSerializer _serializer { get; set; }
@@ -157,7 +159,7 @@ namespace Contentstack.Management.Core.Services
             httpClient.DefaultRequestHeaders
             .Accept
             .Add(new MediaTypeWithQualityHeaderValue("image/jpeg"));
-            Uri requestUri = ContentstackUtilities.ComposeUrI(config.GetUri(), this);
+            Uri requestUri = ContentstackUtilities.ComposeUrI(config.GetUri(this.versionStrategy), this);
             Headers["Content-Type"] = "application/json";
 
             if (!string.IsNullOrEmpty(this.ManagementToken))

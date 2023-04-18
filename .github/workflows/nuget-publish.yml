@@ -16,10 +16,7 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
       - name: Build solution and generate NuGet package
-        run: |
-          cd contentstack-management-dotnet
-          dotnet pack -c Release -o out
-
+        run: dotnet pack -c Release -o out
       - name: Push generated package to GitHub registry
         run: dotnet nuget push ./contentstack-management-dotnet/out/*.nupkg --api-key $NUGET_AUTH_TOKEN --skip-duplicate --no-symbols true
 

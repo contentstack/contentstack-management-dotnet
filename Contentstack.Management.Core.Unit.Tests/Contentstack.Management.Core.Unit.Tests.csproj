@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
-    <ReleaseVersion>0.1.3</ReleaseVersion>
+    <ReleaseVersion>0.2.0</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,6 +45,7 @@
     <Folder Include="Core\Services\Models\" />
     <Folder Include="Models\ContentModel\" />
     <Folder Include="Mokes\Model\" />
+    <Folder Include="Core\Services\App\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -346,5 +347,6 @@
     <None Remove="Models\ContentModel\" />
     <None Remove="Mokes\Model\" />
     <None Remove="Microsoft.AspNetCore.Http" />
+    <None Remove="Core\Services\App\" />
   </ItemGroup>
 </Project>

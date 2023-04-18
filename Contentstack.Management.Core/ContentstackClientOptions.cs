@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Net;
+using contentstack.management.core.Http;
 using Contentstack.Management.Core.Runtime.Pipeline.RetryHandler;
 using Contentstack.Management.Core.Utils;
 
@@ -97,7 +98,7 @@ namespace Contentstack.Management.Core
         /// in the configuration.
         /// </summary>
         /// <returns></returns>
-        public IWebProxy GetWebProxy()
+        internal IWebProxy GetWebProxy()
         {
             const string httpPrefix = "http://";
 
@@ -118,11 +119,14 @@ namespace Contentstack.Management.Core
             return webProxy;
         }
 
-        public Uri GetUri ()
+        internal Uri GetUri (VersionStrategy versionStrategy)
         {
             UriBuilder uriBuilder = new UriBuilder(this.Host);
             uriBuilder.Port = this.Port;
-            uriBuilder.Path = this.Version;
+            if (versionStrategy == VersionStrategy.URLPath)
+            {
+                uriBuilder.Path = this.Version;
+            }
             uriBuilder.Scheme = "https";
             return uriBuilder.Uri;
         }

@@ -421,6 +421,26 @@ namespace Contentstack.Management.Core.Models
 
             return _client.InvokeAsync<OrganizationStackService, ContentstackResponse>(service);
         }
+
+        /// <summary>
+        /// <see cref="Models.App"/> referes to the Marketplace app that allow you to create and manage apps. 
+        /// </summary>
+        /// <param name="uid">Optional app/manifest uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// App app = organization.App(&quot;&lt;APP_UID&gt;&quot;);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.App"/></returns>
+        public App App(string uid = null)
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfOrganizationUidNull();
+
+            return new App(_client, Uid, uid);
+        }
         #endregion
 
         #region Private
