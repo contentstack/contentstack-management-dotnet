@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Contentstack.Management.Core;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Utils;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -26,12 +27,57 @@ namespace Contentstack.Management.Core.Models
             this.appUid = appUid;
             this.uid = uid;
             this.client = contentstackClient;
+            resourcePath = "/installations";
+            if (uid != null)
+            {
+                resourcePath = $"/installations/{uid}";
+            }
+            
         }
         #endregion
 
         #region Public
+
         /// <summary>
-        /// The GET installation call is used to retrieve all installations of an app.
+        /// The update manifest call is used to update the app details such as name, description, icon, and so on.
+        /// </summary>
+        /// <param name="jObject"> Json Object for the app to be created</param>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).Update(content);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse Update(JObject jObject, ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new CreateUpdateAppsService(client.serializer, orgUid, resourcePath, jObject, "PUT", collection: collection);
+            return client.InvokeSync(service);
+        }
+        /// <summary>
+        /// The update manifest call is used to update the app details such as name, description, icon, and so on.
+        /// </summary>
+        /// <param name="jObject"> Json Object for the app to be created</param>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).UpdateAsync(content);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> UpdateAsync(JObject jObject, ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new CreateUpdateAppsService(client.serializer, orgUid, resourcePath, jObject, "PUT", collection: collection);
+            return client.InvokeAsync<CreateUpdateAppsService, ContentstackResponse>(service);
+        }
+        /// <summary>
+        /// The list manifests call is used to fetch details of all apps in a particular organization.
         /// </summary>
         /// <param name="collection"> Query Parameters</param>
         /// <example>
@@ -43,6 +89,120 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public virtual ContentstackResponse FindAll(ParameterCollection collection = null)
+        {
+            ThrowIfUidNotEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, resourcePath, collection: collection);
+            return client.InvokeSync(service);
+        }
+        /// <summary>
+        /// The list manifests call is used to fetch details of all apps in a particular organization.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation().FindAllAsync();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> FindAllAsync(ParameterCollection collection = null)
+        {
+            ThrowIfUidNotEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, resourcePath, collection: collection);
+            return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
+        }
+        /// <summary>
+        /// The get manifest call is used to fetch details of a particular app with its ID.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).Fetch();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, resourcePath, collection: collection);
+            return client.InvokeSync(service);
+        }
+
+        /// <summary>
+        ///The get manifest call is used to fetch details of a particular app with its ID.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).FetchAsync();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, resourcePath, collection: collection);
+            return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// The delete an app call is used to delete the app.
+        /// </summary>
+        /// <param name="jObject"> Json Object for the app to be created</param>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).Delete();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse Delete(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, resourcePath, "DELETE", collection: collection);
+            return client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// The delete an app call is used to delete the app.
+        /// </summary>
+        /// <param name="jObject"> Json Object for the app to be created</param>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).DeleteAsync();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, resourcePath, "DELETE", collection: collection);
+            return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// The GET installation call is used to retrieve all installations of an app.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation().AppInstallations();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse AppInstallations(ParameterCollection collection = null)
         {
             ThrowIfAppUidEmpty();
             var service = new FetchDeleteAppsService(client.serializer, orgUid, $"/manifests/{this.appUid}/installations", collection: collection);
@@ -56,11 +216,11 @@ namespace Contentstack.Management.Core.Models
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
         /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation().FindAllAsync();
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation().AppInstallationsAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Task"/></returns>
-        public virtual Task<ContentstackResponse> FindAllAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> AppInstallationsAsync(ParameterCollection collection = null)
         {
             ThrowIfAppUidEmpty();
             var service = new FetchDeleteAppsService(client.serializer, orgUid, $"/manifests/{this.appUid}/installations", collection: collection);
