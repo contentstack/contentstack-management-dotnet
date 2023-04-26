@@ -243,7 +243,7 @@ namespace Contentstack.Management.Core.Models
         public virtual ContentstackResponse Configuration(ParameterCollection collection = null)
         {
             ThrowIfUidEmpty();
-            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"/{resourcePath}/configuration", collection: collection);
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/configuration", collection: collection);
             return client.InvokeSync(service);
         }
         /// <summary>
@@ -261,10 +261,9 @@ namespace Contentstack.Management.Core.Models
         public virtual Task<ContentstackResponse> ConfigurationAsync(ParameterCollection collection = null)
         {
             ThrowIfUidEmpty();
-            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"/{resourcePath}configuration", collection: collection);
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/configuration", collection: collection);
             return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
         }
-
         /// <summary>
         /// To update organization level app configuration. 
         /// </summary>
@@ -280,7 +279,7 @@ namespace Contentstack.Management.Core.Models
         public virtual ContentstackResponse SetConfiguration(JObject jObject, ParameterCollection collection = null)
         {
             ThrowIfUidEmpty();
-            var service = new CreateUpdateAppsService(client.serializer, orgUid, $"/{resourcePath}/configuration", jObject, "PUT", collection: collection);
+            var service = new CreateUpdateAppsService(client.serializer, orgUid, $"{resourcePath}/configuration", jObject, "PUT", collection: collection);
             return client.InvokeSync(service);
         }
         /// <summary>
@@ -298,8 +297,116 @@ namespace Contentstack.Management.Core.Models
         public virtual Task<ContentstackResponse> SetConfigurationAsync(JObject jObject, ParameterCollection collection = null)
         {
             ThrowIfUidEmpty();
-            var service = new CreateUpdateAppsService(client.serializer, orgUid, $"/{resourcePath}/configuration", jObject, "PUT", collection: collection);
+            var service = new CreateUpdateAppsService(client.serializer, orgUid, $"{resourcePath}/configuration", jObject, "PUT", collection: collection);
             return client.InvokeAsync<CreateUpdateAppsService, ContentstackResponse>(service);
+        }
+        /// <summary>
+        /// To fetch server side organization level config required for the app.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).ServerConfiguration();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse ServerConfiguration(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/server-configuration", collection: collection);
+            return client.InvokeSync(service);
+        }
+        /// <summary>
+        /// To fetch server side organization level config required for the app.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).ServerConfigurationAsync();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> ServerConfigurationAsync(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/server-configuration", collection: collection);
+            return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
+        }
+        /// <summary>
+        /// To update server side organization level config required for the app.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).SetServerConfiguration(content);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse SetServerConfiguration(JObject jObject, ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new CreateUpdateAppsService(client.serializer, orgUid, $"{resourcePath}/server-configuration", jObject, "PUT", collection: collection);
+            return client.InvokeSync(service);
+        }
+        /// <summary>
+        /// To update server side organization level config required for the app.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).SetServerConfigurationAsync(content);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> SetServerConfigurationAsync(JObject jObject, ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new CreateUpdateAppsService(client.serializer, orgUid, $"{resourcePath}/server-configuration", jObject, "PUT", collection: collection);
+            return client.InvokeAsync<CreateUpdateAppsService, ContentstackResponse>(service);
+        }
+        /// <summary>
+        /// To fetch installation data of an app configuration.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).InstallationData();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse InstallationData(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/installationData", collection: collection);
+            return client.InvokeSync(service);
+        }
+        /// <summary>
+        /// To fetch installation data of an app configuration.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation(&quot;&lt;INSTALLATION_UID&gt;&quot;).InstallationDataAsync();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> InstallationDataAsync(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/installationData", collection: collection);
+            return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
         }
         #endregion
 

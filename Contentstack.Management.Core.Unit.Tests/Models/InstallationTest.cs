@@ -63,6 +63,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.ConfigurationAsync(null));
             Assert.ThrowsException<InvalidOperationException>(() => installation.SetConfiguration(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.SetConfigurationAsync(null));
+            Assert.ThrowsException<InvalidOperationException>(() => installation.ServerConfiguration(null));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.ServerConfigurationAsync(null));
+            Assert.ThrowsException<InvalidOperationException>(() => installation.SetServerConfiguration(null));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.SetServerConfigurationAsync(null));
+            Assert.ThrowsException<InvalidOperationException>(() => installation.InstallationData(null));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.InstallationDataAsync(null));
         }
         [TestMethod]
         void Initialize_Installation_with_Uid()
@@ -229,6 +235,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
+        
         [TestMethod]
         public void Should_Installation_Set_Configuration()
         {
@@ -250,6 +257,82 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             string uid = _fixture.Create<string>();
             Installation installation = new Installation(client, orgUid, appUid, uid);
             ContentstackResponse response = await installation.SetConfigurationAsync(_fixture.Create<JObject>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+        [TestMethod]
+        public void Should_Installation_Server_Configuration()
+        {
+            string orgUid = _fixture.Create<string>();
+            string appUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            Installation installation = new Installation(client, orgUid, appUid, uid);
+            ContentstackResponse response = installation.ServerConfiguration();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Installation_Server_Configuration_Async()
+        {
+            string orgUid = _fixture.Create<string>();
+            string appUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            Installation installation = new Installation(client, orgUid, appUid, uid);
+            ContentstackResponse response = await installation.ServerConfigurationAsync();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Installation_Set_Server_Configuration()
+        {
+            string orgUid = _fixture.Create<string>();
+            string appUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            Installation installation = new Installation(client, orgUid, appUid, uid);
+            ContentstackResponse response = installation.SetServerConfiguration(_fixture.Create<JObject>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Installation_Set_Server_Configuration_Async()
+        {
+            string orgUid = _fixture.Create<string>();
+            string appUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            Installation installation = new Installation(client, orgUid, appUid, uid);
+            ContentstackResponse response = await installation.SetServerConfigurationAsync(_fixture.Create<JObject>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+        [TestMethod]
+        public void Should_Installation_Data()
+        {
+            string orgUid = _fixture.Create<string>();
+            string appUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            Installation installation = new Installation(client, orgUid, appUid, uid);
+            ContentstackResponse response = installation.InstallationData();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Installation_Data_Async()
+        {
+            string orgUid = _fixture.Create<string>();
+            string appUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            Installation installation = new Installation(client, orgUid, appUid, uid);
+            ContentstackResponse response = await installation.InstallationDataAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
