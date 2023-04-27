@@ -24,7 +24,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         }
 
         [TestMethod]
-        void Initialize_App_without_Uid()
+        public void Initialize_App_without_Uid()
         {
             string orgUid = _fixture.Create<string>();
             App app = new App(client, orgUid);
@@ -33,7 +33,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.IsNotNull(app.client);
             Assert.IsNull(app.uid);
             Assert.IsNull(app.resourcePathOAuth);
-            Assert.AreEqual("/manifest", app.resourcePath);
+            Assert.AreEqual("/manifests", app.resourcePath);
             Assert.AreEqual(orgUid, app.orgUid);
             Assert.ThrowsException<InvalidOperationException>(() => app.Update(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.UpdateAsync(null));
@@ -49,21 +49,23 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.InstallAsync(null));
             Assert.ThrowsException<InvalidOperationException>(() => app.Reinstall(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.ReinstallAsync(null));
+            Assert.ThrowsException<InvalidOperationException>(() => app.Authorize(null));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.AuthorizeAsync(null));
         }
 
         [TestMethod]
-        void Initialize_App_with_Uid()
+        public void Initialize_App_with_Uid()
         {
             string orgUid = _fixture.Create<string>();
             string uid = _fixture.Create<string>();
-            App app = new App(client, orgUid);
+            App app = new App(client, orgUid, uid);
 
             Assert.IsNotNull(app);
             Assert.IsNotNull(app.client);
             Assert.AreEqual(uid, app.uid);
             Assert.AreEqual(orgUid, app.orgUid);
-            Assert.AreEqual($"/manifest/{uid}", app.resourcePath);
-            Assert.AreEqual($"/manifest/{uid}/oauth", app.resourcePathOAuth);
+            Assert.AreEqual($"/manifests/{uid}", app.resourcePath);
+            Assert.AreEqual($"/manifests/{uid}/oauth", app.resourcePathOAuth);
             Assert.ThrowsException<InvalidOperationException>(() => app.Create(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.CreateAsync(null));
             Assert.ThrowsException<InvalidOperationException>(() => app.FindAll(null));
@@ -250,6 +252,30 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             string uid = _fixture.Create<string>();
             App app = new App(client, orgUid, uid);
             ContentstackResponse response = await app.ReinstallAsync(_fixture.Create<JObject>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_App_Authorize()
+        {
+            string orgUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            App app = new App(client, orgUid, uid);
+            ContentstackResponse response = app.Authorize();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_App_Authorize_Async()
+        {
+            string orgUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            App app = new App(client, orgUid, uid);
+            ContentstackResponse response = await app.AuthorizeAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
