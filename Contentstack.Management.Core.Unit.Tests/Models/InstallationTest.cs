@@ -25,7 +25,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         }
 
         [TestMethod]
-        void Initialize_Installation_without_Uid()
+        public void Initialize_Installation_without_Uid()
         {
             string orgUid = _fixture.Create<string>();
             Installation installation = new Installation(client, orgUid);
@@ -34,15 +34,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.IsNotNull(installation.client);
             Assert.IsNull(installation.uid);
             Assert.IsNull(installation.appUid);
-            Assert.Equals(orgUid, installation.orgUid);
-            Assert.ThrowsException<InvalidOperationException>(() => installation.FindAll(null));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.FindAllAsync(null));
+            Assert.AreEqual(orgUid, installation.orgUid);
             Assert.ThrowsException<InvalidOperationException>(() => installation.AppInstallations(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.AppInstallationsAsync(null));
         }
 
         [TestMethod]
-        void Initialize_Installation_with_InstallationUid()
+        public void Initialize_Installation_with_InstallationUid()
         {
             string orgUid = _fixture.Create<string>();
             string appUid = _fixture.Create<string>();
@@ -51,8 +49,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.IsNotNull(installation);
             Assert.IsNotNull(installation.client);
             Assert.IsNull(installation.uid);
-            Assert.Equals(orgUid, installation.orgUid);
-            Assert.Equals(appUid, installation.appUid);
+            Assert.AreEqual(orgUid, installation.orgUid);
+            Assert.AreEqual(appUid, installation.appUid);
             Assert.ThrowsException<InvalidOperationException>(() => installation.Update(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.UpdateAsync(null));
             Assert.ThrowsException<InvalidOperationException>(() => installation.Fetch(null));
@@ -69,9 +67,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.SetServerConfigurationAsync(null));
             Assert.ThrowsException<InvalidOperationException>(() => installation.InstallationData(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.InstallationDataAsync(null));
+            Assert.ThrowsException<InvalidOperationException>(() => installation.FindAll(null));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => installation.FindAllAsync(null));
         }
         [TestMethod]
-        void Initialize_Installation_with_Uid()
+        public void Initialize_Installation_with_Uid()
         {
             string orgUid = _fixture.Create<string>();
             string appUid = _fixture.Create<string>();
@@ -80,9 +80,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.IsNotNull(installation);
             Assert.IsNotNull(installation.client);
-            Assert.Equals(uid, installation.uid);
-            Assert.Equals(orgUid, installation.orgUid);
-            Assert.Equals(appUid, installation.appUid);
+            Assert.AreEqual(uid, installation.uid);
+            Assert.AreEqual(orgUid, installation.orgUid);
+            Assert.AreEqual(appUid, installation.appUid);
         }
         [TestMethod]
         public void Should_Update_Installation()
@@ -165,7 +165,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             string orgUid = _fixture.Create<string>();
             string appUid = _fixture.Create<string>();
             string uid = _fixture.Create<string>();
-            Installation installation = new Installation(client, orgUid, appUid);
+            Installation installation = new Installation(client, orgUid, appUid, uid);
             ContentstackResponse response = installation.FindAll();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
@@ -178,7 +178,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             string orgUid = _fixture.Create<string>();
             string appUid = _fixture.Create<string>();
             string uid = _fixture.Create<string>();
-            Installation installation = new Installation(client, orgUid, appUid);
+            Installation installation = new Installation(client, orgUid, appUid, uid);
             ContentstackResponse response = await installation.FindAllAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());

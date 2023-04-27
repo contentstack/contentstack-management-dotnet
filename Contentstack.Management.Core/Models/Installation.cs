@@ -91,7 +91,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         public virtual ContentstackResponse FindAll(ParameterCollection collection = null)
         {
-            ThrowIfUidNotEmpty();
+            ThrowIfUidEmpty();
             var service = new FetchDeleteAppsService(client.serializer, orgUid, resourcePath, collection: collection);
             return client.InvokeSync(service);
         }
@@ -109,7 +109,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="Task"/></returns>
         public virtual Task<ContentstackResponse> FindAllAsync(ParameterCollection collection = null)
         {
-            ThrowIfUidNotEmpty();
+            ThrowIfUidEmpty();
             var service = new FetchDeleteAppsService(client.serializer, orgUid, resourcePath, collection: collection);
             return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
         }
@@ -261,6 +261,7 @@ namespace Contentstack.Management.Core.Models
         public virtual Task<ContentstackResponse> ConfigurationAsync(ParameterCollection collection = null)
         {
             ThrowIfUidEmpty();
+
             var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/configuration", collection: collection);
             return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
         }

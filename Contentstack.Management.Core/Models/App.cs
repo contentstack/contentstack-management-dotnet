@@ -23,10 +23,10 @@ namespace Contentstack.Management.Core.Models
 			this.orgUid = orgUid;
             this.uid = uid;
             this.client = contentstackClient;
-            resourcePath = uid == null ? "/manifest" : $"/manifest/{uid}";
+            resourcePath = uid == null ? "/manifests" : $"/manifests/{uid}";
             if (uid != null)
             {
-                resourcePathOAuth = $"/manifest/{uid}/oauth";
+                resourcePathOAuth = $"/manifests/{uid}/oauth";
             }
 		}
         #endregion
@@ -369,10 +369,72 @@ namespace Contentstack.Management.Core.Models
             var service = new CreateUpdateAppsService(client.serializer, orgUid, $"{resourcePath}/reinstall", jObject, collection: collection);
             return client.InvokeAsync<CreateUpdateAppsService, ContentstackResponse>(service);
         }
-
+        /// <summary>
+        /// App installation allow to set installation, configuration for apps.
+        /// </summary>
+        /// <param name="uid"> Installation uid.
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
         public Installation Installation(string uid = null)
         {
             return new Installation(client, orgUid, this.uid, uid);
+        }
+        /// <summary>
+        /// The Authorization allows you to get and revoke app authorization.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Authorization();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public Authorization Authorization()
+        {
+            return new Authorization(client, orgUid, this.uid);
+        }
+        /// <summary>
+        /// To get the apps list of authorized apps for the particular organization.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).Authorize();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse Authorize(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/authorize", collection: collection);
+            return client.InvokeSync(service);
+        }
+        /// <summary>
+        /// To get the apps list of authorized apps for the particular organization.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).AuthorizeAsync();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> AuthorizeAsync(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/authorize", collection: collection);
+            return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
         }
         #endregion
 
