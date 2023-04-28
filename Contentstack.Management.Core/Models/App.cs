@@ -380,9 +380,10 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Installation();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Task"/></returns>
+        /// <returns>The <see cref="Installation"/></returns>
         public Installation Installation(string uid = null)
         {
+            ThrowIfUidEmpty();
             return new Installation(client, orgUid, this.uid, uid);
         }
         /// <summary>
@@ -395,10 +396,27 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Authorization();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Task"/></returns>
+        /// <returns>The <see cref="Authorization"/></returns>
         public Authorization Authorization()
         {
+            ThrowIfUidEmpty();
             return new Authorization(client, orgUid, this.uid);
+        }
+        /// <summary>
+        /// The Hosting allows you to host app.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).Hosting();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Hosting"/></returns>
+        public Hosting Hosting()
+        {
+            ThrowIfUidEmpty();
+            return new Hosting(client, orgUid, this.uid);
         }
         /// <summary>
         /// To get the apps list of authorized apps for the particular organization.
