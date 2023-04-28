@@ -51,6 +51,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.ReinstallAsync(null));
             Assert.ThrowsException<InvalidOperationException>(() => app.Authorize(null));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.AuthorizeAsync(null));
+            Assert.ThrowsException<InvalidOperationException>(() => app.Installation());
+            Assert.ThrowsException<InvalidOperationException>(() => app.Authorization());
+            Assert.ThrowsException<InvalidOperationException>(() => app.Hosting());
         }
 
         [TestMethod]
