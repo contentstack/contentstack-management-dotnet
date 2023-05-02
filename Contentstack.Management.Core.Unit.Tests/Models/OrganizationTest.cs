@@ -60,6 +60,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => organization.GetStacksAsync());
 
             Assert.ThrowsException<InvalidOperationException>(() => organization.App());
+            Assert.ThrowsException<InvalidOperationException>(() => organization.AppRequest());
         }
 
         [TestMethod]
@@ -84,6 +85,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => organization.GetStacksAsync(null));
 
             Assert.ThrowsException<InvalidOperationException>(() => organization.App());
+            Assert.ThrowsException<InvalidOperationException>(() => organization.AppRequest());
         }
 
         [TestMethod]

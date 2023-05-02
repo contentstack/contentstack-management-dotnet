@@ -441,6 +441,25 @@ namespace Contentstack.Management.Core.Models
 
             return new App(_client, Uid, uid);
         }
+
+        /// <summary>
+        /// <see cref="Models.AppRequest"/> create request call is used to create a app request for an app.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// AppRequest appRequest = organization.AppRequest();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.AppRequest"/></returns>
+        public AppRequest AppRequest()
+        {
+            _client.ThrowIfNotLoggedIn();
+            this.ThrowIfOrganizationUidNull();
+
+            return new AppRequest(_client, Uid);
+        }
         #endregion
 
         #region Private

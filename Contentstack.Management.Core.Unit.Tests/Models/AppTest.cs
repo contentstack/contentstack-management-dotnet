@@ -54,6 +54,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsException<InvalidOperationException>(() => app.Installation());
             Assert.ThrowsException<InvalidOperationException>(() => app.Authorization());
             Assert.ThrowsException<InvalidOperationException>(() => app.Hosting());
+            Assert.ThrowsException<InvalidOperationException>(() => app.GetRequests(null));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => app.GetRequestsAsync(null));
         }
 
         [TestMethod]
@@ -279,6 +281,30 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             string uid = _fixture.Create<string>();
             App app = new App(client, orgUid, uid);
             ContentstackResponse response = await app.AuthorizeAsync();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_App_Requests()
+        {
+            string orgUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            App app = new App(client, orgUid, uid);
+            ContentstackResponse response = app.GetRequests();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_App_Requests_Async()
+        {
+            string orgUid = _fixture.Create<string>();
+            string uid = _fixture.Create<string>();
+            App app = new App(client, orgUid, uid);
+            ContentstackResponse response = await app.GetRequestsAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
