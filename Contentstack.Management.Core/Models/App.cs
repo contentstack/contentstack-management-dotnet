@@ -454,6 +454,42 @@ namespace Contentstack.Management.Core.Models
             var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/authorize", collection: collection);
             return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
         }
+        /// <summary>
+        /// The GET app requests of an app call is used to retrieve all requests of an app.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = organization.App(&quot;&lt;APP_UID&gt;&quot;).GetRequests();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        public virtual ContentstackResponse GetRequests(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/requests", collection: collection);
+            return client.InvokeSync(service);
+        }
+        /// <summary>
+        /// The GET app requests of an app call is used to retrieve all requests of an app.
+        /// </summary>
+        /// <param name="collection"> Query Parameters</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await organization.App(&quot;&lt;APP_UID&gt;&quot;).GetRequestsAsync();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Task"/></returns>
+        public virtual Task<ContentstackResponse> GetRequestsAsync(ParameterCollection collection = null)
+        {
+            ThrowIfUidEmpty();
+            var service = new FetchDeleteAppsService(client.serializer, orgUid, $"{resourcePath}/requests", collection: collection);
+            return client.InvokeAsync<FetchDeleteAppsService, ContentstackResponse>(service);
+        }
         #endregion
 
         #region Throw Error
