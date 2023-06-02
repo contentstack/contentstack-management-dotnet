@@ -1,0 +1,79 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/shaileshmishra/Documents/workspace/contentstack/dotnetspace/contentstack-management-dotnet/contentstack.marketplace.core.unit.test/contentstack.marketplace.core.unit.test.csproj": {}
+  },
+  "projects": {
+    "/Users/shaileshmishra/Documents/workspace/contentstack/dotnetspace/contentstack-management-dotnet/contentstack.marketplace.core.unit.test/contentstack.marketplace.core.unit.test.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/shaileshmishra/Documents/workspace/contentstack/dotnetspace/contentstack-management-dotnet/contentstack.marketplace.core.unit.test/contentstack.marketplace.core.unit.test.csproj",
+        "projectName": "contentstack.marketplace.core.unit.test",
+        "projectPath": "/Users/shaileshmishra/Documents/workspace/contentstack/dotnetspace/contentstack-management-dotnet/contentstack.marketplace.core.unit.test/contentstack.marketplace.core.unit.test.csproj",
+        "packagesPath": "/Users/shaileshmishra/.nuget/packages/",
+        "outputPath": "/Users/shaileshmishra/Documents/workspace/contentstack/dotnetspace/contentstack-management-dotnet/contentstack.marketplace.core.unit.test/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/shaileshmishra/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "MSTest.TestAdapter": {
+              "target": "Package",
+              "version": "[2.2.10, )"
+            },
+            "MSTest.TestFramework": {
+              "target": "Package",
+              "version": "[2.2.10, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.5.0, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

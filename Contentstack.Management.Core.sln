@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contentstack.Management.Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "contentstack.management.aspnetcore", "Contentstack.Management.ASPNETCore\contentstack.management.aspnetcore.csproj", "{C90C9782-D041-43A1-B13E-21B72B9A6BE2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "contentstack.marketplace.core", "contentstack.marketplace.core\contentstack.marketplace.core.csproj", "{1F6E6D9C-FFE0-4317-AC7A-13D1EDDB60C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "contentstack.marketplace.core.unit.test", "contentstack.marketplace.core.unit.test\contentstack.marketplace.core.unit.test.csproj", "{8A9BBEDF-8580-4CC9-9278-7E3D1F49705E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,14 @@ Global
 		{C90C9782-D041-43A1-B13E-21B72B9A6BE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C90C9782-D041-43A1-B13E-21B72B9A6BE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C90C9782-D041-43A1-B13E-21B72B9A6BE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F6E6D9C-FFE0-4317-AC7A-13D1EDDB60C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F6E6D9C-FFE0-4317-AC7A-13D1EDDB60C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F6E6D9C-FFE0-4317-AC7A-13D1EDDB60C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F6E6D9C-FFE0-4317-AC7A-13D1EDDB60C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A9BBEDF-8580-4CC9-9278-7E3D1F49705E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A9BBEDF-8580-4CC9-9278-7E3D1F49705E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A9BBEDF-8580-4CC9-9278-7E3D1F49705E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A9BBEDF-8580-4CC9-9278-7E3D1F49705E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +61,8 @@ Global
 		{FB3B9D93-5524-479A-85B5-2A7C24304D19} = {AE5BBF5C-BE98-4EA0-AA55-7E2F78C39B39}
 		{E0456E4C-F70F-4CDC-B0E9-76CCCF351514} = {AE5BBF5C-BE98-4EA0-AA55-7E2F78C39B39}
 		{C90C9782-D041-43A1-B13E-21B72B9A6BE2} = {0977D0FB-EACA-4FBE-A780-2DC2B6523E53}
+		{1F6E6D9C-FFE0-4317-AC7A-13D1EDDB60C1} = {0977D0FB-EACA-4FBE-A780-2DC2B6523E53}
+		{8A9BBEDF-8580-4CC9-9278-7E3D1F49705E} = {AE5BBF5C-BE98-4EA0-AA55-7E2F78C39B39}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		version = 0.1.3
