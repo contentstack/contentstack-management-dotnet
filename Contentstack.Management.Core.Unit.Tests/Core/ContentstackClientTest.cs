@@ -74,8 +74,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Core
                 Timeout= TimeSpan.FromSeconds(20),
                 RetryOnError= false,
                 ProxyHost= "proxyHost",
-                ProxyPort= 22
+                ProxyPort= 22,
+                EarlyAccess = new string[] { "ea1", "ea2" }
             });
+
+            Console.WriteLine(contentstackClient);
 
             Assert.AreEqual("token", contentstackClient.contentstackOptions.Authtoken);
             Assert.AreEqual("host", contentstackClient.contentstackOptions.Host);
@@ -89,6 +92,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Core
             Assert.IsTrue(contentstackClient.contentstackOptions.DisableLogging);
             Assert.AreEqual(1234, contentstackClient.contentstackOptions.MaxResponseContentBufferSize);
             Assert.AreEqual(20, contentstackClient.contentstackOptions.Timeout.Seconds);
+            CollectionAssert.AreEqual(new string[] {"ea1", "ea2"}, contentstackClient.contentstackOptions.EarlyAccess);
+            Assert.AreEqual("ea1,ea2", contentstackClient.DefaultRequestHeaders[HeadersKey.EarlyAccessHeader]);
         }
 
         [TestMethod]
