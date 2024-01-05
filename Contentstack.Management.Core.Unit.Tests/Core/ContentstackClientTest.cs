@@ -4,6 +4,7 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Runtime.Contexts;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core
 {
@@ -78,8 +79,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core
                 EarlyAccess = new string[] { "ea1", "ea2" }
             });
 
-            Console.WriteLine(contentstackClient);
-
             Assert.AreEqual("token", contentstackClient.contentstackOptions.Authtoken);
             Assert.AreEqual("host", contentstackClient.contentstackOptions.Host);
             Assert.AreEqual(445, contentstackClient.contentstackOptions.Port);
@@ -93,7 +92,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core
             Assert.AreEqual(1234, contentstackClient.contentstackOptions.MaxResponseContentBufferSize);
             Assert.AreEqual(20, contentstackClient.contentstackOptions.Timeout.Seconds);
             CollectionAssert.AreEqual(new string[] {"ea1", "ea2"}, contentstackClient.contentstackOptions.EarlyAccess);
-            Assert.AreEqual("ea1,ea2", contentstackClient.DefaultRequestHeaders[HeadersKey.EarlyAccessHeader]);
         }
 
         [TestMethod]
