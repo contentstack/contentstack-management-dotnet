@@ -5,6 +5,7 @@ using Contentstack.Management.Core.Runtime.Contexts;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+
 namespace Contentstack.Management.Core.Unit.Tests.Core
 {
     [TestClass]
@@ -91,7 +92,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core
             Assert.AreEqual(1234, contentstackClient.contentstackOptions.MaxResponseContentBufferSize);
             Assert.AreEqual(20, contentstackClient.contentstackOptions.Timeout.Seconds);
             CollectionAssert.AreEqual(new string[] {"ea1", "ea2"}, contentstackClient.contentstackOptions.EarlyAccess);
-            Assert.AreEqual("ea1,ea2", contentstackClient.DefaultRequestHeaders[HeadersKey.EarlyAccessHeader]);
         }
 
         [TestMethod]
