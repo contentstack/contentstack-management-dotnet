@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Contentstack.Management.Core.Queryable;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Unit.Tests.Queryable
 {
@@ -83,6 +84,19 @@ namespace Contentstack.Management.Core.Unit.Tests.Queryable
             Assert.IsTrue(collection.ContainsKey("param1"));
             Assert.IsInstanceOfType(collection["param1"], typeof(DoubleListParameterValue));
             Assert.AreEqual(vs, (collection["param1"] as DoubleListParameterValue).Value);
+        }
+
+        [TestMethod]
+        public void Should_Add_Query_JObject_In_Parameter_Collection()
+        {
+            ParameterCollection collection = new ParameterCollection();
+            JObject queryObject = JObject.Parse("{ \"price_in_usd\": { \"$lt\": 600 } }");
+
+            collection.AddQuery(queryObject);
+
+            Assert.IsTrue(collection.ContainsKey("query"));
+            Assert.IsInstanceOfType(collection["query"], typeof(StringParameterValue));
+            Assert.AreEqual(Uri.EscapeDataString(queryObject.ToString()), (collection["query"] as StringParameterValue).Value);
         }
     }
 }
