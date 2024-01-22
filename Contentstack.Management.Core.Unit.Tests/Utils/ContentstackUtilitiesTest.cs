@@ -3,6 +3,7 @@ using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Contentstack.Management.Core.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Unit.Tests.Utils
 {
@@ -89,9 +90,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
             param.Add("limit", 10);
             param.Add("include", "type");
 
+            JObject q_obj = JObject.Parse("{ \"price_in_usd\": { \"$lt\": 600 } }");
+            param.AddQuery(q_obj);
+
             var result = ContentstackUtilities.GetQueryParameter(param);
 
-            Assert.AreEqual("include=type&limit=10", result);
+            Assert.AreEqual("include=type&limit=10&query=%7B%0A%20%20%22price_in_usd%22%3A%20%7B%0A%20%20%20%20%22%24lt%22%3A%20600%0A%20%20%7D%0A%7D", result);
         }
 
         [TestMethod]
