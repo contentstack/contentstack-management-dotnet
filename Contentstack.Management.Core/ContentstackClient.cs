@@ -96,7 +96,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         public ContentstackClient(
-        string authtoken = null,
+            string authtoken = null,
             string host = "api.contentstack.io",
             int port = 443,
             string version = "v3",
@@ -148,6 +148,10 @@ namespace Contentstack.Management.Core
                 _httpClient.Timeout = contentstackOptions.Timeout;
                 _httpClient.MaxResponseContentBufferSize = contentstackOptions.MaxResponseContentBufferSize;
                 LogManager = contentstackOptions.DisableLogging ? LogManager.EmptyLogger : LogManager.GetLogManager(GetType());
+
+                if (contentstackOptions.EarlyAccess != null) {
+                    _httpClient.DefaultRequestHeaders.Add(HeadersKey.EarlyAccessHeader, string.Join(",", contentstackOptions.EarlyAccess));
+                }
             }
 
             SerializerSettings.DateParseHandling = DateParseHandling.None;
