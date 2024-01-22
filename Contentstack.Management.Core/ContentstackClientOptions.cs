@@ -22,6 +22,10 @@ namespace Contentstack.Management.Core
         /// </summary>
         public string Host { get; set; } = "api.contentstack.io";
 
+        /// <summary>
+        /// The EarlyAccess used to set early access headers for the Contentstack Management API.
+        /// </summary>
+        public string[] EarlyAccess { get; set; }
 
         /// <summary>
         /// The Host used to set host url for the Contentstack Management API.
