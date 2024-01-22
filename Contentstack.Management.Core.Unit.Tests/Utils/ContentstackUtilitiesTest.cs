@@ -95,7 +95,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
 
             var result = ContentstackUtilities.GetQueryParameter(param);
 
-            Assert.AreEqual("include=type&limit=10&query=%7B%0A%20%20%22price_in_usd%22%3A%20%7B%0A%20%20%20%20%22%24lt%22%3A%20600%0A%20%20%7D%0A%7D", result);
+            Assert.AreEqual("include=type&limit=10&query=%7B%0D%0A%20%20%22price_in_usd%22%3A%20%7B%0D%0A%20%20%20%20%22%24lt%22%3A%20600%0D%0A%20%20%7D%0D%0A%7D", result);
         }
 
         [TestMethod]

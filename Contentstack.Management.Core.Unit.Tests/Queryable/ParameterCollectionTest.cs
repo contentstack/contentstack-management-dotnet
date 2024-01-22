@@ -9,8 +9,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Queryable
     [TestClass]
     public class ParameterCollectionTest
     {
-        private JsonLoadSettings price_in_usd;
-
         [TestMethod]
         public void Initialize_Parameter_Collection()
         {
@@ -81,7 +79,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Queryable
             List<double> vs = new List<double>() { 1, 2, 3 };
 
             collection.Add("param1", vs);
-
+            
             Assert.AreEqual(3, collection.GetSortedParametersList().Count);
             Assert.IsTrue(collection.ContainsKey("param1"));
             Assert.IsInstanceOfType(collection["param1"], typeof(DoubleListParameterValue));
