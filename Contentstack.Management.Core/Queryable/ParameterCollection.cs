@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Contentstack.Management.Core.Exceptions;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Queryable
 {
@@ -61,6 +62,15 @@ namespace Contentstack.Management.Core.Queryable
         }
 
         /// <summary>
+        /// Adds a parameter with a queryObj value.
+        /// </summary>
+        /// <param name="queryObj"></param>
+        public void AddQuery(JObject queryObj)
+        {
+            Add("query", new StringParameterValue(Uri.EscapeDataString(queryObj.ToString())));
+        }
+
+        /// <summary>
         /// Converts the current parameters into a list of key-value pairs.
         /// </summary>
         /// <returns></returns>
@@ -86,6 +96,9 @@ namespace Contentstack.Management.Core.Queryable
                         break;
                     case StringParameterValue stringParameterValue:
                         yield return new KeyValuePair<string, string>(name, stringParameterValue.Value);
+                        break;
+                    case JObjectParameterValue jObjectParameterValue:
+                        yield return new KeyValuePair<string, string>(name, jObjectParameterValue.Value.ToString());
                         break;
                     case StringListParameterValue stringListParameterValue:
                         var sortedStringListParameterValue = stringListParameterValue.Value;
