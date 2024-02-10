@@ -35,7 +35,7 @@ namespace Contentstack.Management.Core
         private HttpClient _httpClient;
         private bool _disposed = false;
 
-        private string Version => "0.1.4";
+        private string Version => "0.1.5";
         private string xUserAgent => $"contentstack-management-dotnet/{Version}";
         #endregion
 
@@ -163,6 +163,8 @@ namespace Contentstack.Management.Core
             {
                 SerializerSettings.Converters.Add((JsonConverter)Activator.CreateInstance(t));
             }
+            SerializerSettings.Converters.Add(new NodeJsonConverter());
+            SerializerSettings.Converters.Add(new TextNodeJsonConverter());
         }
 
         protected void BuildPipeline()
