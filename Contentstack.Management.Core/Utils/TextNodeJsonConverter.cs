@@ -69,11 +69,6 @@ namespace Contentstack.Management.Core.Utils
                 writer.WritePropertyName("superscript");
                 writer.WriteValue(value.superscript);
             }
-            if (value.break)
-            {
-                writer.WritePropertyName("break");
-                writer.WriteValue(value.break);
-            }
             if (!string.IsNullOrEmpty(value.text))
             {
                 writer.WritePropertyName("text");

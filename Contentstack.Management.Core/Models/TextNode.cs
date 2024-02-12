@@ -14,7 +14,6 @@ namespace Contentstack.Management.Core.Models
         public bool inlineCode { get; set; }
         public bool subscript { get; set; }
         public bool superscript { get; set; }
-        public bool break { get; set; }
         public string text { get; set; }
     }
 }
