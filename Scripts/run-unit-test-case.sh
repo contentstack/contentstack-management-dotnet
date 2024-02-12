@@ -4,7 +4,7 @@
 #  Contentstack
 #
 #  Created by Uttam Ukkoji on 30/03/2023.
-#  Copyright © 2023 Contentstack. All rights reserved.
+#  Copyright © 2024 Contentstack. All rights reserved.
 
 echo "Removing files"
 rm -rf "./Contentstack.Management.Core.Unit.Tests/TestResults"
