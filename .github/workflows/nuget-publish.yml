@@ -17,7 +17,6 @@ jobs:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
       - name: Build solution and generate NuGet package
         run: |
-          cd contentstack-management-dotnet
           dotnet pack -c Release -o out
 
       - name: Push generated package to GitHub registry
@@ -36,7 +35,6 @@ jobs:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build solution and generate NuGet package
         run: |
-          cd contentstack-management-dotnet
           dotnet pack -c Release -o out
 
       - name: Push generated package to GitHub registry
