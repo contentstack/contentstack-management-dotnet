@@ -1,6 +1,10 @@
 # Changelog
 
+## [v0.1.5](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.5) (2024-02-11)
+ - Adds JsonConverters to Serializer for JSON Rte 
+
 ## [v0.1.4](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.4) (2024-01-22)
+ - EarlyAccess Header support and AddQuery method in ParamCollection
 
 ## [v0.1.3](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.3) (2023-04-04)
 

@@ -43,7 +43,7 @@ namespace Contentstack.Management.Core.Models
         public string Uid { get; set; }
 
         [JsonProperty(propertyName: "version")]
-        public string Version { get; set; }
+        public int Version { get; set; }
 
         [JsonProperty(propertyName: "locale")]
         public string Locale { get; set; }
