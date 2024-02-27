@@ -10,7 +10,13 @@ namespace Contentstack.Management.Core.Utils
     {
         public override TextNode ReadJson(JsonReader reader, Type objectType, TextNode existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            JObject jObject = JObject.Load(reader);
+
+            TextNode txtnode = new TextNode();
+
+            serializer.Populate(jObject.CreateReader(), txtnode);
+
+            return txtnode;
         }
 
         public override void WriteJson(JsonWriter writer, TextNode value, JsonSerializer serializer)
@@ -33,7 +39,7 @@ namespace Contentstack.Management.Core.Utils
                 }
                 writer.WriteEndArray();
             }
-            // Write additional properties specific to TextNode
+
             if (value.bold)
             {
                 writer.WritePropertyName("bold");
