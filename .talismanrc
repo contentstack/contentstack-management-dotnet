@@ -1,1 +1,5 @@
 threshold: medium
+fileignoreconfig:
+- filename: Contentstack.Management.Core.Tests/Mock/customUpload.html
+  checksum: 5244edc21796bf373f2de512e56171007e1d48d14688684a7bac448789d1d893
+version: ""
