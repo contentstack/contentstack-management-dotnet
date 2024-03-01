@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.1.7](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.5) (2024-02-11)
+ - Feature
+   - Parameter support in References and ReferencesAsync methods
+
+## [v0.1.6](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.5) (2024-02-11)
+ - Fix
+   - TextNode Deserializer
+
 ## [v0.1.5](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.5) (2024-02-11)
  - Adds JsonConverters to Serializer for JSON Rte 
 
