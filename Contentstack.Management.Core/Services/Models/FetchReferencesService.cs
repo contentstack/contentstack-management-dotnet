@@ -1,11 +1,13 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Queryable;
+
 namespace Contentstack.Management.Core.Services.Models
 {
     internal class FetchReferencesService : ContentstackService
     {
-        internal FetchReferencesService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath = null)
-           : base(serializer, stack: stack)
+        internal FetchReferencesService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath = null, ParameterCollection collection = null)
+           : base(serializer, stack: stack, collection)
         {
             if (stack.APIKey == null)
             {
@@ -17,6 +19,11 @@ namespace Contentstack.Management.Core.Services.Models
             }
             this.ResourcePath = $"{resourcePath}/references";
             this.HttpMethod = "GET";
+
+            if (collection != null && collection.Count > 0)
+            {
+                this.UseQueryString = true;
+            }
         }
     }
 }
