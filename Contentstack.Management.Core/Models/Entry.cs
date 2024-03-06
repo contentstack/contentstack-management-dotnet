@@ -374,12 +374,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse References()
+        public ContentstackResponse References(ParameterCollection collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath);
+            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -393,12 +393,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> ReferencesAsync()
+        public Task<ContentstackResponse> ReferencesAsync(ParameterCollection collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath);
+            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchReferencesService, ContentstackResponse>(service);
         }
 
