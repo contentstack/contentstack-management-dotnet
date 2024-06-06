@@ -172,7 +172,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
-            return stack.client.InvokeSync(service, true);
+            return stack.client.InvokeSync(service);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
-            return stack.client.InvokeSync(service, true);
+            return stack.client.InvokeSync(service);
         }
 
         /// <summary>
