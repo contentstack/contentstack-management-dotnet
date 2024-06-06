@@ -174,7 +174,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             return HttpMethod == "POST" || HttpMethod == "PUT" || HttpMethod == "PATCH";
         }
 
-        public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config)
+        public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false)
         {
             var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializer);
             contentstackHttpRequest.Method = new HttpMethod(HttpMethod);

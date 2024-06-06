@@ -194,7 +194,7 @@ namespace Contentstack.Management.Core
             return (ContentstackResponse)ContentstackPipeline.InvokeSync(context).httpResponse;
         }
 
-        internal Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request)
+        internal Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false)
             where TRequest : IContentstackService
             where TResponse : ContentstackResponse
         {
@@ -207,7 +207,7 @@ namespace Contentstack.Management.Core
                   service = request
               },
               new ResponseContext());
-            return ContentstackPipeline.InvokeAsync<TResponse>(context);
+            return ContentstackPipeline.InvokeAsync<TResponse>(context, addAcceptMediaHeader);
         }
 
         #region Dispose methods
