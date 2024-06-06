@@ -32,6 +32,6 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
         /// </summary>
         /// <param name="executionContext"></param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext);
+        System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false);
     }
 }

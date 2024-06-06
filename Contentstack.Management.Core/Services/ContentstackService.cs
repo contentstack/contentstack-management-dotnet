@@ -151,12 +151,16 @@ namespace Contentstack.Management.Core.Services
             return HttpMethod == "POST" || HttpMethod == "PUT" || HttpMethod == "PATCH" || HttpMethod == "DELETE";
         }
 
-        public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config)
+        public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false)
         {
             ThrowIfDisposed();
-            httpClient.DefaultRequestHeaders
-            .Accept
-            .Add(new MediaTypeWithQualityHeaderValue("image/jpeg"));
+
+            if (addAcceptMediaHeader)
+            {
+                httpClient.DefaultRequestHeaders
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("image/jpeg"));
+            }
             Uri requestUri = ContentstackUtilities.ComposeUrI(config.GetUri(), this);
             Headers["Content-Type"] = "application/json";
 

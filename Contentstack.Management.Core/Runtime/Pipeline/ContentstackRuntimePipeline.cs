@@ -83,11 +83,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
             _handler = currentHanler;
         }
 
-        public System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext)
+        public System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false)
         {
             ThrowIfDisposed();
 
-            return _handler.InvokeAsync<T>(executionContext);
+            return _handler.InvokeAsync<T>(executionContext, addAcceptMediaHeader);
         }
 
         public IResponseContext InvokeSync(IExecutionContext executionContext)

@@ -23,14 +23,14 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
         public ILogManager LogManager { get; set; }
         public IPipelineHandler InnerHandler { get; set; }
 
-        public async System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext)
+        public async System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false)
         {
             IHttpRequest httpRequest = null;
             try
             {
                 var requestContext = executionContext.RequestContext;
 
-                httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config);
+                httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config, addAcceptMediaHeader);
 
                 if (requestContext.service.HasRequestBody() && requestContext.service.Content != null)
                 {

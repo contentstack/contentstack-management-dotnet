@@ -11,11 +11,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
 
         public IPipelineHandler InnerHandler { get; set; }
 
-        public virtual Task<T> InvokeAsync<T>(IExecutionContext executionContext)
+        public virtual Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false)
         {
             if (InnerHandler != null)
             {
-                return InnerHandler.InvokeAsync<T>(executionContext);
+                return InnerHandler.InvokeAsync<T>(executionContext, addAcceptMediaHeader);
             }
             throw new InvalidOperationException("Cannot invoke InnerHandler. InnerHandler is not set.");
         }
