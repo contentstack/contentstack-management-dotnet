@@ -2,4 +2,6 @@ threshold: medium
 fileignoreconfig:
 - filename: Contentstack.Management.Core.Tests/Mock/customUpload.html
   checksum: 854eb83dcacd62d3bf233c82e5cfd0c69dd20478fa0e7c6af9028f6c6386749d
+- filename: Contentstack.Management.Core/Attributes/CSMJsonConverterAttribute.cs
+  checksum: 774bc2a4cf7f62fb890ba39ba1319769f0ff4e13d94781d394fcac2adf14381e
 version: ""

@@ -4,7 +4,9 @@
     <TargetFramework>net7.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
-    <ReleaseVersion>0.1.7</ReleaseVersion>
+    <ReleaseVersion>$(Version)</ReleaseVersion>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../CSManagementSDK.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

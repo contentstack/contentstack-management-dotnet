@@ -13,9 +13,11 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>ContentType query issue resolved</PackageReleaseNotes>
     <PackageTags>Contentstack management API </PackageTags>
-    <PackageVersion>0.1.7</PackageVersion>
-    <ReleaseVersion>0.1.7</ReleaseVersion>
+    <PackageVersion>$(Version)</PackageVersion>
+    <ReleaseVersion>$(Version)</ReleaseVersion>
     <Summary>.NET SDK for the Contentstack Content Delivery API.</Summary>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../CSManagementSDK.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
