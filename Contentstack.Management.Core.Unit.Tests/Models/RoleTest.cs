@@ -142,5 +142,23 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
+
+        [TestMethod]
+        public void Should_Create_Role_With_Taxonomy_Permissions()
+        {
+            ContentstackResponse response = _stack.Role().Create(_fixture.Create<RoleModel>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Update_Role_With_Taxonomy_Permissions()
+        {
+            ContentstackResponse response = _stack.Role(_fixture.Create<string>()).Update(_fixture.Create<RoleModel>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
     }
 }
