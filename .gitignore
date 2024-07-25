@@ -25,4 +25,3 @@ packages/
 */appSettings.json
 api_referece/*
 .sonarqube/
-CSManagementSDK.snk
