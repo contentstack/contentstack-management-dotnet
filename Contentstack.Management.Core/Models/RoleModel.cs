@@ -36,7 +36,7 @@ namespace Contentstack.Management.Core.Models
         public List<string> ContentTypes { get; set; }
     }
 
-    public class BrancheRules : Rule
+    public class BranchRules : Rule
     {
         [JsonProperty(propertyName: "module")]
         public string Module { get; } = "branch";
@@ -79,5 +79,29 @@ namespace Contentstack.Management.Core.Models
 
         [JsonProperty(propertyName: "environments")]
         public List<string> Environments { get; set; }
+    }
+
+    public class TaxonomyContentType
+    {
+        [JsonProperty(propertyName: "uid")]
+        public string Uid { get; set; }
+
+        [JsonProperty(propertyName: "acl")]
+        public Dictionary<string, object> ACL { get; }
+    }
+
+    public class TaxonomyRules : Rule
+    {
+        [JsonProperty(propertyName: "module")]
+        public string Module { get; } = "taxonomy";
+
+        [JsonProperty(propertyName: "taxonomies")]
+        public List<string> Taxonomies { get; set; }
+
+        [JsonProperty(propertyName: "terms")]
+        public List<string> Terms { get; set; }
+
+        [JsonProperty(propertyName: "content_types")]
+        public List<TaxonomyContentType> ContentTypes { get; set; }
     }
 }
