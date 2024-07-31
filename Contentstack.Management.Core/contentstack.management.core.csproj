@@ -2,21 +2,22 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net471;net472;</TargetFrameworks>
-    <PackageId>contentstack.management.csharp</PackageId>
-    <PackageVersion>0.1.7</PackageVersion>
+    <Title>Contentstack Management</Title>
     <Authors>Contentstack</Authors>
     <Copyright>Copyright © 2012-2024 Contentstack. All Rights Reserved</Copyright>
-    <Owners>Contentstack </Owners>
-    <PackageProjectUrl>https://github.com/contentstack/contentstack-management-dotnet</PackageProjectUrl>
-    <PackageReleaseNotes>ContentType query issue resolved</PackageReleaseNotes>
-    <Summary>.NET SDK for the Contentstack Content Delivery API.</Summary>
-    <PackageTags>Contentstack management API </PackageTags>
-    <Title>Contentstack Management</Title>
     <Description>.NET SDK for the Contentstack Content Management API.</Description>
+    <Owners>Contentstack </Owners>
+    <PackageId>contentstack.management.csharp</PackageId>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/contentstack/contentstack-management-dotnet</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>v0.1.7</PackageTags>
-    <ReleaseVersion>0.1.7</ReleaseVersion>
+    <PackageReleaseNotes>ContentType query issue resolved</PackageReleaseNotes>
+    <PackageTags>Contentstack management API </PackageTags>
+    <PackageVersion>$(Version)</PackageVersion>
+    <ReleaseVersion>$(Version)</ReleaseVersion>
+    <Summary>.NET SDK for the Contentstack Content Delivery API.</Summary>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../CSManagementSDK.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

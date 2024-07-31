@@ -35,7 +35,7 @@ namespace Contentstack.Management.Core
         private HttpClient _httpClient;
         private bool _disposed = false;
 
-        private string Version => "0.1.7";
+        private string Version => "0.1.8";
         private string xUserAgent => $"contentstack-management-dotnet/{Version}";
         #endregion
 
@@ -194,7 +194,7 @@ namespace Contentstack.Management.Core
             return (ContentstackResponse)ContentstackPipeline.InvokeSync(context).httpResponse;
         }
 
-        internal Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request)
+        internal Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false)
             where TRequest : IContentstackService
             where TResponse : ContentstackResponse
         {
@@ -207,7 +207,7 @@ namespace Contentstack.Management.Core
                   service = request
               },
               new ResponseContext());
-            return ContentstackPipeline.InvokeAsync<TResponse>(context);
+            return ContentstackPipeline.InvokeAsync<TResponse>(context, addAcceptMediaHeader);
         }
 
         #region Dispose methods

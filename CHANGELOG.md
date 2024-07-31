@@ -1,10 +1,14 @@
 # Changelog
 
-## [v0.1.7](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.5) (2024-02-11)
+## [v0.1.8](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.8)
+ - Fix
+   - Strong named assemblies
+
+## [v0.1.7](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.7) (2024-02-11)
  - Feature
    - Parameter support in References and ReferencesAsync methods
 
-## [v0.1.6](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.5) (2024-02-11)
+## [v0.1.6](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.6) (2024-02-11)
  - Fix
    - TextNode Deserializer
 
