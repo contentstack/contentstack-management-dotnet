@@ -25,7 +25,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
         /// </summary>
         /// <param name="executionContext"></param>
 
-        void InvokeSync(IExecutionContext executionContext);
+        void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false);
 
         /// <summary>
         /// 
