@@ -14,9 +14,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             return base.InvokeAsync<T>(executionContext, addAcceptMediaHeader);
         }
 
-        public override void InvokeSync(IExecutionContext executionContext)
+        public override void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false)
         {
-            base.InvokeSync(executionContext);
+            base.InvokeSync(executionContext, addAcceptMediaHeader);
         }
     }
 
@@ -43,7 +43,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             return await Task.FromResult<T>((T)executionContext.ResponseContext.httpResponse);
         }
 
-        public void InvokeSync(IExecutionContext executionContext)
+        public void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false)
         {
             executionContext.ResponseContext.httpResponse = _response;
             if (executionContext.RequestContext.service != null)
