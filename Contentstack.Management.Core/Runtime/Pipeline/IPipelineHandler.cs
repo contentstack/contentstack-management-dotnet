@@ -25,13 +25,13 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
         /// </summary>
         /// <param name="executionContext"></param>
 
-        void InvokeSync(IExecutionContext executionContext);
+        void InvokeSync(IExecutionContext executionContext, string apiVersion = null);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="executionContext"></param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false);
+        System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null);
     }
 }

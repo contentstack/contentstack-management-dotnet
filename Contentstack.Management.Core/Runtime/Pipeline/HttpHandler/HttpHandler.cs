@@ -23,14 +23,14 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
         public ILogManager LogManager { get; set; }
         public IPipelineHandler InnerHandler { get; set; }
 
-        public async System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false)
+        public async System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
         {
             IHttpRequest httpRequest = null;
             try
             {
                 var requestContext = executionContext.RequestContext;
 
-                httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config, addAcceptMediaHeader);
+                httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config, addAcceptMediaHeader, apiVersion);
 
                 if (requestContext.service.HasRequestBody() && requestContext.service.Content != null)
                 {
@@ -57,14 +57,14 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
             }
         }
 
-        public void InvokeSync(IExecutionContext executionContext)
+        public void InvokeSync(IExecutionContext executionContext, string apiVersion = null)
         {
             IHttpRequest httpRequest = null;
             try
             {
                 var requestContext = executionContext.RequestContext;
 
-                httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config);
+                httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config, apiVersion: apiVersion);
 
                 if (requestContext.service.HasRequestBody() && requestContext.service.Content != null)
                 {

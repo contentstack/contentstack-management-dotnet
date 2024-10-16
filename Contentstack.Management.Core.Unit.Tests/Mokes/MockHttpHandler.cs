@@ -9,12 +9,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
     public class MockRetryHadler : PipelineHandler
     {
-        public override Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false)
+        public override Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
         {
             return base.InvokeAsync<T>(executionContext, addAcceptMediaHeader);
         }
 
-        public override void InvokeSync(IExecutionContext executionContext)
+        public override void InvokeSync(IExecutionContext executionContext, string apiVersion = null)
         {
             base.InvokeSync(executionContext);
         }
@@ -32,7 +32,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         public ILogManager LogManager { get; set; }
         public IPipelineHandler InnerHandler { get; set; }
 
-        public async Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false) 
+        public async Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null) 
         {
             executionContext.ResponseContext.httpResponse = _response;
 
@@ -43,7 +43,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             return await Task.FromResult<T>((T)executionContext.ResponseContext.httpResponse);
         }
 
-        public void InvokeSync(IExecutionContext executionContext)
+        public void InvokeSync(IExecutionContext executionContext, string apiVersion = null)
         {
             executionContext.ResponseContext.httpResponse = _response;
             if (executionContext.RequestContext.service != null)
