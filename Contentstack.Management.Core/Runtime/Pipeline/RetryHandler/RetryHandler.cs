@@ -13,7 +13,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         {
             this.RetryPolicy = retryPolicy;
         }
-        public override async Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false)
+        public override async Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
         {
             var requestContext = executionContext.RequestContext;
             var responseContext = executionContext.ResponseContext;
@@ -22,7 +22,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             {
                 try
                 {
-                    var response =  await base.InvokeAsync<T>(executionContext, addAcceptMediaHeader);
+                    var response =  await base.InvokeAsync<T>(executionContext, addAcceptMediaHeader, apiVersion);
                     return response;
                 }
                 catch (Exception exception)
@@ -46,7 +46,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             throw new ContentstackException("No response was return nor exception was thrown");
         }
 
-        public override void InvokeSync(IExecutionContext executionContext)
+        public override void InvokeSync(IExecutionContext executionContext, string apiVersion = null)
         {
             var requestContext = executionContext.RequestContext;
             bool shouldRetry = false;
@@ -54,7 +54,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             {
                 try
                 {
-                    base.InvokeSync(executionContext);
+                    base.InvokeSync(executionContext, apiVersion);
                     return;
                 }
                 catch (Exception exception)

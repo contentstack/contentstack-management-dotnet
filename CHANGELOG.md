@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.1.9](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.9)
+ - Feat
+   - Add support for apiVersion in bulk publish unpublish methods
+
 ## [v0.1.8](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.8)
  - Fix
    - Strong named assemblies
