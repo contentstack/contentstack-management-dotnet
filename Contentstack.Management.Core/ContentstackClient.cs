@@ -179,7 +179,7 @@ namespace Contentstack.Management.Core
             }, LogManager);
         }
 
-        internal ContentstackResponse InvokeSync<TRequest>(TRequest request, string apiVersion = null) where TRequest : IContentstackService
+        internal ContentstackResponse InvokeSync<TRequest>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null) where TRequest : IContentstackService
         {
             ThrowIfDisposed();
 
@@ -191,7 +191,7 @@ namespace Contentstack.Management.Core
                 },
                 new ResponseContext());
 
-            return (ContentstackResponse)ContentstackPipeline.InvokeSync(context, apiVersion).httpResponse;
+            return (ContentstackResponse)ContentstackPipeline.InvokeSync(context, addAcceptMediaHeader, apiVersion).httpResponse;
         }
 
         internal Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null)

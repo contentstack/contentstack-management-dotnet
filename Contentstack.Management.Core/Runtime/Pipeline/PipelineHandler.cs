@@ -20,11 +20,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
             throw new InvalidOperationException("Cannot invoke InnerHandler. InnerHandler is not set.");
         }
 
-        public virtual void InvokeSync(IExecutionContext executionContext, string apiVersion = null)
+        public virtual void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
         {
             if (this.InnerHandler != null)
             {
-                InnerHandler.InvokeSync(executionContext, apiVersion);
+                InnerHandler.InvokeSync(executionContext, addAcceptMediaHeader, apiVersion);
                 return;
             }
             throw new InvalidOperationException("Cannot invoke InnerHandler. InnerHandler is not set.");
