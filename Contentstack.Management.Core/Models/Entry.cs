@@ -414,7 +414,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string locale = null)
+        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -435,13 +435,13 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The Task</returns>
-        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string locale = null)
+        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "entry", locale);
-            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
+            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -456,13 +456,13 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string locale = null)
+        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
-            return stack.client.InvokeSync(service);
+            return stack.client.InvokeSync(service, apiVersion);
         }
 
         /// <summary>
@@ -477,13 +477,13 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The Task</returns>
-        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string locale = null)
+        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
-            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
+            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
         /// <summary>
