@@ -46,7 +46,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             throw new ContentstackException("No response was return nor exception was thrown");
         }
 
-        public override void InvokeSync(IExecutionContext executionContext, string apiVersion = null)
+        public override void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
         {
             var requestContext = executionContext.RequestContext;
             bool shouldRetry = false;
@@ -54,7 +54,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             {
                 try
                 {
-                    base.InvokeSync(executionContext, apiVersion);
+                    base.InvokeSync(executionContext, addAcceptMediaHeader, apiVersion);
                     return;
                 }
                 catch (Exception exception)

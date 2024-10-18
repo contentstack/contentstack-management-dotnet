@@ -90,11 +90,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
             return _handler.InvokeAsync<T>(executionContext, addAcceptMediaHeader, apiVersion);
         }
 
-        public IResponseContext InvokeSync(IExecutionContext executionContext, string apiVersion = null)
+        public IResponseContext InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
         {
             ThrowIfDisposed();
 
-            _handler.InvokeSync(executionContext, apiVersion);
+            _handler.InvokeSync(executionContext, addAcceptMediaHeader, apiVersion);
             return executionContext.ResponseContext;
         }
 

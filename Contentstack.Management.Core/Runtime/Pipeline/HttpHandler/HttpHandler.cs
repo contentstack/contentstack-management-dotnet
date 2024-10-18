@@ -57,14 +57,14 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
             }
         }
 
-        public void InvokeSync(IExecutionContext executionContext, string apiVersion = null)
+        public void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
         {
             IHttpRequest httpRequest = null;
             try
             {
                 var requestContext = executionContext.RequestContext;
 
-                httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config, apiVersion: apiVersion);
+                httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config, addAcceptMediaHeader, apiVersion: apiVersion);
 
                 if (requestContext.service.HasRequestBody() && requestContext.service.Content != null)
                 {
