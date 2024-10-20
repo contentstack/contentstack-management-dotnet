@@ -151,7 +151,7 @@ namespace Contentstack.Management.Core.Services
             return HttpMethod == "POST" || HttpMethod == "PUT" || HttpMethod == "PATCH" || HttpMethod == "DELETE";
         }
 
-        public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false)
+        public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null)
         {
             ThrowIfDisposed();
 
@@ -173,6 +173,10 @@ namespace Contentstack.Management.Core.Services
                 Headers["authtoken"] = config.Authtoken;
             }
 
+            if (!string.IsNullOrEmpty(apiVersion))
+            {
+                Headers["api_version"] = apiVersion;
+            }
             var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializer);
             contentstackHttpRequest.Method = new HttpMethod(HttpMethod);
             contentstackHttpRequest.RequestUri = requestUri;

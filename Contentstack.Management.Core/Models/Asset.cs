@@ -246,12 +246,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Publish(PublishUnpublishDetails details)
+        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset", apiVersion);
             return stack.client.InvokeSync(service);
         }
 
@@ -266,12 +266,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details)
+        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset", apiVersion);
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
         }
 
@@ -286,12 +286,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details)
+        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset", apiVersion);
             return stack.client.InvokeSync(service);
         }
 
@@ -306,12 +306,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details)
+        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset", apiVersion);
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
         }
 
