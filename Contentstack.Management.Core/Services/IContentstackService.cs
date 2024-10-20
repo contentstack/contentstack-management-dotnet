@@ -98,7 +98,7 @@ namespace Contentstack.Management.Core.Services
         /// </summary>
         string GetHeaderValue(string headerName);
 
-        IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false);
+        IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null);
         void OnResponse(IResponse httpResponse, ContentstackClientOptions config);
         bool HasRequestBody();
     }
