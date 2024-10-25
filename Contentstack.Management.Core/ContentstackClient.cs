@@ -179,7 +179,7 @@ namespace Contentstack.Management.Core
             }, LogManager);
         }
 
-        internal ContentstackResponse InvokeSync<TRequest>(TRequest request, bool addAcceptMediaHeader = false) where TRequest : IContentstackService
+        internal ContentstackResponse InvokeSync<TRequest>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null) where TRequest : IContentstackService
         {
             ThrowIfDisposed();
 
@@ -191,10 +191,10 @@ namespace Contentstack.Management.Core
                 },
                 new ResponseContext());
 
-            return (ContentstackResponse)ContentstackPipeline.InvokeSync(context, addAcceptMediaHeader).httpResponse;
+            return (ContentstackResponse)ContentstackPipeline.InvokeSync(context, addAcceptMediaHeader, apiVersion).httpResponse;
         }
 
-        internal Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false)
+        internal Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null)
             where TRequest : IContentstackService
             where TResponse : ContentstackResponse
         {
@@ -207,7 +207,7 @@ namespace Contentstack.Management.Core
                   service = request
               },
               new ResponseContext());
-            return ContentstackPipeline.InvokeAsync<TResponse>(context, addAcceptMediaHeader);
+            return ContentstackPipeline.InvokeAsync<TResponse>(context, addAcceptMediaHeader, apiVersion);
         }
 
         #region Dispose methods
