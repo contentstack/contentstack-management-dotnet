@@ -318,11 +318,10 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The References request returns the details of the entries and the content types in which the specified asset is referenced.
         /// </summary>
-        /// <param name="details">Publish details.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset(&quot;&lt;ASSET_UID&gt;&quot;).Unpublish(new PublishUnpublishDetails());
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset(&quot;&lt;ASSET_UID&gt;&quot;).References();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -338,15 +337,14 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The ReferencesAsync request returns the details of the entries and the content types in which the specified asset is referenced.
         /// </summary>
-        /// <param name="details">Publish details.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset(&quot;&lt;ASSET_UID&gt;&quot;).UnpublishAsync(new PublishUnpublishDetails());
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset(&quot;&lt;ASSET_UID&gt;&quot;).ReferencesAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> ReferencesAsync()
+        public virtual Task<ContentstackResponse> ReferencesAsync(ParameterCollection collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
