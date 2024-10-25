@@ -41,6 +41,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => Asset.PublishAsync(_fixture.Create<PublishUnpublishDetails>()));
             Assert.ThrowsException<InvalidOperationException>(() => Asset.Unpublish(_fixture.Create<PublishUnpublishDetails>()));
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() => Asset.UnpublishAsync(_fixture.Create<PublishUnpublishDetails>()));
+            Assert.ThrowsException<InvalidOperationException>(() => Asset.References());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => Asset.ReferencesAsync());
             Assert.AreEqual(Asset.Query().GetType(), typeof(Query));
         }
 
@@ -182,6 +184,24 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public async System.Threading.Tasks.Task Should_Unpublish_Asset_Async()
         {
             ContentstackResponse response = await _stack.Asset(_fixture.Create<string>()).UnpublishAsync(_fixture.Create<PublishUnpublishDetails>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Get_References_Asset()
+        {
+            ContentstackResponse response = _stack.Asset(_fixture.Create<string>()).References();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Get_References_Asset_Async()
+        {
+            ContentstackResponse response = await _stack.Asset(_fixture.Create<string>()).ReferencesAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
