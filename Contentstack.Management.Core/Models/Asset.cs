@@ -315,6 +315,46 @@ namespace Contentstack.Management.Core.Models
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
         }
 
+        /// <summary>
+        /// The References request returns the details of the entries and the content types in which the specified asset is referenced.
+        /// </summary>
+        /// <param name="details">Publish details.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset(&quot;&lt;ASSET_UID&gt;&quot;).Unpublish(new PublishUnpublishDetails());
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        public virtual ContentstackResponse References(ParameterCollection collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
+            return stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// The ReferencesAsync request returns the details of the entries and the content types in which the specified asset is referenced.
+        /// </summary>
+        /// <param name="details">Publish details.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset(&quot;&lt;ASSET_UID&gt;&quot;).UnpublishAsync(new PublishUnpublishDetails());
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        public virtual Task<ContentstackResponse> ReferencesAsync()
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
+            return stack.client.InvokeAsync<FetchReferencesService, ContentstackResponse>(service);
+        }
+
         #region Throw Error
 
         internal void ThrowIfUidNotEmpty()
