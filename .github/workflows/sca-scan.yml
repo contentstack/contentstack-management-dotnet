@@ -6,14 +6,10 @@ jobs:
   security-sca:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@master
-      - name: Run Dotnet Restore
-        run: |
-          dotnet restore
+      - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/dotnet@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --file=Contentstack.Management.Core/obj/project.assets.json --fail-on=all
+          args: --fail-on=all
