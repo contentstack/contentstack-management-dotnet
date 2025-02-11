@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Configuration;
 using Contentstack.Management.Core;
 using System.Net.Http;
+using System;
+
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
@@ -31,6 +33,13 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The IServiceCollection.</returns>
         public static IServiceCollection TryAddContentstackClient(this IServiceCollection services, ContentstackClientOptions configuration)
         {
+
+            return services;
+        }
+
+        public static IServiceCollection AddContentstackClient(this IServiceCollection services, Action<HttpClient> configureClient)
+        {
+            services.AddHttpClient<ContentstackClient>(configureClient);
 
             return services;
         }
