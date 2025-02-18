@@ -72,6 +72,30 @@ namespace Contentstack.Management.Core
             BuildPipeline();
         }
 
+
+        /// <summary>
+        /// Initializes new instance of the <see cref="ContentstackClient"/> class with custom HttpClient.
+        /// </summary>
+        /// <param name="httpClient">The <see cref="HttpClient"/> user can pass.</param>
+        /// <example>
+        /// <pre><code>
+        /// HttpClientHandler httpClientHandler = new HttpClientHandler
+        /// {
+        ///     Proxy = contentstackOptions.GetWebProxy()
+        /// };
+
+        /// _httpClient = new HttpClient(httpClientHandler);
+        /// ContentstackClient client = new ContentstackClient(_httpClient);
+        /// </code></pre>
+        /// </example>
+        public ContentstackClient(HttpClient httpClient, ContentstackClientOptions contentstackOptions) 
+        {
+            this.contentstackOptions = contentstackOptions;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            Initialize(_httpClient);
+            BuildPipeline();
+        }
+
         public ContentstackClient(ContentstackClientOptions contentstackOptions) :
         this(new OptionsWrapper<ContentstackClientOptions>(contentstackOptions))
         { }
@@ -126,14 +150,21 @@ namespace Contentstack.Management.Core
         { }
         #endregion
 
-        protected void Initialize()
+        protected void Initialize(HttpClient httpClient = null)
         {
-            HttpClientHandler httpClientHandler = new HttpClientHandler
+            if (httpClient != null)
             {
-                Proxy = contentstackOptions.GetWebProxy()
-            };
+                _httpClient = httpClient;
+            }
+            else
+            {
+                HttpClientHandler httpClientHandler = new HttpClientHandler
+                {
+                    Proxy = contentstackOptions.GetWebProxy()
+                };
 
-            _httpClient = new HttpClient(httpClientHandler);
+                _httpClient = new HttpClient(httpClientHandler);
+            }
 
             _httpClient.DefaultRequestHeaders.Add(HeadersKey.XUserAgentHeader, $"{xUserAgent}");
 
