@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Runtime.Contexts;
@@ -62,9 +63,46 @@ namespace Contentstack.Management.Core.Unit.Tests.Core
         }
 
         [TestMethod]
-        public void Initialize_Contentstack_With_Clientptions()
+        public void Initialize_Contentstack_With_ClientOptions()
         {
             var contentstackClient = new ContentstackClient(new ContentstackClientOptions()
+            {
+                Authtoken = "token",
+                Host= "host",
+                Port= 445,
+                Version= "v4",
+                DisableLogging= true,
+                MaxResponseContentBufferSize= 1234,
+                Timeout= TimeSpan.FromSeconds(20),
+                RetryOnError= false,
+                ProxyHost= "proxyHost",
+                ProxyPort= 22,
+                EarlyAccess = new string[] { "ea1", "ea2" }
+            });
+
+            Assert.AreEqual("token", contentstackClient.contentstackOptions.Authtoken);
+            Assert.AreEqual("host", contentstackClient.contentstackOptions.Host);
+            Assert.AreEqual(445, contentstackClient.contentstackOptions.Port);
+            Assert.AreEqual("v4", contentstackClient.contentstackOptions.Version);
+            Assert.AreEqual("proxyHost", contentstackClient.contentstackOptions.ProxyHost);
+            Assert.AreEqual(22, contentstackClient.contentstackOptions.ProxyPort);
+            Assert.IsNull(contentstackClient.contentstackOptions.ProxyCredentials);
+            Assert.IsNotNull(contentstackClient.contentstackOptions.GetWebProxy());
+            Assert.IsFalse(contentstackClient.contentstackOptions.RetryOnError);
+            Assert.IsTrue(contentstackClient.contentstackOptions.DisableLogging);
+            Assert.AreEqual(1234, contentstackClient.contentstackOptions.MaxResponseContentBufferSize);
+            Assert.AreEqual(20, contentstackClient.contentstackOptions.Timeout.Seconds);
+            CollectionAssert.AreEqual(new string[] {"ea1", "ea2"}, contentstackClient.contentstackOptions.EarlyAccess);
+        }
+
+        [TestMethod]
+        public void Initialize_Contentstack_With_CustomHTTPClient()
+        {
+            // create a custom HttpClient
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("CustomHeader", "CustomValue");
+
+            var contentstackClient = new ContentstackClient(httpClient, new ContentstackClientOptions()
             {
                 Authtoken = "token",
                 Host= "host",
