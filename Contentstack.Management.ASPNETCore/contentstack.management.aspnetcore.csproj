@@ -5,7 +5,7 @@
     <PackageId>contentstack.management.aspnetcore</PackageId>
     <PackageVersion>$(Version)</PackageVersion>
     <Authors>Contentstack</Authors>
-    <Copyright>Copyright © 2012-2024 Contentstack. All Rights Reserved</Copyright>
+    <Copyright>Copyright © 2012-2025 Contentstack. All Rights Reserved</Copyright>
     <Owners>Contentstack </Owners>
     <PackageProjectUrl>https://github.com/contentstack/contentstack-management-dotnet</PackageProjectUrl>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
@@ -15,7 +15,7 @@
     <Description>.NET SDK for the Contentstack Content Management API.</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageTags>v$(Version)</PackageTags>
-    <ReleaseVersion>0.1.3</ReleaseVersion>
+    <ReleaseVersion>$(Version)</ReleaseVersion>
     <RootNamespace>Contentstack.Management.ASPNETCore</RootNamespace>
   </PropertyGroup>
 
