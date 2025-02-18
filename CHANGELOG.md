@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.1.11](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.11)
+ - Feat
+   - Add support for custom Http client and IHttpClientFactory
+
 ## [v0.1.10](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.10)
  - Feat
    - Add support for apiVersion in bulk publish unpublish methods
