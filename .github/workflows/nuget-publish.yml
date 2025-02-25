@@ -10,9 +10,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4.2.2
       - name: Setup .NET Core @ Latest
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4.3.0
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
       - name: Build solution and generate NuGet package
@@ -28,9 +28,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4.2.2
       - name: Setup .NET Core @ Latest
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4.3.0
         with:
           source-url: https://nuget.pkg.github.com/Contentstack/index.json
         env:
