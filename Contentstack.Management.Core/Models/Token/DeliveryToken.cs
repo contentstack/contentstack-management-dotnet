@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Models.Token
 {
@@ -8,7 +10,7 @@ namespace Contentstack.Management.Core.Models.Token
         internal DeliveryToken(Stack stack, string uid = null)
            : base(stack, "token", uid)
         {
-            resourcePath = uid == null ? "/delivery_tokens" : $"/delivery_tokens/{uid}";
+            resourcePath = uid == null ? "stacks/delivery_tokens" : $"stacks/delivery_tokens/{uid}";
         }
 
         /// <summary>
