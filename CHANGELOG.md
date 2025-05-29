@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.1.12](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.12)
+ - Fix
+   - Fixed the delivery token url
+
 ## [v0.1.11](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.11)
  - Feat
    - Add support for custom Http client and IHttpClientFactory
