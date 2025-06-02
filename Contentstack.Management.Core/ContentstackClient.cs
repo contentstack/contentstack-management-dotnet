@@ -59,10 +59,10 @@ namespace Contentstack.Management.Core
         /// <pre><code>
         /// var options = new ContentstackClientOptions()
         /// {
-        ///       Host = &quot;&lt;API_HOST&gt;&quot;,
-        ///       Authtoken = &quot;&lt;AUTHTOKEN&gt;&quot;
+        ///       Host = "<API_HOST>",
+        ///       Authtoken = "<AUTHTOKEN>"
         /// }
-        /// ContentstackClient client = new ContentstackClient(new OptionsWrapper&lt;ContentstackClientOptions&gt;(options));
+        /// ContentstackClient client = new ContentstackClient(new OptionsWrapper<ContentstackClientOptions>(options));
         /// </code></pre>
         /// </example>
         public ContentstackClient(IOptions<ContentstackClientOptions> contentstackOptions)
@@ -116,7 +116,7 @@ namespace Contentstack.Management.Core
         /// <param name="proxyCredentials">Credentials to use with a proxy.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// </code></pre>
         /// </example>
         public ContentstackClient(
@@ -283,7 +283,7 @@ namespace Contentstack.Management.Core
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// User user = client.User();
         /// </code></pre>
         /// </example>
@@ -300,8 +300,8 @@ namespace Contentstack.Management.Core
         /// <param name="uid">Organization uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Organization organization = client.Organization(&quot;&lt;ORG_UID&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Organization organization = client.Organization("<ORG_UID>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Organization" />.</returns>
@@ -318,8 +318,8 @@ namespace Contentstack.Management.Core
         /// <param name="managementToken">Stack Management token </param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack Stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack Stack = client.Stack("<API_KEY>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Stack" />.</returns>
@@ -336,8 +336,8 @@ namespace Contentstack.Management.Core
         /// <param name="token">The optional 2FA token.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// NetworkCredential credentials = new NetworkCredential(&quot;&lt;EMAIL&gt;&quot;, &quot;&lt;PASSWORD&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// NetworkCredential credentials = new NetworkCredential("<EMAIL>", "<PASSWORD>");
         /// ContentstackResponse contentstackResponse = client.Login(credentials);
         /// </code></pre>
         /// </example>
@@ -357,8 +357,8 @@ namespace Contentstack.Management.Core
         /// <param name="token">The optional 2FA token.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// NetworkCredential credentials = new NetworkCredential(&quot;&lt;EMAIL&gt;&quot;, &quot;&lt;PASSWORD&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// NetworkCredential credentials = new NetworkCredential("<EMAIL>", "<PASSWORD>");
         /// ContentstackResponse contentstackResponse = await client.LoginAsync(credentials);
         /// </code></pre>
         /// </example>
@@ -398,7 +398,7 @@ namespace Contentstack.Management.Core
         /// <param name="authtoken">The optional authroken in case user want to logout.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentstackResponse contentstackResponse = client.Logout();
         /// </code></pre>
         /// </example>
@@ -416,7 +416,7 @@ namespace Contentstack.Management.Core
         /// <param name="authtoken">The optional authroken in case user want to logout.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentstackResponse contentstackResponse = await client.LogoutAsync();
         /// </code></pre>
         /// </example>
@@ -435,7 +435,7 @@ namespace Contentstack.Management.Core
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentstackResponse contentstackResponse = client.GetUser();
         /// </code></pre>
         /// </example>
@@ -454,7 +454,7 @@ namespace Contentstack.Management.Core
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentstackResponse contentstackResponse = await client.GetUserAsync();
         /// </code></pre>
         /// </example>
