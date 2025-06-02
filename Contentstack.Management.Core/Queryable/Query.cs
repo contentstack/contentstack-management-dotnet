@@ -32,7 +32,7 @@ namespace Contentstack.Management.Core.Queryable
         /// <param name="value">Number of object in limit</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentstackResponse contentstackResponse = client.Stack().Query().Limit(5).Find();
         /// </code></pre>
         /// </example>
@@ -49,7 +49,7 @@ namespace Contentstack.Management.Core.Queryable
         /// <param name="value">Number of object to skip</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentstackResponse contentstackResponse = client.Stack().Query().Skip(5).Find();
         /// </code></pre>
         /// </example>
@@ -65,7 +65,7 @@ namespace Contentstack.Management.Core.Queryable
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentstackResponse contentstackResponse = client.Stack().Query().IncludeCount().Find();
         /// </code></pre>
         /// </example>
