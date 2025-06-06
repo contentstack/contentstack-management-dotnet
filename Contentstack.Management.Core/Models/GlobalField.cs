@@ -16,8 +16,8 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField().Query().Find();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").GlobalField().Query().Find();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Queryable.Query"/></returns>
@@ -32,9 +32,9 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentModeling model = new ContentModeling() // Add global field schema or field rules 
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField().Create(model);
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").GlobalField().Create(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
@@ -49,9 +49,9 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentModeling model = new ContentModeling() // Add global field schema or field rules
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField().CreateAsync(model);
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").GlobalField().CreateAsync(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
@@ -66,9 +66,9 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentModeling model = new ContentModeling() // Add global field schema or field rules
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).Update(model);
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").GlobalField("<GLOBAL_FIELD_UID>").Update(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
@@ -83,9 +83,9 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ContentModeling model = new ContentModeling() // Add global field schema or field rules
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).UpdateAsync(model);
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").GlobalField("<GLOBAL_FIELD_UID>").UpdateAsync(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
@@ -100,8 +100,8 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").GlobalField("<GLOBAL_FIELD_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -115,8 +115,8 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).FetchAsync();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").GlobalField("<GLOBAL_FIELD_UID>").FetchAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
@@ -130,8 +130,8 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).Delete();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").GlobalField("<GLOBAL_FIELD_UID>").Delete();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -145,8 +145,8 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).DeleteAsync();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").GlobalField("<GLOBAL_FIELD_UID>").DeleteAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>

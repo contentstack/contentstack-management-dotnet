@@ -33,7 +33,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="parameters">URI query parameters</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// Stack stack = client.Stack();
         /// ContentstackResponse contentstackResponse = stack.GetAll();
         /// </code></pre>
@@ -55,7 +55,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">URI query parameters</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// Stack stack =  client.Stack();
         /// ContentstackResponse contentstackResponse = await stack.GetAllAsync();
         /// </code></pre>
@@ -77,8 +77,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="parameters">URI query parameters</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
         /// ContentstackResponse contentstackResponse = stack.Fetch();
         /// </code></pre>
         /// </example>
@@ -98,8 +98,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="parameters">URI query parameters</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
         /// ContentstackResponse contentstackResponse = await stack.FetchAsync();
         /// </code></pre>
         /// </example>
@@ -120,9 +120,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="email">The email id of user for transfer.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.TransferOwnership(&quot;&lt;EMAIL&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.TransferOwnership("<EMAIL>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
@@ -142,9 +142,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="email">The email id of user for transfer.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await stack.TransferOwnershipAsync(&quot;&lt;EMAIL&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = await stack.TransferOwnershipAsync("<EMAIL>");
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
@@ -167,9 +167,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="description">The description for the Stack.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// Stack stack = client.Stack();
-        /// ContentstackResponse contentstackResponse = stack.Create(&quot;&lt;STACK_NAME&gt;&quot;, &quot;&lt;LOCALE&gt;&quot;, &quot;&lt;ORG_UID&gt;&quot;, &quot;&lt;DESCRIPTION&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = stack.Create("<STACK_NAME>", "<LOCALE>", "<ORG_UID>", "<DESCRIPTION>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
@@ -195,9 +195,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="description">The description for the Stack.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// Stack stack = client.Stack();
-        /// ContentstackResponse contentstackResponse = await stack.CreateAsync(&quot;&lt;STACK_NAME&gt;&quot;, &quot;&lt;LOCALE&gt;&quot;, &quot;&lt;ORG_UID&gt;&quot;, &quot;&lt;DESCRIPTION&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await stack.CreateAsync("<STACK_NAME>", "<LOCALE>", "<ORG_UID>", "<DESCRIPTION>");
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
@@ -223,9 +223,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="description">The description for the Stack.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Update(&quot;&lt;STACK_NAME&gt;&quot;, &quot;&lt;DESCRIPTION&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Update("<STACK_NAME>", "<DESCRIPTION>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
@@ -249,9 +249,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="description">The description for the Stack.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await stack.UpdateAsync(&quot;&lt;STACK_NAME&gt;&quot;, &quot;&lt;DESCRIPTION&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = await stack.UpdateAsync("<STACK_NAME>", "<DESCRIPTION>");
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
@@ -272,14 +272,14 @@ namespace Contentstack.Management.Core.Models
         /// <param name="usersRole">List of users uid and roles to assign users.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
         /// UserInvitation invitation = new UserInvitation()
         /// {
-        ///         Uid = &quot;&lt;USER_ID&gt;&quot;,
-        ///         Roles = new System.Collections.Generic.List&lt;string&gt;() { &quot;&lt;ROLE_UID&gt;&quot; }
+        ///         Uid = "<USER_ID>",
+        ///         Roles = new System.Collections.Generic.List<string>() { "<ROLE_UID>" }
         /// };
-        /// ContentstackResponse contentstackResponse = stack.UpdateUserRole(new List&lt;UserInvitation&gt;() {
+        /// ContentstackResponse contentstackResponse = stack.UpdateUserRole(new List<UserInvitation>() {
         ///     invitation
         /// });
         /// </code></pre>
@@ -301,14 +301,14 @@ namespace Contentstack.Management.Core.Models
         /// <param name="usersRole"></param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
         /// UserInvitation invitation = new UserInvitation()
         /// {
-        ///         Uid = &quot;&lt;USER_ID&gt;&quot;,
-        ///         Roles = new System.Collections.Generic.List&lt;string&gt;() { &quot;&lt;ROLE_UID&gt;&quot; }
+        ///         Uid = "<USER_ID>",
+        ///         Roles = new System.Collections.Generic.List<string>() { "<ROLE_UID>" }
         /// };
-        /// ContentstackResponse contentstackResponse = await stack.UpdateUserRoleAsync(new List&lt;UserInvitation&gt;() {
+        /// ContentstackResponse contentstackResponse = await stack.UpdateUserRoleAsync(new List<UserInvitation>() {
         ///     invitation
         /// });
         /// </code></pre>
@@ -329,8 +329,8 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
         /// ContentstackResponse contentstackResponse = stack.Settings();
         /// </code></pre>
         /// </example>
@@ -350,8 +350,8 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
         /// ContentstackResponse contentstackResponse = await stack.SettingsAsync();
         /// </code></pre>
         /// </example>
@@ -371,8 +371,8 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
         /// ContentstackResponse contentstackResponse = stack.Settings();
         /// </code></pre>
         /// </example>
@@ -397,8 +397,8 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
         /// ContentstackResponse contentstackResponse = await stack.SettingsAsync();
         /// </code></pre>
         /// </example>
@@ -423,9 +423,9 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Settings(&quot;&lt;STACK_SETTINGS&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Settings("<STACK_SETTINGS>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
@@ -448,9 +448,9 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await stack.SettingsAsync(&quot;&lt;STACK_SETTINGS&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = await stack.SettingsAsync("<STACK_SETTINGS>");
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
@@ -472,12 +472,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="invitations"></param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
         /// UserInvitation invitation = new UserInvitation()
         /// {
-        ///         Email = &quot;&lt;EMAIL&gt;&quot;,
-        ///         Roles = new System.Collections.Generic.List&lt;string&gt;() { &quot;&lt;ROLE_UID&gt;&quot; }
+        ///         Email = "<EMAIL>",
+        ///         Roles = new System.Collections.Generic.List<string>() { "<ROLE_UID>" }
         /// };
         /// ContentstackResponse contentstackResponse = stack.Share(invitation);
         /// </code></pre>
@@ -503,12 +503,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="invitations"></param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
         /// UserInvitation invitation = new UserInvitation()
         /// {
-        ///         Email = &quot;&lt;EMAIL&gt;&quot;,
-        ///         Roles = new System.Collections.Generic.List&lt;string&gt;() { &quot;&lt;ROLE_UID&gt;&quot; }
+        ///         Email = "<EMAIL>",
+        ///         Roles = new System.Collections.Generic.List<string>() { "<ROLE_UID>" }
         /// };
         /// ContentstackResponse contentstackResponse = await stack.ShareAsync(invitation);
         /// </code></pre>
@@ -534,9 +534,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="email"></param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.UnShare((&quot;&lt;EMAIL&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.UnShare(("<EMAIL>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
@@ -561,9 +561,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="email"></param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await stack.UnShareAsync(&quot;&lt;EMAIL&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = await stack.UnShareAsync("<EMAIL>");
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
@@ -587,9 +587,9 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Locale(&quot;&lt;LOCALE_CODE&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Locale("<LOCALE_CODE>").Fetch();
         /// </code></pre>
         /// </example>
         /// <param name="code">Locale code fot language</param>
@@ -609,9 +609,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid"> Optional content type uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.ContentType(&quot;&lt;CONTENT_TYPE_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.ContentType("<CONTENT_TYPE_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.ContentType"/></returns>
@@ -628,9 +628,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional asset uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Asset(&quot;&lt;ASSET_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Asset("<ASSET_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Asset"/></returns>
@@ -649,9 +649,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid"> Optional global field uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.GlobalField(&quot;&lt;GLOBAL_FIELD_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.GlobalField("<GLOBAL_FIELD_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.GlobalField"/></returns>
@@ -669,9 +669,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, extension uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Extension(&quot;&lt;EXTENSION_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Extension("<EXTENSION_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Extension" /></returns>
@@ -689,9 +689,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, label uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Label(&quot;&lt;LABEL_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Label("<LABEL_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Label" /></returns>
@@ -709,9 +709,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, environment uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Environment(&quot;&lt;ENVIRONMENT_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Environment("<ENVIRONMENT_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Environment" /></returns>
@@ -729,9 +729,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, delivery token uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.DeliveryToken(&quot;&lt;TOKEN_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.DeliveryToken("<TOKEN_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Token.DeliveryToken" /></returns>
@@ -749,9 +749,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, management token uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.ManagementTokens(&quot;&lt;TOKEN_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.ManagementTokens("<TOKEN_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Token.ManagementToken" /></returns>
@@ -769,9 +769,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, role uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Role(&quot;&lt;ROLE_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Role("<ROLE_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Release" /></returns>
@@ -789,9 +789,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, release uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Release(&quot;&lt;RELEASE_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Release("<RELEASE_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Release" /></returns>
@@ -810,9 +810,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, workflow uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Workflow(&quot;&lt;WORKFLOW_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Workflow("<WORKFLOW_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Workflow" /></returns>
@@ -831,9 +831,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, publish queue uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.PublishQueue(&quot;&lt;PUBLISH_QUEUE_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.PublishQueue("<PUBLISH_QUEUE_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.PublishQueue" /></returns>
@@ -850,9 +850,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, webhook uid uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.Webhook(&quot;&lt;WEBHOOK_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.Webhook("<WEBHOOK_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>
@@ -870,9 +870,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="uid">Optional, audit log uid.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// Stack stack = client.Stack(&quot;&lt;API_KEY&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = stack.AuditLog(&quot;&lt;AUDIT_LOG_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.AuditLog("<AUDIT_LOG_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>

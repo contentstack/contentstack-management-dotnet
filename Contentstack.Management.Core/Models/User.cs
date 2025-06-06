@@ -26,9 +26,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="email">The email for the account that user has forgotten the login password</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// User user = client.User();
-        /// ContentstackResponse contentstackResponse = client.ForgotPassword(&quot;&lt;EMAIL&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = client.ForgotPassword("<EMAIL>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse" />.</returns>
@@ -47,9 +47,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="email">The email for the account that user has forgotten the login password</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// User user = client.User();
-        /// ContentstackResponse contentstackResponse = await client.ForgotPasswordAsync(&quot;&lt;EMAIL&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.ForgotPasswordAsync("<EMAIL>");
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
@@ -70,9 +70,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="confirmPassword">The confirm password for the account.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// User user = client.User();
-        /// ContentstackResponse contentstackResponse = client.ResetPassword(&quot;&lt;REST_TOKEN&gt;&quot;, &quot;&lt;PASSWORD&gt;&quot;, &quot;&lt;CONFIRM_PASSWORD&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = client.ResetPassword("<REST_TOKEN>", "<PASSWORD>", "<CONFIRM_PASSWORD>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
@@ -93,9 +93,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="confirmPassword">The confirm password for the account.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// User user = client.User();
-        /// ContentstackResponse contentstackResponse = await client.ResetPasswordAsync(&quot;&lt;REST_TOKEN&gt;&quot;, &quot;&lt;PASSWORD&gt;&quot;, &quot;&lt;CONFIRM_PASSWORD&gt;&quot;);
+        /// ContentstackResponse contentstackResponse = await client.ResetPasswordAsync("<REST_TOKEN>", "<PASSWORD>", "<CONFIRM_PASSWORD>");
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>

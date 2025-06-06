@@ -29,8 +29,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="parentUid">Parent Uid for folder to place this folder within another folder</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset().Folder().Create(&quot;&lt;FOLDER_NAME&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Asset().Folder().Create("<FOLDER_NAME>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -49,8 +49,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="parentUid">Parent Uid for folder to place this folder within another folder</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset().Folder().CreateAsync(&quot;&lt;FOLDER_NAME&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Asset().Folder().CreateAsync("<FOLDER_NAME>");
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
@@ -70,8 +70,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="parentUid">Parent Uid for folder to place this folder within another folder</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset().Folder(&quot;&lt;ASSET_UID&gt;&quot;).Update(&quot;&lt;FOLDER_NAME&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Asset().Folder("<ASSET_UID>").Update("<FOLDER_NAME>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -90,8 +90,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="parentUid">Parent Uid for folder to place this folder within another folder</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset().Folder(&quot;&lt;ASSET_UID&gt;&quot;).UpdateAsync(&quot;&lt;FOLDER_NAME&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Asset().Folder("<ASSET_UID>").UpdateAsync("<FOLDER_NAME>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -110,8 +110,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset().Folder(&quot;&lt;ASSET_UID&gt;&quot;).Fetch(model);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Asset().Folder("<ASSET_UID>").Fetch(model);
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -130,8 +130,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset().Folder(&quot;&lt;ASSET_UID&gt;&quot;).FetchAsync(model);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Asset().Folder("<ASSET_UID>").FetchAsync(model);
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -150,8 +150,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset().Folder(&quot;&lt;ASSET_UID&gt;&quot;).Delete();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Asset().Folder("<ASSET_UID>").Delete();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -170,8 +170,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Asset().Folder(&quot;&lt;ASSET_UID&gt;&quot;).DeleteAsync();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Asset().Folder("<ASSET_UID>").DeleteAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
