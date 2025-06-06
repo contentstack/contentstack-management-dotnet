@@ -8,9 +8,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4.2.2
       - name: Setup .NET Core @ Latest
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4.3.0
       - name: Build solution and run unit test
         run: sh ./Scripts/run-unit-test-case.sh
       - name: Test Report
