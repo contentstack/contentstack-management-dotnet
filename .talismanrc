@@ -1,5 +1,8 @@
 threshold: medium
 fileignoreconfig:
+- filename: .github/workflows/secrets-scan.yml
+  ignore_detectors:
+    - filecontent
 - filename: Contentstack.Management.Core.Tests/Mock/customUpload.html
   checksum: 854eb83dcacd62d3bf233c82e5cfd0c69dd20478fa0e7c6af9028f6c6386749d
 - filename: Contentstack.Management.Core/Attributes/CSMJsonConverterAttribute.cs
