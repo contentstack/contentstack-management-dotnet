@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Models.Token
 {
@@ -8,7 +10,7 @@ namespace Contentstack.Management.Core.Models.Token
         internal DeliveryToken(Stack stack, string uid = null)
            : base(stack, "token", uid)
         {
-            resourcePath = uid == null ? "/delivery_tokens" : $"/delivery_tokens/{uid}";
+            resourcePath = uid == null ? "stacks/delivery_tokens" : $"stacks/delivery_tokens/{uid}";
         }
 
         /// <summary>
@@ -16,8 +18,8 @@ namespace Contentstack.Management.Core.Models.Token
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).DeliveryToken().Query().Find();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").DeliveryToken().Query().Find();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Queryable.Query"/></returns>
@@ -32,9 +34,9 @@ namespace Contentstack.Management.Core.Models.Token
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// DeliveryTokenModel model = new DeliveryTokenModel();
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).DeliveryToken().Create(model);
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").DeliveryToken().Create(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">DeliveryToken Model for creating DeliveryToken.</param>
@@ -49,9 +51,9 @@ namespace Contentstack.Management.Core.Models.Token
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// DeliveryTokenModel model = new DeliveryTokenModel();
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).DeliveryToken().CreateAsync(model);
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").DeliveryToken().CreateAsync(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">DeliveryToken Model for creating DeliveryToken.</param>
@@ -66,9 +68,9 @@ namespace Contentstack.Management.Core.Models.Token
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// DeliveryTokenModel model = new DeliveryTokenModel();
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).DeliveryToken(&quot;&lt;DELIVERY_TOKEN_UID&gt;&quot;).Update(model);
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").DeliveryToken("<DELIVERY_TOKEN_UID>").Update(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">DeliveryToken Model for creating DeliveryToken.</param>
@@ -83,9 +85,9 @@ namespace Contentstack.Management.Core.Models.Token
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// DeliveryTokenModel model = new DeliveryTokenModel();
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).DeliveryToken(&quot;&lt;DELIVERY_TOKEN_UID&gt;&quot;).UpdateAsync(model);
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").DeliveryToken("<DELIVERY_TOKEN_UID>").UpdateAsync(model);
         /// </code></pre>
         /// </example>
         /// <param name="model">DeliveryToken Model for creating DeliveryToken.</param>
@@ -100,8 +102,8 @@ namespace Contentstack.Management.Core.Models.Token
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).DeliveryToken(&quot;&lt;DELIVERY_TOKEN_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").DeliveryToken("<DELIVERY_TOKEN_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -115,8 +117,8 @@ namespace Contentstack.Management.Core.Models.Token
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).DeliveryToken(&quot;&lt;DELIVERY_TOKEN_UID&gt;&quot;).FetchAsync();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").DeliveryToken("<DELIVERY_TOKEN_UID>").FetchAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
@@ -130,8 +132,8 @@ namespace Contentstack.Management.Core.Models.Token
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).DeliveryToken(&quot;&lt;DELIVERY_TOKEN_UID&gt;&quot;).Delete();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").DeliveryToken("<DELIVERY_TOKEN_UID>").Delete();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -145,8 +147,8 @@ namespace Contentstack.Management.Core.Models.Token
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).DeliveryToken(&quot;&lt;DELIVERY_TOKEN_UID&gt;&quot;).DeleteAsync();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").DeliveryToken("<DELIVERY_TOKEN_UID>").DeleteAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>

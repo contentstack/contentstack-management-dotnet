@@ -27,8 +27,8 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension().Query().Find();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Extension().Query().Find();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Queryable.Query"/></returns>
@@ -44,9 +44,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model"> <see cref="Abstractions.IExtensionInterface"/> Model with details.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// CustomField model = new CustomField(&quot;FILE_PATH&quot;, &quot;FILE_CONTENT_TYPE&quot;, &quot;TITLE&quot;, &quot;DATA_TYPE&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension().Upload(model);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// CustomField model = new CustomField("FILE_PATH", "FILE_CONTENT_TYPE", "TITLE", "DATA_TYPE");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Extension().Upload(model);
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -64,9 +64,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model"><see cref="Abstractions.IExtensionInterface"/> with details.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// CustomFieldModel model = new CustomFieldModel(&quot;FILE_PATH&quot;, &quot;FILE_CONTENT_TYPE&quot;, &quot;TITLE&quot;, &quot;DATA_TYPE&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension().UploadAsync(model);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// CustomFieldModel model = new CustomFieldModel("FILE_PATH", "FILE_CONTENT_TYPE", "TITLE", "DATA_TYPE");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Extension().UploadAsync(model);
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
@@ -85,9 +85,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model"><see cref="ExtensionModel"/> with details.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ExtensionModel model = new ExtensionModel(); 
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension().Create(model);
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Extension().Create(model);
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -105,9 +105,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model"><see cref="ExtensionModel"/> with details.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ExtensionModel model = new ExtensionModel();
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension().CreateAsync(model);
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Extension().CreateAsync(model);
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
@@ -126,9 +126,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model"><see cref="ExtensionModel"/> with details.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ExtensionModel model = new ExtensionModel();
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension(&quot;&lt;EXTENSION_UID&gt;&quot;).Update(model);
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Extension("<EXTENSION_UID>").Update(model);
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -146,9 +146,9 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model"><see cref="ExtensionModel"/> with details.</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// ExtensionModel model = new ExtensionModel();
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension(&quot;&lt;EXTENSION_UID&gt;&quot;).UpdateAsync(model);
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Extension("<EXTENSION_UID>").UpdateAsync(model);
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -167,8 +167,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension(&quot;&lt;EXTENSION_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Extension("<EXTENSION_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -187,8 +187,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension(&quot;&lt;EXTENSION_UID&gt;&quot;).FetchAsync();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Extension("<EXTENSION_UID>").FetchAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -207,8 +207,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension(&quot;&lt;EXTENSION_UID&gt;&quot;).Delete();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Extension("<EXTENSION_UID>").Delete();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -227,8 +227,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).Extension(&quot;&lt;EXTENSION_UID&gt;&quot;).DeleteAsync();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Extension("<EXTENSION_UID>").DeleteAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>

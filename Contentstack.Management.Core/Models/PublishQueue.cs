@@ -28,8 +28,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).PublishQueue().FindAll();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").PublishQueue().FindAll();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -49,8 +49,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).PublishQueue().FindAllAsync();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").PublishQueue().FindAllAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -70,8 +70,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).PublishQueue(&quot;&lt;PUBLISH_QUEUE_UID&gt;&quot;).Fetch();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").PublishQueue("<PUBLISH_QUEUE_UID>").Fetch();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -91,8 +91,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).PublishQueue(&quot;&lt;PUBLISH_QUEUE_UID&gt;&quot;).FetchAsync();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").PublishQueue("<PUBLISH_QUEUE_UID>").FetchAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -111,8 +111,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = client.Stack(&quot;&lt;API_KEY&gt;&quot;).PublishQueue(&quot;&lt;PUBLISH_QUEUE_UID&gt;&quot;).Cancel();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").PublishQueue("<PUBLISH_QUEUE_UID>").Cancel();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
@@ -131,8 +131,8 @@ namespace Contentstack.Management.Core.Models
         /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient(&quot;&lt;AUTHTOKEN&gt;&quot;, &quot;&lt;API_HOST&gt;&quot;);
-        /// ContentstackResponse contentstackResponse = await client.Stack(&quot;&lt;API_KEY&gt;&quot;).PublishQueue(&quot;&lt;PUBLISH_QUEUE_UID&gt;&quot;).CancelAsync();
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").PublishQueue("<PUBLISH_QUEUE_UID>").CancelAsync();
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
