@@ -83,7 +83,7 @@ namespace Contentstack.Management.Core.Services.Models
                     writer.WriteValue(locale);
 
                 }
-                if (!string.IsNullOrEmpty(details.Version))
+                if (!string.IsNullOrEmpty(details.ScheduledAt))
                 {
                     writer.WritePropertyName("scheduled_at");
                     writer.WriteValue(details.ScheduledAt);
