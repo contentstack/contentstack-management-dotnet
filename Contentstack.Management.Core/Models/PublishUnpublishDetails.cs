@@ -10,7 +10,7 @@ namespace Contentstack.Management.Core.Models
 
         public List<string> Environments { get; set; }
 
-        public string Version { get; set; }
+        public int? Version { get; set; }
 
         public string ScheduledAt { get; set; }
 

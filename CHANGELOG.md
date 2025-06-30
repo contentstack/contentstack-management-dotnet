@@ -1,4 +1,7 @@
 # Changelog
+## [v0.1.13](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.13)
+ - Fix
+   - Fixed the Single Publish issue with specific entry version (Changing the type from String to Int)
 
 ## [v0.1.12](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.1.12)
  - Fix
