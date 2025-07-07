@@ -101,7 +101,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual(resourcePath, service.ResourcePath);
-            Assert.AreEqual($"{{\"{fieldName}\":{{\"locales\":[{string.Join(",", locales)}],\"environments\":[{string.Join(",", environments)}]}},\"version\":\"{details.Version}\",\"scheduled_at\":\"{details.ScheduledAt}\"}}", Encoding.Default.GetString(service.ByteContent));
+            Assert.AreEqual($"{{\"{fieldName}\":{{\"locales\":[{string.Join(",", locales)}],\"environments\":[{string.Join(",", environments)}]}},\"version\":{details.Version},\"scheduled_at\":\"{details.ScheduledAt}\"}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         [TestMethod]
@@ -132,7 +132,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual(resourcePath, service.ResourcePath);
-            Assert.AreEqual($"{{\"{fieldName}\":{{\"locales\":[{string.Join(",", locales)}],\"environments\":[{string.Join(",", environments)}]}},\"version\":\"{details.Version}\",\"locale\":\"{locale}\",\"scheduled_at\":\"{details.ScheduledAt}\"}}", Encoding.Default.GetString(service.ByteContent));
+            Assert.AreEqual($"{{\"{fieldName}\":{{\"locales\":[{string.Join(",", locales)}],\"environments\":[{string.Join(",", environments)}]}},\"version\":{details.Version},\"locale\":\"{locale}\",\"scheduled_at\":\"{details.ScheduledAt}\"}}", Encoding.Default.GetString(service.ByteContent));
         }
 
         public void Should_Create_Blank_Content_Body()
