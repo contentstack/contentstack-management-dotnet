@@ -138,7 +138,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public void Test005_BulkReleaseItemsData_Empty_Collections()
         {
             // Arrange
-            var releaseData = new BulkReleaseItemsData();
+            var releaseData = new BulkReleaseItemsData
+            {
+                Locale = new List<string>(),
+                Items = new List<BulkReleaseItem>()
+            };
 
             // Act
             var json = JsonConvert.SerializeObject(releaseData);

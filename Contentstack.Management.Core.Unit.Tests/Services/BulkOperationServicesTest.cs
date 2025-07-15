@@ -129,7 +129,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 {
                     new BulkPublishEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Version = 5,
                         Locale = "en-us"
@@ -162,7 +162,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 {
                     new BulkPublishEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Version = 5,
                         Locale = "en-us"
@@ -239,7 +239,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 {
                     new BulkPublishEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Version = 5,
                         Locale = "en-us"
@@ -270,7 +270,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 {
                     new BulkPublishEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Version = 5,
                         Locale = "en-us"
@@ -305,14 +305,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 {
                     new BulkDeleteEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Locale = "en-us"
                     }
                 },
                 Assets = new List<BulkDeleteAsset>
                 {
-                    new BulkDeleteAsset { Uid = "blt6f299e4805f0b1dd" }
+                    new BulkDeleteAsset { Uid = "asset_uid" }
                 }
             };
 
@@ -335,14 +335,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 {
                     new BulkDeleteEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Locale = "en-us"
                     }
                 },
                 Assets = new List<BulkDeleteAsset>
                 {
-                    new BulkDeleteAsset { Uid = "blt6f299e4805f0b1dd" }
+                    new BulkDeleteAsset { Uid = "asset_uid" }
                 }
             };
 
@@ -370,7 +370,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 {
                     new BulkWorkflowEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Locale = "en-us"
                     }
@@ -403,7 +403,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 {
                     new BulkWorkflowEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Locale = "en-us"
                     }

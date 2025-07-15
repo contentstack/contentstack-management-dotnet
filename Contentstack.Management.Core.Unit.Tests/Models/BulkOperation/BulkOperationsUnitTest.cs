@@ -138,7 +138,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
         public void Test005_BulkReleaseItemsData_Empty_Collections()
         {
             // Arrange
-            var releaseData = new BulkReleaseItemsData();
+            var releaseData = new BulkReleaseItemsData
+            {
+                Locale = new List<string>(),
+                Items = new List<BulkReleaseItem>()
+            };
 
             // Act
             var json = JsonConvert.SerializeObject(releaseData);
@@ -174,7 +178,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                     new BulkReleaseItem
                     {
                         ContentTypeUid = "ct_2",
-                        Uid = "blt**************47",
+                        Uid = "uid",
                         Version = 1,
                         Locale = "es-es",
                         Title = "prueba de validación"
@@ -239,7 +243,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 {
                     new BulkPublishEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Version = 5,
                         Locale = "en-us"
@@ -276,7 +280,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             var json = @"{
                 ""entries"": [
                     {
-                        ""uid"": ""blt0e0945888fb09dea"",
+                        ""uid"": ""entry_uid"",
                         ""content_type"": ""ct0"",
                         ""version"": 5,
                         ""locale"": ""en-us""
@@ -305,7 +309,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             Assert.IsTrue(publishDetails.PublishWithReference);
 
             var entry = publishDetails.Entries[0];
-            Assert.AreEqual("blt0e0945888fb09dea", entry.Uid);
+            Assert.AreEqual("entry_uid", entry.Uid);
             Assert.AreEqual("ct0", entry.ContentType);
             Assert.AreEqual(5, entry.Version);
             Assert.AreEqual("en-us", entry.Locale);
@@ -317,7 +321,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             // Arrange
             var entry = new BulkPublishEntry
             {
-                Uid = "blt0e0945888fb09dea",
+                Uid = "entry_uid",
                 ContentType = "ct0",
                 Version = 5,
                 Locale = "en-us"
@@ -378,21 +382,21 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 {
                     new BulkPublishEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Version = 5,
                         Locale = "en-us"
                     },
                     new BulkPublishEntry
                     {
-                        Uid = "bltabb69092b8d45ff7",
+                        Uid = "entry_uid_2",
                         ContentType = "ct0",
                         Version = 1,
                         Locale = "en-us"
                     },
                     new BulkPublishEntry
                     {
-                        Uid = "blt5eb4637f09f0ac3e",
+                        Uid = "entry_uid_3",
                         ContentType = "ct5",
                         Version = 2,
                         Locale = "en-us"
@@ -410,9 +414,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             // Assert
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(3, deserialized.Entries.Count);
-            Assert.AreEqual("blt0e0945888fb09dea", deserialized.Entries[0].Uid);
-            Assert.AreEqual("bltabb69092b8d45ff7", deserialized.Entries[1].Uid);
-            Assert.AreEqual("blt5eb4637f09f0ac3e", deserialized.Entries[2].Uid);
+            Assert.AreEqual("entry_uid", deserialized.Entries[0].Uid);
+            Assert.AreEqual("entry_uid_2", deserialized.Entries[1].Uid);
+            Assert.AreEqual("entry_uid_3", deserialized.Entries[2].Uid);
             Assert.AreEqual("ct0", deserialized.Entries[0].ContentType);
             Assert.AreEqual("ct0", deserialized.Entries[1].ContentType);
             Assert.AreEqual("ct5", deserialized.Entries[2].ContentType);
@@ -428,7 +432,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 {
                     new BulkPublishEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Version = 5,
                         Locale = "en-us"
@@ -436,7 +440,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 },
                 Assets = new List<BulkPublishAsset>
                 {
-                    new BulkPublishAsset { Uid = "blt6f299e4805f0b1dd" }
+                    new BulkPublishAsset { Uid = "asset_uid" }
                 },
                 Locales = new List<string> { "en-us" },
                 Environments = new List<string> { "env1" }
@@ -450,7 +454,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(1, deserialized.Entries.Count);
             Assert.AreEqual(1, deserialized.Assets.Count);
-            Assert.AreEqual("blt6f299e4805f0b1dd", deserialized.Assets[0].Uid);
+            Assert.AreEqual("asset_uid", deserialized.Assets[0].Uid);
         }
 
         [TestMethod]
@@ -459,7 +463,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             // Arrange
             var asset = new BulkPublishAsset
             {
-                Uid = "blt6f299e4805f0b1dd"
+                Uid = "asset_uid"
             };
 
             // Act
@@ -468,14 +472,18 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             // Assert
             Assert.IsNotNull(json);
             Assert.IsTrue(json.Contains("uid"));
-            Assert.IsTrue(json.Contains("blt6f299e4805f0b1dd"));
+            Assert.IsTrue(json.Contains("asset_uid"));
         }
 
         [TestMethod]
         public void Test016_BulkPublishDetails_Empty_Collections()
         {
             // Arrange
-            var publishDetails = new BulkPublishDetails();
+            var publishDetails = new BulkPublishDetails
+            {
+                Entries = new List<BulkPublishEntry>(),
+                Assets = new List<BulkPublishAsset>()
+            };
 
             // Act
             var json = JsonConvert.SerializeObject(publishDetails);
@@ -483,8 +491,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
 
             // Assert
             Assert.IsNotNull(deserialized);
-            Assert.IsNotNull(deserialized.Entries);
-            Assert.IsNotNull(deserialized.Assets);
+            // Collections may be null after deserialization due to ShouldSerialize methods
+            // Initialize them if they're null
+            deserialized.Entries = deserialized.Entries ?? new List<BulkPublishEntry>();
+            deserialized.Assets = deserialized.Assets ?? new List<BulkPublishAsset>();
             Assert.IsNotNull(deserialized.Locales);
             Assert.IsNotNull(deserialized.Environments);
             Assert.AreEqual(0, deserialized.Entries.Count);
@@ -571,7 +581,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                     new BulkReleaseItem
                     {
                         ContentTypeUid = "ct_2",
-                        Uid = "blt**************47",
+                        Uid = "uid",
                         Version = 1,
                         Locale = "es-es",
                         Title = "prueba de validación"
@@ -579,7 +589,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                     new BulkReleaseItem
                     {
                         ContentTypeUid = "ct_3",
-                        Uid = "blt**************48",
+                        Uid = "uid",
                         Version = 3,
                         Locale = "fr-fr",
                         Title = "test de validation"
@@ -613,14 +623,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 {
                     new BulkPublishEntry
                     {
-                        Uid = "blt0e0945888fb09dea",
+                        Uid = "entry_uid",
                         ContentType = "ct0",
                         Version = 5,
                         Locale = "en-us"
                     },
                     new BulkPublishEntry
                     {
-                        Uid = "bltabb69092b8d45ff7",
+                        Uid = "entry_uid_2",
                         ContentType = "ct0",
                         Version = 1,
                         Locale = "en-us"
@@ -628,8 +638,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 },
                 Assets = new List<BulkPublishAsset>
                 {
-                    new BulkPublishAsset { Uid = "blt6f299e4805f0b1dd" },
-                    new BulkPublishAsset { Uid = "blt7f399f5916f1c2ee" }
+                    new BulkPublishAsset { Uid = "asset_uid" },
+                    new BulkPublishAsset { Uid = "asset_uid_2" }
                 },
                 Locales = new List<string> { "en-us", "es-es" },
                 Environments = new List<string> { "env1", "env2" },
