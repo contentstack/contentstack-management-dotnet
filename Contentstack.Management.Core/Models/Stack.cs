@@ -883,6 +883,36 @@ namespace Contentstack.Management.Core.Models
 
             return new AuditLog(this, uid);
         }
+
+        /// <summary>
+        /// Gets the bulk operation instance for performing bulk operations on entries and assets.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// 
+        /// var publishDetails = new BulkPublishDetails
+        /// {
+        ///     Entries = new List<BulkPublishEntry>
+        ///     {
+        ///         new BulkPublishEntry { Uid = "entry_uid", ContentTypeUid = "content_type_uid", Locale = "en-us" }
+        ///     },
+        ///     Locales = new List<string> { "en-us" },
+        ///     Environments = new List<string> { "environment_uid" }
+        /// };
+        /// 
+        /// ContentstackResponse response = stack.BulkOperation().Publish(publishDetails);
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.BulkOperation"/></returns>
+        public BulkOperation BulkOperation()
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new BulkOperation(this);
+        }
         #endregion
 
         #region Throw Error
