@@ -25,7 +25,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test001_BulkReleaseItemsService_Initialization()
         {
-            // Arrange
+            
             var releaseData = new BulkReleaseItemsData
             {
                 Release = "release_uid",
@@ -45,10 +45,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 }
             };
 
-            // Act
+            
             var service = new BulkReleaseItemsService(_serializer, _stack, releaseData, "1.0");
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/release/items", service.ResourcePath);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -59,7 +58,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test002_BulkReleaseItemsService_ContentBody()
         {
-            // Arrange
+            
             var releaseData = new BulkReleaseItemsData
             {
                 Release = "release_uid",
@@ -81,10 +80,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
 
             var service = new BulkReleaseItemsService(_serializer, _stack, releaseData);
 
-            // Act
+            
             service.ContentBody();
 
-            // Assert
             Assert.IsNotNull(service.ByteContent);
             Assert.IsTrue(service.ByteContent.Length > 0);
             
@@ -99,7 +97,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test003_BulkReleaseItemsService_Without_BulkVersion()
         {
-            // Arrange
+            
             var releaseData = new BulkReleaseItemsData
             {
                 Release = "release_uid",
@@ -109,10 +107,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 Items = new List<BulkReleaseItem>()
             };
 
-            // Act
+            
             var service = new BulkReleaseItemsService(_serializer, _stack, releaseData);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/release/items", service.ResourcePath);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -122,7 +119,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test004_BulkPublishService_Initialization()
         {
-            // Arrange
+            
             var publishDetails = new BulkPublishDetails
             {
                 Entries = new List<BulkPublishEntry>
@@ -139,10 +136,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 Environments = new List<string> { "env1" }
             };
 
-            // Act
+            
             var service = new BulkPublishService(_serializer, _stack, publishDetails, true, true, true);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/publish", service.ResourcePath);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -155,7 +151,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test005_BulkPublishService_ContentBody()
         {
-            // Arrange
+            
             var publishDetails = new BulkPublishDetails
             {
                 Entries = new List<BulkPublishEntry>
@@ -174,10 +170,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
 
             var service = new BulkPublishService(_serializer, _stack, publishDetails);
 
-            // Act
+            
             service.ContentBody();
 
-            // Assert
             Assert.IsNotNull(service.ByteContent);
             Assert.IsTrue(service.ByteContent.Length > 0);
             
@@ -190,7 +185,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test006_BulkPublishService_With_All_Flags()
         {
-            // Arrange
+            
             var publishDetails = new BulkPublishDetails
             {
                 Entries = new List<BulkPublishEntry>(),
@@ -198,10 +193,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 Environments = new List<string> { "env1" }
             };
 
-            // Act
+            
             var service = new BulkPublishService(_serializer, _stack, publishDetails, true, true, true);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.IsTrue(service.Headers.ContainsKey("skip_workflow_stage_check"));
             Assert.IsTrue(service.Headers.ContainsKey("approvals"));
@@ -212,7 +206,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test007_BulkPublishService_Without_Flags()
         {
-            // Arrange
+            
             var publishDetails = new BulkPublishDetails
             {
                 Entries = new List<BulkPublishEntry>(),
@@ -220,10 +214,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 Environments = new List<string> { "env1" }
             };
 
-            // Act
+            
             var service = new BulkPublishService(_serializer, _stack, publishDetails, false, false, false);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.IsFalse(service.Headers.ContainsKey("skip_workflow_stage_check"));
             Assert.IsFalse(service.Headers.ContainsKey("approvals"));
@@ -232,7 +225,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test008_BulkUnpublishService_Initialization()
         {
-            // Arrange
+            
             var unpublishDetails = new BulkPublishDetails
             {
                 Entries = new List<BulkPublishEntry>
@@ -249,10 +242,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 Environments = new List<string> { "env1" }
             };
 
-            // Act
+            
             var service = new BulkUnpublishService(_serializer, _stack, unpublishDetails, true, true, true);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/unpublish", service.ResourcePath);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -263,7 +255,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test009_BulkUnpublishService_ContentBody()
         {
-            // Arrange
+            
             var unpublishDetails = new BulkPublishDetails
             {
                 Entries = new List<BulkPublishEntry>
@@ -282,10 +274,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
 
             var service = new BulkUnpublishService(_serializer, _stack, unpublishDetails);
 
-            // Act
+            
             service.ContentBody();
 
-            // Assert
             Assert.IsNotNull(service.ByteContent);
             Assert.IsTrue(service.ByteContent.Length > 0);
             
@@ -298,7 +289,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test010_BulkDeleteService_Initialization()
         {
-            // Arrange
+            
             var deleteDetails = new BulkDeleteDetails
             {
                 Entries = new List<BulkDeleteEntry>
@@ -316,10 +307,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 }
             };
 
-            // Act
+            
             var service = new BulkDeleteService(_serializer, _stack, deleteDetails);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/delete", service.ResourcePath);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -328,7 +318,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test011_BulkDeleteService_ContentBody()
         {
-            // Arrange
+            
             var deleteDetails = new BulkDeleteDetails
             {
                 Entries = new List<BulkDeleteEntry>
@@ -348,10 +338,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
 
             var service = new BulkDeleteService(_serializer, _stack, deleteDetails);
 
-            // Act
+            
             service.ContentBody();
 
-            // Assert
             Assert.IsNotNull(service.ByteContent);
             Assert.IsTrue(service.ByteContent.Length > 0);
             
@@ -363,7 +352,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test012_BulkWorkflowUpdateService_Initialization()
         {
-            // Arrange
+            
             var updateBody = new BulkWorkflowUpdateBody
             {
                 Entries = new List<BulkWorkflowEntry>
@@ -384,10 +373,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 }
             };
 
-            // Act
+            
             var service = new BulkWorkflowUpdateService(_serializer, _stack, updateBody);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/workflow", service.ResourcePath);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -396,7 +384,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test013_BulkWorkflowUpdateService_ContentBody()
         {
-            // Arrange
+            
             var updateBody = new BulkWorkflowUpdateBody
             {
                 Entries = new List<BulkWorkflowEntry>
@@ -419,10 +407,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
 
             var service = new BulkWorkflowUpdateService(_serializer, _stack, updateBody);
 
-            // Act
+            
             service.ContentBody();
 
-            // Assert
             Assert.IsNotNull(service.ByteContent);
             Assert.IsTrue(service.ByteContent.Length > 0);
             
@@ -434,14 +421,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test014_BulkJobStatusService_Initialization()
         {
-            // Arrange
+            
             string jobId = "test_job_id";
             string bulkVersion = "1.0";
 
-            // Act
+            
             var service = new BulkJobStatusService(_serializer, _stack, jobId, bulkVersion);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual($"/bulk/jobs/{jobId}", service.ResourcePath);
             Assert.AreEqual("GET", service.HttpMethod);
@@ -452,13 +438,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test015_BulkJobStatusService_Without_BulkVersion()
         {
-            // Arrange
+            
             string jobId = "test_job_id";
 
-            // Act
+            
             var service = new BulkJobStatusService(_serializer, _stack, jobId);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual($"/bulk/jobs/{jobId}", service.ResourcePath);
             Assert.AreEqual("GET", service.HttpMethod);
@@ -468,7 +453,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test016_BulkAddItemsService_Initialization()
         {
-            // Arrange
+            
             var addItemsData = new BulkAddItemsData
             {
                 Items = new List<BulkAddItem>
@@ -481,10 +466,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 }
             };
 
-            // Act
+            
             var service = new BulkAddItemsService(_serializer, _stack, addItemsData, "1.0");
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/release/items", service.ResourcePath);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -495,7 +479,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test017_BulkUpdateItemsService_Initialization()
         {
-            // Arrange
+            
             var updateItemsData = new BulkAddItemsData
             {
                 Items = new List<BulkAddItem>
@@ -508,10 +492,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 }
             };
 
-            // Act
+            
             var service = new BulkUpdateItemsService(_serializer, _stack, updateItemsData, "1.0");
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/release/update_items", service.ResourcePath);
             Assert.AreEqual("PUT", service.HttpMethod);
@@ -522,7 +505,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test018_BulkReleaseItemsService_Null_Data_Throws_Exception()
         {
-            // Arrange & Act & Assert
+              
             Assert.ThrowsException<System.ArgumentNullException>(() =>
             {
                 new BulkReleaseItemsService(_serializer, _stack, null);
@@ -532,7 +515,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test019_BulkPublishService_Null_Data_Throws_Exception()
         {
-            // Arrange & Act & Assert
+              
             Assert.ThrowsException<System.ArgumentNullException>(() =>
             {
                 new BulkPublishService(_serializer, _stack, null);
@@ -542,7 +525,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
         [TestMethod]
         public void Test020_BulkDeleteService_Null_Data_Throws_Exception()
         {
-            // Arrange & Act & Assert
+              
             Assert.ThrowsException<System.ArgumentNullException>(() =>
             {
                 new BulkDeleteService(_serializer, _stack, null);

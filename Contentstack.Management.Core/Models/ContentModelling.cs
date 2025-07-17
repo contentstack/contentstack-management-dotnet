@@ -13,11 +13,17 @@ namespace Contentstack.Management.Core.Models
         [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
 
+        [JsonProperty(propertyName: "description")]
+        public string Description { get; set; }
+
         [JsonProperty(propertyName: "field_rules")]
         public List<FieldRules> FieldRules { get; set; }
 
         [JsonProperty(propertyName: "schema")]
         public List<Field> Schema { get; set; }
+
+        [JsonProperty(propertyName: "global_field_refs")]
+        public List<GlobalFieldRefs> GlobalFieldRefs { get; set; }
 
         [JsonProperty(propertyName: "options")]
         public Option Options { get; set; }

@@ -12,7 +12,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
         [TestMethod]
         public void BulkPublishDetails_Serialization_Test()
         {
-            // Arrange
+            
             var details = new BulkPublishDetails
             {
                 Entries = new List<BulkPublishEntry>
@@ -41,11 +41,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 Environments = new List<string> { "env_1", "env_2" }
             };
 
-            // Act
+            
             var json = JsonConvert.SerializeObject(details);
             var deserialized = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
 
-            // Assert
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(2, deserialized.Entries.Count);
             Assert.AreEqual(2, deserialized.Assets.Count);
@@ -65,7 +64,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
         [TestMethod]
         public void BulkPublishEntry_WithContentType_Serialization_Test()
         {
-            // Arrange
+            
             var entry = new BulkPublishEntry
             {
                 Uid = "entry_uid",
@@ -74,11 +73,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 Locale = "en-us"
             };
 
-            // Act
+            
             var json = JsonConvert.SerializeObject(entry);
             var deserialized = JsonConvert.DeserializeObject<BulkPublishEntry>(json);
 
-            // Assert
             Assert.IsNotNull(deserialized);
             Assert.AreEqual("entry_uid", deserialized.Uid);
             Assert.AreEqual("content_type_1", deserialized.ContentType);
@@ -89,7 +87,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
         [TestMethod]
         public void BulkDeleteDetails_Serialization_Test()
         {
-            // Arrange
+            
             var details = new BulkDeleteDetails
             {
                 Entries = new List<BulkDeleteEntry>
@@ -114,11 +112,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 }
             };
 
-            // Act
+            
             var json = JsonConvert.SerializeObject(details);
             var deserialized = JsonConvert.DeserializeObject<BulkDeleteDetails>(json);
 
-            // Assert
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(2, deserialized.Entries.Count);
             Assert.AreEqual(2, deserialized.Assets.Count);
@@ -132,7 +129,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
         [TestMethod]
         public void BulkWorkflowUpdateBody_Serialization_Test()
         {
-            // Arrange
+            
             var updateBody = new BulkWorkflowUpdateBody
             {
                 Entries = new List<BulkWorkflowEntry>
@@ -170,11 +167,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 }
             };
 
-            // Act
+            
             var json = JsonConvert.SerializeObject(updateBody);
             var deserialized = JsonConvert.DeserializeObject<BulkWorkflowUpdateBody>(json);
 
-            // Assert
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(1, deserialized.Entries.Count);
             Assert.IsNotNull(deserialized.Workflow);
@@ -205,7 +201,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
         [TestMethod]
         public void BulkAddItemsData_Serialization_Test()
         {
-            // Arrange
+            
             var data = new BulkAddItemsData
             {
                 Items = new List<BulkAddItem>
@@ -223,11 +219,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 }
             };
 
-            // Act
+            
             var json = JsonConvert.SerializeObject(data);
             var deserialized = JsonConvert.DeserializeObject<BulkAddItemsData>(json);
 
-            // Assert
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(2, deserialized.Items.Count);
 
@@ -239,18 +234,17 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
         [TestMethod]
         public void BulkPublishDetails_EmptyCollections_Test()
         {
-            // Arrange
+            
             var details = new BulkPublishDetails
             {
                 Entries = new List<BulkPublishEntry>(),
                 Assets = new List<BulkPublishAsset>()
             };
 
-            // Act
+            
             var json = JsonConvert.SerializeObject(details);
             var deserialized = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
 
-            // Assert
             Assert.IsNotNull(deserialized);
             // Collections may be null after deserialization due to ShouldSerialize methods
             // Initialize them if they're null
@@ -267,7 +261,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
         [TestMethod]
         public void BulkPublishDetails_WithRulesAndScheduling_Test()
         {
-            // Arrange
+            
             var details = new BulkPublishDetails
             {
                 Entries = new List<BulkPublishEntry>
@@ -290,11 +284,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 PublishWithReference = true
             };
 
-            // Act
+            
             var json = JsonConvert.SerializeObject(details);
             var deserialized = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
 
-            // Assert
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(1, deserialized.Entries.Count);
             Assert.AreEqual(1, deserialized.Locales.Count);
@@ -314,7 +307,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
         [TestMethod]
         public void BulkWorkflowStage_EmptyCollections_Test()
         {
-            // Arrange
+            
             var workflowStage = new BulkWorkflowStage
             {
                 Uid = "test_uid",
@@ -323,11 +316,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
                 AssignedByRoles = new List<BulkWorkflowRole>()
             };
 
-            // Act
+            
             var json = JsonConvert.SerializeObject(workflowStage);
             var deserialized = JsonConvert.DeserializeObject<BulkWorkflowStage>(json);
 
-            // Assert
             Assert.IsNotNull(deserialized);
             Assert.AreEqual("test_uid", deserialized.Uid);
             Assert.AreEqual("test_comment", deserialized.Comment);
@@ -342,18 +334,17 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
         [TestMethod]
         public void BulkPublishEntry_NullValues_Test()
         {
-            // Arrange
+            
             var entry = new BulkPublishEntry
             {
                 Uid = "entry_uid"
                 // Version is null by default
             };
 
-            // Act
+            
             var json = JsonConvert.SerializeObject(entry);
             var deserialized = JsonConvert.DeserializeObject<BulkPublishEntry>(json);
 
-            // Assert
             Assert.IsNotNull(deserialized);
             Assert.AreEqual("entry_uid", deserialized.Uid);
             Assert.AreEqual(0, deserialized.Version); // int defaults to 0, not null
