@@ -643,24 +643,23 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// A <see cref="Models.GlobalField" /> is a reusable field (or group of fields) that you can define once and reuse in any content type within your stack.
-        /// This eliminates the need (and thereby time and efforts) to create the same set of fields repeatedly in multiple content types. 
+        /// <see cref="Models.GlobalField" /> defines the structure or schema of a page or a section of your web or mobile property. To create global Fields for your application, you are required to first create a global field. Read more about <a href='https://www.contentstack.com/docs/guide/global-fields'>Global Fields</a>.
         /// </summary>
-        /// <param name="uid"> Optional global field uid.</param>
+        /// <param name="uid">Optional, global field uid.</param>
+        /// <param name="apiVersion">Optional, API version for nested global field support.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
-        /// Stack stack = client.Stack("<API_KEY>");
-        /// ContentstackResponse contentstackResponse = stack.GlobalField("<GLOBAL_FIELD_UID>").Fetch();
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").GlobalField("<GLOBAL_FIELD_UID>").Fetch();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Models.GlobalField"/></returns>
-        public GlobalField GlobalField(string uid = null)
+        /// <returns>The <see cref="Models.GlobalField" /></returns>
+        public GlobalField GlobalField(string uid = null, string apiVersion = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            return new GlobalField(this, uid);
+            return new GlobalField(this, uid, apiVersion);
         }
 
         /// <summary>

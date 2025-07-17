@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
@@ -237,6 +238,42 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             var nestedGlobalField = globalFields.Modellings.Find(gf => gf.Uid == "nested_global_field_test");
             Assert.IsNotNull(nestedGlobalField);
             Assert.AreEqual("nested_global_field_test", nestedGlobalField.Uid);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test007a_Should_Query_Nested_Global_Fields_With_ApiVersion()
+        {
+            ContentstackResponse response = _stack.GlobalField(apiVersion: "3.2").Query().Find();
+            GlobalFieldsModel globalFields = response.OpenTResponse<GlobalFieldsModel>();
+            var jsonResponse = response.OpenJObjectResponse();
+            
+            Assert.IsNotNull(response);
+            Assert.IsNotNull(globalFields);
+            Assert.IsNotNull(globalFields.Modellings);
+            Assert.IsTrue(globalFields.Modellings.Count >= 1);
+
+            var nestedGlobalField = globalFields.Modellings.Find(gf => gf.Uid == "nested_global_field_test");
+            Assert.IsNotNull(nestedGlobalField);
+            Assert.AreEqual("nested_global_field_test", nestedGlobalField.Uid);
+
+            // Find the global field reference and check its reference_to from the raw JSON
+            var globalFieldReference = nestedGlobalField.Schema
+                .FirstOrDefault(f => f.DataType == "global_field" && f.Uid == "global_field_reference");
+            
+            Assert.IsNotNull(globalFieldReference);
+            Assert.AreEqual("global_field", globalFieldReference.DataType);
+            Assert.AreEqual("global_field_reference", globalFieldReference.Uid);
+            Assert.AreEqual("Global Field Reference", globalFieldReference.DisplayName);
+            
+            // Check the reference_to value from the raw JSON
+            var globalFieldsArray = jsonResponse["global_fields"] as Newtonsoft.Json.Linq.JArray;
+            var nestedGlobalFieldJson = globalFieldsArray?.FirstOrDefault(gf => gf["uid"]?.ToString() == "nested_global_field_test");
+            var schemaArray = nestedGlobalFieldJson?["schema"] as Newtonsoft.Json.Linq.JArray;
+            var globalFieldRefJson = schemaArray?.FirstOrDefault(f => f["uid"]?.ToString() == "global_field_reference");
+            var referenceTo = globalFieldRefJson?["reference_to"]?.ToString();
+            
+            Assert.AreEqual("referenced_global_field", referenceTo);
         }
 
         [TestMethod]

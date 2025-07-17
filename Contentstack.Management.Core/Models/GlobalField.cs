@@ -5,10 +5,13 @@ namespace Contentstack.Management.Core.Models
 {
     public class GlobalField : BaseModel<ContentModelling>
     {
-        internal GlobalField(Stack stack, string uid = null)
+        private readonly string apiVersion;
+
+        internal GlobalField(Stack stack, string uid = null, string apiVersion = null)
             : base(stack, "global_field", uid)
         {
             resourcePath = uid == null ? "/global_fields" : $"/global_fields/{uid}";
+            this.apiVersion = apiVersion;
         }
 
         /// <summary>
@@ -24,7 +27,7 @@ namespace Contentstack.Management.Core.Models
         public Query Query()
         {
             ThrowIfUidNotEmpty();
-            return new Query(stack, resourcePath);
+            return new Query(stack, resourcePath, apiVersion);
         }
 
         /// <summary>

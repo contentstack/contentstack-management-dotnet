@@ -42,9 +42,29 @@ namespace Contentstack.Management.Core.Unit.Tests.Queryable
         }
 
         [TestMethod]
+        public void Initialize_Query_With_ApiVersion()
+        {
+            string apiVersion = "3.2";
+            Query query = new Query(new Stack(new ContentstackClient(authtoken: _fixture.Create<string>())), _fixture.Create<string>(), apiVersion);
+
+            Assert.ThrowsException<InvalidOperationException>(() => query.Find());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => query.FindAsync());
+        }
+
+        [TestMethod]
         public void Query_Pagination_Parameters()
         {
             Query query = new Query(_stack, _fixture.Create<string>());
+            query.Limit(10);
+            query.Skip(10);
+            query.IncludeCount();
+        }
+
+        [TestMethod]
+        public void Query_Pagination_Parameters_With_ApiVersion()
+        {
+            string apiVersion = "3.2";
+            Query query = new Query(_stack, _fixture.Create<string>(), apiVersion);
             query.Limit(10);
             query.Skip(10);
             query.IncludeCount();

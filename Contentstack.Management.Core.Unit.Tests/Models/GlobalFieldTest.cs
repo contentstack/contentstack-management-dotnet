@@ -42,10 +42,41 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         }
 
         [TestMethod]
+        public void Initialize_GlobalField_With_ApiVersion()
+        {
+            string apiVersion = "3.2";
+            GlobalField globalField = new GlobalField(_stack, apiVersion: apiVersion);
+
+            Assert.IsNull(globalField.Uid);
+            Assert.AreEqual($"/global_fields", globalField.resourcePath);
+            Assert.ThrowsException<InvalidOperationException>(() => globalField.Fetch());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.FetchAsync());
+            Assert.ThrowsException<InvalidOperationException>(() => globalField.Update(new ContentModelling()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.UpdateAsync(new ContentModelling()));
+            Assert.ThrowsException<InvalidOperationException>(() => globalField.Delete());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.DeleteAsync());
+            Assert.AreEqual(globalField.Query().GetType(), typeof(Query));
+        }
+
+        [TestMethod]
         public void Initialize_GlobalField_With_Uid()
         {
             string uid = _fixture.Create<string>();
             GlobalField globalField = new GlobalField(_stack, uid);
+
+            Assert.AreEqual(uid, globalField.Uid);
+            Assert.AreEqual($"/global_fields/{globalField.Uid}", globalField.resourcePath);
+            Assert.ThrowsException<InvalidOperationException>(() => globalField.Create(new ContentModelling()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => globalField.CreateAsync(new ContentModelling()));
+            Assert.ThrowsException<InvalidOperationException>(() => globalField.Query());
+        }
+
+        [TestMethod]
+        public void Initialize_GlobalField_With_Uid_And_ApiVersion()
+        {
+            string uid = _fixture.Create<string>();
+            string apiVersion = "3.2";
+            GlobalField globalField = new GlobalField(_stack, uid, apiVersion);
 
             Assert.AreEqual(uid, globalField.Uid);
             Assert.AreEqual($"/global_fields/{globalField.Uid}", globalField.resourcePath);
@@ -81,9 +112,27 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         }
 
         [TestMethod]
+        public void Should_Query_Content_Type_With_ApiVersion()
+        {
+            ContentstackResponse response = _stack.GlobalField(apiVersion: "3.2").Query().Find();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
         public async System.Threading.Tasks.Task Should_Query_Content_Type_Async()
         {
             ContentstackResponse response = await _stack.GlobalField().Query().FindAsync();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Query_Content_Type_Async_With_ApiVersion()
+        {
+            ContentstackResponse response = await _stack.GlobalField(apiVersion: "3.2").Query().FindAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
