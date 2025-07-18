@@ -199,7 +199,10 @@ namespace Contentstack.Management.Core.Services
             }
         }
 
-        public virtual void OnResponse(IResponse httpResponse, ContentstackClientOptions config) { }
+        public virtual void OnResponse(IResponse httpResponse, ContentstackClientOptions config) 
+        { 
+            // Base implementation - no general cleanup
+        }
 
         #region Dispose methods
         /// <summary>

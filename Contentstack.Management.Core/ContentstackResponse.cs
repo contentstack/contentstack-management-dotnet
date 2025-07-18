@@ -140,6 +140,7 @@ namespace Contentstack.Management.Core
                 this.ContentType = response.Content.Headers.ContentType.MediaType;
             }
             CopyHeaderValues(response);
+            
         }
 
         /// <summary>

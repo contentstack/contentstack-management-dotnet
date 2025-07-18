@@ -32,7 +32,6 @@ namespace Contentstack.Management.Core.Models.Fields
         /// </summary>
         [JsonProperty(propertyName: "unique")]
         public new bool Unique { get; set; }
-
         /// <summary>
         /// Determines if this field is non-localizable.
         /// </summary>

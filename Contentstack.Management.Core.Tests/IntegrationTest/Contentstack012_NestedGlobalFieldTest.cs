@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
@@ -239,6 +240,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             Assert.AreEqual("nested_global_field_test", nestedGlobalField.Uid);
         }
 
+
+
         [TestMethod]
         [DoNotParallelize]
         public void Test009_Should_Delete_Referenced_Global_Field()
@@ -258,7 +261,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             ContentstackResponse response = _stack.GlobalField("nested_global_field_test").Delete();
             Assert.IsNotNull(response);
         }
-
 
     }
 }

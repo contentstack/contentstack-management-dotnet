@@ -22,7 +22,7 @@ namespace Contentstack.Management.Core.Models.Fields
         [JsonProperty(propertyName: "data_type")]
         public string DataType { get; set; }
         /// <summary>
-        /// Allows you to enter additional data about a field. Also, you can add additional values under ‘field_metadata’.
+        /// Allows you to enter additional data about a field. Also, you can add additional values under 'field_metadata'.
         /// </summary>
         [JsonProperty(propertyName: "field_metadata")]
         public FieldMetadata FieldMetadata { get; set; }
