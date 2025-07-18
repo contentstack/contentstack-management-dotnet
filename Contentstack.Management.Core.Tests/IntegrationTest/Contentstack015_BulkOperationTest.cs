@@ -220,14 +220,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }).ToList()
                 };
 
-                //// Add items to release
-                //ContentstackResponse addResponse = _stack.BulkOperation().AddItems(addItemsData);
-                //var addResponseJson = addResponse.OpenJObjectResponse();
-
-                //Assert.IsNotNull(addResponse);
-                //Assert.IsTrue(addResponse.IsSuccessStatusCode);
-                //Console.WriteLine("Successfully added items to release");
-
                 // Now perform bulk release operations using AddItems in deployment mode (only 4 entries)
                 var releaseData = new BulkAddItemsData
                 {
@@ -281,48 +273,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string availableReleaseUid = await FetchAvailableRelease();
                 Assert.IsFalse(string.IsNullOrEmpty(availableReleaseUid), "No release available for bulk operations");
 
-                // First, add the last entry to the release 
-                //var addItemsData = new BulkAddItemsData
-                //{
-                //    Items = availableEntries.Skip(4).Take(1).Select(e => new BulkAddItem // Take the 5th entry (last one)
-                //    {
-                //        Uid = e.Uid,
-                //        ContentType = _contentTypeUid
-                //    }).ToList()
-                //};
-
-                // Add items to release using bulk_version 1.0
-                //ContentstackResponse addResponse = _stack.BulkOperation().AddItems(addItemsData, "1.0");
-                //if (addResponse.IsSuccessStatusCode)
-                //{
-                //    Console.WriteLine("Successfully added last entry to release for update test");
-                //    await Task.Delay(3000); // Wait for items to be added
-                //}
-
-                //// Now update the last entry in the release using ReleaseItem().UpdateReleaseItem()
-                //var releaseItemsToUpdate = availableEntries.Skip(4).Take(1).Select(e => e.Uid).ToList();
-                
-                //ContentstackResponse updateResponse = _stack.Release(availableReleaseUid).Item().UpdateReleaseItem(releaseItemsToUpdate);
-                //var updateResponseJson = updateResponse.OpenJObjectResponse();
-
-                //Assert.IsNotNull(updateResponse);
-                //Assert.IsTrue(updateResponse.IsSuccessStatusCode);
-
-                //if (updateResponseJson["job_id"] != null)
-                //{
-                //    string jobId = updateResponseJson["job_id"].ToString();
-                //    Console.WriteLine($"Release items update job created with ID: {jobId}");
-                    
-                //    // Check job status
-                //    await Task.Delay(2000);
-                //    await CheckBulkJobStatus(jobId);
-                //}
-                //else
-                //{
-                //    Console.WriteLine("Release items updated successfully (no job created)");
-                //}
-
-                                // Alternative: Test bulk update items with version 2.0 for release items
+                // Alternative: Test bulk update items with version 2.0 for release items
                 var releaseData = new BulkAddItemsData
                 {
                     Release = availableReleaseUid,
@@ -339,16 +290,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         Title = e.Title
                     }).ToList()
                 };
-                //var bulkUpdateData = new BulkAddItemsData
-                //{
-                //    Items = availableEntries.Skip(4).Take(1).Select(e => new BulkAddItem // Update the last entry
-                //    {
-                //        Uid = e.Uid,
-                //        ContentType = _contentTypeUid
-                //    }).ToList()
-                //};
-
-                // Perform bulk update items operation
+               
                 ContentstackResponse bulkUpdateResponse = _stack.BulkOperation().UpdateItems(releaseData, "2.0");
                 var bulkUpdateResponseJson = bulkUpdateResponse.OpenJObjectResponse();
 
@@ -515,21 +457,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             try
             {
-                // Check if test environment already exists
-                //try
-                //{
-                //    ContentstackResponse fetchResponse = _stack.Environment(_testEnvironmentUid).Fetch();
-                //    if (fetchResponse.IsSuccessStatusCode)
-                //    {
-                //        Console.WriteLine($"Test environment '{_testEnvironmentUid}' already exists");
-                //        return;
-                //    }
-                //}
-                //catch
-                //{
-                //    // Environment doesn't exist, create it
-                //}
-
                 // Create test environment
                 var environmentModel = new EnvironmentModel
                 {
@@ -562,21 +489,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             try
             {
-                // Check if test release already exists
-                //try
-                //{
-                //    ContentstackResponse fetchResponse = _stack.Release(_testReleaseUid).Fetch();
-                //    if (fetchResponse.IsSuccessStatusCode)
-                //    {
-                //        Console.WriteLine($"Test release '{_testReleaseUid}' already exists");
-                //        return;
-                //    }
-                //}
-                //catch
-                //{
-                //    // Release doesn't exist, create it
-                //}
-
                 // Create test release
                 var releaseModel = new ReleaseModel
                 {
