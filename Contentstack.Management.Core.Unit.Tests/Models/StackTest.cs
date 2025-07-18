@@ -955,7 +955,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
                 }
             };
 
-            ContentstackResponse response = await stack.BulkOperation().AddItemsAsync(itemsData);
+            ContentstackResponse response = await stack.BulkOperation().AddItemsAsync(itemsData, "1.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -1009,7 +1009,34 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
                 }
             };
 
-            ContentstackResponse response = stack.BulkOperation().UpdateItems(itemsData);
+            ContentstackResponse response = stack.BulkOperation().UpdateItems(itemsData, "1.0");
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Update_Items_Bulk_Operation_With_Version()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            var itemsData = new BulkAddItemsData
+            {
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem
+                    {
+                        Uid = "entry_uid_1",
+                        ContentType = "content_type_1"
+                    }
+                }
+            };
+
+            ContentstackResponse response = stack.BulkOperation().UpdateItems(itemsData, "2.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
@@ -1036,10 +1063,337 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
                 }
             };
 
-            ContentstackResponse response = await stack.BulkOperation().UpdateItemsAsync(itemsData);
+            ContentstackResponse response = await stack.BulkOperation().UpdateItemsAsync(itemsData, "1.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Update_Items_Bulk_Operation_Async_With_Version()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            var itemsData = new BulkAddItemsData
+            {
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem
+                    {
+                        Uid = "entry_uid_1",
+                        ContentType = "content_type_1"
+                    }
+                }
+            };
+
+            ContentstackResponse response = await stack.BulkOperation().UpdateItemsAsync(itemsData, "2.0");
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Add_Items_With_Deployment_Mode_Bulk_Operation()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            var itemsData = new BulkAddItemsData
+            {
+                Release = "release_uid_123",
+                Action = "publish",
+                Locale = new List<string> { "en-us" },
+                Reference = true,
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem
+                    {
+                        Uid = "entry_uid_1",
+                        ContentType = "content_type_1",
+                        ContentTypeUid = "content_type_1",
+                        Version = 1,
+                        Locale = "en-us",
+                        Title = "Test Entry"
+                    }
+                }
+            };
+
+            ContentstackResponse response = stack.BulkOperation().AddItems(itemsData, "2.0");
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Add_Items_With_Deployment_Mode_Bulk_Operation_Async()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            var itemsData = new BulkAddItemsData
+            {
+                Release = "release_uid_123",
+                Action = "publish",
+                Locale = new List<string> { "en-us" },
+                Reference = true,
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem
+                    {
+                        Uid = "entry_uid_1",
+                        ContentType = "content_type_1",
+                        ContentTypeUid = "content_type_1",
+                        Version = 1,
+                        Locale = "en-us",
+                        Title = "Test Entry"
+                    }
+                }
+            };
+
+            ContentstackResponse response = await stack.BulkOperation().AddItemsAsync(itemsData, "2.0");
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Update_Items_With_Deployment_Mode_Bulk_Operation()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            var itemsData = new BulkAddItemsData
+            {
+                Release = "release_uid_123",
+                Action = "unpublish",
+                Locale = new List<string> { "en-us" },
+                Reference = false,
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem
+                    {
+                        Uid = "entry_uid_1",
+                        ContentType = "content_type_1",
+                        ContentTypeUid = "content_type_1",
+                        Version = 1,
+                        Locale = "en-us",
+                        Title = "Test Entry"
+                    }
+                }
+            };
+
+            ContentstackResponse response = stack.BulkOperation().UpdateItems(itemsData, "2.0");
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Update_Items_With_Deployment_Mode_Bulk_Operation_Async()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            var itemsData = new BulkAddItemsData
+            {
+                Release = "release_uid_123",
+                Action = "unpublish",
+                Locale = new List<string> { "en-us" },
+                Reference = false,
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem
+                    {
+                        Uid = "entry_uid_1",
+                        ContentType = "content_type_1",
+                        ContentTypeUid = "content_type_1",
+                        Version = 1,
+                        Locale = "en-us",
+                        Title = "Test Entry"
+                    }
+                }
+            };
+
+            ContentstackResponse response = await stack.BulkOperation().UpdateItemsAsync(itemsData, "2.0");
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Test_AddItems_Simple_Mode_With_Version()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            var itemsData = new BulkAddItemsData
+            {
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem
+                    {
+                        Uid = "entry_uid_1",
+                        ContentType = "content_type_1"
+                    }
+                }
+            };
+
+            // Test simple mode (no release properties set)
+            Assert.IsFalse(itemsData.IsReleaseDeploymentMode());
+
+            ContentstackResponse response = stack.BulkOperation().AddItems(itemsData, "1.0");
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Test_AddItems_Simple_Mode_With_Version_Async()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            var itemsData = new BulkAddItemsData
+            {
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem
+                    {
+                        Uid = "entry_uid_1",
+                        ContentType = "content_type_1"
+                    }
+                }
+            };
+
+            // Test simple mode (no release properties set)
+            Assert.IsFalse(itemsData.IsReleaseDeploymentMode());
+
+            ContentstackResponse response = await stack.BulkOperation().AddItemsAsync(itemsData, "2.0");
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Test_UpdateItems_Simple_Mode_With_Version()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            var itemsData = new BulkAddItemsData
+            {
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem
+                    {
+                        Uid = "entry_uid_1",
+                        ContentType = "content_type_1"
+                    }
+                }
+            };
+
+            // Test simple mode (no release properties set)
+            Assert.IsFalse(itemsData.IsReleaseDeploymentMode());
+
+            ContentstackResponse response = stack.BulkOperation().UpdateItems(itemsData, "1.0");
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Test_UpdateItems_Simple_Mode_With_Version_Async()
+        {
+            var contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
+            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(contentstackResponse));
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            var itemsData = new BulkAddItemsData
+            {
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem
+                    {
+                        Uid = "entry_uid_1",
+                        ContentType = "content_type_1"
+                    }
+                }
+            };
+
+            // Test simple mode (no release properties set)
+            Assert.IsFalse(itemsData.IsReleaseDeploymentMode());
+
+            ContentstackResponse response = await stack.BulkOperation().UpdateItemsAsync(itemsData, "2.0");
+
+            Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Test_Deployment_Mode_Detection()
+        {
+            // Test deployment mode detection
+            var deploymentData = new BulkAddItemsData
+            {
+                Release = "release_uid_123",
+                Action = "publish",
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem { Uid = "entry_uid", ContentType = "content_type" }
+                }
+            };
+
+            Assert.IsTrue(deploymentData.IsReleaseDeploymentMode());
+
+            // Test simple mode detection
+            var simpleData = new BulkAddItemsData
+            {
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem { Uid = "entry_uid", ContentType = "content_type" }
+                }
+            };
+
+            Assert.IsFalse(simpleData.IsReleaseDeploymentMode());
+
+            // Test partial data (missing action)
+            var partialData = new BulkAddItemsData
+            {
+                Release = "release_uid_123",
+                Items = new List<BulkAddItem>
+                {
+                    new BulkAddItem { Uid = "entry_uid", ContentType = "content_type" }
+                }
+            };
+
+            Assert.IsFalse(partialData.IsReleaseDeploymentMode()); // Should be false without action
         }
 
         [TestMethod]

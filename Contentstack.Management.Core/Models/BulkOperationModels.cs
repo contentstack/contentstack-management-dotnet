@@ -350,6 +350,7 @@ namespace Contentstack.Management.Core.Models
 
     /// <summary>
     /// Represents data for bulk add/update items operations.
+    /// Enhanced to support both simple adding to release and complex release deployment operations.
     /// </summary>
     public class BulkAddItemsData
     {
@@ -360,6 +361,34 @@ namespace Contentstack.Management.Core.Models
         public List<BulkAddItem> Items { get; set; }
 
         /// <summary>
+        /// Gets or sets the release UID for deployment operations.
+        /// When specified, this enables release deployment mode (like JavaScript SDK).
+        /// </summary>
+        [JsonProperty(propertyName: "release")]
+        public string Release { get; set; }
+
+        /// <summary>
+        /// Gets or sets the action to perform during deployment (publish, unpublish, etc.).
+        /// Only used when Release is specified.
+        /// </summary>
+        [JsonProperty(propertyName: "action")]
+        public string Action { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of locales for deployment.
+        /// Only used when Release is specified.
+        /// </summary>
+        [JsonProperty(propertyName: "locale")]
+        public List<string> Locale { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference flag for deployment.
+        /// Only used when Release is specified.
+        /// </summary>
+        [JsonProperty(propertyName: "reference")]
+        public bool? Reference { get; set; }
+
+        /// <summary>
         /// Determines whether to serialize the Items property.
         /// </summary>
         /// <returns>True if Items should be serialized, false otherwise.</returns>
@@ -367,10 +396,56 @@ namespace Contentstack.Management.Core.Models
         {
             return Items != null && Items.Count > 0;
         }
+
+        /// <summary>
+        /// Determines whether to serialize the Release property.
+        /// </summary>
+        /// <returns>True if Release should be serialized, false otherwise.</returns>
+        public bool ShouldSerializeRelease()
+        {
+            return !string.IsNullOrEmpty(Release);
+        }
+
+        /// <summary>
+        /// Determines whether to serialize the Action property.
+        /// </summary>
+        /// <returns>True if Action should be serialized, false otherwise.</returns>
+        public bool ShouldSerializeAction()
+        {
+            return !string.IsNullOrEmpty(Action);
+        }
+
+        /// <summary>
+        /// Determines whether to serialize the Locale property.
+        /// </summary>
+        /// <returns>True if Locale should be serialized, false otherwise.</returns>
+        public bool ShouldSerializeLocale()
+        {
+            return Locale != null && Locale.Count > 0;
+        }
+
+        /// <summary>
+        /// Determines whether to serialize the Reference property.
+        /// </summary>
+        /// <returns>True if Reference should be serialized, false otherwise.</returns>
+        public bool ShouldSerializeReference()
+        {
+            return Reference.HasValue;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is configured for release deployment mode.
+        /// </summary>
+        /// <returns>True if this is a release deployment operation, false if simple add operation.</returns>
+        public bool IsReleaseDeploymentMode()
+        {
+            return !string.IsNullOrEmpty(Release) && !string.IsNullOrEmpty(Action);
+        }
     }
 
     /// <summary>
     /// Represents an item for bulk add/update operations.
+    /// Enhanced to support both simple and complex release deployment properties.
     /// </summary>
     public class BulkAddItem
     {
@@ -385,6 +460,70 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         [JsonProperty(propertyName: "content_type")]
         public string ContentType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the content type UID for release deployment mode.
+        /// This is an alias for ContentType with a different JSON property name.
+        /// </summary>
+        [JsonProperty(propertyName: "content_type_uid")]
+        public string ContentTypeUid { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version number for release deployment mode.
+        /// Only used in enhanced release deployment operations.
+        /// </summary>
+        [JsonProperty(propertyName: "version")]
+        public int? Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets the locale for release deployment mode.
+        /// Only used in enhanced release deployment operations.
+        /// </summary>
+        [JsonProperty(propertyName: "locale")]
+        public string Locale { get; set; }
+
+        /// <summary>
+        /// Gets or sets the title for release deployment mode.
+        /// Only used in enhanced release deployment operations.
+        /// </summary>
+        [JsonProperty(propertyName: "title")]
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Determines whether to serialize the ContentTypeUid property.
+        /// </summary>
+        /// <returns>True if ContentTypeUid should be serialized, false otherwise.</returns>
+        public bool ShouldSerializeContentTypeUid()
+        {
+            return !string.IsNullOrEmpty(ContentTypeUid);
+        }
+
+        /// <summary>
+        /// Determines whether to serialize the Version property.
+        /// </summary>
+        /// <returns>True if Version should be serialized, false otherwise.</returns>
+        public bool ShouldSerializeVersion()
+        {
+            return Version.HasValue;
+        }
+
+        /// <summary>
+        /// Determines whether to serialize the Locale property.
+        /// </summary>
+        /// <returns>True if Locale should be serialized, false otherwise.</returns>
+        public bool ShouldSerializeLocale()
+        {
+            return !string.IsNullOrEmpty(Locale);
+        }
+
+        /// <summary>
+        /// Determines whether to serialize the Title property.
+        /// </summary>
+        /// <returns>True if Title should be serialized, false otherwise.</returns>
+        public bool ShouldSerializeTitle()
+        {
+            return !string.IsNullOrEmpty(Title);
+        }
     }
 
     /// <summary>

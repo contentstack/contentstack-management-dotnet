@@ -236,9 +236,11 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// Adds multiple items to a release in bulk.
+        /// Adds multiple items to a release in bulk with enhanced capabilities.
+        /// Automatically detects whether to perform simple add or deployment operation based on data properties.
+        /// When Release property is set in data, performs deployment operation (like JavaScript SDK).
         /// </summary>
-        /// <param name="data">The data containing items to be added to the release.</param>
+        /// <param name="data">The data containing items. If Release property is set, performs deployment operation.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
         /// <example>
@@ -246,18 +248,39 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
         /// Stack stack = client.Stack("<API_KEY>");
         /// 
-        /// var itemsData = new BulkAddItemsData
+        /// // Simple add mode
+        /// var simpleData = new BulkAddItemsData
         /// {
         ///     Items = new List<BulkAddItem>
         ///     {
         ///         new BulkAddItem { Uid = "entry_uid", ContentType = "content_type_uid" }
         ///     }
         /// };
+        /// ContentstackResponse response = stack.BulkOperation().AddItems(simpleData);
         /// 
-        /// ContentstackResponse response = stack.BulkOperation().AddItems(itemsData, "1.0");
+        /// // Deployment mode (like JavaScript SDK)
+        /// var deployData = new BulkAddItemsData
+        /// {
+        ///     Release = "release_uid",
+        ///     Action = "publish",
+        ///     Locale = new List<string> { "en-us" },
+        ///     Reference = true,
+        ///     Items = new List<BulkAddItem>
+        ///     {
+        ///         new BulkAddItem 
+        ///         { 
+        ///             Uid = "entry_uid", 
+        ///             ContentTypeUid = "content_type_uid",
+        ///             Version = 1,
+        ///             Locale = "en-us",
+        ///             Title = "My Entry"
+        ///         }
+        ///     }
+        /// };
+        /// ContentstackResponse response = stack.BulkOperation().AddItems(deployData, "2.0");
         /// </code></pre>
         /// </example>
-        public ContentstackResponse AddItems(BulkAddItemsData data, string bulkVersion = null)
+        public ContentstackResponse AddItems(BulkAddItemsData data, string bulkVersion = "1.0")
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -267,12 +290,63 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// Adds multiple items to a release in bulk asynchronously.
+        /// Adds multiple items to a release in bulk with enhanced deployment capabilities.
+        /// Supports both simple adding to release and complex release deployment operations (like JavaScript SDK).
         /// </summary>
-        /// <param name="data">The data containing items to be added to the release.</param>
+        /// <param name="data">The data containing items and optional deployment configuration.</param>
+        /// <param name="releaseUid">The release UID for deployment operations. If specified, enables deployment mode.</param>
+        /// <param name="action">The action to perform (publish, unpublish, etc.). Required when releaseUid is specified.</param>
+        /// <param name="locales">The list of locales for deployment. Only used when releaseUid is specified.</param>
+        /// <param name="reference">Whether to include references. Only used when releaseUid is specified.</param>
+        /// <param name="bulkVersion">The bulk version.</param>
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// 
+        /// // Enhanced deployment mode
+        /// var deployData = new BulkAddItemsData
+        /// {
+        ///     Items = new List<BulkAddItem>
+        ///     {
+        ///         new BulkAddItem 
+        ///         { 
+        ///             Uid = "entry_uid", 
+        ///             ContentTypeUid = "content_type_uid",
+        ///             Version = 1,
+        ///             Locale = "en-us",
+        ///             Title = "My Entry"
+        ///         }
+        ///     }
+        /// };
+        /// ContentstackResponse response = stack.BulkOperation().AddItemsWithDeployment(deployData, "release_uid", "publish", new List<string> { "en-us" }, true, "2.0");
+        /// </code></pre>
+        /// </example>
+        public ContentstackResponse AddItemsWithDeployment(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        {
+            _stack.ThrowIfNotLoggedIn();
+            _stack.ThrowIfAPIKeyEmpty();
+
+            // Configure the data object for deployment
+            data.Release = releaseUid;
+            data.Action = action;
+            data.Locale = locales;
+            data.Reference = reference;
+
+            var service = new BulkAddItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            return _stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// Adds multiple items to a release in bulk asynchronously with enhanced capabilities.
+        /// Automatically detects whether to perform simple add or deployment operation based on data properties.
+        /// When Release property is set in data, performs deployment operation (like JavaScript SDK).
+        /// </summary>
+        /// <param name="data">The data containing items. If Release property is set, performs deployment operation.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> AddItemsAsync(BulkAddItemsData data, string bulkVersion = null)
+        public Task<ContentstackResponse> AddItemsAsync(BulkAddItemsData data, string bulkVersion = "1.0")
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -282,12 +356,79 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// Updates multiple items in a release in bulk.
+        /// Adds multiple items to a release in bulk asynchronously with enhanced deployment capabilities.
+        /// Supports both simple adding to release and complex release deployment operations (like JavaScript SDK).
         /// </summary>
-        /// <param name="data">The data containing items to be updated in the release.</param>
+        /// <param name="data">The data containing items and optional deployment configuration.</param>
+        /// <param name="releaseUid">The release UID for deployment operations. Required for deployment mode.</param>
+        /// <param name="action">The action to perform (publish, unpublish, etc.). Required when releaseUid is specified.</param>
+        /// <param name="locales">The list of locales for deployment. Only used when releaseUid is specified.</param>
+        /// <param name="reference">Whether to include references. Only used when releaseUid is specified.</param>
+        /// <param name="bulkVersion">The bulk version.</param>
+        /// <returns>The Task</returns>
+        public Task<ContentstackResponse> AddItemsWithDeploymentAsync(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        {
+            _stack.ThrowIfNotLoggedIn();
+            _stack.ThrowIfAPIKeyEmpty();
+
+            // Configure the data object for deployment
+            data.Release = releaseUid;
+            data.Action = action;
+            data.Locale = locales;
+            data.Reference = reference;
+
+            var service = new BulkAddItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            return _stack.client.InvokeAsync<BulkAddItemsService, ContentstackResponse>(service);
+        }
+
+
+
+        /// <summary>
+        /// Updates multiple items in a release in bulk with enhanced capabilities.
+        /// Automatically detects whether to perform simple update or deployment operation based on data properties.
+        /// When Release property is set in data, performs deployment operation (like JavaScript SDK).
+        /// </summary>
+        /// <param name="data">The data containing items. If Release property is set, performs deployment operation.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse UpdateItems(BulkAddItemsData data, string bulkVersion = null)
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// 
+        /// // Simple update mode
+        /// var simpleData = new BulkAddItemsData
+        /// {
+        ///     Items = new List<BulkAddItem>
+        ///     {
+        ///         new BulkAddItem { Uid = "entry_uid", ContentType = "content_type_uid" }
+        ///     }
+        /// };
+        /// ContentstackResponse response = stack.BulkOperation().UpdateItems(simpleData);
+        /// 
+        /// // Deployment mode (like JavaScript SDK)
+        /// var deployData = new BulkAddItemsData
+        /// {
+        ///     Release = "release_uid",
+        ///     Action = "unpublish",
+        ///     Locale = new List<string> { "en-us" },
+        ///     Reference = false,
+        ///     Items = new List<BulkAddItem>
+        ///     {
+        ///         new BulkAddItem 
+        ///         { 
+        ///             Uid = "entry_uid", 
+        ///             ContentTypeUid = "content_type_uid",
+        ///             Version = 1,
+        ///             Locale = "en-us",
+        ///             Title = "My Entry"
+        ///         }
+        ///     }
+        /// };
+        /// ContentstackResponse response = stack.BulkOperation().UpdateItems(deployData, "2.0");
+        /// </code></pre>
+        /// </example>
+        public ContentstackResponse UpdateItems(BulkAddItemsData data, string bulkVersion = "1.0")
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -297,15 +438,92 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// Updates multiple items in a release in bulk asynchronously.
+        /// Updates multiple items in a release in bulk with enhanced deployment capabilities.
+        /// Supports both simple updating in release and complex release deployment operations (like JavaScript SDK).
         /// </summary>
-        /// <param name="data">The data containing items to be updated in the release.</param>
+        /// <param name="data">The data containing items and optional deployment configuration.</param>
+        /// <param name="releaseUid">The release UID for deployment operations. Required for deployment mode.</param>
+        /// <param name="action">The action to perform (publish, unpublish, etc.). Required when releaseUid is specified.</param>
+        /// <param name="locales">The list of locales for deployment. Only used when releaseUid is specified.</param>
+        /// <param name="reference">Whether to include references. Only used when releaseUid is specified.</param>
         /// <param name="bulkVersion">The bulk version.</param>
-        /// <returns>The Task</returns>
-        public Task<ContentstackResponse> UpdateItemsAsync(BulkAddItemsData data, string bulkVersion = null)
+        /// <returns>The <see cref="ContentstackResponse"/></returns>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// 
+        /// // Enhanced deployment mode
+        /// var deployData = new BulkAddItemsData
+        /// {
+        ///     Items = new List<BulkAddItem>
+        ///     {
+        ///         new BulkAddItem 
+        ///         { 
+        ///             Uid = "entry_uid", 
+        ///             ContentTypeUid = "content_type_uid",
+        ///             Version = 2,
+        ///             Locale = "en-us",
+        ///             Title = "Updated Entry"
+        ///         }
+        ///     }
+        /// };
+        /// ContentstackResponse response = stack.BulkOperation().UpdateItemsWithDeployment(deployData, "release_uid", "publish", new List<string> { "en-us" }, true, "2.0");
+        /// </code></pre>
+        /// </example>
+        public ContentstackResponse UpdateItemsWithDeployment(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
+
+            // Configure the data object for deployment
+            data.Release = releaseUid;
+            data.Action = action;
+            data.Locale = locales;
+            data.Reference = reference;
+
+            var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            return _stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// Updates multiple items in a release in bulk asynchronously with enhanced capabilities.
+        /// Automatically detects whether to perform simple update or deployment operation based on data properties.
+        /// When Release property is set in data, performs deployment operation (like JavaScript SDK).
+        /// </summary>
+        /// <param name="data">The data containing items. If Release property is set, performs deployment operation.</param>
+        /// <param name="bulkVersion">The bulk version.</param>
+        /// <returns>The Task</returns>
+        public Task<ContentstackResponse> UpdateItemsAsync(BulkAddItemsData data, string bulkVersion = "1.0")
+        {
+            _stack.ThrowIfNotLoggedIn();
+            _stack.ThrowIfAPIKeyEmpty();
+
+            var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            return _stack.client.InvokeAsync<BulkUpdateItemsService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// Updates multiple items in a release in bulk asynchronously with enhanced deployment capabilities.
+        /// Supports both simple updating in release and complex release deployment operations (like JavaScript SDK).
+        /// </summary>
+        /// <param name="data">The data containing items and optional deployment configuration.</param>
+        /// <param name="releaseUid">The release UID for deployment operations. Required for deployment mode.</param>
+        /// <param name="action">The action to perform (publish, unpublish, etc.). Required when releaseUid is specified.</param>
+        /// <param name="locales">The list of locales for deployment. Only used when releaseUid is specified.</param>
+        /// <param name="reference">Whether to include references. Only used when releaseUid is specified.</param>
+        /// <param name="bulkVersion">The bulk version.</param>
+        /// <returns>The Task</returns>
+        public Task<ContentstackResponse> UpdateItemsWithDeploymentAsync(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        {
+            _stack.ThrowIfNotLoggedIn();
+            _stack.ThrowIfAPIKeyEmpty();
+
+            // Configure the data object for deployment
+            data.Release = releaseUid;
+            data.Action = action;
+            data.Locale = locales;
+            data.Reference = reference;
 
             var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkUpdateItemsService, ContentstackResponse>(service);
