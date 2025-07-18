@@ -191,5 +191,137 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
+
+        [TestMethod]
+        public void Should_Use_Specialized_Service_For_Create_With_ApiVersion()
+        {
+            string apiVersion = "3.2";
+            GlobalField globalField = new GlobalField(_stack, apiVersion: apiVersion);
+
+            // This should use the specialized GlobalFieldService
+            ContentstackResponse response = globalField.Create(new ContentModelling());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Use_Specialized_Service_For_Create_Async_With_ApiVersion()
+        {
+            string apiVersion = "3.2";
+            GlobalField globalField = new GlobalField(_stack, apiVersion: apiVersion);
+
+            // This should use the specialized GlobalFieldService
+            ContentstackResponse response = await globalField.CreateAsync(new ContentModelling());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Use_Specialized_Service_For_Update_With_ApiVersion()
+        {
+            string uid = _fixture.Create<string>();
+            string apiVersion = "3.2";
+            GlobalField globalField = new GlobalField(_stack, uid, apiVersion);
+
+            // This should use the specialized GlobalFieldService
+            ContentstackResponse response = globalField.Update(new ContentModelling());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Use_Specialized_Service_For_Update_Async_With_ApiVersion()
+        {
+            string uid = _fixture.Create<string>();
+            string apiVersion = "3.2";
+            GlobalField globalField = new GlobalField(_stack, uid, apiVersion);
+
+            // This should use the specialized GlobalFieldService
+            ContentstackResponse response = await globalField.UpdateAsync(new ContentModelling());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Use_Specialized_Service_For_Fetch_With_ApiVersion()
+        {
+            string uid = _fixture.Create<string>();
+            string apiVersion = "3.2";
+            GlobalField globalField = new GlobalField(_stack, uid, apiVersion);
+
+            // This should use the specialized GlobalFieldFetchDeleteService
+            ContentstackResponse response = globalField.Fetch();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Use_Specialized_Service_For_Fetch_Async_With_ApiVersion()
+        {
+            string uid = _fixture.Create<string>();
+            string apiVersion = "3.2";
+            GlobalField globalField = new GlobalField(_stack, uid, apiVersion);
+
+            // This should use the specialized GlobalFieldFetchDeleteService
+            ContentstackResponse response = await globalField.FetchAsync();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Use_Specialized_Service_For_Delete_With_ApiVersion()
+        {
+            string uid = _fixture.Create<string>();
+            string apiVersion = "3.2";
+            GlobalField globalField = new GlobalField(_stack, uid, apiVersion);
+
+            // This should use the specialized GlobalFieldFetchDeleteService
+            ContentstackResponse response = globalField.Delete();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Use_Specialized_Service_For_Delete_Async_With_ApiVersion()
+        {
+            string uid = _fixture.Create<string>();
+            string apiVersion = "3.2";
+            GlobalField globalField = new GlobalField(_stack, uid, apiVersion);
+
+            // This should use the specialized GlobalFieldFetchDeleteService
+            ContentstackResponse response = await globalField.DeleteAsync();
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Handle_Nested_GlobalField_Operations_Without_ApiVersion()
+        {
+            // Test that operations work normally without apiVersion
+            GlobalField globalField = new GlobalField(_stack);
+
+            ContentstackResponse response = globalField.Create(new ContentModelling());
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Handle_Nested_GlobalField_Operations_With_Empty_ApiVersion()
+        {
+            // Test that operations work normally with empty apiVersion
+            GlobalField globalField = new GlobalField(_stack, apiVersion: "");
+
+            ContentstackResponse response = globalField.Create(new ContentModelling());
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+        }
     }
 }
