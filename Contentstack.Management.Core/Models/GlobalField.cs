@@ -1,14 +1,18 @@
 ﻿using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
+using Contentstack.Management.Core.Services.Models;
 
 namespace Contentstack.Management.Core.Models
 {
     public class GlobalField : BaseModel<ContentModelling>
     {
-        internal GlobalField(Stack stack, string uid = null)
+        private readonly string apiVersion;
+
+        internal GlobalField(Stack stack, string uid = null, string apiVersion = null)
             : base(stack, "global_field", uid)
         {
             resourcePath = uid == null ? "/global_fields" : $"/global_fields/{uid}";
+            this.apiVersion = apiVersion;
         }
 
         /// <summary>
@@ -24,7 +28,7 @@ namespace Contentstack.Management.Core.Models
         public Query Query()
         {
             ThrowIfUidNotEmpty();
-            return new Query(stack, resourcePath);
+            return new Query(stack, resourcePath, apiVersion);
         }
 
         /// <summary>
@@ -41,7 +45,9 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public override ContentstackResponse Create(ContentModelling model, ParameterCollection collection = null)
         {
-            return base.Create(model, collection);
+            ThrowIfUidNotEmpty();
+            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, collection: collection);
+            return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -58,7 +64,10 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> CreateAsync(ContentModelling model, ParameterCollection collection = null)
         {
-            return base.CreateAsync(model, collection);
+            ThrowIfUidNotEmpty();
+            stack.ThrowIfNotLoggedIn();
+            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, collection: collection);
+            return stack.client.InvokeAsync<GlobalFieldService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -75,7 +84,9 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public override ContentstackResponse Update(ContentModelling model, ParameterCollection collection = null)
         {
-            return base.Update(model, collection);
+            ThrowIfUidEmpty();
+            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, "PUT", collection: collection);
+            return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -92,7 +103,10 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> UpdateAsync(ContentModelling model, ParameterCollection collection = null)
         {
-            return base.UpdateAsync(model, collection);
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, "PUT", collection: collection);
+            return stack.client.InvokeAsync<GlobalFieldService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -107,7 +121,10 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public override ContentstackResponse Fetch(ParameterCollection collection = null)
         {
-            return base.Fetch(collection);
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, collection: collection);
+            return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -122,7 +139,10 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
         {
-            return base.FetchAsync(collection);
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, collection: collection);
+            return stack.client.InvokeAsync<GlobalFieldFetchDeleteService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -137,7 +157,10 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public override ContentstackResponse Delete(ParameterCollection collection = null)
         {
-            return base.Delete(collection);
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, "DELETE", collection: collection);
+            return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -152,7 +175,10 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task.</returns>
         public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
         {
-            return base.DeleteAsync(collection);
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, "DELETE", collection: collection);
+            return stack.client.InvokeAsync<GlobalFieldFetchDeleteService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
     }
 }

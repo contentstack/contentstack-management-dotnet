@@ -1,4 +1,12 @@
 # Changelog
+## [v0.3.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.3.0)
+  - Feat
+    - Bulk Operations: 
+      - Added Support for the bulk operations of Publish, Unpublish, Delete, Workflow Update, addRelease Items, Update Release Items, Job-Status both sync and async methods
+    - Nested Global Fields: 
+      Added the support for the nested global fields for all the CRUD Operations
+
+# Changelog
 ## [v0.2.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.2.0)
  - Fix
    - Fixed the Single Publish issue with specific entry version (Changing the type from String to Int)

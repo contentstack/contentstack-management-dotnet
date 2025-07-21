@@ -107,9 +107,33 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         [TestMethod]
         [DoNotParallelize]
-        public async System.Threading.Tasks.Task Test007_Should_Update_Async_Global_Field()
+        public void Test006a_Should_Query_Global_Field_With_ApiVersion()
+        {
+            ContentstackResponse response = _stack.GlobalField(apiVersion: "3.2").Query().Find();
+            GlobalFieldsModel globalField = response.OpenTResponse<GlobalFieldsModel>();
+            Assert.IsNotNull(response);
+            Assert.IsNotNull(globalField);
+            Assert.IsNotNull(globalField.Modellings);
+            Assert.AreEqual(1, globalField.Modellings.Count);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test007_Should_Query_Async_Global_Field()
         {
             ContentstackResponse response = await _stack.GlobalField().Query().FindAsync();
+            GlobalFieldsModel globalField = response.OpenTResponse<GlobalFieldsModel>();
+            Assert.IsNotNull(response);
+            Assert.IsNotNull(globalField);
+            Assert.IsNotNull(globalField.Modellings);
+            Assert.AreEqual(1, globalField.Modellings.Count);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test007a_Should_Query_Async_Global_Field_With_ApiVersion()
+        {
+            ContentstackResponse response = await _stack.GlobalField(apiVersion: "3.2").Query().FindAsync();
             GlobalFieldsModel globalField = response.OpenTResponse<GlobalFieldsModel>();
             Assert.IsNotNull(response);
             Assert.IsNotNull(globalField);

@@ -11,7 +11,9 @@ namespace Contentstack.Management.Core.Queryable
         private readonly Stack _stack;
         private readonly string _resourcePath;
         private readonly ParameterCollection _collection = new ParameterCollection();
-        internal Query(Stack stack, string resourcePath)
+        private readonly string _apiVersion;
+
+        internal Query(Stack stack, string resourcePath, string apiVersion = null)
         {
             if(stack == null)
             {
@@ -24,6 +26,7 @@ namespace Contentstack.Management.Core.Queryable
             }
             _stack = stack;
             _resourcePath = resourcePath;
+            _apiVersion = apiVersion;
         }
         #region Public
         /// <summary>
@@ -93,7 +96,7 @@ namespace Contentstack.Management.Core.Queryable
             }
             
             var service = new QueryService(_stack, _collection, _resourcePath);
-            return _stack.client.InvokeSync(service);
+            return _stack.client.InvokeSync(service, false, _apiVersion);
         }
 
         /// <summary>
@@ -113,7 +116,7 @@ namespace Contentstack.Management.Core.Queryable
             }
             var service = new QueryService(_stack, _collection, _resourcePath);
 
-            return _stack.client.InvokeAsync<QueryService, ContentstackResponse>(service);
+            return _stack.client.InvokeAsync<QueryService, ContentstackResponse>(service, false, _apiVersion);
         }
         #endregion
         #region Throw Error
