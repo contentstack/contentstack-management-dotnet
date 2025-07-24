@@ -420,7 +420,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "entry", locale);
-            return stack.client.InvokeSync(service);
+            return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
         /// <summary>
