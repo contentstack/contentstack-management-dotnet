@@ -251,8 +251,8 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset", apiVersion);
-            return stack.client.InvokeSync(service);
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
+            return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -271,8 +271,8 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset", apiVersion);
-            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
+            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -291,8 +291,8 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset", apiVersion);
-            return stack.client.InvokeSync(service);
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
+            return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
         /// <summary>
@@ -311,8 +311,8 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset", apiVersion);
-            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service);
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
+            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
         /// <summary>
