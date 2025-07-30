@@ -1,4 +1,8 @@
 # Changelog
+## [v0.3.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.3.2)
+ - Fix
+   - Added Test cases for the Release
+
 ## [v0.3.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.3.1)
  - Fix
    - Fixed apiVersion param in Publish/Unpublish methods
