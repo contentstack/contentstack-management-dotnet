@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
+using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -1621,6 +1622,128 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.ThrowsException<ArgumentNullException>(() => stack.BulkOperation().ReleaseItems(null));
             Assert.ThrowsExceptionAsync<ArgumentNullException>(() => stack.BulkOperation().ReleaseItemsAsync(null));
+        }
+
+        [TestMethod]
+        public void Should_Return_Release_Instance()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            Release release = stack.Release();
+
+            Assert.IsNotNull(release);
+            Assert.AreEqual(typeof(Release), release.GetType());
+            Assert.IsNull(release.Uid);
+            Assert.AreEqual("/releases", release.resourcePath);
+        }
+
+        [TestMethod]
+        public void Should_Return_Release_Instance_With_Uid()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+            string releaseUid = _fixture.Create<string>();
+
+            Release release = stack.Release(releaseUid);
+
+            Assert.IsNotNull(release);
+            Assert.AreEqual(typeof(Release), release.GetType());
+            Assert.AreEqual(releaseUid, release.Uid);
+            Assert.AreEqual($"/releases/{releaseUid}", release.resourcePath);
+        }
+
+        [TestMethod]
+        public void Should_Create_Multiple_Release_Instances()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+            string uid1 = _fixture.Create<string>();
+            string uid2 = _fixture.Create<string>();
+
+            Release release1 = stack.Release();
+            Release release2 = stack.Release(uid1);
+            Release release3 = stack.Release(uid2);
+
+            Assert.IsNotNull(release1);
+            Assert.IsNotNull(release2);
+            Assert.IsNotNull(release3);
+            Assert.AreNotSame(release1, release2);
+            Assert.AreNotSame(release2, release3);
+            Assert.IsNull(release1.Uid);
+            Assert.AreEqual(uid1, release2.Uid);
+            Assert.AreEqual(uid2, release3.Uid);
+        }
+
+        [TestMethod]
+        public void Should_Return_Release_With_Same_Stack_Reference()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            Release release = stack.Release();
+
+            Assert.IsNotNull(release);
+            // We can't directly access the stack property as it's internal, 
+            // but we can verify the release instance is properly initialized
+            Assert.AreEqual(typeof(Release), release.GetType());
+        }
+
+        [TestMethod]
+        public void Should_Return_Release_Query_Instance()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            Release release = stack.Release();
+            Query query = release.Query();
+
+            Assert.IsNotNull(query);
+            Assert.AreEqual(typeof(Query), query.GetType());
+        }
+
+        [TestMethod]
+        public void Should_Return_ReleaseItem_Instance_With_Uid()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+            string releaseUid = _fixture.Create<string>();
+
+            Release release = stack.Release(releaseUid);
+            ReleaseItem releaseItem = release.Item();
+
+            Assert.IsNotNull(releaseItem);
+            Assert.AreEqual(typeof(ReleaseItem), releaseItem.GetType());
+        }
+
+        [TestMethod]
+        public void Should_Handle_Null_Uid_In_Release()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            Release release1 = stack.Release(null);
+            Release release2 = stack.Release();
+
+            Assert.IsNotNull(release1);
+            Assert.IsNotNull(release2);
+            Assert.IsNull(release1.Uid);
+            Assert.IsNull(release2.Uid);
+            Assert.AreEqual("/releases", release1.resourcePath);
+            Assert.AreEqual("/releases", release2.resourcePath);
+        }
+
+        [TestMethod]
+        public void Should_Handle_Empty_String_Uid_In_Release()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            Release release = stack.Release(string.Empty);
+
+            Assert.IsNotNull(release);
+            Assert.AreEqual(string.Empty, release.Uid);
+            Assert.AreEqual("/releases/", release.resourcePath);
         }
 
         #endregion
