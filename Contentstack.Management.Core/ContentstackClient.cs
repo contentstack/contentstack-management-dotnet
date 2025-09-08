@@ -430,6 +430,127 @@ namespace Contentstack.Management.Core
         }
         #endregion
 
+        #region OAuth Methods
+        /// <summary>
+        /// Creates an OAuth handler for OAuth 2.0 authentication flow.
+        /// This method allows you to use OAuth instead of traditional authtoken authentication.
+        /// </summary>
+        /// <param name="options">The OAuth configuration options.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient();
+        /// var oauthOptions = new OAuthOptions
+        /// {
+        ///     AppId = "your-app-id",
+        ///     ClientId = "your-client-id",
+        ///     RedirectUri = "http://localhost:8184"
+        /// };
+        /// OAuthHandler oauthHandler = client.OAuth(oauthOptions);
+        /// 
+        /// // Get authorization URL
+        /// string authUrl = oauthHandler.GetAuthorizationUrl();
+        /// 
+        /// // After user authorization, exchange code for tokens
+        /// var tokens = await oauthHandler.ExchangeCodeForTokenAsync("authorization_code");
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="OAuthHandler" /> for managing OAuth flow.</returns>
+        public OAuthHandler OAuth(OAuthOptions options)
+        {
+            if (options == null)
+                throw new ArgumentNullException(nameof(options), "OAuth options cannot be null.");
+
+            return new OAuthHandler(this, options);
+        }
+
+        /// <summary>
+        /// Creates an OAuth handler with default OAuth options.
+        /// Uses the default AppId, ClientId, and RedirectUri.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient();
+        /// OAuthHandler oauthHandler = client.OAuth();
+        /// 
+        /// // Get authorization URL with default options
+        /// string authUrl = oauthHandler.GetAuthorizationUrl();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="OAuthHandler" /> with default OAuth options.</returns>
+        public OAuthHandler OAuth()
+        {
+            var defaultOptions = new OAuthOptions();
+            return new OAuthHandler(this, defaultOptions);
+        }
+
+        /// <summary>
+        /// Sets OAuth tokens for the client to use for authenticated requests.
+        /// This method is called internally by the OAuthHandler after successful token exchange or refresh.
+        /// </summary>
+        /// <param name="tokens">The OAuth tokens to use for authentication.</param>
+        /// <exception cref="ArgumentNullException">Thrown when tokens is null.</exception>
+        internal void SetOAuthTokens(OAuthTokens tokens)
+        {
+            if (tokens == null)
+                throw new ArgumentNullException(nameof(tokens), "OAuth tokens cannot be null.");
+
+            if (string.IsNullOrEmpty(tokens.AccessToken))
+                throw new ArgumentException("Access token cannot be null or empty.", nameof(tokens));
+
+            // Store the access token in the client options for use in HTTP requests
+            // This will be used by the HTTP pipeline to inject the Bearer token
+            contentstackOptions.Authtoken = tokens.AccessToken;
+            contentstackOptions.IsOAuthToken = true;
+        }
+
+        /// <summary>
+        /// Gets the current OAuth tokens for the specified client ID.
+        /// This method allows other SDKs (like contentstack-model-generator) to access OAuth tokens.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID to get tokens for.</param>
+        /// <returns>The OAuth tokens if available, null otherwise.</returns>
+        public OAuthTokens GetOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                throw new ArgumentException("Client ID cannot be null or empty.", nameof(clientId));
+
+            return InMemoryOAuthTokenStore.GetTokens(clientId);
+        }
+
+        /// <summary>
+        /// Checks if valid OAuth tokens are available for the specified client ID.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID to check tokens for.</param>
+        /// <returns>True if valid tokens are available, false otherwise.</returns>
+        public bool HasValidOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                return false;
+
+            return InMemoryOAuthTokenStore.HasValidTokens(clientId);
+        }
+
+        /// <summary>
+        /// Clears OAuth tokens and resets the client to use traditional authentication.
+        /// This method should be called when logging out or switching authentication methods.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID to clear tokens for.</param>
+        public void ClearOAuthTokens(string clientId = null)
+        {
+            if (!string.IsNullOrEmpty(clientId))
+            {
+                InMemoryOAuthTokenStore.ClearTokens(clientId);
+            }
+
+            // Reset OAuth flag and clear authtoken if it was an OAuth token
+            if (contentstackOptions.IsOAuthToken)
+            {
+                contentstackOptions.IsOAuthToken = false;
+                contentstackOptions.Authtoken = null;
+            }
+        }
+        #endregion
+
         /// <summary>
         /// The Get user call returns comprehensive information of an existing user account.
         /// </summary>
