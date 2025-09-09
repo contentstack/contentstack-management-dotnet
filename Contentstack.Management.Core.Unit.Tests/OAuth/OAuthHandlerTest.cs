@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         public void Cleanup()
         {
             // Clear any test tokens
-            InMemoryOAuthTokenStore.ClearTokens(_options.ClientId);
+            _client.ClearOAuthTokens(_options.ClientId);
         }
 
         [TestMethod]
@@ -104,7 +104,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 AccessToken = "test-token",
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, expectedTokens);
+            _client.StoreOAuthTokens(_options.ClientId, expectedTokens);
 
             // Act
             var tokens = handler.GetCurrentTokens();
@@ -135,7 +135,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ExpiresAt = DateTime.UtcNow.AddHours(1),
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act & Assert
             Assert.IsTrue(handler.HasValidTokens());
@@ -152,7 +152,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ExpiresAt = DateTime.UtcNow.AddMinutes(-5),
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act & Assert
             Assert.IsFalse(handler.HasValidTokens());
@@ -178,7 +178,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 AccessToken = "test-token",
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act & Assert
             Assert.IsTrue(handler.HasTokens());
@@ -194,7 +194,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 AccessToken = "test-token",
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
             Assert.IsTrue(handler.HasTokens());
 
             // Act
@@ -272,7 +272,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             handler.GetAuthorizationUrl();
 
             // Assert
-            var storedTokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var storedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(storedTokens);
             Assert.IsNotNull(storedTokens.AccessToken); // This is the code verifier
             Assert.IsTrue(PkceHelper.IsValidCodeVerifier(storedTokens.AccessToken));
@@ -413,7 +413,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 AccessToken = "test-token",
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act & Assert
             try
@@ -443,7 +443,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 AccessToken = "test-access-token",
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act
             var result = handler.GetAccessToken();
@@ -475,7 +475,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 RefreshToken = "test-refresh-token",
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act
             var result = handler.GetRefreshToken();
@@ -507,7 +507,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 OrganizationUid = "test-org-uid",
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act
             var result = handler.GetOrganizationUID();
@@ -539,7 +539,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 UserUid = "test-user-uid",
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act
             var result = handler.GetUserUID();
@@ -572,7 +572,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ExpiresAt = expiryTime,
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act
             var result = handler.GetTokenExpiryTime();
@@ -605,13 +605,13 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             {
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act
             handler.SetAccessToken("new-access-token");
 
             // Assert
-            var updatedTokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var updatedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.AreEqual("new-access-token", updatedTokens.AccessToken);
         }
 
@@ -625,7 +625,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             handler.SetAccessToken("new-access-token");
 
             // Assert
-            var tokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var tokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(tokens);
             Assert.AreEqual("new-access-token", tokens.AccessToken);
             Assert.AreEqual(_options.ClientId, tokens.ClientId);
@@ -662,13 +662,13 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             {
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act
             handler.SetRefreshToken("new-refresh-token");
 
             // Assert
-            var updatedTokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var updatedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.AreEqual("new-refresh-token", updatedTokens.RefreshToken);
         }
 
@@ -682,7 +682,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             handler.SetRefreshToken("new-refresh-token");
 
             // Assert
-            var tokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var tokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(tokens);
             Assert.AreEqual("new-refresh-token", tokens.RefreshToken);
             Assert.AreEqual(_options.ClientId, tokens.ClientId);
@@ -719,13 +719,13 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             {
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act
             handler.SetOrganizationUID("new-org-uid");
 
             // Assert
-            var updatedTokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var updatedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.AreEqual("new-org-uid", updatedTokens.OrganizationUid);
         }
 
@@ -739,7 +739,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             handler.SetOrganizationUID("new-org-uid");
 
             // Assert
-            var tokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var tokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(tokens);
             Assert.AreEqual("new-org-uid", tokens.OrganizationUid);
             Assert.AreEqual(_options.ClientId, tokens.ClientId);
@@ -776,13 +776,13 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             {
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act
             handler.SetUserUID("new-user-uid");
 
             // Assert
-            var updatedTokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var updatedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.AreEqual("new-user-uid", updatedTokens.UserUid);
         }
 
@@ -796,7 +796,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             handler.SetUserUID("new-user-uid");
 
             // Assert
-            var tokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var tokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(tokens);
             Assert.AreEqual("new-user-uid", tokens.UserUid);
             Assert.AreEqual(_options.ClientId, tokens.ClientId);
@@ -833,14 +833,14 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             {
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
             var newExpiryTime = DateTime.UtcNow.AddHours(2);
 
             // Act
             handler.SetTokenExpiryTime(newExpiryTime);
 
             // Assert
-            var updatedTokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var updatedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.AreEqual(newExpiryTime, updatedTokens.ExpiresAt);
         }
 
@@ -855,7 +855,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             handler.SetTokenExpiryTime(newExpiryTime);
 
             // Assert
-            var tokens = InMemoryOAuthTokenStore.GetTokens(_options.ClientId);
+            var tokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(tokens);
             Assert.AreEqual(newExpiryTime, tokens.ExpiresAt);
             Assert.AreEqual(_options.ClientId, tokens.ClientId);
@@ -963,7 +963,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 UserUid = "test-user-uid",
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act & Assert
             try
@@ -1002,7 +1002,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 UserUid = "test-user-uid",
                 ClientId = _options.ClientId
             };
-            InMemoryOAuthTokenStore.SetTokens(_options.ClientId, tokens);
+            _client.StoreOAuthTokens(_options.ClientId, tokens);
 
             // Act & Assert
             try

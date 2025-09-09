@@ -11,6 +11,7 @@ namespace Contentstack.Management.Core.Services.OAuth
     {
         private readonly string _appId;
         private readonly string _authorizationId;
+        private readonly string _organizationUid;
 
         /// <summary>
         /// Initializes a new instance of the OAuthAppRevocationService class.
@@ -18,7 +19,8 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="appId">The OAuth app ID.</param>
         /// <param name="authorizationId">The authorization ID to revoke.</param>
-        internal OAuthAppRevocationService(JsonSerializer serializer, string appId, string authorizationId)
+        /// <param name="organizationUid">The organization UID for OAuth operations.</param>
+        internal OAuthAppRevocationService(JsonSerializer serializer, string appId, string authorizationId, string organizationUid = null)
             : base(serializer)
         {
             if (string.IsNullOrEmpty(appId))
@@ -28,6 +30,7 @@ namespace Contentstack.Management.Core.Services.OAuth
 
             _appId = appId;
             _authorizationId = authorizationId;
+            _organizationUid = organizationUid;
             InitializeService();
         }
 
@@ -61,6 +64,13 @@ namespace Contentstack.Management.Core.Services.OAuth
                 Authtoken = config.Authtoken,
                 IsOAuthToken = true // This service requires OAuth authentication
             };
+            
+            // Set the required headers BEFORE calling base.CreateHttpRequest
+            // Add organization_uid header if available
+            if (!string.IsNullOrEmpty(_organizationUid))
+            {
+                Headers["organization_uid"] = _organizationUid;
+            }
             
             var request = base.CreateHttpRequest(httpClient, devHubConfig, addAcceptMediaHeader, apiVersion);
             

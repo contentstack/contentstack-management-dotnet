@@ -12,19 +12,22 @@ namespace Contentstack.Management.Core.Services.OAuth
     internal class OAuthAppAuthorizationService : ContentstackService
     {
         private readonly string _appId;
+        private readonly string _organizationUid;
 
         /// <summary>
         /// Initializes a new instance of the OAuthAppAuthorizationService class.
         /// </summary>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="appId">The OAuth app ID.</param>
-        internal OAuthAppAuthorizationService(JsonSerializer serializer, string appId)
+        /// <param name="organizationUid">The organization UID for OAuth operations.</param>
+        internal OAuthAppAuthorizationService(JsonSerializer serializer, string appId, string organizationUid = null)
             : base(serializer)
         {
             if (string.IsNullOrEmpty(appId))
                 throw new ArgumentException("App ID cannot be null or empty.", nameof(appId));
 
             _appId = appId;
+            _organizationUid = organizationUid;
             InitializeService();
         }
 
@@ -55,14 +58,20 @@ namespace Contentstack.Management.Core.Services.OAuth
                 Host = GetDeveloperHubHostname(config.Host),
                 Port = config.Port,
                 Version = "", // OAuth endpoints don't use versioning
-                Authtoken = config.Authtoken,
+                Authtoken = config.Authtoken, // This should contain the OAuth access token
                 IsOAuthToken = true // This service requires OAuth authentication
             };
             
-            var request = base.CreateHttpRequest(httpClient, devHubConfig, addAcceptMediaHeader, apiVersion);
-            
-            // Set the required headers for OAuth app authorization API
+            // Set the required headers BEFORE calling base.CreateHttpRequest
             Headers["Content-Type"] = "application/json";
+            
+            // Add organization_uid header if available
+            if (!string.IsNullOrEmpty(_organizationUid))
+            {
+                Headers["organization_uid"] = _organizationUid;
+            }
+            
+            var request = base.CreateHttpRequest(httpClient, devHubConfig, addAcceptMediaHeader, apiVersion);
             
             return request;
         }

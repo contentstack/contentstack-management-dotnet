@@ -81,7 +81,7 @@ namespace Contentstack.Management.Core
         /// <returns>The OAuth tokens if available, null otherwise.</returns>
         public OAuthTokens GetCurrentTokens()
         {
-            return InMemoryOAuthTokenStore.GetTokens(_clientId);
+            return _client.GetStoredOAuthTokens(_clientId);
         }
 
         /// <summary>
@@ -90,7 +90,8 @@ namespace Contentstack.Management.Core
         /// <returns>True if valid tokens are available, false otherwise.</returns>
         public bool HasValidTokens()
         {
-            return InMemoryOAuthTokenStore.HasValidTokens(_clientId);
+            var tokens = _client.GetStoredOAuthTokens(_clientId);
+            return tokens?.IsValid == true;
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace Contentstack.Management.Core
         /// <returns>True if tokens exist, false otherwise.</returns>
         public bool HasTokens()
         {
-            return InMemoryOAuthTokenStore.HasTokens(_clientId);
+            return _client.HasStoredOAuthTokens(_clientId);
         }
 
         /// <summary>
@@ -107,7 +108,16 @@ namespace Contentstack.Management.Core
         /// </summary>
         public void ClearTokens()
         {
-            InMemoryOAuthTokenStore.ClearTokens(_clientId);
+            _client.ClearStoredOAuthTokens(_clientId);
+        }
+
+        /// <summary>
+        /// Stores OAuth tokens in the client.
+        /// </summary>
+        /// <param name="tokens">The OAuth tokens to store.</param>
+        private void StoreTokens(OAuthTokens tokens)
+        {
+            _client.StoreOAuthTokens(_clientId, tokens);
         }
 
         /// <summary>
@@ -188,7 +198,7 @@ namespace Contentstack.Management.Core
                 tokens = new OAuthTokens { ClientId = _clientId };
             }
             tokens.AccessToken = token;
-            InMemoryOAuthTokenStore.SetTokens(_clientId, tokens);
+            StoreTokens(tokens);
         }
 
         /// <summary>
@@ -207,7 +217,7 @@ namespace Contentstack.Management.Core
                 tokens = new OAuthTokens { ClientId = _clientId };
             }
             tokens.RefreshToken = token;
-            InMemoryOAuthTokenStore.SetTokens(_clientId, tokens);
+            StoreTokens(tokens);
         }
 
         /// <summary>
@@ -226,7 +236,7 @@ namespace Contentstack.Management.Core
                 tokens = new OAuthTokens { ClientId = _clientId };
             }
             tokens.OrganizationUid = organizationUID;
-            InMemoryOAuthTokenStore.SetTokens(_clientId, tokens);
+            StoreTokens(tokens);
         }
 
         /// <summary>
@@ -245,7 +255,7 @@ namespace Contentstack.Management.Core
                 tokens = new OAuthTokens { ClientId = _clientId };
             }
             tokens.UserUid = userUID;
-            InMemoryOAuthTokenStore.SetTokens(_clientId, tokens);
+            StoreTokens(tokens);
         }
 
         /// <summary>
@@ -264,7 +274,7 @@ namespace Contentstack.Management.Core
                 tokens = new OAuthTokens { ClientId = _clientId };
             }
             tokens.ExpiresAt = expiryTime;
-            InMemoryOAuthTokenStore.SetTokens(_clientId, tokens);
+            StoreTokens(tokens);
         }
         #endregion
 
@@ -355,7 +365,7 @@ namespace Contentstack.Management.Core
                         ClientId = _clientId,
                         AccessToken = codeVerifier // Temporarily store code verifier
                     };
-                    InMemoryOAuthTokenStore.SetTokens(_clientId, tempTokens);
+                    StoreTokens(tempTokens);
                 }
                 // Traditional OAuth flow - no additional parameters needed
 
@@ -393,7 +403,7 @@ namespace Contentstack.Management.Core
                 if (_options.UsePkce)
                 {
                     // PKCE flow - get stored code verifier
-                    var storedTokens = InMemoryOAuthTokenStore.GetTokens(_clientId);
+                    var storedTokens = GetCurrentTokens();
                     if (storedTokens?.AccessToken == null)
                     {
                         throw new Exceptions.OAuthTokenException(
@@ -445,7 +455,7 @@ namespace Contentstack.Management.Core
                 };
 
                 // Store tokens in memory for future use
-                InMemoryOAuthTokenStore.SetTokens(_clientId, tokens);
+                StoreTokens(tokens);
 
                 // Set OAuth tokens in the client for authenticated requests
                 GetClient().SetOAuthTokens(tokens);
@@ -474,7 +484,7 @@ namespace Contentstack.Management.Core
             if (string.IsNullOrEmpty(tokenToUse))
             {
                 // Get refresh token from stored tokens
-                var storedTokens = InMemoryOAuthTokenStore.GetTokens(_clientId);
+                var storedTokens = GetCurrentTokens();
                 if (storedTokens?.RefreshToken == null)
                 {
                     throw new Exceptions.OAuthTokenRefreshException(
@@ -532,7 +542,7 @@ namespace Contentstack.Management.Core
                 };
 
                 // Store the new tokens in memory
-                InMemoryOAuthTokenStore.SetTokens(_clientId, newTokens);
+                StoreTokens(newTokens);
 
                 // Set OAuth tokens in the client for authenticated requests
                 GetClient().SetOAuthTokens(newTokens);
@@ -556,27 +566,31 @@ namespace Contentstack.Management.Core
             try
             {
                 // Check if we have tokens to logout
-                var currentTokens = InMemoryOAuthTokenStore.GetTokens(_clientId);
+                var currentTokens = GetCurrentTokens();
                 if (currentTokens == null)
                 {
                     throw new Exceptions.OAuthException("No OAuth tokens found. User is not logged in via OAuth.");
                 }
 
                 // Try to revoke the OAuth app authorization (optional - if it fails, we still clear tokens)
-                try
+                // Only attempt revocation if we have valid tokens
+                if (currentTokens != null && !string.IsNullOrEmpty(currentTokens.AccessToken))
                 {
-                    var authorizationId = await GetOauthAppAuthorizationAsync();
-                    await RevokeOauthAppAuthorizationAsync(authorizationId);
-                }
-                catch (Exception ex)
-                {
-                    // Log the revocation failure but don't fail the logout
-                    // This is common in OAuth implementations where revocation is optional
-                    System.Diagnostics.Debug.WriteLine($"OAuth authorization revocation failed (non-critical): {ex.Message}");
+                    try
+                    {
+                        var authorizationId = await GetOauthAppAuthorizationAsync();
+                        await RevokeOauthAppAuthorizationAsync(authorizationId);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the revocation failure but don't fail the logout
+                        // This is common in OAuth implementations where revocation is optional
+                        System.Diagnostics.Debug.WriteLine($"OAuth authorization revocation failed (non-critical): {ex.Message}");
+                    }
                 }
 
                 // Clear tokens from memory store
-                InMemoryOAuthTokenStore.ClearTokens(_clientId);
+                ClearTokens();
 
                 // Clear OAuth tokens from the client
                 GetClient().ClearOAuthTokens(_clientId);
@@ -601,14 +615,14 @@ namespace Contentstack.Management.Core
             try
             {
                 // Check if we have tokens to logout
-                var currentTokens = InMemoryOAuthTokenStore.GetTokens(_clientId);
+                var currentTokens = GetCurrentTokens();
                 if (currentTokens == null)
                 {
                     throw new Exceptions.OAuthException("No OAuth tokens found. User is not logged in via OAuth.");
                 }
 
                 // Clear tokens from memory store
-                InMemoryOAuthTokenStore.ClearTokens(_clientId);
+                ClearTokens();
 
                 // Clear OAuth tokens from the client
                 GetClient().ClearOAuthTokens(_clientId);
@@ -718,28 +732,45 @@ namespace Contentstack.Management.Core
                 // Create a service to get OAuth app authorizations
                 var service = new Services.OAuth.OAuthAppAuthorizationService(
                     GetClient().serializer,
-                    _options.AppId
+                    _options.AppId,
+                    tokens.OrganizationUid
                 );
 
-                // Make the API call to get authorizations
-                var response = await GetClient().InvokeAsync<Services.OAuth.OAuthAppAuthorizationService, ContentstackResponse>(service);
-                var authResponse = response.OpenTResponse<Models.OAuthAppAuthorizationResponse>();
+                // Configure the client with OAuth access token for this request
+                var originalAuthtoken = GetClient().contentstackOptions.Authtoken;
+                var originalIsOAuthToken = GetClient().contentstackOptions.IsOAuthToken;
+                
+                GetClient().contentstackOptions.Authtoken = tokens.AccessToken;
+                GetClient().contentstackOptions.IsOAuthToken = true;
+                
+                try
+                {
+                    // Make the API call to get authorizations
+                    var response = await GetClient().InvokeAsync<Services.OAuth.OAuthAppAuthorizationService, ContentstackResponse>(service);
+                    var authResponse = response.OpenTResponse<Models.OAuthAppAuthorizationResponse>();
 
-                if (authResponse?.Data?.Length > 0)
-                {
-                    var userUid = tokens.UserUid;
-                    var currentUserAuthorization = authResponse.Data.FirstOrDefault(auth => auth.User?.Uid == userUid);
-                    
-                    if (currentUserAuthorization == null)
+                    if (authResponse?.Data?.Length > 0)
                     {
-                        throw new Exceptions.OAuthException("No authorizations found for current user!");
+                        var userUid = tokens.UserUid;
+                        var currentUserAuthorization = authResponse.Data.FirstOrDefault(auth => auth.User?.Uid == userUid);
+                        
+                        if (currentUserAuthorization == null)
+                        {
+                            throw new Exceptions.OAuthException("No authorizations found for current user!");
+                        }
+                        
+                        return currentUserAuthorization.AuthorizationUid;
                     }
-                    
-                    return currentUserAuthorization.AuthorizationUid;
+                    else
+                    {
+                        throw new Exceptions.OAuthException("No authorizations found for the app!");
+                    }
                 }
-                else
+                finally
                 {
-                    throw new Exceptions.OAuthException("No authorizations found for the app!");
+                    // Restore original client configuration
+                    GetClient().contentstackOptions.Authtoken = originalAuthtoken;
+                    GetClient().contentstackOptions.IsOAuthToken = originalIsOAuthToken;
                 }
             }
             catch (Exception ex) when (!(ex is Exceptions.OAuthException))
@@ -762,15 +793,36 @@ namespace Contentstack.Management.Core
 
             try
             {
+                // Get current tokens to access organization UID
+                var tokens = GetCurrentTokens();
+                var organizationUid = tokens?.OrganizationUid;
+
                 // Create a service to revoke OAuth app authorization
                 var service = new Services.OAuth.OAuthAppRevocationService(
                     GetClient().serializer,
                     _options.AppId,
-                    authorizationId
+                    authorizationId,
+                    organizationUid
                 );
 
-                // Make the API call to revoke authorization
-                await GetClient().InvokeAsync<Services.OAuth.OAuthAppRevocationService, ContentstackResponse>(service);
+                // Configure the client with OAuth access token for this request
+                var originalAuthtoken = GetClient().contentstackOptions.Authtoken;
+                var originalIsOAuthToken = GetClient().contentstackOptions.IsOAuthToken;
+                
+                GetClient().contentstackOptions.Authtoken = tokens.AccessToken;
+                GetClient().contentstackOptions.IsOAuthToken = true;
+                
+                try
+                {
+                    // Make the API call to revoke authorization
+                    await GetClient().InvokeAsync<Services.OAuth.OAuthAppRevocationService, ContentstackResponse>(service);
+                }
+                finally
+                {
+                    // Restore original client configuration
+                    GetClient().contentstackOptions.Authtoken = originalAuthtoken;
+                    GetClient().contentstackOptions.IsOAuthToken = originalIsOAuthToken;
+                }
             }
             catch (Exception ex) when (!(ex is ArgumentException || ex is Exceptions.OAuthException))
             {

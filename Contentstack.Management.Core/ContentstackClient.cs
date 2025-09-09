@@ -37,6 +37,9 @@ namespace Contentstack.Management.Core
 
         private string Version => "0.3.2";
         private string xUserAgent => $"contentstack-management-dotnet/{Version}";
+        
+        // OAuth token storage
+        private readonly Dictionary<string, OAuthTokens> _oauthTokens = new Dictionary<string, OAuthTokens>();
         #endregion
 
 
@@ -514,7 +517,20 @@ namespace Contentstack.Management.Core
             if (string.IsNullOrEmpty(clientId))
                 throw new ArgumentException("Client ID cannot be null or empty.", nameof(clientId));
 
-            return InMemoryOAuthTokenStore.GetTokens(clientId);
+            return GetStoredOAuthTokens(clientId);
+        }
+
+        /// <summary>
+        /// Checks if OAuth tokens are available for the specified client ID (regardless of validity).
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID to check tokens for.</param>
+        /// <returns>True if tokens are available, false otherwise.</returns>
+        public bool HasOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                return false;
+
+            return HasStoredOAuthTokens(clientId);
         }
 
         /// <summary>
@@ -527,7 +543,8 @@ namespace Contentstack.Management.Core
             if (string.IsNullOrEmpty(clientId))
                 return false;
 
-            return InMemoryOAuthTokenStore.HasValidTokens(clientId);
+            var tokens = GetStoredOAuthTokens(clientId);
+            return tokens?.IsValid == true;
         }
 
         /// <summary>
@@ -539,7 +556,11 @@ namespace Contentstack.Management.Core
         {
             if (!string.IsNullOrEmpty(clientId))
             {
-                InMemoryOAuthTokenStore.ClearTokens(clientId);
+                ClearStoredOAuthTokens(clientId);
+            }
+            else
+            {
+                _oauthTokens.Clear();
             }
 
             // Reset OAuth flag and clear authtoken if it was an OAuth token
@@ -548,6 +569,62 @@ namespace Contentstack.Management.Core
                 contentstackOptions.IsOAuthToken = false;
                 contentstackOptions.Authtoken = null;
             }
+        }
+        #endregion
+
+        #region Internal OAuth Token Management
+        /// <summary>
+        /// Stores OAuth tokens for the specified client ID.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID.</param>
+        /// <param name="tokens">The OAuth tokens to store.</param>
+        internal void StoreOAuthTokens(string clientId, OAuthTokens tokens)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                throw new ArgumentException("Client ID cannot be null or empty.", nameof(clientId));
+
+            if (tokens == null)
+                throw new ArgumentNullException(nameof(tokens));
+
+            _oauthTokens[clientId] = tokens;
+        }
+
+        /// <summary>
+        /// Gets OAuth tokens for the specified client ID.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID.</param>
+        /// <returns>The OAuth tokens if found, null otherwise.</returns>
+        internal OAuthTokens GetStoredOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                return null;
+
+            return _oauthTokens.TryGetValue(clientId, out var tokens) ? tokens : null;
+        }
+
+        /// <summary>
+        /// Checks if OAuth tokens exist for the specified client ID.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID.</param>
+        /// <returns>True if tokens exist, false otherwise.</returns>
+        internal bool HasStoredOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                return false;
+
+            return _oauthTokens.ContainsKey(clientId);
+        }
+
+        /// <summary>
+        /// Removes OAuth tokens for the specified client ID.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID.</param>
+        internal void ClearStoredOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                return;
+
+            _oauthTokens.Remove(clientId);
         }
         #endregion
 
