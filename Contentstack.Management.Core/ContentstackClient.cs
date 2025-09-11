@@ -40,6 +40,8 @@ namespace Contentstack.Management.Core
         
         // OAuth token storage
         private readonly Dictionary<string, OAuthTokens> _oauthTokens = new Dictionary<string, OAuthTokens>();
+        
+        private bool _isRefreshingToken = false;
         #endregion
 
 
@@ -228,11 +230,17 @@ namespace Contentstack.Management.Core
             return (ContentstackResponse)ContentstackPipeline.InvokeSync(context, addAcceptMediaHeader, apiVersion).httpResponse;
         }
 
-        internal Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null)
+        internal async Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null)
             where TRequest : IContentstackService
             where TResponse : ContentstackResponse
         {
             ThrowIfDisposed();
+
+            // Check and refresh OAuth tokens if needed before making API calls
+            if (contentstackOptions.IsOAuthToken && !string.IsNullOrEmpty(contentstackOptions.Authtoken))
+            {
+                await EnsureOAuthTokenIsValidAsync();
+            }
 
             ExecutionContext context = new ExecutionContext(
               new RequestContext()
@@ -241,7 +249,7 @@ namespace Contentstack.Management.Core
                   service = request
               },
               new ResponseContext());
-            return ContentstackPipeline.InvokeAsync<TResponse>(context, addAcceptMediaHeader, apiVersion);
+            return await ContentstackPipeline.InvokeAsync<TResponse>(context, addAcceptMediaHeader, apiVersion);
         }
 
         #region Dispose methods
@@ -502,6 +510,8 @@ namespace Contentstack.Management.Core
 
             // Store the access token in the client options for use in HTTP requests
             // This will be used by the HTTP pipeline to inject the Bearer token
+            // Note: We need both IsOAuthToken=true AND Authtoken=AccessToken because
+            // the HTTP pipeline only has access to ContentstackClientOptions, not the full client
             contentstackOptions.Authtoken = tokens.AccessToken;
             contentstackOptions.IsOAuthToken = true;
         }
@@ -665,5 +675,74 @@ namespace Contentstack.Management.Core
 
             return InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
         }
+
+        /// <summary>
+        /// Ensures that the current OAuth token is valid and refreshes it if needed.
+        /// This method is called before each API request to automatically handle token refresh.
+        /// </summary>
+        private async Task EnsureOAuthTokenIsValidAsync()
+        {
+            // Prevent recursive calls
+            if (_isRefreshingToken)
+            {
+                return;
+            }
+
+            try
+            {
+                // Find the OAuth tokens that match the current access token
+                foreach (var kvp in _oauthTokens)
+                {
+                    var clientId = kvp.Key;
+                    var tokens = kvp.Value;
+
+                    if (tokens?.AccessToken == contentstackOptions.Authtoken && tokens.NeedsRefresh)
+                    {
+                        // Set flag to prevent recursive calls
+                        _isRefreshingToken = true;
+
+                        try
+                        {
+                            // Get the OAuth handler for this client
+                            var oauthHandler = OAuth(new Models.OAuthOptions
+                            {
+                                ClientId = clientId,
+                                AppId = tokens.AppId
+                            });
+
+                            // Refresh the tokens
+                            var refreshedTokens = await oauthHandler.RefreshTokenAsync(tokens.RefreshToken);
+                            
+                            if (refreshedTokens != null)
+                            {
+                                // Update the stored tokens
+                                StoreOAuthTokens(clientId, refreshedTokens);
+                                
+                                // Update the client's current authentication
+                                contentstackOptions.Authtoken = refreshedTokens.AccessToken;
+                                contentstackOptions.IsOAuthToken = true; // Ensure OAuth flag is maintained
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Wrap any exception in OAuth exception with context
+                            throw new Exceptions.OAuthException(
+                                $"OAuth token refresh failed for client '{clientId}': {ex.Message}", ex);
+                        }
+                        finally
+                        {
+                            _isRefreshingToken = false;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Wrap any exception in OAuth exception with context
+                throw new Exceptions.OAuthException(
+                    $"OAuth token validation failed: {ex.Message}", ex);
+            }
+        }
     }
 }
+

@@ -10,7 +10,7 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// Initializes a new instance of the OAuthException class.
         /// </summary>
-        public OAuthException() : base("An OAuth error occurred.")
+        public OAuthException() : base("OAuth operation failed.")
         {
         }
 
@@ -40,7 +40,7 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// Initializes a new instance of the OAuthConfigurationException class.
         /// </summary>
-        public OAuthConfigurationException() : base("OAuth configuration error occurred.")
+        public OAuthConfigurationException() : base("OAuth configuration is invalid.")
         {
         }
 
@@ -70,7 +70,7 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// Initializes a new instance of the OAuthTokenException class.
         /// </summary>
-        public OAuthTokenException() : base("OAuth token error occurred.")
+        public OAuthTokenException() : base("OAuth token operation failed.")
         {
         }
 
@@ -100,7 +100,7 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// Initializes a new instance of the OAuthAuthorizationException class.
         /// </summary>
-        public OAuthAuthorizationException() : base("OAuth authorization error occurred.")
+        public OAuthAuthorizationException() : base("OAuth authorization failed.")
         {
         }
 
@@ -130,7 +130,7 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// Initializes a new instance of the OAuthTokenRefreshException class.
         /// </summary>
-        public OAuthTokenRefreshException() : base("OAuth token refresh error occurred.")
+        public OAuthTokenRefreshException() : base("OAuth token refresh failed.")
         {
         }
 
