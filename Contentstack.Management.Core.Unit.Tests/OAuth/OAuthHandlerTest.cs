@@ -206,13 +206,13 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         }
 
         [TestMethod]
-        public void OAuthHandler_GetAuthorizationUrl_WithPKCE_ShouldReturnValidUrl()
+        public void OAuthHandler_AuthorizeAsync_WithPKCE_ShouldReturnValidUrl()
         {
             // Arrange
             var handler = new OAuthHandler(_client, _options);
 
             // Act
-            var authUrl = handler.GetAuthorizationUrl();
+            var authUrl = handler.AuthorizeAsync().Result;
 
             // Assert
             Assert.IsNotNull(authUrl);
@@ -224,7 +224,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         }
 
         [TestMethod]
-        public void OAuthHandler_GetAuthorizationUrl_WithTraditionalOAuth_ShouldReturnValidUrl()
+        public void OAuthHandler_AuthorizeAsync_WithTraditionalOAuth_ShouldReturnValidUrl()
         {
             // Arrange
             var traditionalOptions = new OAuthOptions
@@ -238,7 +238,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             var handler = new OAuthHandler(_client, traditionalOptions);
 
             // Act
-            var authUrl = handler.GetAuthorizationUrl();
+            var authUrl = handler.AuthorizeAsync().Result;
 
             // Assert
             Assert.IsNotNull(authUrl);
@@ -249,33 +249,33 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         }
 
         [TestMethod]
-        public void OAuthHandler_GetAuthorizationUrl_WithScopes_ShouldIncludeScopes()
+        public void OAuthHandler_AuthorizeAsync_WithScopes_ShouldIncludeScopes()
         {
             // Arrange
             _options.Scope = new[] { "read", "write" };
             var handler = new OAuthHandler(_client, _options);
 
             // Act
-            var authUrl = handler.GetAuthorizationUrl();
+            var authUrl = handler.AuthorizeAsync().Result;
 
             // Assert
             Assert.IsTrue(authUrl.Contains("scope=read%20write"));
         }
 
         [TestMethod]
-        public void OAuthHandler_GetAuthorizationUrl_ShouldStoreCodeVerifierForPKCE()
+        public void OAuthHandler_AuthorizeAsync_ShouldGenerateCodeVerifierForPKCE()
         {
             // Arrange
             var handler = new OAuthHandler(_client, _options);
 
             // Act
-            handler.GetAuthorizationUrl();
+            var authUrl = handler.AuthorizeAsync().Result;
 
             // Assert
-            var storedTokens = _client.GetOAuthTokens(_options.ClientId);
-            Assert.IsNotNull(storedTokens);
-            Assert.IsNotNull(storedTokens.AccessToken); // This is the code verifier
-            Assert.IsTrue(PkceHelper.IsValidCodeVerifier(storedTokens.AccessToken));
+            Assert.IsNotNull(authUrl);
+            Assert.IsTrue(authUrl.Contains("code_challenge="));
+            Assert.IsTrue(authUrl.Contains("code_challenge_method=S256"));
+            // Note: Code verifier is stored in handler instance, not in client tokens
         }
 
         [TestMethod]
@@ -340,11 +340,11 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             try
             {
                 handler.ExchangeCodeForTokenAsync("test-code").Wait();
-                Assert.Fail("Should have thrown OAuthTokenException");
+                Assert.Fail("Should have thrown OAuthConfigurationException");
             }
-            catch (AggregateException ex) when (ex.InnerException is OAuthTokenException)
+            catch (AggregateException ex) when (ex.InnerException is Exceptions.OAuthConfigurationException)
             {
-                // Expected
+                // Expected - PKCE flow requires code verifier to be generated first
             }
         }
 
@@ -877,9 +877,9 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 // If we get here, the method completed without throwing an exception
                 // The actual token exchange would fail in a real test due to mocking, but the URL parsing works
             }
-            catch (Exceptions.OAuthTokenException)
+            catch (Exceptions.OAuthConfigurationException)
             {
-                // Expected - the actual API call will fail in unit tests
+                // Expected - PKCE flow requires code verifier to be generated first
                 // This confirms that the URL parsing worked and the method attempted the token exchange
             }
         }
@@ -941,12 +941,10 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             try
             {
                 await handler.HandleRedirectAsync(redirectUrl);
-                // If we get here, the method completed without throwing an exception
             }
-            catch (Exceptions.OAuthTokenException)
+            catch (Exceptions.OAuthConfigurationException)
             {
-                // Expected - the actual API call will fail in unit tests
-                // This confirms that the URL parsing worked correctly
+                
             }
         }
         #endregion
@@ -975,8 +973,6 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             }
             catch (Exceptions.OAuthException)
             {
-                // Expected - the actual API call will fail in unit tests due to mocking
-                // This confirms that the method attempted to call the revocation API
             }
         }
 
@@ -1013,8 +1009,6 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             }
             catch (Exceptions.OAuthException)
             {
-                // Expected - the actual API call will fail in unit tests
-                // In this case, tokens are NOT cleared because the API call failed
                 Assert.IsTrue(handler.HasTokens());
             }
         }
