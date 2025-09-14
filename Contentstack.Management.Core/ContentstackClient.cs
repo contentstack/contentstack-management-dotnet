@@ -219,6 +219,11 @@ namespace Contentstack.Management.Core
         {
             ThrowIfDisposed();
 
+            if (contentstackOptions.IsOAuthToken && !string.IsNullOrEmpty(contentstackOptions.Authtoken))
+            {
+                EnsureOAuthTokenIsValid();
+            }
+
             ExecutionContext context = new ExecutionContext(
                 new RequestContext()
                 {
@@ -635,6 +640,14 @@ namespace Contentstack.Management.Core
                 return;
 
             _oauthTokens.Remove(clientId);
+        }
+
+        /// <summary>
+        /// Clears all OAuth tokens (useful for cleanup).
+        /// </summary>
+        internal void ClearAllOAuthTokens()
+        {
+            _oauthTokens.Clear();
         }
         #endregion
 

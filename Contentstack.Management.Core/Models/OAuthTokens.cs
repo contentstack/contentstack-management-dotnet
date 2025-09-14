@@ -23,9 +23,29 @@ namespace Contentstack.Management.Core.Models
 
         public string AppId { get; set; }
 
-        public bool IsExpired => DateTime.UtcNow >= ExpiresAt;
+        public bool IsExpired => ExpiresAt == DateTime.MinValue || DateTime.UtcNow >= ExpiresAt;
 
-        public bool NeedsRefresh => DateTime.UtcNow >= ExpiresAt.AddMinutes(-5) || IsExpired;
+        public bool NeedsRefresh 
+        {
+            get
+            {
+                // If ExpiresAt is not set or is MinValue, consider it expired
+                if (ExpiresAt == DateTime.MinValue)
+                    return true;
+                
+                try
+                {
+                    // Check if we need to refresh (5 minutes before expiration)
+                    var refreshTime = ExpiresAt.AddMinutes(-5);
+                    return DateTime.UtcNow >= refreshTime || IsExpired;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    // If the calculation results in an unrepresentable DateTime, consider it expired
+                    return true;
+                }
+            }
+        }
 
         public bool IsValid => !string.IsNullOrEmpty(AccessToken) && !IsExpired;
     }

@@ -78,8 +78,6 @@ namespace Contentstack.Management.Core.Services.OAuth
                 Host = GetDeveloperHubHostname(config.Host),
                 Port = config.Port,
                 Version = "", // OAuth endpoints don't use versioning
-                Authtoken = config.Authtoken,
-                IsOAuthToken = config.IsOAuthToken
             };
             
             var request = base.CreateHttpRequest(httpClient, devHubConfig, addAcceptMediaHeader, apiVersion);

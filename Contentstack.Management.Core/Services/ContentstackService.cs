@@ -168,18 +168,17 @@ namespace Contentstack.Management.Core.Services
             {
                 Headers["authorization"] = this.ManagementToken;
             }
-            else if (!string.IsNullOrEmpty(config.Authtoken))
+            else if (config.IsOAuthToken)
             {
-                if (config.IsOAuthToken)
+                if (!string.IsNullOrEmpty(config.Authtoken))
                 {
-                    // OAuth Bearer token format
+
                     Headers["authorization"] = $"Bearer {config.Authtoken}";
                 }
-                else
-                {
-                    // Traditional authtoken format
-                    Headers["authtoken"] = config.Authtoken;
-                }
+            }
+            else if (!string.IsNullOrEmpty(config.Authtoken))
+            {
+                Headers["authtoken"] = config.Authtoken;
             }
 
             if (!string.IsNullOrEmpty(apiVersion))

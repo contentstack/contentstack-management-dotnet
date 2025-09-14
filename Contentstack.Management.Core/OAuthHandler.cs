@@ -254,10 +254,13 @@ namespace Contentstack.Management.Core
 
             try
             {
+                
                 // Build the base authorization URL using the correct OAuth hostname
                 // Transform api.contentstack.io -> app.contentstack.com for OAuth authorization
                 var oauthHost = GetOAuthHost(GetClient().contentstackOptions.Host);
+                
                 var baseUrl = $"https://{oauthHost}/#!/apps/{_options.AppId}/authorize";
+                
                 var authUrl = new UriBuilder(baseUrl);
 
                 // Add required OAuth parameters
@@ -310,10 +313,21 @@ namespace Contentstack.Management.Core
 
             try
             {
+                
                 // Create the OAuth token service for authorization code exchange
                 OAuthTokenService tokenService;
 
-                if (_options.UsePkce && !string.IsNullOrEmpty(this.codeVerifier) )
+                if (_options.UsePkce)
+                {
+                    // PKCE code verifier should be available from the instance
+                    if (string.IsNullOrEmpty(this.codeVerifier))
+                    {
+                        throw new Exceptions.OAuthConfigurationException(
+                            "PKCE code verifier not found. Make sure to call AuthorizeAsync() before ExchangeCodeForTokenAsync().");
+                    }
+                }
+                
+                if (_options.UsePkce && !string.IsNullOrEmpty(this.codeVerifier))
                 {
                     tokenService = OAuthTokenService.CreateForAuthorizationCode(
                         serializer: GetClient().serializer,
@@ -557,9 +571,18 @@ namespace Contentstack.Management.Core
             if (string.IsNullOrEmpty(baseHost))
                 return baseHost;
 
-            // Transform api.contentstack.io -> app.contentstack.com
+            // Extract hostname from URL if it contains protocol
             var oauthHost = baseHost;
-            
+            if (oauthHost.StartsWith("https://"))
+            {
+                oauthHost = oauthHost.Substring(8); // Remove "https://"
+            }
+            else if (oauthHost.StartsWith("http://"))
+            {
+                oauthHost = oauthHost.Substring(7); // Remove "http://"
+            }
+
+            // Transform api.contentstack.io -> app.contentstack.com
             // Replace .io with .com
             if (oauthHost.EndsWith(".io"))
             {
@@ -653,9 +676,9 @@ namespace Contentstack.Management.Core
                     // Make the API call to revoke authorization
                     var response = await GetClient().InvokeAsync<OAuthAppRevocationService, ContentstackResponse>(service);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    throw;
+                    throw ex;
                 }
                 finally
                 {
