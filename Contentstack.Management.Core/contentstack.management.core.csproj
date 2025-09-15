@@ -11,7 +11,6 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/contentstack/contentstack-management-dotnet</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>ContentType query issue resolved</PackageReleaseNotes>
     <PackageTags>Contentstack management API </PackageTags>
     <PackageVersion>$(Version)</PackageVersion>
     <ReleaseVersion>$(Version)</ReleaseVersion>
