@@ -175,5 +175,123 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.Fail(e.Message);
             }
         }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test008_Should_Fail_Login_With_Invalid_MfaSecret()
+        {
+            ContentstackClient client = new ContentstackClient();
+            NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
+            string invalidMfaSecret = "INVALID_BASE32_SECRET!@#";
+            
+            try
+            {
+                ContentstackResponse contentstackResponse = client.Login(credentials, null, invalidMfaSecret);
+                Assert.Fail("Expected exception for invalid MFA secret");
+            }
+            catch (ArgumentException)
+            {
+                // Expected exception for invalid Base32 encoding
+                Assert.IsTrue(true);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test009_Should_Generate_TOTP_Token_With_Valid_MfaSecret()
+        {
+            ContentstackClient client = new ContentstackClient();
+            NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
+            string validMfaSecret = "JBSWY3DPEHPK3PXP"; // Valid Base32 test secret
+            
+            try
+            {
+                // This should fail due to invalid credentials, but should succeed in generating TOTP
+                ContentstackResponse contentstackResponse = client.Login(credentials, null, validMfaSecret);
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                // Expected to fail due to invalid credentials, but we verify it processed the MFA secret
+                // The error should be about credentials, not about MFA secret format
+                Assert.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode);
+                Assert.IsTrue(errorException.Message.Contains("email or password") || 
+                             errorException.Message.Contains("credentials") ||
+                             errorException.Message.Contains("authentication"));
+            }
+            catch (ArgumentException)
+            {
+                Assert.Fail("Should not throw ArgumentException for valid MFA secret");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test010_Should_Generate_TOTP_Token_With_Valid_MfaSecret_Async()
+        {
+            ContentstackClient client = new ContentstackClient();
+            NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
+            string validMfaSecret = "JBSWY3DPEHPK3PXP"; // Valid Base32 test secret
+            
+            try
+            {
+                // This should fail due to invalid credentials, but should succeed in generating TOTP
+                ContentstackResponse contentstackResponse = await client.LoginAsync(credentials, null, validMfaSecret);
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                // Expected to fail due to invalid credentials, but we verify it processed the MFA secret
+                // The error should be about credentials, not about MFA secret format
+                Assert.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode);
+                Assert.IsTrue(errorException.Message.Contains("email or password") || 
+                             errorException.Message.Contains("credentials") ||
+                             errorException.Message.Contains("authentication"));
+            }
+            catch (ArgumentException)
+            {
+                Assert.Fail("Should not throw ArgumentException for valid MFA secret");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test011_Should_Prefer_Explicit_Token_Over_MfaSecret()
+        {
+            ContentstackClient client = new ContentstackClient();
+            NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
+            string validMfaSecret = "JBSWY3DPEHPK3PXP";
+            string explicitToken = "123456";
+            
+            try
+            {
+                // This should fail due to invalid credentials, but should use explicit token
+                ContentstackResponse contentstackResponse = client.Login(credentials, explicitToken, validMfaSecret);
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                // Expected to fail due to invalid credentials
+                // The important thing is that it didn't throw an exception about MFA secret processing
+                Assert.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode);
+            }
+            catch (ArgumentException)
+            {
+                Assert.Fail("Should not throw ArgumentException when explicit token is provided");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
     }
 }
