@@ -28,7 +28,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthTokenStorage_SetAndGetTokens_ShouldWork()
         {
-            // Arrange
+            
             var tokens = new OAuthTokens
             {
                 AccessToken = "test-access-token",
@@ -38,12 +38,8 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 UserUid = "test-user-uid",
                 ClientId = TestClientId
             };
-
-            // Act
             _client.StoreOAuthTokens(TestClientId, tokens);
             var retrievedTokens = _client.GetOAuthTokens(TestClientId);
-
-            // Assert
             Assert.IsNotNull(retrievedTokens);
             Assert.AreEqual("test-access-token", retrievedTokens.AccessToken);
             Assert.AreEqual("test-refresh-token", retrievedTokens.RefreshToken);
@@ -55,17 +51,15 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthTokenStorage_GetTokens_WithNonExistentClientId_ShouldReturnNull()
         {
-            // Act
-            var tokens = _client.GetOAuthTokens("non-existent-client-id");
 
-            // Assert
+            var tokens = _client.GetOAuthTokens("non-existent-client-id");
             Assert.IsNull(tokens);
         }
 
         [TestMethod]
         public void OAuthTokenStorage_HasTokens_WithExistingTokens_ShouldReturnTrue()
         {
-            // Arrange
+            
             var tokens = new OAuthTokens
             {
                 AccessToken = "test-token",
@@ -73,21 +67,21 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(TestClientId, tokens);
 
-            // Act & Assert
+            
             Assert.IsTrue(_client.HasOAuthTokens(TestClientId));
         }
 
         [TestMethod]
         public void OAuthTokenStorage_HasTokens_WithNoTokens_ShouldReturnFalse()
         {
-            // Act & Assert
+            
             Assert.IsFalse(_client.HasOAuthTokens(TestClientId));
         }
 
         [TestMethod]
         public void OAuthTokenStorage_HasValidTokens_WithValidTokens_ShouldReturnTrue()
         {
-            // Arrange
+            
             var tokens = new OAuthTokens
             {
                 AccessToken = "test-token",
@@ -96,14 +90,14 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(TestClientId, tokens);
 
-            // Act & Assert
+            
             Assert.IsTrue(_client.HasValidOAuthTokens(TestClientId));
         }
 
         [TestMethod]
         public void OAuthTokenStorage_HasValidTokens_WithExpiredTokens_ShouldReturnFalse()
         {
-            // Arrange
+            
             var tokens = new OAuthTokens
             {
                 AccessToken = "test-token",
@@ -112,21 +106,21 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(TestClientId, tokens);
 
-            // Act & Assert
+            
             Assert.IsFalse(_client.HasValidOAuthTokens(TestClientId));
         }
 
         [TestMethod]
         public void OAuthTokenStorage_HasValidTokens_WithNoTokens_ShouldReturnFalse()
         {
-            // Act & Assert
+            
             Assert.IsFalse(_client.HasValidOAuthTokens(TestClientId));
         }
 
         [TestMethod]
         public void OAuthTokenStorage_ClearTokens_ShouldRemoveTokens()
         {
-            // Arrange
+            
             var tokens = new OAuthTokens
             {
                 AccessToken = "test-token",
@@ -134,11 +128,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(TestClientId, tokens);
             Assert.IsTrue(_client.HasOAuthTokens(TestClientId));
-
-            // Act
             _client.ClearOAuthTokens(TestClientId);
-
-            // Assert
             Assert.IsNull(_client.GetOAuthTokens(TestClientId));
             Assert.IsFalse(_client.HasOAuthTokens(TestClientId));
             Assert.IsFalse(_client.HasOAuthTokens(TestClientId));
@@ -147,15 +137,13 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthTokenStorage_ClearTokens_WithNonExistentClientId_ShouldNotThrow()
         {
-            // Act & Assert - Should not throw
+            // Should not throw
             _client.ClearOAuthTokens("non-existent-client-id");
         }
-
-
         [TestMethod]
         public void OAuthTokenStorage_ThreadSafety_ShouldHandleConcurrentAccess()
         {
-            // Arrange
+            
             var tokens1 = new OAuthTokens
             {
                 AccessToken = "token-1",
@@ -181,8 +169,6 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             });
 
             Task.WaitAll(task1, task2);
-
-            // Assert
             Assert.AreEqual("token-1", task1.Result.AccessToken);
             Assert.AreEqual("token-2", task2.Result.AccessToken);
         }
@@ -190,7 +176,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthTokenStorage_UpdateTokens_ShouldReplaceExistingTokens()
         {
-            // Arrange
+            
             var originalTokens = new OAuthTokens
             {
                 AccessToken = "original-token",
@@ -204,16 +190,10 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 RefreshToken = "new-refresh-token",
                 ClientId = TestClientId
             };
-
-            // Act
             _client.StoreOAuthTokens(TestClientId, updatedTokens);
             var retrievedTokens = _client.GetOAuthTokens(TestClientId);
-
-            // Assert
             Assert.AreEqual("updated-token", retrievedTokens.AccessToken);
             Assert.AreEqual("new-refresh-token", retrievedTokens.RefreshToken);
         }
     }
 }
-
-

@@ -30,17 +30,15 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestCleanup]
         public void Cleanup()
         {
-            // Clear any test tokens
+
             _client.ClearOAuthTokens(_options.ClientId);
         }
 
         [TestMethod]
         public void OAuthHandler_Constructor_WithValidParameters_ShouldCreateInstance()
         {
-            // Act
-            var handler = new OAuthHandler(_client, _options);
 
-            // Assert
+            var handler = new OAuthHandler(_client, _options);
             Assert.IsNotNull(handler);
             Assert.AreEqual(_options.ClientId, handler.ClientId);
             Assert.AreEqual(_options.AppId, handler.AppId);
@@ -52,7 +50,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentNullException))]
         public void OAuthHandler_Constructor_WithNullClient_ShouldThrowException()
         {
-            // Act & Assert
+            
             new OAuthHandler(null, _options);
         }
 
@@ -60,7 +58,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentNullException))]
         public void OAuthHandler_Constructor_WithNullOptions_ShouldThrowException()
         {
-            // Act & Assert
+            
             new OAuthHandler(_client, null);
         }
 
@@ -68,7 +66,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(OAuthConfigurationException))]
         public void OAuthHandler_Constructor_WithInvalidOptions_ShouldThrowException()
         {
-            // Arrange
+            
             var invalidOptions = new OAuthOptions
             {
                 AppId = "", // Invalid
@@ -77,27 +75,23 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ResponseType = "code"
             };
 
-            // Act & Assert
+            
             new OAuthHandler(_client, invalidOptions);
         }
 
         [TestMethod]
         public void OAuthHandler_GetCurrentTokens_WithNoTokens_ShouldReturnNull()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             var tokens = handler.GetCurrentTokens();
-
-            // Assert
             Assert.IsNull(tokens);
         }
 
         [TestMethod]
         public void OAuthHandler_GetCurrentTokens_WithStoredTokens_ShouldReturnTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var expectedTokens = new OAuthTokens
             {
@@ -105,11 +99,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ClientId = _options.ClientId
             };
             _client.StoreOAuthTokens(_options.ClientId, expectedTokens);
-
-            // Act
             var tokens = handler.GetCurrentTokens();
-
-            // Assert
             Assert.IsNotNull(tokens);
             Assert.AreEqual("test-token", tokens.AccessToken);
         }
@@ -117,17 +107,17 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_HasValidTokens_WithNoTokens_ShouldReturnFalse()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
 
-            // Act & Assert
+            
             Assert.IsFalse(handler.HasValidTokens());
         }
 
         [TestMethod]
         public void OAuthHandler_HasValidTokens_WithValidTokens_ShouldReturnTrue()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -137,14 +127,14 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
 
-            // Act & Assert
+            
             Assert.IsTrue(handler.HasValidTokens());
         }
 
         [TestMethod]
         public void OAuthHandler_HasValidTokens_WithExpiredTokens_ShouldReturnFalse()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -154,24 +144,24 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
 
-            // Act & Assert
+            
             Assert.IsFalse(handler.HasValidTokens());
         }
 
         [TestMethod]
         public void OAuthHandler_HasTokens_WithNoTokens_ShouldReturnFalse()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
 
-            // Act & Assert
+            
             Assert.IsFalse(handler.HasTokens());
         }
 
         [TestMethod]
         public void OAuthHandler_HasTokens_WithTokens_ShouldReturnTrue()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -180,14 +170,14 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
 
-            // Act & Assert
+            
             Assert.IsTrue(handler.HasTokens());
         }
 
         [TestMethod]
         public void OAuthHandler_ClearTokens_ShouldRemoveTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -196,11 +186,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
             Assert.IsTrue(handler.HasTokens());
-
-            // Act
             handler.ClearTokens();
-
-            // Assert
             Assert.IsFalse(handler.HasTokens());
             Assert.IsNull(handler.GetCurrentTokens());
         }
@@ -208,13 +194,9 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_AuthorizeAsync_WithPKCE_ShouldReturnValidUrl()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             var authUrl = handler.AuthorizeAsync().Result;
-
-            // Assert
             Assert.IsNotNull(authUrl);
             Assert.IsTrue(authUrl.Contains("response_type=code"));
             Assert.IsTrue(authUrl.Contains($"client_id={_options.ClientId}"));
@@ -226,7 +208,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_AuthorizeAsync_WithTraditionalOAuth_ShouldReturnValidUrl()
         {
-            // Arrange
+            
             var traditionalOptions = new OAuthOptions
             {
                 AppId = "test-app-id",
@@ -236,11 +218,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ClientSecret = "test-secret"
             };
             var handler = new OAuthHandler(_client, traditionalOptions);
-
-            // Act
             var authUrl = handler.AuthorizeAsync().Result;
-
-            // Assert
             Assert.IsNotNull(authUrl);
             Assert.IsTrue(authUrl.Contains("response_type=code"));
             Assert.IsTrue(authUrl.Contains($"client_id={traditionalOptions.ClientId}"));
@@ -251,27 +229,19 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_AuthorizeAsync_WithScopes_ShouldIncludeScopes()
         {
-            // Arrange
+            
             _options.Scope = new[] { "read", "write" };
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             var authUrl = handler.AuthorizeAsync().Result;
-
-            // Assert
             Assert.IsTrue(authUrl.Contains("scope=read%20write"));
         }
 
         [TestMethod]
         public void OAuthHandler_AuthorizeAsync_ShouldGenerateCodeVerifierForPKCE()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             var authUrl = handler.AuthorizeAsync().Result;
-
-            // Assert
             Assert.IsNotNull(authUrl);
             Assert.IsTrue(authUrl.Contains("code_challenge="));
             Assert.IsTrue(authUrl.Contains("code_challenge_method=S256"));
@@ -281,13 +251,9 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_ToString_ShouldReturnFormattedString()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             var result = handler.ToString();
-
-            // Assert
             Assert.IsTrue(result.Contains(_options.ClientId));
             Assert.IsTrue(result.Contains(_options.AppId));
             Assert.IsTrue(result.Contains("True")); // UsePkce
@@ -297,10 +263,9 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_ExchangeCodeForTokenAsync_WithEmptyCode_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
 
-            // Act & Assert
             try
             {
                 handler.ExchangeCodeForTokenAsync("").Wait();
@@ -308,17 +273,17 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             }
             catch (AggregateException ex) when (ex.InnerException is ArgumentException)
             {
-                // Expected
+
             }
         }
 
         [TestMethod]
         public void OAuthHandler_ExchangeCodeForTokenAsync_WithNullCode_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
 
-            // Act & Assert
+            
             try
             {
                 handler.ExchangeCodeForTokenAsync(null).Wait();
@@ -326,17 +291,17 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             }
             catch (AggregateException ex) when (ex.InnerException is ArgumentException)
             {
-                // Expected
+
             }
         }
 
         [TestMethod]
         public void OAuthHandler_ExchangeCodeForTokenAsync_WithoutCodeVerifier_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
 
-            // Act & Assert
+            
             try
             {
                 handler.ExchangeCodeForTokenAsync("test-code").Wait();
@@ -351,10 +316,10 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_RefreshTokenAsync_WithNoTokens_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
 
-            // Act & Assert
+            
             try
             {
                 handler.RefreshTokenAsync().Wait();
@@ -362,17 +327,17 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             }
             catch (AggregateException ex) when (ex.InnerException is OAuthTokenRefreshException)
             {
-                // Expected
+
             }
         }
 
         [TestMethod]
         public void OAuthHandler_RefreshTokenAsync_WithEmptyRefreshToken_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
 
-            // Act & Assert
+            
             try
             {
                 handler.RefreshTokenAsync("").Wait();
@@ -380,17 +345,17 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             }
             catch (AggregateException ex) when (ex.InnerException is OAuthTokenRefreshException)
             {
-                // Expected
+
             }
         }
 
         [TestMethod]
         public void OAuthHandler_LogoutAsync_WithNoTokens_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
 
-            // Act & Assert
+            
             try
             {
                 handler.LogoutAsync().Wait();
@@ -406,7 +371,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_LogoutAsync_WithTokens_ShouldReturnSuccessMessage()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -415,7 +380,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
 
-            // Act & Assert
+            
             try
             {
                 var result = handler.LogoutAsync().Result;
@@ -436,7 +401,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_GetAccessToken_WithValidTokens_ShouldReturnAccessToken()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -444,31 +409,23 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ClientId = _options.ClientId
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
-
-            // Act
             var result = handler.GetAccessToken();
-
-            // Assert
             Assert.AreEqual("test-access-token", result);
         }
 
         [TestMethod]
         public void OAuthHandler_GetAccessToken_WithNoTokens_ShouldReturnNull()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             var result = handler.GetAccessToken();
-
-            // Assert
             Assert.IsNull(result);
         }
 
         [TestMethod]
         public void OAuthHandler_GetRefreshToken_WithValidTokens_ShouldReturnRefreshToken()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -476,31 +433,23 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ClientId = _options.ClientId
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
-
-            // Act
             var result = handler.GetRefreshToken();
-
-            // Assert
             Assert.AreEqual("test-refresh-token", result);
         }
 
         [TestMethod]
         public void OAuthHandler_GetRefreshToken_WithNoTokens_ShouldReturnNull()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             var result = handler.GetRefreshToken();
-
-            // Assert
             Assert.IsNull(result);
         }
 
         [TestMethod]
         public void OAuthHandler_GetOrganizationUID_WithValidTokens_ShouldReturnOrganizationUID()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -508,31 +457,23 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ClientId = _options.ClientId
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
-
-            // Act
             var result = handler.GetOrganizationUID();
-
-            // Assert
             Assert.AreEqual("test-org-uid", result);
         }
 
         [TestMethod]
         public void OAuthHandler_GetOrganizationUID_WithNoTokens_ShouldReturnNull()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             var result = handler.GetOrganizationUID();
-
-            // Assert
             Assert.IsNull(result);
         }
 
         [TestMethod]
         public void OAuthHandler_GetUserUID_WithValidTokens_ShouldReturnUserUID()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -540,31 +481,23 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ClientId = _options.ClientId
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
-
-            // Act
             var result = handler.GetUserUID();
-
-            // Assert
             Assert.AreEqual("test-user-uid", result);
         }
 
         [TestMethod]
         public void OAuthHandler_GetUserUID_WithNoTokens_ShouldReturnNull()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             var result = handler.GetUserUID();
-
-            // Assert
             Assert.IsNull(result);
         }
 
         [TestMethod]
         public void OAuthHandler_GetTokenExpiryTime_WithValidTokens_ShouldReturnExpiryTime()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var expiryTime = DateTime.UtcNow.AddHours(1);
             var tokens = new OAuthTokens
@@ -573,24 +506,16 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ClientId = _options.ClientId
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
-
-            // Act
             var result = handler.GetTokenExpiryTime();
-
-            // Assert
             Assert.AreEqual(expiryTime, result);
         }
 
         [TestMethod]
         public void OAuthHandler_GetTokenExpiryTime_WithNoTokens_ShouldReturnNull()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             var result = handler.GetTokenExpiryTime();
-
-            // Assert
             Assert.IsNull(result);
         }
         #endregion
@@ -599,18 +524,14 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_SetAccessToken_WithValidToken_ShouldUpdateTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
                 ClientId = _options.ClientId
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
-
-            // Act
             handler.SetAccessToken("new-access-token");
-
-            // Assert
             var updatedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.AreEqual("new-access-token", updatedTokens.AccessToken);
         }
@@ -618,13 +539,9 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_SetAccessToken_WithNoExistingTokens_ShouldCreateNewTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetAccessToken("new-access-token");
-
-            // Assert
             var tokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(tokens);
             Assert.AreEqual("new-access-token", tokens.AccessToken);
@@ -635,10 +552,8 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentException))]
         public void OAuthHandler_SetAccessToken_WithNullToken_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetAccessToken(null);
         }
 
@@ -646,28 +561,22 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentException))]
         public void OAuthHandler_SetAccessToken_WithEmptyToken_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetAccessToken("");
         }
 
         [TestMethod]
         public void OAuthHandler_SetRefreshToken_WithValidToken_ShouldUpdateTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
                 ClientId = _options.ClientId
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
-
-            // Act
             handler.SetRefreshToken("new-refresh-token");
-
-            // Assert
             var updatedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.AreEqual("new-refresh-token", updatedTokens.RefreshToken);
         }
@@ -675,13 +584,9 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_SetRefreshToken_WithNoExistingTokens_ShouldCreateNewTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetRefreshToken("new-refresh-token");
-
-            // Assert
             var tokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(tokens);
             Assert.AreEqual("new-refresh-token", tokens.RefreshToken);
@@ -692,10 +597,8 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentException))]
         public void OAuthHandler_SetRefreshToken_WithNullToken_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetRefreshToken(null);
         }
 
@@ -703,28 +606,22 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentException))]
         public void OAuthHandler_SetRefreshToken_WithEmptyToken_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetRefreshToken("");
         }
 
         [TestMethod]
         public void OAuthHandler_SetOrganizationUID_WithValidUID_ShouldUpdateTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
                 ClientId = _options.ClientId
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
-
-            // Act
             handler.SetOrganizationUID("new-org-uid");
-
-            // Assert
             var updatedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.AreEqual("new-org-uid", updatedTokens.OrganizationUid);
         }
@@ -732,13 +629,9 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_SetOrganizationUID_WithNoExistingTokens_ShouldCreateNewTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetOrganizationUID("new-org-uid");
-
-            // Assert
             var tokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(tokens);
             Assert.AreEqual("new-org-uid", tokens.OrganizationUid);
@@ -749,10 +642,8 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentException))]
         public void OAuthHandler_SetOrganizationUID_WithNullUID_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetOrganizationUID(null);
         }
 
@@ -760,28 +651,22 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentException))]
         public void OAuthHandler_SetOrganizationUID_WithEmptyUID_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetOrganizationUID("");
         }
 
         [TestMethod]
         public void OAuthHandler_SetUserUID_WithValidUID_ShouldUpdateTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
                 ClientId = _options.ClientId
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
-
-            // Act
             handler.SetUserUID("new-user-uid");
-
-            // Assert
             var updatedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.AreEqual("new-user-uid", updatedTokens.UserUid);
         }
@@ -789,13 +674,9 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_SetUserUID_WithNoExistingTokens_ShouldCreateNewTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetUserUID("new-user-uid");
-
-            // Assert
             var tokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(tokens);
             Assert.AreEqual("new-user-uid", tokens.UserUid);
@@ -806,10 +687,8 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentException))]
         public void OAuthHandler_SetUserUID_WithNullUID_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetUserUID(null);
         }
 
@@ -817,17 +696,15 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentException))]
         public void OAuthHandler_SetUserUID_WithEmptyUID_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             handler.SetUserUID("");
         }
 
         [TestMethod]
         public void OAuthHandler_SetTokenExpiryTime_WithValidTime_ShouldUpdateTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -835,11 +712,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
             var newExpiryTime = DateTime.UtcNow.AddHours(2);
-
-            // Act
             handler.SetTokenExpiryTime(newExpiryTime);
-
-            // Assert
             var updatedTokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.AreEqual(newExpiryTime, updatedTokens.ExpiresAt);
         }
@@ -847,14 +720,10 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void OAuthHandler_SetTokenExpiryTime_WithNoExistingTokens_ShouldCreateNewTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var newExpiryTime = DateTime.UtcNow.AddHours(2);
-
-            // Act
             handler.SetTokenExpiryTime(newExpiryTime);
-
-            // Assert
             var tokens = _client.GetOAuthTokens(_options.ClientId);
             Assert.IsNotNull(tokens);
             Assert.AreEqual(newExpiryTime, tokens.ExpiresAt);
@@ -866,11 +735,11 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public async Task OAuthHandler_HandleRedirectAsync_WithValidUrl_ShouldExchangeCodeForTokens()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var redirectUrl = "https://example.com/callback?code=test-auth-code&state=test-state";
 
-            // Act & Assert
+            
             try
             {
                 await handler.HandleRedirectAsync(redirectUrl);
@@ -888,10 +757,8 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentException))]
         public async Task OAuthHandler_HandleRedirectAsync_WithNullUrl_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             await handler.HandleRedirectAsync(null);
         }
 
@@ -899,10 +766,8 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(ArgumentException))]
         public async Task OAuthHandler_HandleRedirectAsync_WithEmptyUrl_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             await handler.HandleRedirectAsync("");
         }
 
@@ -910,11 +775,9 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(Exceptions.OAuthException))]
         public async Task OAuthHandler_HandleRedirectAsync_WithUrlMissingCode_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var redirectUrl = "https://example.com/callback?state=test-state";
-
-            // Act
             await handler.HandleRedirectAsync(redirectUrl);
         }
 
@@ -922,22 +785,20 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(Exceptions.OAuthException))]
         public async Task OAuthHandler_HandleRedirectAsync_WithUrlContainingEmptyCode_ShouldThrowException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var redirectUrl = "https://example.com/callback?code=&state=test-state";
-
-            // Act
             await handler.HandleRedirectAsync(redirectUrl);
         }
 
         [TestMethod]
         public async Task OAuthHandler_HandleRedirectAsync_WithComplexUrl_ShouldParseCorrectly()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var redirectUrl = "https://example.com/callback?code=test-auth-code&state=test-state&other=value";
 
-            // Act & Assert
+            
             try
             {
                 await handler.HandleRedirectAsync(redirectUrl);
@@ -953,7 +814,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public async Task OAuthHandler_LogoutAsync_WithValidTokens_ShouldCallRevocationAPI()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -963,7 +824,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
 
-            // Act & Assert
+            
             try
             {
                 var result = await handler.LogoutAsync();
@@ -980,17 +841,15 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [ExpectedException(typeof(Exceptions.OAuthException))]
         public async Task OAuthHandler_LogoutAsync_WithNoTokens_ShouldThrowOAuthException()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
-
-            // Act
             await handler.LogoutAsync();
         }
 
         [TestMethod]
         public async Task OAuthHandler_LogoutAsync_ShouldClearTokensAfterSuccessfulRevocation()
         {
-            // Arrange
+            
             var handler = new OAuthHandler(_client, _options);
             var tokens = new OAuthTokens
             {
@@ -1000,7 +859,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             };
             _client.StoreOAuthTokens(_options.ClientId, tokens);
 
-            // Act & Assert
+            
             try
             {
                 await handler.LogoutAsync();

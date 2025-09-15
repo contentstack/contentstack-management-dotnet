@@ -29,14 +29,14 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestCleanup]
         public void Cleanup()
         {
-            // Clear any test tokens
+
             _client.ClearOAuthTokens(_options.ClientId);
         }
 
         [TestMethod]
         public void ContentstackClient_EnsureOAuthTokenIsValidAsync_WithExpiredToken_ShouldRefreshSuccessfully()
         {
-            // Arrange
+            
             var expiredTokens = new OAuthTokens
             {
                 AccessToken = "expired-token",
@@ -51,7 +51,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             _client.contentstackOptions.Authtoken = expiredTokens.AccessToken;
             _client.contentstackOptions.IsOAuthToken = true;
 
-            // Act & Assert
+            
             try
             {
                 var result = _client.GetUserAsync().Result;
@@ -66,7 +66,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void ContentstackClient_EnsureOAuthTokenIsValidAsync_WithInvalidRefreshToken_ShouldThrowOAuthTokenRefreshException()
         {
-            // Arrange
+            
             var tokensWithInvalidRefresh = new OAuthTokens
             {
                 AccessToken = "expired-token",
@@ -81,7 +81,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             _client.contentstackOptions.Authtoken = tokensWithInvalidRefresh.AccessToken;
             _client.contentstackOptions.IsOAuthToken = true;
 
-            // Act & Assert
+            
             try
             {
                 var result = _client.GetUserAsync().Result;
@@ -97,7 +97,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void ContentstackClient_EnsureOAuthTokenIsValidAsync_WithNullRefreshToken_ShouldThrowOAuthTokenRefreshException()
         {
-            // Arrange
+            
             var tokensWithNullRefresh = new OAuthTokens
             {
                 AccessToken = "expired-token",
@@ -111,7 +111,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             _client.contentstackOptions.Authtoken = tokensWithNullRefresh.AccessToken;
             _client.contentstackOptions.IsOAuthToken = true;
 
-            // Act & Assert
+            
             try
             {
                 var result = _client.GetUserAsync().Result;
@@ -128,7 +128,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void ContentstackClient_EnsureOAuthTokenIsValidAsync_WithValidToken_ShouldNotAttemptRefresh()
         {
-            // Arrange
+            
             var validTokens = new OAuthTokens
             {
                 AccessToken = "valid-token",
@@ -142,7 +142,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             _client.contentstackOptions.Authtoken = validTokens.AccessToken;
             _client.contentstackOptions.IsOAuthToken = true;
 
-            // Act & Assert
+            
             try
             {
                 var result = _client.GetUserAsync().Result;
@@ -162,7 +162,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void ContentstackClient_EnsureOAuthTokenIsValidAsync_WithTokenNeedingRefresh_ShouldAttemptRefresh()
         {
-            // Arrange
+            
             var tokensNeedingRefresh = new OAuthTokens
             {
                 AccessToken = "token-needing-refresh",
@@ -176,7 +176,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             _client.contentstackOptions.Authtoken = tokensNeedingRefresh.AccessToken;
             _client.contentstackOptions.IsOAuthToken = true;
 
-            // Act & Assert
+            
             try
             {
                 var result = _client.GetUserAsync().Result;
@@ -192,7 +192,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void ContentstackClient_EnsureOAuthTokenIsValidAsync_WithMultipleClients_ShouldHandleCorrectClient()
         {
-            // Arrange
+            
             var client1Tokens = new OAuthTokens
             {
                 AccessToken = "client1-token",
@@ -216,7 +216,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             _client.contentstackOptions.Authtoken = "client1-token"; // Use client1's expired token
             _client.contentstackOptions.IsOAuthToken = true;
 
-            // Act & Assert
+            
             try
             {
                 var result = _client.GetUserAsync().Result;
@@ -233,7 +233,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         [TestMethod]
         public void ContentstackClient_EnsureOAuthTokenIsValidAsync_WithNoMatchingTokens_ShouldNotThrow()
         {
-            // Arrange
+            
             var tokens = new OAuthTokens
             {
                 AccessToken = "some-other-token",
@@ -247,7 +247,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
             _client.contentstackOptions.Authtoken = "different-token"; // Different token
             _client.contentstackOptions.IsOAuthToken = true;
 
-            // Act & Assert
+            
             try
             {
                 var result = _client.GetUserAsync().Result;
