@@ -219,10 +219,7 @@ namespace Contentstack.Management.Core
         {
             ThrowIfDisposed();
 
-            if (contentstackOptions.IsOAuthToken && !string.IsNullOrEmpty(contentstackOptions.Authtoken))
-            {
-                EnsureOAuthTokenIsValid();
-            }
+            // OAuth token validation is handled in the async method
 
             ExecutionContext context = new ExecutionContext(
                 new RequestContext()
