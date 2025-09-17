@@ -35,8 +35,13 @@ namespace Contentstack.Management.Core
         private HttpClient _httpClient;
         private bool _disposed = false;
 
-        private string Version => "0.3.2";
+        private string Version => "0.4.0";
         private string xUserAgent => $"contentstack-management-dotnet/{Version}";
+        
+        // OAuth token storage
+        private readonly Dictionary<string, OAuthTokens> _oauthTokens = new Dictionary<string, OAuthTokens>();
+        
+        private bool _isRefreshingToken = false;
         #endregion
 
 
@@ -214,6 +219,8 @@ namespace Contentstack.Management.Core
         {
             ThrowIfDisposed();
 
+            // OAuth token validation is handled in the async method
+
             ExecutionContext context = new ExecutionContext(
                 new RequestContext()
                 {
@@ -225,11 +232,17 @@ namespace Contentstack.Management.Core
             return (ContentstackResponse)ContentstackPipeline.InvokeSync(context, addAcceptMediaHeader, apiVersion).httpResponse;
         }
 
-        internal Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null)
+        internal async Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null)
             where TRequest : IContentstackService
             where TResponse : ContentstackResponse
         {
             ThrowIfDisposed();
+
+            // Check and refresh OAuth tokens if needed before making API calls
+            if (contentstackOptions.IsOAuthToken && !string.IsNullOrEmpty(contentstackOptions.Authtoken))
+            {
+                await EnsureOAuthTokenIsValidAsync();
+            }
 
             ExecutionContext context = new ExecutionContext(
               new RequestContext()
@@ -238,7 +251,7 @@ namespace Contentstack.Management.Core
                   service = request
               },
               new ResponseContext());
-            return ContentstackPipeline.InvokeAsync<TResponse>(context, addAcceptMediaHeader, apiVersion);
+            return await ContentstackPipeline.InvokeAsync<TResponse>(context, addAcceptMediaHeader, apiVersion);
         }
 
         #region Dispose methods
@@ -430,6 +443,211 @@ namespace Contentstack.Management.Core
         }
         #endregion
 
+        #region OAuth Methods
+        /// <summary>
+        /// Creates an OAuth handler for OAuth 2.0 authentication flow.
+        /// This method allows you to use OAuth instead of traditional authtoken authentication.
+        /// </summary>
+        /// <param name="options">The OAuth configuration options.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient();
+        /// var oauthOptions = new OAuthOptions
+        /// {
+        ///     AppId = "your-app-id",
+        ///     ClientId = "your-client-id",
+        ///     RedirectUri = "http://localhost:8184"
+        /// };
+        /// OAuthHandler oauthHandler = client.OAuth(oauthOptions);
+        /// 
+        /// // Get authorization URL
+        /// string authUrl = oauthHandler.GetAuthorizationUrl();
+        /// 
+        /// // After user authorization, exchange code for tokens
+        /// var tokens = await oauthHandler.ExchangeCodeForTokenAsync("authorization_code");
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="OAuthHandler" /> for managing OAuth flow.</returns>
+        public OAuthHandler OAuth(OAuthOptions options)
+        {
+            if (options == null)
+                throw new ArgumentNullException(nameof(options), "OAuth options cannot be null.");
+
+            return new OAuthHandler(this, options);
+        }
+
+        /// <summary>
+        /// Creates an OAuth handler with default OAuth options.
+        /// Uses the default AppId, ClientId, and RedirectUri.
+        /// </summary>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient();
+        /// OAuthHandler oauthHandler = client.OAuth();
+        /// 
+        /// // Get authorization URL with default options
+        /// string authUrl = oauthHandler.GetAuthorizationUrl();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="OAuthHandler" /> with default OAuth options.</returns>
+        public OAuthHandler OAuth()
+        {
+            var defaultOptions = new OAuthOptions();
+            return new OAuthHandler(this, defaultOptions);
+        }
+
+        /// <summary>
+        /// Sets OAuth tokens for the client to use for authenticated requests.
+        /// This method is called internally by the OAuthHandler after successful token exchange or refresh.
+        /// </summary>
+        /// <param name="tokens">The OAuth tokens to use for authentication.</param>
+        /// <exception cref="ArgumentNullException">Thrown when tokens is null.</exception>
+        internal void SetOAuthTokens(OAuthTokens tokens)
+        {
+            if (tokens == null)
+                throw new ArgumentNullException(nameof(tokens), "OAuth tokens cannot be null.");
+
+            if (string.IsNullOrEmpty(tokens.AccessToken))
+                throw new ArgumentException("Access token cannot be null or empty.", nameof(tokens));
+
+            // Store the access token in the client options for use in HTTP requests
+            // This will be used by the HTTP pipeline to inject the Bearer token
+            // Note: We need both IsOAuthToken=true AND Authtoken=AccessToken because
+            // the HTTP pipeline only has access to ContentstackClientOptions, not the full client
+            contentstackOptions.Authtoken = tokens.AccessToken;
+            contentstackOptions.IsOAuthToken = true;
+        }
+
+        /// <summary>
+        /// Gets the current OAuth tokens for the specified client ID.
+        /// This method allows other SDKs (like contentstack-model-generator) to access OAuth tokens.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID to get tokens for.</param>
+        /// <returns>The OAuth tokens if available, null otherwise.</returns>
+        public OAuthTokens GetOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                throw new ArgumentException("Client ID cannot be null or empty.", nameof(clientId));
+
+            return GetStoredOAuthTokens(clientId);
+        }
+
+        /// <summary>
+        /// Checks if OAuth tokens are available for the specified client ID (regardless of validity).
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID to check tokens for.</param>
+        /// <returns>True if tokens are available, false otherwise.</returns>
+        public bool HasOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                return false;
+
+            return HasStoredOAuthTokens(clientId);
+        }
+
+        /// <summary>
+        /// Checks if valid OAuth tokens are available for the specified client ID.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID to check tokens for.</param>
+        /// <returns>True if valid tokens are available, false otherwise.</returns>
+        public bool HasValidOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                return false;
+
+            var tokens = GetStoredOAuthTokens(clientId);
+            return tokens?.IsValid == true;
+        }
+
+        /// <summary>
+        /// Clears OAuth tokens and resets the client to use traditional authentication.
+        /// This method should be called when logging out or switching authentication methods.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID to clear tokens for.</param>
+        public void ClearOAuthTokens(string clientId = null)
+        {
+            if (!string.IsNullOrEmpty(clientId))
+            {
+                ClearStoredOAuthTokens(clientId);
+            }
+            else
+            {
+                _oauthTokens.Clear();
+            }
+
+            // Reset OAuth flag and clear authtoken if it was an OAuth token
+            if (contentstackOptions.IsOAuthToken)
+            {
+                contentstackOptions.IsOAuthToken = false;
+                contentstackOptions.Authtoken = null;
+            }
+        }
+        #endregion
+
+        #region Internal OAuth Token Management
+        /// <summary>
+        /// Stores OAuth tokens for the specified client ID.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID.</param>
+        /// <param name="tokens">The OAuth tokens to store.</param>
+        internal void StoreOAuthTokens(string clientId, OAuthTokens tokens)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                throw new ArgumentException("Client ID cannot be null or empty.", nameof(clientId));
+
+            if (tokens == null)
+                throw new ArgumentNullException(nameof(tokens));
+
+            _oauthTokens[clientId] = tokens;
+        }
+
+        /// <summary>
+        /// Gets OAuth tokens for the specified client ID.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID.</param>
+        /// <returns>The OAuth tokens if found, null otherwise.</returns>
+        internal OAuthTokens GetStoredOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                return null;
+
+            return _oauthTokens.TryGetValue(clientId, out var tokens) ? tokens : null;
+        }
+
+        /// <summary>
+        /// Checks if OAuth tokens exist for the specified client ID.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID.</param>
+        /// <returns>True if tokens exist, false otherwise.</returns>
+        internal bool HasStoredOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                return false;
+
+            return _oauthTokens.ContainsKey(clientId);
+        }
+
+        /// <summary>
+        /// Removes OAuth tokens for the specified client ID.
+        /// </summary>
+        /// <param name="clientId">The OAuth client ID.</param>
+        internal void ClearStoredOAuthTokens(string clientId)
+        {
+            if (string.IsNullOrEmpty(clientId))
+                return;
+
+            _oauthTokens.Remove(clientId);
+        }
+
+        /// <summary>
+        /// Clears all OAuth tokens (useful for cleanup).
+        /// </summary>
+        internal void ClearAllOAuthTokens()
+        {
+            _oauthTokens.Clear();
+        }
+        #endregion
+
         /// <summary>
         /// The Get user call returns comprehensive information of an existing user account.
         /// </summary>
@@ -467,5 +685,74 @@ namespace Contentstack.Management.Core
 
             return InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
         }
+
+        /// <summary>
+        /// Ensures that the current OAuth token is valid and refreshes it if needed.
+        /// This method is called before each API request to automatically handle token refresh.
+        /// </summary>
+        private async Task EnsureOAuthTokenIsValidAsync()
+        {
+            // Prevent recursive calls
+            if (_isRefreshingToken)
+            {
+                return;
+            }
+
+            try
+            {
+                // Find the OAuth tokens that match the current access token
+                foreach (var kvp in _oauthTokens)
+                {
+                    var clientId = kvp.Key;
+                    var tokens = kvp.Value;
+
+                    if (tokens?.AccessToken == contentstackOptions.Authtoken && tokens.NeedsRefresh)
+                    {
+                        // Set flag to prevent recursive calls
+                        _isRefreshingToken = true;
+
+                        try
+                        {
+                            // Get the OAuth handler for this client
+                            var oauthHandler = OAuth(new Models.OAuthOptions
+                            {
+                                ClientId = clientId,
+                                AppId = tokens.AppId
+                            });
+
+                            // Refresh the tokens
+                            var refreshedTokens = await oauthHandler.RefreshTokenAsync(tokens.RefreshToken);
+                            
+                            if (refreshedTokens != null)
+                            {
+                                // Update the stored tokens
+                                StoreOAuthTokens(clientId, refreshedTokens);
+                                
+                                // Update the client's current authentication
+                                contentstackOptions.Authtoken = refreshedTokens.AccessToken;
+                                contentstackOptions.IsOAuthToken = true; // Ensure OAuth flag is maintained
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Wrap any exception in OAuth exception with context
+                            throw new Exceptions.OAuthException(
+                                $"OAuth token refresh failed for client '{clientId}': {ex.Message}", ex);
+                        }
+                        finally
+                        {
+                            _isRefreshingToken = false;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Wrap any exception in OAuth exception with context
+                throw new Exceptions.OAuthException(
+                    $"OAuth token validation failed: {ex.Message}", ex);
+            }
+        }
     }
 }
+

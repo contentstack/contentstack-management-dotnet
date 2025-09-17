@@ -1,4 +1,8 @@
 # Changelog
+## [v0.4.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.4.0)
+ - Feature
+   - Added Support for OAuth
+
 ## [v0.3.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.3.2)
  - Fix
    - Added Test cases for the Release

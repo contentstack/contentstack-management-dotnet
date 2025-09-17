@@ -18,6 +18,13 @@ namespace Contentstack.Management.Core
         public string Authtoken { get; set; }
 
         /// <summary>
+        /// Indicates whether the current authtoken is an OAuth Bearer token.
+        /// When true, the authtoken will be sent as "Authorization: Bearer {token}" header.
+        /// When false, the authtoken will be sent as "authtoken: {token}" header.
+        /// </summary>
+        public bool IsOAuthToken { get; set; } = false;
+
+        /// <summary>
         /// The Host used to set host url for the Contentstack Management API.
         /// </summary>
         public string Host { get; set; } = "api.contentstack.io";
