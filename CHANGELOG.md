@@ -1,4 +1,12 @@
 # Changelog
+## [v0.4.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.4.0)
+ - Feat
+   - **MFA Support**: Added Multi-Factor Authentication (MFA) support for login operations
+     - Added `mfaSecret` parameter to `Login` and `LoginAsync` methods for TOTP generation
+     - Automatic TOTP token generation from Base32-encoded MFA secrets using Otp.NET library
+     - Comprehensive test coverage for MFA functionality including unit and integration tests
+     - Supports both explicit token and MFA secret-based authentication flows
+
 ## [v0.3.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.3.2)
  - Fix
    - Added Test cases for the Release

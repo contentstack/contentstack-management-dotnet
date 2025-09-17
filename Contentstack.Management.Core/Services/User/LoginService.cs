@@ -4,6 +4,7 @@ using System.Net;
 using Newtonsoft.Json;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
+using OtpNet;
 using Contentstack.Management.Core.Http;
 
 namespace Contentstack.Management.Core.Services.User
@@ -16,7 +17,7 @@ namespace Contentstack.Management.Core.Services.User
         #endregion
 
         #region Constructor
-        internal LoginService(JsonSerializer serializer, ICredentials credentials, string token = null): base(serializer)
+        internal LoginService(JsonSerializer serializer, ICredentials credentials, string token = null, string mfaSecret = null): base(serializer)
         {
             this.HttpMethod = "POST";
             this.ResourcePath = "user-session";
@@ -27,7 +28,18 @@ namespace Contentstack.Management.Core.Services.User
             }
 
             _credentials = credentials;
-            _token = token;
+
+            if (string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(mfaSecret))
+            {
+                var secretBytes = Base32Encoding.ToBytes(mfaSecret);
+
+                var totp = new Totp(secretBytes);
+                _token = totp.ComputeTotp();
+            }
+            else
+            {
+                _token = token;
+            }
         }
         #endregion
 
