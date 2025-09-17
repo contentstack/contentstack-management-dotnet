@@ -33,7 +33,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/> containing the deletion result.</returns>
-        public virtual ContentstackResponse Delete()
+        public ContentstackResponse Delete()
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -52,7 +52,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task containing <see cref="ContentstackResponse"/> with the deletion result.</returns>
-        public virtual Task<ContentstackResponse> DeleteAsync()
+        public Task<ContentstackResponse> DeleteAsync()
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -72,7 +72,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/> containing the variant data.</returns>
-        public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
+        public ContentstackResponse Fetch(ParameterCollection collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -92,7 +92,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task containing <see cref="ContentstackResponse"/> with the variant data.</returns>
-        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -113,7 +113,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/> containing the created variant data.</returns>
-        public virtual ContentstackResponse Create(VariantsModel model)
+        public ContentstackResponse Create(VariantsModel model)
         {
             ThrowIfUidNotEmpty();
 
@@ -133,7 +133,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task containing <see cref="ContentstackResponse"/> with the created variant data.</returns>
-        public virtual Task<ContentstackResponse> CreateAsync(VariantsModel model)
+        public Task<ContentstackResponse> CreateAsync(VariantsModel model)
         {
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
@@ -155,7 +155,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/> containing the requested variants data.</returns>
-        public virtual ContentstackResponse FetchByUid(string[] uids)
+        public ContentstackResponse FetchByUid(string[] uids)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -185,7 +185,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task containing <see cref="ContentstackResponse"/> with the requested variants data.</returns>
-        public virtual Task<ContentstackResponse> FetchByUidAsync(string[] uids)
+        public Task<ContentstackResponse> FetchByUidAsync(string[] uids)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
