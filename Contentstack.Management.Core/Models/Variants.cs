@@ -24,16 +24,15 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// The Delete variants call is used to delete a specific variants.
+        /// The Delete call is used to delete a specific variant.
         /// </summary>
-        /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
-        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Variants("<Variants_UID>").Delete();
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Variants("<VARIANT_UID>").Delete();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        /// <returns>The <see cref="ContentstackResponse"/> containing the deletion result.</returns>
         public virtual ContentstackResponse Delete()
         {
             stack.ThrowIfNotLoggedIn();
@@ -44,16 +43,15 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// The Delete variants call is used to delete a specific variants.
+        /// The DeleteAsync call is used to asynchronously delete a specific variant.
         /// </summary>
-        /// <param name="collection">Query parameter</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
-        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Variants("<Variants_UID>").DeleteAsync();
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Variants("<VARIANT_UID>").DeleteAsync();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        /// <returns>The Task containing <see cref="ContentstackResponse"/> with the deletion result.</returns>
         public virtual Task<ContentstackResponse> DeleteAsync()
         {
             stack.ThrowIfNotLoggedIn();
@@ -64,16 +62,16 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// Retrieves a specific variant by UID.
+        /// The Fetch call retrieves a specific variant by UID.
         /// </summary>
         /// <param name="collection">Optional query parameters.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
-        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Variants("<Variants_UID>").Fetch();
+        /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Variants("<VARIANT_UID>").Fetch();
         /// </code></pre>
         /// </example>
-        /// <returns>Variant data in <see cref="ContentstackResponse"/>.</returns>
+        /// <returns>The <see cref="ContentstackResponse"/> containing the variant data.</returns>
         public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
         {
             stack.ThrowIfNotLoggedIn();
@@ -84,16 +82,16 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// Asynchronously retrieves a specific variant by UID.
+        /// The FetchAsync call asynchronously retrieves a specific variant by UID.
         /// </summary>
         /// <param name="collection">Optional query parameters.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
-        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Variants("<Variants_UID>").FetchAsync();
+        /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Variants("<VARIANT_UID>").FetchAsync();
         /// </code></pre>
         /// </example>
-        /// <returns>Task containing variant data in <see cref="ContentstackResponse"/>.</returns>
+        /// <returns>The Task containing <see cref="ContentstackResponse"/> with the variant data.</returns>
         public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
         {
             stack.ThrowIfNotLoggedIn();
@@ -104,9 +102,9 @@ namespace Contentstack.Management.Core.Models
         }
         
         /// <summary>
-        /// The Create is used to create an entry variant in the stack.
+        /// The Create call is used to create an entry variant in the stack.
         /// </summary>
-        /// <param name="model"><see cref="VariantsModel"/> with details.</param>
+        /// <param name="model">The <see cref="VariantsModel"/> containing variant details.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
@@ -114,7 +112,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Variants().Create(model);
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        /// <returns>The <see cref="ContentstackResponse"/> containing the created variant data.</returns>
         public virtual ContentstackResponse Create(VariantsModel model)
         {
             ThrowIfUidNotEmpty();
@@ -124,9 +122,9 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// The Create is used to create an entry variant in the stack.
+        /// The CreateAsync call is used to asynchronously create an entry variant in the stack.
         /// </summary>
-        /// <param name="model"><see cref="VariantsModel"/> with details.</param>
+        /// <param name="model">The <see cref="VariantsModel"/> containing variant details.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
@@ -134,7 +132,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Variants().CreateAsync(model);
         /// </code></pre>
         /// </example>
-        /// <returns>The Task.</returns>
+        /// <returns>The Task containing <see cref="ContentstackResponse"/> with the created variant data.</returns>
         public virtual Task<ContentstackResponse> CreateAsync(VariantsModel model)
         {
             ThrowIfUidNotEmpty();
@@ -145,17 +143,18 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// Retrieves multiple variants by their UIDs.
+        /// The FetchByUid call retrieves multiple variants by passing an array of their UIDs.
+        /// This method allows you to fetch multiple variants in a single API call.
         /// </summary>
-        /// <param name="uids">Array of variant UIDs to fetch.</param>
+        /// <param name="uids">Array of variant UIDs to fetch. Cannot be null or empty.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
-        /// string[] variantUids = {"uid1", "uid2", "uid3"};
+        /// string[] variantUids = {"bltvariant123", "bltvariant456", "bltvariant789"};
         /// ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Variants().FetchByUid(variantUids);
         /// </code></pre>
         /// </example>
-        /// <returns>Variants data in <see cref="ContentstackResponse"/>.</returns>
+        /// <returns>The <see cref="ContentstackResponse"/> containing the requested variants data.</returns>
         public virtual ContentstackResponse FetchByUid(string[] uids)
         {
             stack.ThrowIfNotLoggedIn();
@@ -174,17 +173,18 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// Asynchronously retrieves multiple variants by their UIDs.
+        /// The FetchByUidAsync call asynchronously retrieves multiple variants by passing an array of their UIDs.
+        /// This method allows you to fetch multiple variants in a single API call asynchronously.
         /// </summary>
-        /// <param name="uids">Array of variant UIDs to fetch.</param>
+        /// <param name="uids">Array of variant UIDs to fetch. Cannot be null or empty.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
-        /// string[] variantUids = {"uid1", "uid2", "uid3"};
+        /// string[] variantUids = {"bltvariant123", "bltvariant456", "bltvariant789"};
         /// ContentstackResponse contentstackResponse = await client.Stack("<API_KEY>").Variants().FetchByUidAsync(variantUids);
         /// </code></pre>
         /// </example>
-        /// <returns>Task containing variants data in <see cref="ContentstackResponse"/>.</returns>
+        /// <returns>The Task containing <see cref="ContentstackResponse"/> with the requested variants data.</returns>
         public virtual Task<ContentstackResponse> FetchByUidAsync(string[] uids)
         {
             stack.ThrowIfNotLoggedIn();
