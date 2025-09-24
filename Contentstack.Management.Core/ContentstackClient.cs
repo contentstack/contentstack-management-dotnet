@@ -334,6 +334,7 @@ namespace Contentstack.Management.Core
         /// </summary>
         /// <param name="credentials">User credentials for login.</param>
         /// <param name="token">The optional 2FA token.</param>
+        /// <param name="mfaSecret">The optional MFA Secret for 2FA token.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
@@ -342,10 +343,10 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse" /></returns>
-        public ContentstackResponse Login(ICredentials credentials, string token = null)
+        public ContentstackResponse Login(ICredentials credentials, string token = null, string mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
-            LoginService Login = new LoginService(serializer, credentials, token);
+            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret);
 
             return InvokeSync(Login);
         }
@@ -355,6 +356,7 @@ namespace Contentstack.Management.Core
         /// </summary>
         /// <param name="credentials">User credentials for login.</param>
         /// <param name="token">The optional 2FA token.</param>
+        /// <param name="mfaSecret">The optional MFA Secret for 2FA token.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
@@ -363,10 +365,10 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string token = null)
+        public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string token = null, string mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
-            LoginService Login = new LoginService(serializer, credentials, token);
+            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret);
 
             return InvokeAsync<LoginService, ContentstackResponse>(Login);
         }
