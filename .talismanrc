@@ -7,4 +7,8 @@ fileignoreconfig:
   checksum: 854eb83dcacd62d3bf233c82e5cfd0c69dd20478fa0e7c6af9028f6c6386749d
 - filename: Contentstack.Management.Core/Attributes/CSMJsonConverterAttribute.cs
   checksum: 774bc2a4cf7f62fb890ba39ba1319769f0ff4e13d94781d394fcac2adf14381e
+- filename: Contentstack.Management.Core.Unit.Tests/OAuth/OAuthOptionsTest.cs
+  checksum: 3d1ed19a9c7d311d9662632f48169d3a9013f605674cbd18b9f45039b0f83ff6
+- filename: Contentstack.Management.Core/Models/OAuthOptions.cs
+  checksum: c328bfd5241e11e6e9d630527ba9084fb5b361abac48e8af2f96379dd6357c6c
 version: ""

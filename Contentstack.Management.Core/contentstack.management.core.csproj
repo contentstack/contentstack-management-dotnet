@@ -11,7 +11,6 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/contentstack/contentstack-management-dotnet</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>ContentType query issue resolved</PackageReleaseNotes>
     <PackageTags>Contentstack management API </PackageTags>
     <PackageVersion>$(Version)</PackageVersion>
     <ReleaseVersion>$(Version)</ReleaseVersion>
@@ -63,6 +62,7 @@
     <Folder Include="Runtime\Pipeline\RertyHandler\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Otp.NET" Version="1.4.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
