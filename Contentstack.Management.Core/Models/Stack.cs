@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Stack;
 using Contentstack.Management.Core.Utils;
+using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Models.Token;
 
 namespace Contentstack.Management.Core.Models
@@ -622,7 +623,7 @@ namespace Contentstack.Management.Core.Models
             return new ContentType(this, uid);
         }
         /// <summary>
-        /// <see cref="Models.Asset"/> refer to all the media files (images, videos, PDFs, audio files, and so on) uploaded in your Contentstack repository for future use. 
+        /// <see cref="Models.Asset"/> efer to all the media files (images, videos, PDFs, audio files, and so on) uploaded in your Contentstack repository for future use. 
         /// </summary>
         /// <param name="uid">Optional asset uid.</param>
         /// <example>
@@ -762,7 +763,7 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// A <see cref="Models.Role" /> is a collection of permissions that will be applicable to all the users who are assigned this role.
+        /// A <see cref="Models.Role" /> collection of permissions that will be applicable to all the users who are assigned this role.
         /// </summary>
         /// <param name="uid">Optional, role uid.</param>
         /// <example>
@@ -772,7 +773,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = stack.Role("<ROLE_UID>").Fetch();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Models.Role" /></returns>
+        /// <returns>The <see cref="Models.Release" /></returns>
         public Role Role(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -843,9 +844,9 @@ namespace Contentstack.Management.Core.Models
             return new PublishQueue(this, uid);
         }
         /// <summary>
-        /// A <see cref="Models.Webhook" /> is a mechanism that sends real-time information to any third-party app or service to keep your application in sync with your Contentstack account. 
+        /// A <see cref="Models.Webhook" /> a mechanism that sends real-time information to any third-party app or service to keep your application in sync with your Contentstack account. 
         /// </summary>
-        /// <param name="uid">Optional, webhook uid.</param>
+        /// <param name="uid">Optional, webhook uid uid.</param>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
@@ -853,7 +854,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = stack.Webhook("<WEBHOOK_UID>").Fetch();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Models.Webhook" /></returns>
+        /// <returns>The <see cref="Models.AuditLog" /></returns>
         public Webhook Webhook(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -910,26 +911,6 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
 
             return new BulkOperation(this);
-        }
-
-        /// <summary>
-        /// A <see cref="Models.Variants" /> represents different versions or variations of content entries that allow you to create and manage multiple variants of the same content.
-        /// </summary>
-        /// <param name="uid">Optional, variant uid.</param>
-        /// <example>
-        /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
-        /// Stack stack = client.Stack("<API_KEY>");
-        /// ContentstackResponse contentstackResponse = stack.Variants("<VARIANT_UID>").Fetch();
-        /// </code></pre>
-        /// </example>
-        /// <returns>The <see cref="Models.Variants"/></returns>
-        public Variants Variants(string uid = null)
-        {
-            ThrowIfNotLoggedIn();
-            ThrowIfAPIKeyEmpty();
-
-            return new Variants(this, uid);
         }
         #endregion
 
