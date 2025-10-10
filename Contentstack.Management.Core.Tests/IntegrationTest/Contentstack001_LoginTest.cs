@@ -15,7 +15,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     public class Contentstack001_LoginTest
     {
         private readonly IConfigurationRoot _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
         [TestMethod]
         [DoNotParallelize]
         public void Test001_Should_Return_Failuer_On_Wrong_Login_Credentials()
@@ -63,39 +62,31 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test003_Should_Return_Success_On_Async_Login()
         {
             ContentstackClient client = new ContentstackClient();
-            var response = client.LoginAsync(Contentstack.Credential);
-
-            response.ContinueWith((t) =>
+            
+            try
             {
-                if (t.IsCompleted)
-                {
-                    try
-                    {
-                        ContentstackResponse contentstackResponse = t.Result;
-                        string loginResponse = contentstackResponse.OpenResponse();
+                ContentstackResponse contentstackResponse =  client.Login(Contentstack.Credential);
+                string loginResponse = contentstackResponse.OpenResponse();
 
-                        Assert.IsNotNull(client.contentstackOptions.Authtoken);
-                        Assert.IsNotNull(loginResponse);
-                    }catch (Exception e)
-                    {
-                        Assert.Fail(e.Message);
-                    }
-
-                }
-            });
-            Thread.Sleep(3000);
+                Assert.IsNotNull(client.contentstackOptions.Authtoken);
+                Assert.IsNotNull(loginResponse);
+                
+                client.Logout();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test004_Should_Return_Success_On_Login()
         {
-            string email = _configuration.GetSection("Contentstack:Credentials:Email").Value;
-            string password = _configuration.GetSection("Contentstack:Credentials:Password").Value;
-
             try
             {
-                ContentstackClient client = Contentstack.Client;
+                ContentstackClient client = new ContentstackClient();
+                
                 ContentstackResponse contentstackResponse = client.Login(Contentstack.Credential);
                 string loginResponse = contentstackResponse.OpenResponse();
 
@@ -114,7 +105,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             try
             {
-                ContentstackClient client = Contentstack.Client;
+                ContentstackClient client = new ContentstackClient();
+                
+                client.Login(Contentstack.Credential);
+                
                 ContentstackResponse response = client.GetUser();
 
                 var user = response.OpenJObjectResponse();
@@ -134,7 +128,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             try
             {
-                ContentstackClient client = Contentstack.Client;
+                ContentstackClient client = new ContentstackClient();
+                
+                await client.LoginAsync(Contentstack.Credential);
+                
                 ContentstackResponse response = await client.GetUserAsync();
 
                 var user = response.OpenJObjectResponse();
@@ -160,7 +157,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ParameterCollection collection = new ParameterCollection();
                 collection.Add("include_orgs_roles", true);
             
-                ContentstackClient client = Contentstack.Client;
+                ContentstackClient client = new ContentstackClient();
+                
+                client.Login(Contentstack.Credential);
+                
                 ContentstackResponse response = client.GetUser(collection);
 
                 var user = response.OpenJObjectResponse();

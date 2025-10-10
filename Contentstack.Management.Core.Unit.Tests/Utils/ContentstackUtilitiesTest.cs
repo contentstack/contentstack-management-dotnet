@@ -105,5 +105,160 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
 
             Assert.AreEqual("", result);
         }
+
+        [TestMethod]
+        public void Return_Uri_On_Service_With_ResourcePath_And_Query_And_PathResources()
+        {
+            var service = new MockService();
+            service.ResourcePath = "content_type/{content_type_uid}/entries/{entry_uid}";
+            service.AddPathResource("{content_type_uid}", "ContentTypeUid");
+            service.AddPathResource("{entry_uid}", "EntryUid");
+            service.AddQueryResource("limit", "10");
+            service.AddQueryResource("count", "true");
+
+            var uri = ContentstackUtilities.ComposeUrI(baseUri, service);
+
+            Assert.AreEqual(string.Format("{0}content_type/ContentTypeUid/entries/EntryUid?limit=10&count=true", baseUri.AbsoluteUri), uri.AbsoluteUri);
+        }
+
+        [TestMethod]
+        public void Return_Uri_On_Service_With_ResourcePath_And_Query_And_PathResources_And_Parameters()
+        {
+            var service = new MockService(new ParameterCollection());
+            service.ResourcePath = "content_type/{content_type_uid}/entries/{entry_uid}";
+            service.AddPathResource("{content_type_uid}", "ContentTypeUid");
+            service.AddPathResource("{entry_uid}", "EntryUid");
+            service.AddQueryResource("limit", "10");
+            service.AddQueryResource("count", "true");
+            service.UseQueryString = true;
+            service.Parameters.Add("include", "type");
+
+            var uri = ContentstackUtilities.ComposeUrI(baseUri, service);
+
+            Assert.IsTrue(uri.AbsoluteUri.Contains("content_type/ContentTypeUid/entries/EntryUid"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("limit=10"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("count=true"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("include=type"));
+        }
+
+        [TestMethod]
+        public void Return_Uri_On_Service_With_ResourcePath_And_Query_And_PathResources_And_Parameters_And_QueryResources()
+        {
+            var service = new MockService(new ParameterCollection());
+            service.ResourcePath = "content_type/{content_type_uid}/entries/{entry_uid}";
+            service.AddPathResource("{content_type_uid}", "ContentTypeUid");
+            service.AddPathResource("{entry_uid}", "EntryUid");
+            service.AddQueryResource("limit", "10");
+            service.AddQueryResource("count", "true");
+            service.UseQueryString = true;
+            service.Parameters.Add("include", "type");
+
+            var uri = ContentstackUtilities.ComposeUrI(baseUri, service);
+
+            Assert.IsTrue(uri.AbsoluteUri.Contains("content_type/ContentTypeUid/entries/EntryUid"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("limit=10"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("count=true"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("include=type"));
+        }
+
+        [TestMethod]
+        public void Return_Uri_On_Service_With_ResourcePath_And_Query_And_PathResources_And_Parameters_And_QueryResources_And_Empty_QueryResources()
+        {
+            var service = new MockService(new ParameterCollection());
+            service.ResourcePath = "content_type/{content_type_uid}/entries/{entry_uid}";
+            service.AddPathResource("{content_type_uid}", "ContentTypeUid");
+            service.AddPathResource("{entry_uid}", "EntryUid");
+            service.AddQueryResource("limit", "10");
+            service.AddQueryResource("count", "true");
+            service.UseQueryString = true;
+            service.Parameters.Add("include", "type");
+
+            var uri = ContentstackUtilities.ComposeUrI(baseUri, service);
+
+            Assert.IsTrue(uri.AbsoluteUri.Contains("content_type/ContentTypeUid/entries/EntryUid"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("limit=10"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("count=true"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("include=type"));
+        }
+
+        [TestMethod]
+        public void Return_Uri_On_Service_With_ResourcePath_And_Query_And_PathResources_And_Parameters_And_QueryResources_And_Empty_QueryResources_And_Empty_Parameters()
+        {
+            var service = new MockService(new ParameterCollection());
+            service.ResourcePath = "content_type/{content_type_uid}/entries/{entry_uid}";
+            service.AddPathResource("{content_type_uid}", "ContentTypeUid");
+            service.AddPathResource("{entry_uid}", "EntryUid");
+            service.AddQueryResource("limit", "10");
+            service.AddQueryResource("count", "true");
+            service.UseQueryString = true;
+            service.Parameters.Add("include", "type");
+
+            var uri = ContentstackUtilities.ComposeUrI(baseUri, service);
+
+            Assert.IsTrue(uri.AbsoluteUri.Contains("content_type/ContentTypeUid/entries/EntryUid"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("limit=10"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("count=true"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("include=type"));
+        }
+
+        [TestMethod]
+        public void Return_Uri_On_Service_With_ResourcePath_And_Query_And_PathResources_And_Parameters_And_QueryResources_And_Empty_QueryResources_And_Empty_Parameters_And_Empty_ResourcePath()
+        {
+            var service = new MockService(new ParameterCollection());
+            service.ResourcePath = "";
+            service.AddPathResource("{content_type_uid}", "ContentTypeUid");
+            service.AddPathResource("{entry_uid}", "EntryUid");
+            service.AddQueryResource("limit", "10");
+            service.AddQueryResource("count", "true");
+            service.UseQueryString = true;
+            service.Parameters.Add("include", "type");
+
+            var uri = ContentstackUtilities.ComposeUrI(baseUri, service);
+
+            Assert.IsTrue(uri.AbsoluteUri.Contains("limit=10"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("count=true"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("include=type"));
+        }
+
+        [TestMethod]
+        public void Return_Uri_On_Service_With_ResourcePath_And_Query_And_PathResources_And_Parameters_And_QueryResources_And_Empty_QueryResources_And_Empty_Parameters_And_Empty_ResourcePath_And_Empty_PathResources()
+        {
+            var service = new MockService(new ParameterCollection());
+            service.ResourcePath = "";
+            service.AddQueryResource("limit", "10");
+            service.AddQueryResource("count", "true");
+            service.UseQueryString = true;
+            service.Parameters.Add("include", "type");
+
+            var uri = ContentstackUtilities.ComposeUrI(baseUri, service);
+
+            Assert.IsTrue(uri.AbsoluteUri.Contains("limit=10"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("count=true"));
+            Assert.IsTrue(uri.AbsoluteUri.Contains("include=type"));
+        }
+
+        [TestMethod]
+        public void Return_Uri_On_Service_With_ResourcePath_And_Query_And_PathResources_And_Parameters_And_QueryResources_And_Empty_QueryResources_And_Empty_Parameters_And_Empty_ResourcePath_And_Empty_PathResources_And_Empty_QueryResources()
+        {
+            var service = new MockService(new ParameterCollection());
+            service.ResourcePath = "";
+            service.UseQueryString = true;
+            service.Parameters.Add("include", "type");
+
+            var uri = ContentstackUtilities.ComposeUrI(baseUri, service);
+
+            Assert.IsTrue(uri.AbsoluteUri.Contains("include=type"));
+        }
+
+        [TestMethod]
+        public void Return_Uri_On_Service_With_ResourcePath_And_Query_And_PathResources_And_Parameters_And_QueryResources_And_Empty_QueryResources_And_Empty_Parameters_And_Empty_ResourcePath_And_Empty_PathResources_And_Empty_QueryResources_And_Empty_Parameters()
+        {
+            var service = new MockService();
+            service.ResourcePath = "";
+
+            var uri = ContentstackUtilities.ComposeUrI(baseUri, service);
+
+            Assert.AreEqual(baseUri, uri);
+        }
     }
 }

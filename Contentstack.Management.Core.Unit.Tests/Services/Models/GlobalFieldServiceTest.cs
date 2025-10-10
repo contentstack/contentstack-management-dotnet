@@ -36,10 +36,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var model = new ContentModelling { Title = "Test" };
             var uid = _fixture.Create<string>();
 
-            // Act
             var service = new GlobalFieldService(JsonSerializer.CreateDefault(), _stack, "/global_fields", model, uid, null);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual("/global_fields", service.ResourcePath);
         }
@@ -52,10 +50,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var uid = _fixture.Create<string>();
             var apiVersion = "3.2";
 
-            // Act
             var service = new GlobalFieldService(JsonSerializer.CreateDefault(), _stack, "/global_fields", model, uid, apiVersion);
 
-            // Assert
             Assert.IsNotNull(service);
             Assert.AreEqual("/global_fields", service.ResourcePath);
         }
@@ -68,10 +64,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var uid = _fixture.Create<string>();
             var apiVersion = "3.2";
 
-            // Act
             var service = new GlobalFieldService(JsonSerializer.CreateDefault(), _stack, "/global_fields", model, uid, apiVersion);
 
-            // Assert
             Assert.IsTrue(service.Headers.ContainsKey("api_version"));
             Assert.AreEqual(apiVersion, service.Headers["api_version"]);
         }
@@ -83,10 +77,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var model = new ContentModelling { Title = "Test" };
             var uid = _fixture.Create<string>();
 
-            // Act
             var service = new GlobalFieldService(JsonSerializer.CreateDefault(), _stack, "/global_fields", model, uid, null);
 
-            // Assert
             Assert.IsFalse(service.Headers.ContainsKey("api_version"));
         }
 
@@ -106,7 +98,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var mockResponse = new MockHttpResponse(200, "Success");
             service.OnResponse(mockResponse, _stack.client.contentstackOptions);
 
-            // Assert
             Assert.IsFalse(service.Headers.ContainsKey("api_version"));
         }
 
@@ -173,10 +164,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var uid = _fixture.Create<string>();
             var service = new GlobalFieldService(JsonSerializer.CreateDefault(), _stack, "/global_fields", model, uid, null);
 
-            // Act
             service.ContentBody();
 
-            // Assert
             Assert.IsNotNull(service.ByteContent);
             var content = System.Text.Encoding.UTF8.GetString(service.ByteContent);
             Assert.IsTrue(content.Contains("Test Global Field"));
@@ -187,13 +176,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         {
             // Arrange
             var uid = _fixture.Create<string>();
-            var service = new GlobalFieldService(JsonSerializer.CreateDefault(), _stack, "/global_fields", null, uid, null);
-
-            // Act
-            service.ContentBody();
-
-            // Assert
-            Assert.IsNull(service.ByteContent);
+            
+            Assert.ThrowsException<ArgumentNullException>(() => 
+                new GlobalFieldService(JsonSerializer.CreateDefault(), _stack, "/global_fields", null, uid, null));
         }
     }
 } 
