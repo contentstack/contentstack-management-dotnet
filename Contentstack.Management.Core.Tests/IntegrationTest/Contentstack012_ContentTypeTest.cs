@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -96,15 +97,46 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test006_Should_Update_Async_Content_Type()
         {
-            _multiPage.Title = "First Async";
-            ContentstackResponse response = await _stack.ContentType(_multiPage.Uid).UpdateAsync(_multiPage);
-            ContentTypeModel ContentType = response.OpenTResponse<ContentTypeModel>();
-            Assert.IsNotNull(response);
-            Assert.IsNotNull(ContentType);
-            Assert.IsNotNull(ContentType.Modelling);
-            Assert.AreEqual(_multiPage.Title, ContentType.Modelling.Title);
-            Assert.AreEqual(_multiPage.Uid, ContentType.Modelling.Uid);
-            Assert.AreEqual(_multiPage.Schema.Count, ContentType.Modelling.Schema.Count);
+            try
+            {
+                // Load the existing schema
+                _multiPage.Schema = Contentstack.serializeArray<List<Models.Fields.Field>>(Contentstack.Client.serializer, "contentTypeSchema.json");
+                
+                // Add a new text field to the schema
+                var newTextField = new Models.Fields.TextboxField
+                {
+                    Uid = "new_text_field",
+                    DataType = "text",
+                    DisplayName = "New Text Field",
+                    FieldMetadata = new Models.Fields.FieldMetadata
+                    {
+                        Description = "A new text field added during async update test"
+                    }
+                };
+                _multiPage.Schema.Add(newTextField);
+                
+                // Update the content type with the modified schema
+                ContentstackResponse response = await _stack.ContentType(_multiPage.Uid).UpdateAsync(_multiPage);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    ContentTypeModel ContentType = response.OpenTResponse<ContentTypeModel>();
+                    Assert.IsNotNull(response);
+                    Assert.IsNotNull(ContentType);
+                    Assert.IsNotNull(ContentType.Modelling);
+                    Assert.AreEqual(_multiPage.Uid, ContentType.Modelling.Uid);
+                    Assert.AreEqual(_multiPage.Schema.Count, ContentType.Modelling.Schema.Count);
+                    Console.WriteLine($"Successfully updated content type with {ContentType.Modelling.Schema.Count} fields");
+                }
+                else
+                {
+                    Assert.Fail($"Update failed with status {response.StatusCode}: {response.OpenResponse()}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail($"Exception during async update: {ex.Message}");
+            }
         }
 
         [TestMethod]
@@ -121,7 +153,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         [TestMethod]
         [DoNotParallelize]
-        public async System.Threading.Tasks.Task Test008_Should_Update_Async_Content_Type()
+        public async System.Threading.Tasks.Task Test008_Should_Query_Async_Content_Type()
         {
             ContentstackResponse response = await _stack.ContentType().Query().FindAsync();
             ContentTypesModel ContentType = response.OpenTResponse<ContentTypesModel>();

@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Services.Models
             this._apiVersion = apiVersion;
 
             // Set api_version header if provided
-            if (!string.IsNullOrEmpty(apiVersion))
+            if (!string.IsNullOrWhiteSpace(apiVersion))
             {
                 this.Headers["api_version"] = apiVersion;
             }
