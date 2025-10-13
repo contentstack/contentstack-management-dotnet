@@ -59,19 +59,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         [TestMethod]
         [DoNotParallelize]
-        public void Test003_Should_Return_Success_On_Async_Login()
+        public async System.Threading.Tasks.Task Test003_Should_Return_Success_On_Async_Login()
         {
             ContentstackClient client = new ContentstackClient();
             
             try
             {
-                ContentstackResponse contentstackResponse =  client.Login(Contentstack.Credential);
+                ContentstackResponse contentstackResponse =  await client.LoginAsync(Contentstack.Credential);
                 string loginResponse = contentstackResponse.OpenResponse();
 
                 Assert.IsNotNull(client.contentstackOptions.Authtoken);
                 Assert.IsNotNull(loginResponse);
                 
-                client.Logout();
+                await client.LogoutAsync();
             }
             catch (Exception e)
             {
