@@ -1,4 +1,10 @@
 # Changelog
+## [v0.5.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.5.0)
+ - Feat
+   - **Variant Group Management**: Added comprehensive support for variant group operations
+     - Added `VariantGroup` model class with Find, LinkContentTypes and UnlinkContentTypes methods
+     - Comprehensive unit test coverage with 33+ tests covering all functionality and edge cases
+
 ## [v0.4.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.4.0)
  - Feat
    - **MFA Support**: Added Multi-Factor Authentication (MFA) support for login operations
