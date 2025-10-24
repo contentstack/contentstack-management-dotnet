@@ -884,6 +884,27 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
+        /// A <see cref="Models.VariantGroup" /> allows you to manage variant groups and their associated content types.
+        /// Variant groups help you organize related variants for better management.
+        /// </summary>
+        /// <param name="uid">Optional, variant group uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse contentstackResponse = stack.VariantGroup().Find();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.VariantGroup" /></returns>
+        public VariantGroup VariantGroup(string uid = null)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new VariantGroup(this, uid);
+        }
+
+        /// <summary>
         /// Gets the bulk operation instance for performing bulk operations on entries and assets.
         /// </summary>
         /// <example>

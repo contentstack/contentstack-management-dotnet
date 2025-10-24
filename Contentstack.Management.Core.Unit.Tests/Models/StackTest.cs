@@ -62,6 +62,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsException<InvalidOperationException>(() => stack.Webhook());
             Assert.ThrowsException<InvalidOperationException>(() => stack.PublishQueue());
             Assert.ThrowsException<InvalidOperationException>(() => stack.AuditLog());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.VariantGroup());
         }
 
         [TestMethod]
@@ -107,6 +108,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsException<InvalidOperationException>(() => stack.Webhook());
             Assert.ThrowsException<InvalidOperationException>(() => stack.PublishQueue());
             Assert.ThrowsException<InvalidOperationException>(() => stack.AuditLog());
+            Assert.ThrowsException<InvalidOperationException>(() => stack.VariantGroup());
         }
 
         [TestMethod]
@@ -1744,6 +1746,63 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.IsNotNull(release);
             Assert.AreEqual(string.Empty, release.Uid);
             Assert.AreEqual("/releases/", release.resourcePath);
+        }
+
+        [TestMethod]
+        public void Should_Return_VariantGroup_Instance_Without_Uid()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            VariantGroup variantGroup = stack.VariantGroup();
+
+            Assert.IsNotNull(variantGroup);
+            Assert.IsNull(variantGroup.Uid);
+            Assert.AreEqual("/variant_groups", variantGroup.resourcePath);
+        }
+
+        [TestMethod]
+        public void Should_Return_VariantGroup_Instance_With_Uid()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+            string variantGroupUid = _fixture.Create<string>();
+
+            VariantGroup variantGroup = stack.VariantGroup(variantGroupUid);
+
+            Assert.IsNotNull(variantGroup);
+            Assert.AreEqual(variantGroupUid, variantGroup.Uid);
+            Assert.AreEqual($"/variant_groups/{variantGroupUid}", variantGroup.resourcePath);
+        }
+
+        [TestMethod]
+        public void Should_Handle_Null_Uid_In_VariantGroup()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            VariantGroup variantGroup1 = stack.VariantGroup(null);
+            VariantGroup variantGroup2 = stack.VariantGroup();
+
+            Assert.IsNotNull(variantGroup1);
+            Assert.IsNotNull(variantGroup2);
+            Assert.IsNull(variantGroup1.Uid);
+            Assert.IsNull(variantGroup2.Uid);
+            Assert.AreEqual("/variant_groups", variantGroup1.resourcePath);
+            Assert.AreEqual("/variant_groups", variantGroup2.resourcePath);
+        }
+
+        [TestMethod]
+        public void Should_Handle_Empty_String_Uid_In_VariantGroup()
+        {
+            client.contentstackOptions.Authtoken = _fixture.Create<string>();
+            Stack stack = new Stack(client, _fixture.Create<string>());
+
+            VariantGroup variantGroup = stack.VariantGroup(string.Empty);
+
+            Assert.IsNotNull(variantGroup);
+            Assert.AreEqual(string.Empty, variantGroup.Uid);
+            Assert.AreEqual("/variant_groups/", variantGroup.resourcePath);
         }
 
         #endregion
