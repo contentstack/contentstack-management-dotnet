@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Runtime.Contexts;
@@ -133,14 +134,15 @@ namespace Contentstack.Management.Core.Unit.Tests.Core
         }
 
         [TestMethod]
-        public void Should_Dispose_ContentstackClientAsync()
+        public async Task Should_Dispose_ContentstackClientAsync()
         {
             var contentstackClient = new ContentstackClient();
+            contentstackClient.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(MockResponse.CreateContentstackResponse("LoginResponse.txt")));
 
             contentstackClient.Dispose();
 
             Assert.ThrowsException<ObjectDisposedException>(() => contentstackClient.InvokeSync(new MockService()));
-            Assert.ThrowsException<ObjectDisposedException>(() =>  contentstackClient.InvokeAsync<MockService, ContentstackResponse>(new MockService()));
+            await Assert.ThrowsExceptionAsync<ObjectDisposedException>(async () => await contentstackClient.InvokeAsync<MockService, ContentstackResponse>(new MockService()));
 
             contentstackClient.Dispose();
         }

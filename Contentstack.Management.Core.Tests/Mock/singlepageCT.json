@@ -1,7 +1,7 @@
 ﻿{
   "options": {
     "is_page": true,
-    "singleton": true,
+    "singleton": false,
     "title": "title",
     "sub_title": []
   },

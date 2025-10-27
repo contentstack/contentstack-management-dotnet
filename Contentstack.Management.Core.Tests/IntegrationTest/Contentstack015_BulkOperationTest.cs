@@ -261,7 +261,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         [TestMethod]
         [DoNotParallelize]
-        public async Task Test005A_Should_Update_Items_In_Release()
+        public async Task Test006_Should_Update_Items_In_Release()
         {
             try
             {
@@ -314,7 +314,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         [TestMethod]
         [DoNotParallelize]
-        public async Task Test006_Should_Perform_Bulk_Delete_Operation()
+        public async Task Test007_Should_Perform_Bulk_Delete_Operation()
         {
             try
             {
