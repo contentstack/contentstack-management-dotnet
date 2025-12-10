@@ -1,0 +1,8 @@
+HTTP/1.1 502 Bad Gateway
+content-type: application/json
+content-length: 40
+date: Wed, 28 Apr 2021 11:11:34 GMT
+connection: Keep-Alive
+
+{"error_message": "Bad gateway","error_code": 502}
+
