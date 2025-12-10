@@ -207,7 +207,19 @@ namespace Contentstack.Management.Core
         {
             HttpHandler httpClientHandler = new HttpHandler(_httpClient);
 
-            RetryPolicy retryPolicy = contentstackOptions.RetryPolicy ?? new DefaultRetryPolicy(contentstackOptions.RetryLimit, contentstackOptions.RetryDelay);
+            RetryPolicy retryPolicy;
+            if (contentstackOptions.RetryPolicy != null)
+            {
+                // Use custom retry policy if provided
+                retryPolicy = contentstackOptions.RetryPolicy;
+            }
+            else
+            {
+                // Create RetryConfiguration from options and use it with DefaultRetryPolicy
+                var retryConfiguration = RetryConfiguration.FromOptions(contentstackOptions);
+                retryPolicy = new DefaultRetryPolicy(retryConfiguration);
+            }
+
             ContentstackPipeline = new ContentstackRuntimePipeline(new List<IPipelineHandler>()
             {
                 httpClientHandler,

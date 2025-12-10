@@ -89,6 +89,59 @@ namespace Contentstack.Management.Core
         public RetryPolicy RetryPolicy { get; set; }
 
         /// <summary>
+        /// When set to true, the client will retry on network failures.
+        /// The default value is true.
+        /// </summary>
+        public bool RetryOnNetworkFailure { get; set; } = true;
+
+        /// <summary>
+        /// When set to true, the client will retry on DNS failures.
+        /// The default value is true.
+        /// </summary>
+        public bool RetryOnDnsFailure { get; set; } = true;
+
+        /// <summary>
+        /// When set to true, the client will retry on socket failures.
+        /// The default value is true.
+        /// </summary>
+        public bool RetryOnSocketFailure { get; set; } = true;
+
+        /// <summary>
+        /// When set to true, the client will retry on HTTP server errors (5xx).
+        /// The default value is true.
+        /// </summary>
+        public bool RetryOnHttpServerError { get; set; } = true;
+
+        /// <summary>
+        /// Maximum number of network retry attempts.
+        /// The default value is 3.
+        /// </summary>
+        public int MaxNetworkRetries { get; set; } = 3;
+
+        /// <summary>
+        /// Base delay for network retries.
+        /// The default value is 100ms.
+        /// </summary>
+        public TimeSpan NetworkRetryDelay { get; set; } = TimeSpan.FromMilliseconds(100);
+
+        /// <summary>
+        /// Backoff strategy for network retries.
+        /// The default value is Exponential.
+        /// </summary>
+        public BackoffStrategy NetworkBackoffStrategy { get; set; } = BackoffStrategy.Exponential;
+
+        /// <summary>
+        /// Custom function to determine if a status code should be retried.
+        /// If null, default retry condition is used (429, 500, 502, 503, 504).
+        /// </summary>
+        public Func<HttpStatusCode, bool>? RetryCondition { get; set; }
+
+        /// <summary>
+        /// Options for retry delay calculation.
+        /// </summary>
+        public RetryDelayOptions RetryDelayOptions { get; set; }
+
+        /// <summary>
         /// Host for the Proxy.
         /// </summary>
         public string ProxyHost { get; set; }
