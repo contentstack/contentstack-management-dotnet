@@ -24,7 +24,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 MaxNetworkRetries = 3,
                 NetworkRetryDelay = TimeSpan.FromMilliseconds(100),
                 NetworkBackoffStrategy = BackoffStrategy.Exponential,
-                RetryCondition = (statusCode) => statusCode == HttpStatusCode.TooManyRequests,
+                RetryCondition = (statusCode) => statusCode == (HttpStatusCode)429,
                 RetryDelayOptions = new RetryDelayOptions
                 {
                     Base = TimeSpan.FromMilliseconds(300),

@@ -134,7 +134,7 @@ namespace Contentstack.Management.Core
         /// Custom function to determine if a status code should be retried.
         /// If null, default retry condition is used (429, 500, 502, 503, 504).
         /// </summary>
-        public Func<HttpStatusCode, bool>? RetryCondition { get; set; }
+        public Func<HttpStatusCode, bool> RetryCondition { get; set; }
 
         /// <summary>
         /// Options for retry delay calculation.

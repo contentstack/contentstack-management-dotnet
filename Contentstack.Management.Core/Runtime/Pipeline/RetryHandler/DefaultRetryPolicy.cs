@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Runtime.Contexts;
 
@@ -86,18 +87,21 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
                     if (retryConfiguration.RetryOnHttpServerError)
                     {
                         // Check if HTTP retry limit exceeded
+                        // If HttpRetryCount >= RetryLimit, we've already exhausted retries
                         if (requestContext.HttpRetryCount >= retryConfiguration.RetryLimit)
                         {
                             return false;
                         }
                         return true;
                     }
+                    return false;
                 }
 
-                // Check custom retry condition
+                // Check custom retry condition (for non-5xx errors like 429)
                 if (delayCalculator.ShouldRetryHttpStatusCode(contentstackException.StatusCode, retryConfiguration))
                 {
                     // Check if HTTP retry limit exceeded
+                    // If HttpRetryCount >= RetryLimit, we've already exhausted retries
                     if (requestContext.HttpRetryCount >= retryConfiguration.RetryLimit)
                     {
                         return false;
@@ -115,7 +119,8 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
 
             if (retryConfiguration != null)
             {
-                // Check both network and HTTP retry limits
+                // Return true only if BOTH limits are exceeded (meaning we've exhausted all retry options)
+                // Individual limits are checked in RetryForException
                 return requestContext.NetworkRetryCount >= retryConfiguration.MaxNetworkRetries &&
                        requestContext.HttpRetryCount >= retryConfiguration.RetryLimit;
             }
@@ -179,7 +184,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         /// <summary>
         /// Gets the retry delay for an HTTP error.
         /// </summary>
-        public TimeSpan GetHttpRetryDelay(IRequestContext requestContext, Exception exception, HttpResponseHeaders? responseHeaders = null)
+        public TimeSpan GetHttpRetryDelay(IRequestContext requestContext, Exception exception, HttpResponseHeaders responseHeaders = null)
         {
             if (retryConfiguration == null)
             {

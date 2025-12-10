@@ -50,6 +50,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
                             await Task.Delay(delay);
                             continue;
                         }
+                        else
+                        {
+                            // Retry limit exceeded or not retryable - convert to exception
+                            throw ContentstackErrorException.CreateException(contentstackResponse.ResponseBody);
+                        }
                     }
 
                     return response;
@@ -125,6 +130,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
                                 contentstackResponse.ResponseBody?.Headers);
                             System.Threading.Tasks.Task.Delay(delay).Wait();
                             continue;
+                        }
+                        else
+                        {
+                            // Retry limit exceeded or not retryable - convert to exception
+                            throw ContentstackErrorException.CreateException(contentstackResponse.ResponseBody);
                         }
                     }
 
