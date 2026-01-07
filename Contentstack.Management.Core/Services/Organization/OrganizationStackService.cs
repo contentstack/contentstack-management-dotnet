@@ -1,6 +1,7 @@
 ﻿using System;
 using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Organization
 {
@@ -13,7 +14,7 @@ namespace Contentstack.Management.Core.Services.Organization
 
             if (string.IsNullOrEmpty(uid))
             {
-                throw new ArgumentNullException("uid");
+                throw new ArgumentNullException("uid", CSConstants.OrganizationUIDRequired);
             }
             this.ResourcePath = "/organizations/{organization_uid}/stacks";
             this.AddPathResource("{organization_uid}", uid);

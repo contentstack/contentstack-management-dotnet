@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.User
 {
@@ -15,7 +16,7 @@ namespace Contentstack.Management.Core.Services.User
 
             if (string.IsNullOrEmpty(authtoken))
             {
-                throw new ArgumentNullException("authtoken");
+                throw new ArgumentNullException("authtoken", CSConstants.AuthenticationTokenRequired);
             }
 
             _authtoken = authtoken;

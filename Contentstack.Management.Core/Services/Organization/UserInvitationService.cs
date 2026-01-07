@@ -5,6 +5,7 @@ using System.IO;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Organization
 {
@@ -19,12 +20,12 @@ namespace Contentstack.Management.Core.Services.Organization
         {
             if (string.IsNullOrEmpty(uid))
             {
-                throw new ArgumentNullException("uid");
+                throw new ArgumentNullException("uid", CSConstants.OrganizationUIDRequired);
             }
 
             if (string.IsNullOrEmpty(httpMethod))
             {
-                throw new ArgumentNullException("httpMethod");
+                throw new ArgumentNullException("httpMethod", CSConstants.HTTPMethodRequired);
             }
             if (collection != null && collection.Count > 0)
             {

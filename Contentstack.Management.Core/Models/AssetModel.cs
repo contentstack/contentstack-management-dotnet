@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Http;
 using Contentstack.Management.Core.Abstractions;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -29,11 +30,11 @@ namespace Contentstack.Management.Core.Models
         {
             if (fileName == null)
             {
-                throw new ArgumentNullException("fileName", "File name can not be null.");
+                throw new ArgumentNullException("fileName", CSConstants.FileNameRequired);
             }
             if (byteArray == null)
             {
-                throw new ArgumentNullException("byteArray", "Uploading content can not be null.");
+                throw new ArgumentNullException("byteArray", CSConstants.UploadContentRequired);
             }
             FileName = fileName;
             Title = title;

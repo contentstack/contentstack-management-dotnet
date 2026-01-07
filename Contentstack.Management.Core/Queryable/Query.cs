@@ -17,12 +17,12 @@ namespace Contentstack.Management.Core.Queryable
         {
             if(stack == null)
             {
-                throw new ArgumentNullException("stack", "Stack can not be null");
+                throw new ArgumentNullException("stack", CSConstants.StackRequired);
             }
 
             if (resourcePath== null)
             {
-                throw new ArgumentNullException("resourcePath", "Respource path can not be null");
+                throw new ArgumentNullException("resourcePath", CSConstants.ResourcePathRequired);
             }
             _stack = stack;
             _resourcePath = resourcePath;

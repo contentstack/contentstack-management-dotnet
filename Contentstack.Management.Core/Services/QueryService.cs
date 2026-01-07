@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Contentstack.Management.Core.Queryable;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services
 {
@@ -13,13 +14,13 @@ namespace Contentstack.Management.Core.Services
         {
             if (string.IsNullOrEmpty(resourcePath))
             {
-                throw new ArgumentNullException("resourcePath");
+                throw new ArgumentNullException("resourcePath", CSConstants.ResourcePathRequired);
             }
             this.ResourcePath = resourcePath;
 
             if (string.IsNullOrEmpty(stack.APIKey))
             {
-                throw new ArgumentNullException("stack", "API Key should be present.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
             if (collection != null && collection.Count > 0)
             {

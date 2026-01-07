@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
 {
@@ -35,18 +36,18 @@ namespace Contentstack.Management.Core.Services.Stack
             {
                 if (masterLocale == null)
                 {
-                    throw new ArgumentNullException("masterLocale", "Should have Master Locale while creating the Stack.");
+                    throw new ArgumentNullException("masterLocale", CSConstants.MasterLocaleRequired);
                 }
                 if (_name == null)
                 {
-                    throw new ArgumentNullException("name", "Name for stack is mandatory while creating the Stack.");
+                    throw new ArgumentNullException("name", CSConstants.StackNameRequired);
                 }
                 this.Headers.Add("organization_uid", organizationUid);
                 this.HttpMethod = "POST";
             }
             else 
             {
-                throw new ArgumentNullException("stack", "Should have API Key or Organization UID to perform this operation.");
+                throw new ArgumentNullException("stack", CSConstants.APIKeyOrOrgUIDRequired);
             }
         }
 

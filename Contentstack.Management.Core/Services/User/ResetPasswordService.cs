@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.User
 {
@@ -15,15 +16,15 @@ namespace Contentstack.Management.Core.Services.User
         {
             if (string.IsNullOrEmpty(resetPasswordToken))
             {
-                throw new ArgumentNullException("resetPasswordToken");
+                throw new ArgumentNullException("resetPasswordToken", CSConstants.ResetPasswordTokenRequired);
             }
             if (string.IsNullOrEmpty(password))
             {
-                throw new ArgumentNullException("password");
+                throw new ArgumentNullException("password", CSConstants.NewPasswordRequired);
             }
             if (string.IsNullOrEmpty(confirmPassword))
             {
-                throw new ArgumentNullException("confirmPassword");
+                throw new ArgumentNullException("confirmPassword", CSConstants.PasswordMismatch);
             }
             _resetPasswordToken = resetPasswordToken;
             _password = password;

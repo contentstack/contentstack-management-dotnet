@@ -30,9 +30,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
         public void Test_CSConstants_InternalMessages()
         {
             Assert.AreEqual("You are already logged in.", CSConstants.YouAreLoggedIn);
-            Assert.AreEqual("You are need to login.", CSConstants.YouAreNotLoggedIn);
-            Assert.AreEqual("Uid should not be empty.", CSConstants.MissingUID);
-            Assert.AreEqual("API Key should not be empty.", CSConstants.MissingAPIKey);
+            Assert.AreEqual("You are not logged in. Log in and try again.", CSConstants.YouAreNotLoggedIn);
+            Assert.AreEqual("UID is required. Provide a valid UID and try again.", CSConstants.MissingUID);
+            Assert.AreEqual("API Key is required. Provide a valid API Key and try again.", CSConstants.MissingAPIKey);
             Assert.AreEqual("API Key should be empty.", CSConstants.APIKey);
             Assert.AreEqual("Please enter email id to remove from org.", CSConstants.RemoveUserEmailError);
             Assert.AreEqual("Please enter share uid to resend invitation.", CSConstants.OrgShareUIDMissing);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Contentstack.Management.Core.Exceptions;
+using Contentstack.Management.Core.Utils;
 using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Queryable
@@ -113,7 +114,7 @@ namespace Contentstack.Management.Core.Queryable
                             yield return new KeyValuePair<string, string>($"{name}[]", listValue.ToString(CultureInfo.InvariantCulture));
                         break;
                     default:
-                        throw new ContentstackException("Unsupported parameter value type '" + value.GetType().FullName + "'");
+                        throw new ContentstackException(CSConstants.ParameterTypeNotSupported);
                 }
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -236,7 +237,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentNullException("name", "Invalide name.");
+                throw new ArgumentNullException("name", CSConstants.ReleaseNameInvalid);
             }
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -267,7 +268,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentNullException("name", "Invalide name.");
+                throw new ArgumentNullException("name", CSConstants.ReleaseNameInvalid);
             }
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();

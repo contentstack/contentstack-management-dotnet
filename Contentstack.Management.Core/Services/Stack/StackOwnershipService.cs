@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
 {
@@ -15,12 +16,12 @@ namespace Contentstack.Management.Core.Services.Stack
         {
             if (string.IsNullOrEmpty(stack.APIKey))
             {
-                throw new ArgumentNullException("stack", "API Key should be present.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
 
             if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException("email");
+                throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
             this._email = email;
             this.ResourcePath = "stacks/transfer_ownership";
