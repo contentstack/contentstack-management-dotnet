@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Runtime.Contexts;
 
@@ -208,11 +207,6 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
                 requestContext.NetworkRetryCount,
                 retryConfiguration);
         }
-
-        // Internal methods for testing
-        internal bool CanRetryInternal(IExecutionContext executionContext) => CanRetry(executionContext);
-        internal bool RetryForExceptionInternal(IExecutionContext executionContext, Exception exception) => RetryForException(executionContext, exception);
-        internal bool RetryLimitExceededInternal(IExecutionContext executionContext) => RetryLimitExceeded(executionContext);
     }
 }
 
