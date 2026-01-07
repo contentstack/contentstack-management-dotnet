@@ -111,7 +111,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             }
 
             // Default retry condition: 429, 500, 502, 503, 504
-            return statusCode == HttpStatusCode.TooManyRequests || // TooManyRequests
+            return statusCode == HttpStatusCode.TooManyRequests || 
                    statusCode == HttpStatusCode.InternalServerError ||
                    statusCode == HttpStatusCode.BadGateway ||
                    statusCode == HttpStatusCode.ServiceUnavailable ||
