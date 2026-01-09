@@ -52,7 +52,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         /// <param name="error">The exception that triggered the retry, if any.</param>
         /// <param name="responseHeaders">The HTTP response headers, if available.</param>
         /// <returns>The delay to wait before retrying. Returns TimeSpan.Zero or negative to disable retry.</returns>
-        public TimeSpan CalculateHttpRetryDelay(int retryCount, RetryConfiguration config, Exception? error, HttpResponseHeaders? responseHeaders = null)
+        public TimeSpan CalculateHttpRetryDelay(int retryCount, RetryConfiguration config, Exception error, HttpResponseHeaders responseHeaders = null)
         {
             // Check for Retry-After header (for 429 Too Many Requests)
             if (responseHeaders != null && responseHeaders.RetryAfter != null)
@@ -111,7 +111,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             }
 
             // Default retry condition: 429, 500, 502, 503, 504
-            return statusCode == HttpStatusCode.TooManyRequests ||
+            return statusCode == (HttpStatusCode)429 ||
                    statusCode == HttpStatusCode.InternalServerError ||
                    statusCode == HttpStatusCode.BadGateway ||
                    statusCode == HttpStatusCode.ServiceUnavailable ||

@@ -75,7 +75,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         /// Custom function to determine if a status code should be retried.
         /// If null, default retry condition is used (429, 500, 502, 503, 504).
         /// </summary>
-        public Func<HttpStatusCode, bool>? RetryCondition { get; set; }
+        public Func<HttpStatusCode, bool> RetryCondition { get; set; }
 
         /// <summary>
         /// Options for retry delay calculation.
@@ -119,10 +119,10 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         public TimeSpan Base { get; set; } = TimeSpan.FromMilliseconds(300);
 
         /// <summary>
-        /// Custom backoff function. Parameters: retryCount, exception.
+        /// Custom backoff function. Parameters: retryCount, exception (may be null).
         /// Return TimeSpan.Zero or negative TimeSpan to disable retry for that attempt.
         /// </summary>
-        public Func<int, Exception?, TimeSpan>? CustomBackoff { get; set; }
+        public Func<int, Exception, TimeSpan> CustomBackoff { get; set; }
     }
 }
 

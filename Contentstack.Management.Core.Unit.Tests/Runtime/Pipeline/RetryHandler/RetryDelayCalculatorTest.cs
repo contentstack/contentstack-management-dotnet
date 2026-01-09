@@ -99,19 +99,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
             };
 
             // Run multiple times to verify jitter is added
-            bool foundVariation = false;
             var firstDelay = calculator.CalculateNetworkRetryDelay(1, config);
             
-            for (int i = 0; i < 10; i++)
-            {
-                var delay = calculator.CalculateNetworkRetryDelay(1, config);
-                if (delay != firstDelay)
-                {
-                    foundVariation = true;
-                    break;
-                }
-            }
-
             // Jitter should cause some variation (though it's random, so not guaranteed)
             // At minimum, verify the delay is within expected range
             Assert.IsTrue(firstDelay >= TimeSpan.FromMilliseconds(100));
@@ -169,7 +158,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 RetryDelay = TimeSpan.FromMilliseconds(300)
             };
 
-            var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests);
+            var response = new HttpResponseMessage((HttpStatusCode)429);
             response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromSeconds(5));
 
             var delay = calculator.CalculateHttpRetryDelay(0, config, null, response.Headers);
@@ -185,7 +174,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 RetryDelay = TimeSpan.FromMilliseconds(300)
             };
 
-            var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests);
+            var response = new HttpResponseMessage((HttpStatusCode)429);
             var retryAfterDate = DateTimeOffset.UtcNow.AddSeconds(3);
             response.Headers.RetryAfter = new RetryConditionHeaderValue(retryAfterDate);
 
@@ -299,7 +288,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
         public void ShouldRetryHttpStatusCode_Default_429()
         {
             var config = new RetryConfiguration();
-            var result = calculator.ShouldRetryHttpStatusCode(HttpStatusCode.TooManyRequests, config);
+            var result = calculator.ShouldRetryHttpStatusCode((HttpStatusCode)429, config);
             Assert.IsTrue(result);
         }
 
@@ -351,11 +340,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
         {
             var config = new RetryConfiguration
             {
-                RetryCondition = (statusCode) => statusCode == HttpStatusCode.NotFound || statusCode == HttpStatusCode.TooManyRequests
+                RetryCondition = (statusCode) => statusCode == HttpStatusCode.NotFound || statusCode == (HttpStatusCode)429
             };
 
             Assert.IsTrue(calculator.ShouldRetryHttpStatusCode(HttpStatusCode.NotFound, config));
-            Assert.IsTrue(calculator.ShouldRetryHttpStatusCode(HttpStatusCode.TooManyRequests, config));
+            Assert.IsTrue(calculator.ShouldRetryHttpStatusCode((HttpStatusCode)429, config));
             Assert.IsFalse(calculator.ShouldRetryHttpStatusCode(HttpStatusCode.InternalServerError, config));
         }
     }

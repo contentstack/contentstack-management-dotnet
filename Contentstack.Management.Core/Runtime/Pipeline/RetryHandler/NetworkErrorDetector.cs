@@ -16,7 +16,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         /// </summary>
         /// <param name="error">The exception to analyze.</param>
         /// <returns>NetworkErrorInfo if it's a transient network error, null otherwise.</returns>
-        public NetworkErrorInfo? IsTransientNetworkError(Exception error)
+        public NetworkErrorInfo IsTransientNetworkError(Exception error)
         {
             if (error == null)
                 return null;
@@ -110,7 +110,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         /// <summary>
         /// Determines if a network error should be retried based on configuration.
         /// </summary>
-        public bool ShouldRetryNetworkError(NetworkErrorInfo? errorInfo, RetryConfiguration config)
+        public bool ShouldRetryNetworkError(NetworkErrorInfo errorInfo, RetryConfiguration config)
         {
             if (errorInfo == null || !errorInfo.IsTransient)
                 return false;
