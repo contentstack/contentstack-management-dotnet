@@ -1,4 +1,9 @@
 # Changelog
+
+## [v0.5.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.5.1)
+ - Enhancement
+   - Improved error messages
+
 ## [v0.5.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.5.0)
  - Feat
    - **Variant Group Management**: Added comprehensive support for variant group operations
