@@ -186,9 +186,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
             };
             var policy = new DefaultRetryPolicy(config);
             var context = CreateExecutionContext();
-            context.RequestContext.HttpRetryCount = 1;
             var exception = MockNetworkErrorGenerator.CreateContentstackErrorException(HttpStatusCode.InternalServerError);
 
+            context.RequestContext.HttpRetryCount = 0;
+            var result0 = policy.RetryForException(context, exception);
+            Assert.IsTrue(result0);
+
+            context.RequestContext.HttpRetryCount = 1;
             var result = policy.RetryForException(context, exception);
             Assert.IsFalse(result);
         }

@@ -23,19 +23,19 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             RetryLimit = 5;
         }
 
-        protected override bool RetryForException(IExecutionContext executionContext, Exception exception)
+        public override bool RetryForException(IExecutionContext executionContext, Exception exception)
         {
             LastException = exception;
             RetryCallCount++;
             return ShouldRetryValue;
         }
 
-        protected override bool CanRetry(IExecutionContext executionContext)
+        public override bool CanRetry(IExecutionContext executionContext)
         {
             return CanRetryValue;
         }
 
-        protected override bool RetryLimitExceeded(IExecutionContext executionContext)
+        public override bool RetryLimitExceeded(IExecutionContext executionContext)
         {
             return RetryLimitExceededValue;
         }
