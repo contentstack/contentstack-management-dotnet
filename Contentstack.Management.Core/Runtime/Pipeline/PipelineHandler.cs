@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Internal;
 using Contentstack.Management.Core.Runtime.Contexts;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Runtime.Pipeline
 {
@@ -17,7 +18,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
             {
                 return InnerHandler.InvokeAsync<T>(executionContext, addAcceptMediaHeader, apiVersion);
             }
-            throw new InvalidOperationException("Cannot invoke InnerHandler. InnerHandler is not set.");
+            throw new InvalidOperationException(CSConstants.InnerHandlerNotSet);
         }
 
         public virtual void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
@@ -27,7 +28,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
                 InnerHandler.InvokeSync(executionContext, addAcceptMediaHeader, apiVersion);
                 return;
             }
-            throw new InvalidOperationException("Cannot invoke InnerHandler. InnerHandler is not set.");
+            throw new InvalidOperationException(CSConstants.InnerHandlerNotSet);
         }
     }
 }

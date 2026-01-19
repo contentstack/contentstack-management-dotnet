@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Models;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
 {
@@ -17,7 +18,7 @@ namespace Contentstack.Management.Core.Services.Stack
         {
             if (string.IsNullOrEmpty(stack.APIKey))
             {
-                throw new ArgumentNullException("stack", "API Key should be present.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
             HttpMethod = "POST";
         }

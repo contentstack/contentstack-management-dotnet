@@ -215,7 +215,7 @@ namespace Contentstack.Management.Core.Models
             this.ThrowIfOrganizationUidNull();
             if (emails == null)
             {
-                throw new ArgumentNullException("emails");
+                throw new ArgumentNullException("emails", CSConstants.EmailsRequired);
             }
             var userInviteService = new UserInvitationService(_client.serializer, this.Uid, "DELETE");
             userInviteService.RemoveUsers(emails);
@@ -240,7 +240,7 @@ namespace Contentstack.Management.Core.Models
             this.ThrowIfOrganizationUidNull();
             if (emails == null)
             {
-                throw new ArgumentNullException("emails");
+                throw new ArgumentNullException("emails", CSConstants.EmailsRequired);
             }
             var userInviteService = new UserInvitationService(_client.serializer, this.Uid, "DELETE");
             userInviteService.RemoveUsers(emails);
@@ -429,7 +429,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(this.Uid))
             {
-                throw new InvalidOperationException(CSConstants.MissingUID);
+                throw new InvalidOperationException(CSConstants.OrganizationUIDRequired);
             }
         }
         #endregion

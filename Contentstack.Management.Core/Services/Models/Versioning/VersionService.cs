@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models.Versioning
 {
@@ -20,15 +21,15 @@ namespace Contentstack.Management.Core.Services.Models.Versioning
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
             if (resourcePath == null)
             {
-                throw new ArgumentNullException("resourcePath", "Should resource path for service.");
+                throw new ArgumentNullException("resourcePath", CSConstants.ResourcePathRequired);
             }
             if (fieldName == null)
             {
-                throw new ArgumentNullException("fieldName", "Should resource path for service.");
+                throw new ArgumentNullException("fieldName", CSConstants.FieldNameRequired);
             }
             this.fieldName = fieldName;
             this.ResourcePath = resourcePath;
