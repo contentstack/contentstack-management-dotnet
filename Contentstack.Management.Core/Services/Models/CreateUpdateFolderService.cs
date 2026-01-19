@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
 {
@@ -21,11 +22,11 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
             if (name == null)
             {
-                throw new ArgumentNullException("name", "Should have folder name.");
+                throw new ArgumentNullException("name", CSConstants.FolderNameRequired);
             }
             this.ResourcePath = "/assets/folders";
 

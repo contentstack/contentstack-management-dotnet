@@ -32,7 +32,7 @@ namespace Contentstack.Management.Core.Services
         {
             if (serializer == null)
             {
-                throw new ArgumentNullException("serializer");
+                throw new ArgumentNullException("serializer", CSConstants.JSONSerializerError);
             }
 
             if (stack != null)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -258,7 +259,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(this.releaseUID))
             {
-                throw new InvalidOperationException("Uid can not be empty.");
+                throw new InvalidOperationException(CSConstants.ReleaseItemUIDRequired);
             }
         }
         #endregion

@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using Contentstack.Management.Core.Abstractions;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
 {
@@ -15,15 +16,15 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
             if (resourcePath == null)
             {
-                throw new ArgumentNullException("resourcePath", "Should have resource path for service.");
+                throw new ArgumentNullException("resourcePath", CSConstants.ResourcePathRequired);
             }
             if (uploadInterface == null)
             {
-                throw new ArgumentNullException("uploadInterface", "Should have multipart content for service.");
+                throw new ArgumentNullException("uploadInterface", CSConstants.UploadContentRequired);
             }
             this.ResourcePath = resourcePath;
             this.HttpMethod = httpMethod;

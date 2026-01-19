@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Models;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
 {
@@ -16,7 +17,7 @@ namespace Contentstack.Management.Core.Services.Stack
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("stack", "API Key should be present.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
             ResourcePath = "stacks/settings";
             HttpMethod = method;

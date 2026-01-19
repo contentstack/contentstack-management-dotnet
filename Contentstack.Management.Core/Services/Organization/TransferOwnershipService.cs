@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Organization
 {
@@ -14,12 +15,12 @@ namespace Contentstack.Management.Core.Services.Organization
         {
             if (string.IsNullOrEmpty(uid))
             {
-                throw new ArgumentNullException("uid");
+                throw new ArgumentNullException("uid", CSConstants.OrganizationUIDRequired);
             }
 
             if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException("email");
+                throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
             this._email = email;
             this.ResourcePath = "/organizations/{organization_uid}/transfer-ownership";

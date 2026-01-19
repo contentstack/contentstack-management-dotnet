@@ -207,7 +207,19 @@ namespace Contentstack.Management.Core
         {
             HttpHandler httpClientHandler = new HttpHandler(_httpClient);
 
-            RetryPolicy retryPolicy = contentstackOptions.RetryPolicy ?? new DefaultRetryPolicy(contentstackOptions.RetryLimit, contentstackOptions.RetryDelay);
+            RetryPolicy retryPolicy;
+            if (contentstackOptions.RetryPolicy != null)
+            {
+                // Use custom retry policy if provided
+                retryPolicy = contentstackOptions.RetryPolicy;
+            }
+            else
+            {
+                // Create RetryConfiguration from options and use it with DefaultRetryPolicy
+                var retryConfiguration = RetryConfiguration.FromOptions(contentstackOptions);
+                retryPolicy = new DefaultRetryPolicy(retryConfiguration);
+            }
+
             ContentstackPipeline = new ContentstackRuntimePipeline(new List<IPipelineHandler>()
             {
                 httpClientHandler,
@@ -473,7 +485,7 @@ namespace Contentstack.Management.Core
         public OAuthHandler OAuth(OAuthOptions options)
         {
             if (options == null)
-                throw new ArgumentNullException(nameof(options), "OAuth options cannot be null.");
+                throw new ArgumentNullException(nameof(options), CSConstants.OAuthOptionsRequired);
 
             return new OAuthHandler(this, options);
         }
@@ -507,10 +519,10 @@ namespace Contentstack.Management.Core
         internal void SetOAuthTokens(OAuthTokens tokens)
         {
             if (tokens == null)
-                throw new ArgumentNullException(nameof(tokens), "OAuth tokens cannot be null.");
+                throw new ArgumentNullException(nameof(tokens), CSConstants.OAuthTokensRequired);
 
             if (string.IsNullOrEmpty(tokens.AccessToken))
-                throw new ArgumentException("Access token cannot be null or empty.", nameof(tokens));
+                throw new ArgumentException(CSConstants.AccessTokenRequired, nameof(tokens));
 
             // Store the access token in the client options for use in HTTP requests
             // This will be used by the HTTP pipeline to inject the Bearer token
@@ -529,7 +541,7 @@ namespace Contentstack.Management.Core
         public OAuthTokens GetOAuthTokens(string clientId)
         {
             if (string.IsNullOrEmpty(clientId))
-                throw new ArgumentException("Client ID cannot be null or empty.", nameof(clientId));
+                throw new ArgumentException(CSConstants.ClientIDRequired, nameof(clientId));
 
             return GetStoredOAuthTokens(clientId);
         }
@@ -595,7 +607,7 @@ namespace Contentstack.Management.Core
         internal void StoreOAuthTokens(string clientId, OAuthTokens tokens)
         {
             if (string.IsNullOrEmpty(clientId))
-                throw new ArgumentException("Client ID cannot be null or empty.", nameof(clientId));
+                throw new ArgumentException(CSConstants.ClientIDRequired, nameof(clientId));
 
             if (tokens == null)
                 throw new ArgumentNullException(nameof(tokens));

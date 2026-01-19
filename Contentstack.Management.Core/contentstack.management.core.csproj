@@ -2,9 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net471;net472;</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <Title>Contentstack Management</Title>
     <Authors>Contentstack</Authors>
-    <Copyright>Copyright © 2012-2025 Contentstack. All Rights Reserved</Copyright>
+    <Copyright>Copyright © 2012-2026 Contentstack. All Rights Reserved</Copyright>
     <Description>.NET SDK for the Contentstack Content Management API.</Description>
     <Owners>Contentstack </Owners>
     <PackageId>contentstack.management.csharp</PackageId>

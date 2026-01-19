@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Models;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
 {
@@ -16,22 +17,22 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
 
             if (details == null)
             {
-                throw new ArgumentNullException("details", "Should publish details for service.");
+                throw new ArgumentNullException("details", CSConstants.PublishDetailsRequired);
             }
 
             if (resourcePath == null)
             {
-                throw new ArgumentNullException("resourcePath", "Should resource path for service.");
+                throw new ArgumentNullException("resourcePath", CSConstants.ResourcePathRequired);
             }
 
             if (fieldName == null)
             {
-                throw new ArgumentNullException("fieldName", "Should field name for service.");
+                throw new ArgumentNullException("fieldName", CSConstants.FieldNameRequired);
             }
 
             this.ResourcePath = resourcePath;

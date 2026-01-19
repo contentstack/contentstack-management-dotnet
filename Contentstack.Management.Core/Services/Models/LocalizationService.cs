@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
 {
@@ -18,19 +19,19 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
             if (resourcePath == null)
             {
-                throw new ArgumentNullException("resourcePath", "Should resource path for service.");
+                throw new ArgumentNullException("resourcePath", CSConstants.ResourcePathRequired);
             }
             if (!shouldUnlocalize && dataModel == null)
             {
-                throw new ArgumentNullException("dataModel", "Data model is mandatory for service");
+                throw new ArgumentNullException("dataModel", CSConstants.DataModelRequired);
             }
             if (fieldName == null)
             {
-                throw new ArgumentNullException("fieldName", "Name mandatory for service");
+                throw new ArgumentNullException("fieldName", CSConstants.FieldNameRequired);
             }
             this.ResourcePath = shouldUnlocalize ? $"{resourcePath}/unlocalize" : resourcePath;
             this.HttpMethod = shouldUnlocalize ? "POST": "PUT";

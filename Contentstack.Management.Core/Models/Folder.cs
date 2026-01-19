@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -190,7 +191,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (!string.IsNullOrEmpty(this.Uid))
             {
-                throw new InvalidOperationException("Operation not allowed.");
+                throw new InvalidOperationException(CSConstants.OperationNotAllowedOnFolder);
             }
         }
 
@@ -198,7 +199,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(this.Uid))
             {
-                throw new InvalidOperationException("Uid can not be empty.");
+                throw new InvalidOperationException(CSConstants.FolderUIDRequired);
             }
         }
         #endregion

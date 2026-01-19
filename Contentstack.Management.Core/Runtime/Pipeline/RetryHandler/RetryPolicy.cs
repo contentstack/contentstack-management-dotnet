@@ -26,11 +26,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             return false;
         }
 
-        protected abstract bool RetryForException(IExecutionContext excutionContext, Exception exception);
+        public abstract bool RetryForException(IExecutionContext excutionContext, Exception exception);
 
-        protected abstract bool CanRetry(IExecutionContext excutionContext);
+        public abstract bool CanRetry(IExecutionContext excutionContext);
 
-        protected abstract bool RetryLimitExceeded(IExecutionContext excutionContext);
+        public abstract bool RetryLimitExceeded(IExecutionContext excutionContext);
         internal abstract void WaitBeforeRetry(IExecutionContext executionContext);
     }
 }

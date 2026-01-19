@@ -66,6 +66,21 @@ namespace Contentstack.Management.Core.Exceptions
         /// </summary>
         [JsonProperty("errors")]
         public Dictionary<string, object> Errors { get; set; }
+
+        /// <summary>
+        /// Number of retry attempts made before this exception was thrown.
+        /// </summary>
+        public int RetryAttempts { get; set; }
+
+        /// <summary>
+        /// The original exception that caused this error, if this is a network error wrapped in an HTTP exception.
+        /// </summary>
+        public Exception OriginalError { get; set; }
+
+        /// <summary>
+        /// Indicates whether this error originated from a network failure.
+        /// </summary>
+        public bool IsNetworkError { get; set; }
         #endregion
         public static ContentstackErrorException CreateException(HttpResponseMessage response)
         {
