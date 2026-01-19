@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -288,7 +289,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             if (string.IsNullOrEmpty(contentType))
             {
-                throw new ArgumentNullException("Content Type can not be empty.");
+                throw new ArgumentNullException("contentType", CSConstants.ContentTypeRequired);
             }
 
             var service = new FetchDeleteService(stack.client.serializer, stack, $"/workflows/content_type/{contentType}", collection: collection);
@@ -310,7 +311,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             if (string.IsNullOrEmpty(contentType))
             {
-                throw new ArgumentNullException("Content Type can not be empty.");
+                throw new ArgumentNullException("contentType", CSConstants.ContentTypeRequired);
             }
             var service = new FetchDeleteService(stack.client.serializer, stack, $"/workflows/content_type/{contentType}", collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);

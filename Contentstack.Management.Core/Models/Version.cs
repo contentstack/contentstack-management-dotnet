@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models.Versioning;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -83,7 +84,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (Number != null)
             {
-                throw new InvalidOperationException("Operation not allowed.");
+                throw new InvalidOperationException(CSConstants.OperationNotAllowedForVersion);
             }
         }
 
@@ -91,7 +92,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (Number == null)
             {
-                throw new InvalidOperationException("Uid can not be empty.");
+                throw new InvalidOperationException(CSConstants.VersionUIDRequired);
             }
         }
         #endregion

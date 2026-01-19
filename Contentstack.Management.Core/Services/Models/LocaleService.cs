@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
 {
@@ -10,7 +11,7 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
             
             this.ResourcePath = resourcePath != null ? $"{resourcePath}/locales" : "locales";

@@ -5,6 +5,7 @@ using System.IO;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
 {
@@ -18,12 +19,12 @@ namespace Contentstack.Management.Core.Services.Stack
         {
             if (userInvitation == null)
             {
-                throw new ArgumentNullException("userInvitation", "Uid and roles should be present.");
+                throw new ArgumentNullException("userInvitation", CSConstants.UserInvitationDetailsRequired);
             }
 
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("stack", "API Key should be present.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
             this.ResourcePath = "stacks/users/roles";
             this.HttpMethod = "POST";

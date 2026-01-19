@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Contentstack.Management.Core.Abstractions;
+using Contentstack.Management.Core.Utils;
 using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.CustomExtension
@@ -33,11 +34,11 @@ namespace Contentstack.Management.Core.Models.CustomExtension
         {
             if (byteArray == null)
             {
-                throw new ArgumentNullException("byteArray", "Uploading content can not be null.");
+                throw new ArgumentNullException("byteArray", CSConstants.UploadContentRequired);
             }
             if (title == null)
             {
-                throw new ArgumentNullException("title", "Title for widget is required.");
+                throw new ArgumentNullException("title", CSConstants.WidgetTitleRequired);
             }
             Title = title;
             Tags = tags;

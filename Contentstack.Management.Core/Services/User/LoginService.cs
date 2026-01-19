@@ -6,6 +6,7 @@ using System.Globalization;
 using Newtonsoft.Json.Linq;
 using OtpNet;
 using Contentstack.Management.Core.Http;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.User
 {
@@ -24,7 +25,7 @@ namespace Contentstack.Management.Core.Services.User
 
             if (credentials == null)
             {
-                throw new ArgumentNullException("credentials");
+                throw new ArgumentNullException("credentials", CSConstants.LoginCredentialsRequired);
             }
 
             _credentials = credentials;

@@ -9,7 +9,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
     {
         public override bool CanConvert(Type objectType)
         {
-            throw new NotImplementedException();
+            return false; // Mock converter - not actually used for conversion
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -28,7 +28,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
     {
         public override bool CanConvert(Type objectType)
         {
-            throw new NotImplementedException();
+            return false; // Mock converter - not actually used for conversion
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

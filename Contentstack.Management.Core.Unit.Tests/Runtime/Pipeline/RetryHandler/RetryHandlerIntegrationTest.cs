@@ -2,8 +2,11 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using Contentstack.Management.Core;
+using Contentstack.Management.Core.Exceptions;
+using Contentstack.Management.Core.Internal;
 using Contentstack.Management.Core.Runtime.Contexts;
 using Contentstack.Management.Core.Runtime.Pipeline.RetryHandler;
+using RetryHandlerClass = Contentstack.Management.Core.Runtime.Pipeline.RetryHandler.RetryHandler;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
@@ -36,7 +39,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 NetworkBackoffStrategy = BackoffStrategy.Exponential
             };
             var policy = new DefaultRetryPolicy(config);
-            var handler = new RetryHandler(policy);
+            var handler = new RetryHandlerClass(policy);
             var mockInnerHandler = new MockHttpHandlerWithRetries();
             mockInnerHandler.AddFailuresThenSuccess(2, MockNetworkErrorGenerator.CreateSocketException(SocketError.ConnectionReset));
             handler.InnerHandler = mockInnerHandler;
@@ -64,7 +67,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 }
             };
             var policy = new DefaultRetryPolicy(config);
-            var handler = new RetryHandler(policy);
+            var handler = new RetryHandlerClass(policy);
             var mockInnerHandler = new MockHttpHandlerWithRetries();
             mockInnerHandler.AddHttpErrorsThenSuccess(2, HttpStatusCode.InternalServerError);
             handler.InnerHandler = mockInnerHandler;
@@ -93,7 +96,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 RetryDelay = TimeSpan.FromMilliseconds(10)
             };
             var policy = new DefaultRetryPolicy(config);
-            var handler = new RetryHandler(policy);
+            var handler = new RetryHandlerClass(policy);
             var mockInnerHandler = new MockHttpHandlerWithRetries();
             mockInnerHandler.AddException(MockNetworkErrorGenerator.CreateSocketException(SocketError.ConnectionReset));
             mockInnerHandler.AddResponse(HttpStatusCode.InternalServerError);
@@ -120,7 +123,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 RetryOnError = false
             };
             var policy = new DefaultRetryPolicy(config);
-            var handler = new RetryHandler(policy);
+            var handler = new RetryHandlerClass(policy);
             var mockInnerHandler = new MockHttpHandlerWithRetries();
             mockInnerHandler.AddException(MockNetworkErrorGenerator.CreateSocketException(SocketError.ConnectionReset));
             handler.InnerHandler = mockInnerHandler;
@@ -154,7 +157,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 NetworkBackoffStrategy = BackoffStrategy.Exponential
             };
             var policy = new DefaultRetryPolicy(config);
-            var handler = new RetryHandler(policy);
+            var handler = new RetryHandlerClass(policy);
             var mockInnerHandler = new MockHttpHandlerWithRetries();
             mockInnerHandler.AddFailuresThenSuccess(2, MockNetworkErrorGenerator.CreateSocketException(SocketError.ConnectionReset));
             handler.InnerHandler = mockInnerHandler;
@@ -179,7 +182,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 RetryDelay = TimeSpan.FromMilliseconds(10)
             };
             var policy = new DefaultRetryPolicy(config);
-            var handler = new RetryHandler(policy);
+            var handler = new RetryHandlerClass(policy);
             var mockInnerHandler = new MockHttpHandlerWithRetries();
             mockInnerHandler.AddResponse(HttpStatusCode.TooManyRequests);
             mockInnerHandler.AddResponse(HttpStatusCode.TooManyRequests);
@@ -214,7 +217,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 RetryCondition = (statusCode) => statusCode == HttpStatusCode.NotFound
             };
             var policy = new DefaultRetryPolicy(config);
-            var handler = new RetryHandler(policy);
+            var handler = new RetryHandlerClass(policy);
             var mockInnerHandler = new MockHttpHandlerWithRetries();
             mockInnerHandler.AddHttpErrorsThenSuccess(2, HttpStatusCode.NotFound);
             handler.InnerHandler = mockInnerHandler;
@@ -242,7 +245,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
                 }
             };
             var policy = new DefaultRetryPolicy(config);
-            var handler = new RetryHandler(policy);
+            var handler = new RetryHandlerClass(policy);
             var mockInnerHandler = new MockHttpHandlerWithRetries();
             mockInnerHandler.AddHttpErrorsThenSuccess(2, HttpStatusCode.TooManyRequests);
             handler.InnerHandler = mockInnerHandler;

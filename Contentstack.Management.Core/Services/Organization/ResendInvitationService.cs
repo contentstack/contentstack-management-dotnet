@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Organization
 {
@@ -11,11 +12,11 @@ namespace Contentstack.Management.Core.Services.Organization
         {
             if (string.IsNullOrEmpty(uid))
             {
-                throw new ArgumentNullException("uid");
+                throw new ArgumentNullException("uid", CSConstants.OrganizationUIDRequired);
             }
             if (string.IsNullOrEmpty(shareUid))
             {
-                throw new ArgumentNullException("shareUid");
+                throw new ArgumentNullException("shareUid", CSConstants.ShareUIDRequired);
             }
             this.ResourcePath = "/organizations/{organization_uid}/share/{share_uid}/resend_invitation";
             this.AddPathResource("{organization_uid}", uid);

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 namespace Contentstack.Management.Core.Services
 {
     internal class DeleteReleaseItemService : ContentstackService
@@ -16,15 +17,15 @@ namespace Contentstack.Management.Core.Services
         {
             if (stack.APIKey == null)
             {
-                throw new ArgumentNullException("stack", "Should have API Key to perform this operation.");
+                throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
             if (releaseUID == null)
             {
-                throw new ArgumentNullException("releaseUID", "Should have release UID for service.");
+                throw new ArgumentNullException("releaseUID", CSConstants.ReleaseUIDRequired);
             }
             if (items == null)
             {
-                throw new ArgumentNullException("items", "Should release items for service.");
+                throw new ArgumentNullException("items", CSConstants.ReleaseItemsRequired);
             }
             this.ResourcePath = $"/releases/{releaseUID}/item";
             this.HttpMethod = "DELETE";

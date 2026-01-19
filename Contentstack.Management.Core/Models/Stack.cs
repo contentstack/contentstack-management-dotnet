@@ -435,7 +435,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
             if (settings == null)
             {
-                throw new ArgumentNullException("settings", "Settings can not be null.");
+                throw new ArgumentNullException("settings", CSConstants.StackSettingsRequired);
             }
 
             var service = new StackSettingsService(client.serializer, this, "POST", settings);
@@ -460,7 +460,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
             if (settings == null)
             {
-                throw new ArgumentNullException("settings", "Settings can not be null.");
+                throw new ArgumentNullException("settings", CSConstants.StackSettingsRequired);
             }
             var service = new StackSettingsService(client.serializer, this, "POST", settings);
 
@@ -489,7 +489,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
             if (invitations == null)
             {
-                throw new ArgumentNullException("invitations", "Invitations can not be null.");
+                throw new ArgumentNullException("invitations", CSConstants.InvitationsRequired);
             }
 
             var service = new StackShareService(client.serializer, this);
@@ -520,7 +520,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
             if (invitations == null)
             {
-                throw new ArgumentNullException("invitations", "Invitations can not be null.");
+                throw new ArgumentNullException("invitations", CSConstants.InvitationsRequired);
             }
 
             var service = new StackShareService(client.serializer, this);
@@ -546,7 +546,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
             if (email == null)
             {
-                throw new ArgumentNullException("email", "Email can not be null.");
+                throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
 
             var service = new StackShareService(client.serializer, this);
@@ -573,7 +573,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
             if (email == null)
             {
-                throw new ArgumentNullException("email", "Email can not be null.");
+                throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
 
             var service = new StackShareService(client.serializer, this);
@@ -941,7 +941,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (!string.IsNullOrEmpty(this.APIKey))
             {
-                throw new InvalidOperationException(CSConstants.APIKey);
+                throw new InvalidOperationException(CSConstants.InvalidAPIKey);
             }
         }
 
@@ -956,7 +956,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentNullException("name", "Invalide name for the Stack.");
+                throw new ArgumentNullException("name", CSConstants.StackNameInvalid);
             }
         }
 
@@ -964,7 +964,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(locale))
             {
-                throw new ArgumentNullException("locale", "Invalide name for the Stack.");
+                throw new ArgumentNullException("locale", CSConstants.LocaleInvalid);
             }
         }
 
@@ -972,7 +972,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(uid))
             {
-                throw new ArgumentNullException("uid", "Invalide Organization UID.");
+                throw new ArgumentNullException("uid", CSConstants.OrganizationUIDInvalid);
             }
         }
 

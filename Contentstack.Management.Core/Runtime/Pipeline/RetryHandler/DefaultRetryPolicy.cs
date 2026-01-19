@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Runtime.Contexts;
 
@@ -42,7 +43,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             delayCalculator = new RetryDelayCalculator();
         }
 
-        protected override bool CanRetry(IExecutionContext executionContext)
+        public override bool CanRetry(IExecutionContext executionContext)
         {
             if (retryConfiguration != null)
             {
@@ -51,7 +52,10 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             return RetryOnError;
         }
 
-        protected override bool RetryForException(IExecutionContext executionContext, Exception exception)
+        public override bool RetryForException(
+            IExecutionContext executionContext,
+            Exception exception
+        )
         {
             if (retryConfiguration == null)
             {
@@ -61,7 +65,41 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
 
             var requestContext = executionContext.RequestContext;
 
-            // Check for network errors
+            // Check for HTTP errors (ContentstackErrorException) FIRST
+            // This must come before network error check because ContentstackErrorException with 5xx
+            // can be detected as network errors, but we want to use HTTP retry logic and limits
+            if (exception is ContentstackErrorException contentstackException)
+            {
+                // Check if HTTP retry limit exceeded first (applies to all HTTP errors)
+                // HttpRetryCount is the number of retries already attempted
+                // RetryLimit is the maximum number of retries allowed
+                // So when HttpRetryCount >= RetryLimit, we've reached or exceeded the limit
+                // IMPORTANT: Check this BEFORE checking if it's a retryable error to ensure limit is respected
+                // This matches the pattern used in ShouldRetryHttpStatusCode method
+                if (requestContext.HttpRetryCount >= this.RetryLimit)
+                {
+                    return false;
+                }
+
+                // Check if it's a server error (5xx) that should be retried
+                if (contentstackException.StatusCode >= HttpStatusCode.InternalServerError &&
+                    contentstackException.StatusCode <= HttpStatusCode.GatewayTimeout)
+                {
+                    if (retryConfiguration.RetryOnHttpServerError)
+                    {
+                        return true;
+                    }
+                    // If RetryOnHttpServerError is false, fall through to check custom retry condition
+                }
+
+                // Check custom retry condition
+                if (delayCalculator.ShouldRetryHttpStatusCode(contentstackException.StatusCode, retryConfiguration))
+                {
+                    return true;
+                }
+            }
+
+            // Check for network errors (only if not already handled as HTTP error)
             var networkErrorInfo = networkErrorDetector.IsTransientNetworkError(exception);
             if (networkErrorInfo != null)
             {
@@ -76,40 +114,10 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
                 }
             }
 
-            // Check for HTTP errors (ContentstackErrorException)
-            if (exception is ContentstackErrorException contentstackException)
-            {
-                // Check if it's a server error (5xx) that should be retried
-                if (contentstackException.StatusCode >= HttpStatusCode.InternalServerError &&
-                    contentstackException.StatusCode <= HttpStatusCode.GatewayTimeout)
-                {
-                    if (retryConfiguration.RetryOnHttpServerError)
-                    {
-                        // Check if HTTP retry limit exceeded
-                        if (requestContext.HttpRetryCount >= retryConfiguration.RetryLimit)
-                        {
-                            return false;
-                        }
-                        return true;
-                    }
-                }
-
-                // Check custom retry condition
-                if (delayCalculator.ShouldRetryHttpStatusCode(contentstackException.StatusCode, retryConfiguration))
-                {
-                    // Check if HTTP retry limit exceeded
-                    if (requestContext.HttpRetryCount >= retryConfiguration.RetryLimit)
-                    {
-                        return false;
-                    }
-                    return true;
-                }
-            }
-
             return false;
         }
 
-        protected override bool RetryLimitExceeded(IExecutionContext executionContext)
+        public override bool RetryLimitExceeded(IExecutionContext executionContext)
         {
             var requestContext = executionContext.RequestContext;
 

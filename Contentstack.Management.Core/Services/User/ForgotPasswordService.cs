@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.User
 {
@@ -13,7 +14,7 @@ namespace Contentstack.Management.Core.Services.User
         {
             if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException("email");
+                throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
 
             _email = email;
