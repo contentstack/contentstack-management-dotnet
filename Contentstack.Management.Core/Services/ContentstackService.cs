@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Net.Http;
@@ -151,6 +151,15 @@ namespace Contentstack.Management.Core.Services
             return HttpMethod == "POST" || HttpMethod == "PUT" || HttpMethod == "PATCH" || HttpMethod == "DELETE";
         }
 
+        /// <summary>
+        /// Returns true if the request should include Content-Type: application/json header.
+        /// Override to skip Content-Type for specific requests (e.g. DELETE /releases).
+        /// </summary>
+        protected virtual bool ShouldSetContentType()
+        {
+            return true;
+        }
+
         public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null)
         {
             ThrowIfDisposed();
@@ -162,7 +171,10 @@ namespace Contentstack.Management.Core.Services
                 .Add(new MediaTypeWithQualityHeaderValue("image/jpeg"));
             }
             Uri requestUri = ContentstackUtilities.ComposeUrI(config.GetUri(), this);
-            Headers["Content-Type"] = "application/json";
+            if (ShouldSetContentType())
+            {
+                Headers["Content-Type"] = "application/json";
+            }
 
             if (!string.IsNullOrEmpty(this.ManagementToken))
             {
