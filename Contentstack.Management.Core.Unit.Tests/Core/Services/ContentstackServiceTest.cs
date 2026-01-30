@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -276,6 +276,19 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
 
             contentstackService.Headers[HeadersKey.ContentTypeHeader] = "application/json";
 
+            Assert.AreEqual("application/json", contentstackService.GetHeaderValue(HeadersKey.ContentTypeHeader));
+        }
+
+        [TestMethod]
+        public void CreateHttpRequest_Should_Set_Content_Type_When_ShouldSetContentType_Returns_True()
+        {
+            var contentstackService = new ContentstackService(serializer);
+            var config = new ContentstackClientOptions();
+            config.Authtoken = _fixture.Create<string>();
+
+            contentstackService.CreateHttpRequest(new HttpClient(), config);
+
+            Assert.IsTrue(contentstackService.Headers.ContainsKey(HeadersKey.ContentTypeHeader));
             Assert.AreEqual("application/json", contentstackService.GetHeaderValue(HeadersKey.ContentTypeHeader));
         }
 

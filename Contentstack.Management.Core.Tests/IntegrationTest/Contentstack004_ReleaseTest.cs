@@ -970,6 +970,92 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
+        /// <summary>
+        /// Verifies that Delete Release API succeeds when the SDK does not send Content-Type header (DELETE /releases/{uid}).
+        /// Creates a release, deletes it without Content-Type, asserts success, then verifies the release is gone.
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test021_Should_Delete_Release_Without_Content_Type_Header()
+        {
+            try
+            {
+                var releaseModel = new ReleaseModel
+                {
+                    Name = _testReleaseName + " Delete Without Content-Type",
+                    Description = _testReleaseDescription + " (Delete without Content-Type header)",
+                    Locked = false,
+                    Archived = false
+                };
 
+                ContentstackResponse createResponse = _stack.Release().Create(releaseModel);
+                var createResponseJson = createResponse.OpenJObjectResponse();
+                Assert.IsTrue(createResponse.IsSuccessStatusCode, "Create release must succeed.");
+                string releaseToDeleteUid = createResponseJson["release"]["uid"].ToString();
+
+                ContentstackResponse deleteResponse = _stack.Release(releaseToDeleteUid).Delete();
+
+                Assert.IsNotNull(deleteResponse);
+                Assert.IsTrue(deleteResponse.IsSuccessStatusCode, "Delete release (without Content-Type) must succeed.");
+
+                try
+                {
+                    var fetchResponse = _stack.Release(releaseToDeleteUid).Fetch();
+                    Assert.IsFalse(fetchResponse.IsSuccessStatusCode, "Release must be gone after delete; Fetch should not succeed.");
+                }
+                catch (ContentstackErrorException)
+                {
+                    Assert.IsTrue(true, "Release not found after delete (exception path).");
+                }
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Delete release without Content-Type header failed: {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Verifies that Delete Release API (async) succeeds when the SDK does not send Content-Type header (DELETE /releases/{uid}).
+        /// Creates a release, deletes it without Content-Type, asserts success, then verifies the release is gone.
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test022_Should_Delete_Release_Async_Without_Content_Type_Header()
+        {
+            try
+            {
+                var releaseModel = new ReleaseModel
+                {
+                    Name = _testReleaseName + " Delete Async Without Content-Type",
+                    Description = _testReleaseDescription + " (Delete async without Content-Type header)",
+                    Locked = false,
+                    Archived = false
+                };
+
+                ContentstackResponse createResponse = await _stack.Release().CreateAsync(releaseModel);
+                var createResponseJson = createResponse.OpenJObjectResponse();
+                Assert.IsTrue(createResponse.IsSuccessStatusCode, "Create release must succeed.");
+                string releaseToDeleteUid = createResponseJson["release"]["uid"].ToString();
+
+                ContentstackResponse deleteResponse = await _stack.Release(releaseToDeleteUid).DeleteAsync();
+
+                Assert.IsNotNull(deleteResponse);
+                Assert.IsTrue(deleteResponse.IsSuccessStatusCode, "Delete release async (without Content-Type) must succeed.");
+
+                try
+                {
+                    var fetchResponse = await _stack.Release(releaseToDeleteUid).FetchAsync();
+                    Assert.IsFalse(fetchResponse.IsSuccessStatusCode, "Release must be gone after delete; Fetch should not succeed.");
+                }
+                catch (ContentstackErrorException)
+                {
+                    Assert.IsTrue(true, "Release not found after delete (exception path).");
+                }
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Delete release async without Content-Type header failed: {e.Message}");
+            }
+        }
     }
 } 
