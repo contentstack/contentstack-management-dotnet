@@ -1,9 +1,13 @@
-﻿using System;
+using System;
+using System.Net.Http;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Contentstack.Management.Core;
 using Contentstack.Management.Core.Services.Models;
+using Contentstack.Management.Core.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
 {
     [TestClass]
@@ -11,8 +15,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
     {
         private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
-       .Customize(new AutoMoqCustomization());
+            .Customize(new AutoMoqCustomization());
 
+        private static ContentstackClientOptions CreateConfig(IFixture fixture)
+        {
+            var config = new ContentstackClientOptions();
+            config.Authtoken = fixture.Create<string>();
+            return config;
+        }
 
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
@@ -59,6 +69,64 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             Assert.IsNotNull(service);
             Assert.AreEqual("GET", service.HttpMethod);
             Assert.AreEqual(resourcePath, service.ResourcePath);
+        }
+
+        [TestMethod]
+        public void Delete_Release_Should_Not_Include_Content_Type_Header()
+        {
+            var stack = new Management.Core.Models.Stack(null, _fixture.Create<string>());
+            var service = new FetchDeleteService(serializer, stack, "/releases/release_uid_123", "DELETE");
+
+            service.CreateHttpRequest(new HttpClient(), CreateConfig(_fixture));
+
+            Assert.IsFalse(service.Headers.ContainsKey(HeadersKey.ContentTypeHeader), "DELETE /releases/{uid} must not include Content-Type header.");
+        }
+
+        [TestMethod]
+        public void Delete_Release_With_Path_Releases_Only_Should_Not_Include_Content_Type_Header()
+        {
+            var stack = new Management.Core.Models.Stack(null, _fixture.Create<string>());
+            var service = new FetchDeleteService(serializer, stack, "/releases", "DELETE");
+
+            service.CreateHttpRequest(new HttpClient(), CreateConfig(_fixture));
+
+            Assert.IsFalse(service.Headers.ContainsKey(HeadersKey.ContentTypeHeader));
+        }
+
+        [TestMethod]
+        public void Delete_Release_Items_Path_Should_Include_Content_Type_Header()
+        {
+            var stack = new Management.Core.Models.Stack(null, _fixture.Create<string>());
+            var service = new FetchDeleteService(serializer, stack, "/releases/release_uid/item", "DELETE");
+
+            service.CreateHttpRequest(new HttpClient(), CreateConfig(_fixture));
+
+            Assert.IsTrue(service.Headers.ContainsKey(HeadersKey.ContentTypeHeader), "DELETE /releases/{uid}/item (FetchDeleteService) should still set Content-Type.");
+            Assert.AreEqual("application/json", service.GetHeaderValue(HeadersKey.ContentTypeHeader));
+        }
+
+        [TestMethod]
+        public void Fetch_Release_Should_Include_Content_Type_Header()
+        {
+            var stack = new Management.Core.Models.Stack(null, _fixture.Create<string>());
+            var service = new FetchDeleteService(serializer, stack, "/releases/release_uid_123", "GET");
+
+            service.CreateHttpRequest(new HttpClient(), CreateConfig(_fixture));
+
+            Assert.IsTrue(service.Headers.ContainsKey(HeadersKey.ContentTypeHeader));
+            Assert.AreEqual("application/json", service.GetHeaderValue(HeadersKey.ContentTypeHeader));
+        }
+
+        [TestMethod]
+        public void Delete_Non_Release_Resource_Should_Include_Content_Type_Header()
+        {
+            var stack = new Management.Core.Models.Stack(null, _fixture.Create<string>());
+            var service = new FetchDeleteService(serializer, stack, "/contenttypes/ct_uid", "DELETE");
+
+            service.CreateHttpRequest(new HttpClient(), CreateConfig(_fixture));
+
+            Assert.IsTrue(service.Headers.ContainsKey(HeadersKey.ContentTypeHeader));
+            Assert.AreEqual("application/json", service.GetHeaderValue(HeadersKey.ContentTypeHeader));
         }
     }
 }

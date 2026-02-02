@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.6.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.6.1) (2026-02-02)
+ - Fix
+   - Release DELETE request no longer includes Content-Type header to comply with API requirements
+
 ## [v0.6.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.6.0)
  - Enhancement
    - Refactor retry policy implementation to improve exception handling  and retry logic across various scenarios
