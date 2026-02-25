@@ -38,14 +38,12 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
             // Set headers based on parameters
             if (_skipWorkflowStage)
             {
-                Headers["skip_workflow_stage_check"] = "true";
-                // AddQueryResource("skip_workflow_stage_check", "true");
+                AddQueryResource("skip_workflow_stage_check", "true");
             }
 
             if (_approvals)
             {
-                Headers["approvals"] = "true";
-                //  AddQueryResource("approvals", "true");
+                AddQueryResource("approvals", "true");
             }
 
             if (_isNested)
