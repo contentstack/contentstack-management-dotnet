@@ -39,11 +39,13 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
             if (_skipWorkflowStage)
             {
                 Headers["skip_workflow_stage_check"] = "true";
+                // AddQueryResource("skip_workflow_stage_check", "true");
             }
 
             if (_approvals)
             {
                 Headers["approvals"] = "true";
+                //  AddQueryResource("approvals", "true");
             }
 
             if (_isNested)

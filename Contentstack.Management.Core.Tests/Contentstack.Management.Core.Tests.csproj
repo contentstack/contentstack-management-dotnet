@@ -36,11 +36,6 @@
     <EmbeddedResource Include="Mock\*.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Microsoft.AspNetCore.Http" />
   </ItemGroup>
   <ItemGroup>
