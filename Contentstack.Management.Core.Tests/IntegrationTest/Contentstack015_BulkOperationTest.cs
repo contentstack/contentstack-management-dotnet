@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Models.Fields;
 using Contentstack.Management.Core.Tests.Model;
@@ -20,6 +22,17 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private string _testEnvironmentUid = "bulk_test_environment";
         private string _testReleaseUid = "bulk_test_release";
         private List<EntryInfo> _createdEntries = new List<EntryInfo>();
+
+        /// <summary>
+        /// Fails the test with a clear message from ContentstackErrorException or generic exception.
+        /// </summary>
+        private static void FailWithError(string operation, Exception ex)
+        {
+            if (ex is ContentstackErrorException cex)
+                Assert.Fail($"{operation} failed. HTTP {(int)cex.StatusCode} ({cex.StatusCode}). ErrorCode: {cex.ErrorCode}. Message: {cex.ErrorMessage ?? cex.Message}");
+            else
+                Assert.Fail($"{operation} failed: {ex.Message}");
+        }
 
         [TestInitialize]
         public async Task Initialize()
@@ -223,14 +236,17 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails, skipWorkflowStage: true, approvals: true);
-                var responseJson = response.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
-                Assert.IsTrue(response.IsSuccessStatusCode);
+                Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk publish failed with status {(int)response.StatusCode} ({response.StatusCode}).");
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.");
+
+                var responseJson = response.OpenJObjectResponse();
+                Assert.IsNotNull(responseJson);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Assert.Fail($"Failed to perform bulk publish with skipWorkflowStage and approvals: {e.Message}");
+                FailWithError("Bulk publish with skipWorkflowStage and approvals", ex);
             }
         }
 
@@ -261,14 +277,126 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.BulkOperation().Unpublish(unpublishDetails, skipWorkflowStage: true, approvals: true);
-                var responseJson = response.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
-                Assert.IsTrue(response.IsSuccessStatusCode);
+                Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk unpublish failed with status {(int)response.StatusCode} ({response.StatusCode}).");
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.");
+
+                var responseJson = response.OpenJObjectResponse();
+                Assert.IsNotNull(responseJson);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Assert.Fail($"Failed to perform bulk unpublish with skipWorkflowStage and approvals: {e.Message}");
+                FailWithError("Bulk unpublish with skipWorkflowStage and approvals", ex);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test003b_Should_Perform_Bulk_Publish_With_ApiVersion_3_2()
+        {
+            try
+            {
+                await EnsureBulkTestContentTypeAndEntriesAsync();
+
+                List<EntryInfo> availableEntries = await FetchExistingEntries();
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
+
+                List<string> availableEnvironments = await GetAvailableEnvironments();
+
+                var publishDetails = new BulkPublishDetails
+                {
+                    Entries = availableEntries.Select(e => new BulkPublishEntry
+                    {
+                        Uid = e.Uid,
+                        ContentType = _contentTypeUid,
+                        Version = e.Version,
+                        Locale = "en-us"
+                    }).ToList(),
+                    Locales = new List<string> { "en-us" },
+                    Environments = availableEnvironments
+                };
+
+                ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails, skipWorkflowStage: true, approvals: true, apiVersion: "3.2");
+
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk publish with api_version 3.2 failed with status {(int)response.StatusCode} ({response.StatusCode}).");
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.");
+
+                var responseJson = response.OpenJObjectResponse();
+                Assert.IsNotNull(responseJson);
+            }
+            catch (Exception ex)
+            {
+                FailWithError("Bulk publish with api_version 3.2", ex);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test004b_Should_Perform_Bulk_Unpublish_With_ApiVersion_3_2()
+        {
+            try
+            {
+                await EnsureBulkTestContentTypeAndEntriesAsync();
+
+                List<EntryInfo> availableEntries = await FetchExistingEntries();
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
+
+                List<string> availableEnvironments = await GetAvailableEnvironments();
+
+                var unpublishDetails = new BulkPublishDetails
+                {
+                    Entries = availableEntries.Select(e => new BulkPublishEntry
+                    {
+                        Uid = e.Uid,
+                        ContentType = _contentTypeUid,
+                        Version = e.Version,
+                        Locale = "en-us"
+                    }).ToList(),
+                    Locales = new List<string> { "en-us" },
+                    Environments = availableEnvironments
+                };
+
+                ContentstackResponse response = _stack.BulkOperation().Unpublish(unpublishDetails, skipWorkflowStage: true, approvals: true, apiVersion: "3.2");
+
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk unpublish with api_version 3.2 failed with status {(int)response.StatusCode} ({response.StatusCode}).");
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.");
+
+                var responseJson = response.OpenJObjectResponse();
+                Assert.IsNotNull(responseJson);
+            }
+            catch (Exception ex)
+            {
+                FailWithError("Bulk unpublish with api_version 3.2", ex);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test004c_Should_Return_Error_When_Bulk_Unpublish_With_Invalid_Data()
+        {
+            var invalidDetails = new BulkPublishDetails
+            {
+                Entries = new List<BulkPublishEntry>(),
+                Locales = new List<string> { "en-us" },
+                Environments = new List<string> { "non_existent_environment_uid" }
+            };
+
+            try
+            {
+                _stack.BulkOperation().Unpublish(invalidDetails);
+                Assert.Fail("Expected ContentstackErrorException was not thrown.");
+            }
+            catch (ContentstackErrorException ex)
+            {
+                Assert.IsFalse(ex.StatusCode >= HttpStatusCode.OK && (int)ex.StatusCode < 300, "Expected non-success status code.");
+                Assert.IsNotNull(ex.ErrorMessage ?? ex.Message, "Error message should be present.");
+            }
+            catch (Exception ex)
+            {
+                FailWithError("Bulk unpublish with invalid data (negative test)", ex);
             }
         }
 
