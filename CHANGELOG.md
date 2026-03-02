@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.7.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.7.0)
+ - Feat
+   - **Bulk publish/unpublish: query parameters (DX-3233)**
+     - `skip_workflow_stage_check` and `approvals` are now sent as query parameters instead of headers for bulk publish and bulk unpublish
+     - Unit tests updated to assert on `QueryResources` for these flags (BulkPublishServiceTest, BulkUnpublishServiceTest, BulkOperationServicesTest)
+     - Integration tests: bulk publish with skipWorkflowStage and approvals (Test003a), bulk unpublish with skipWorkflowStage and approvals (Test004a), and helper `EnsureBulkTestContentTypeAndEntriesAsync()` so bulk tests can run in any order
+
 ## [v0.6.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.6.1) (2026-02-02)
  - Fix
    - Release DELETE request no longer includes Content-Type header to comply with API requirements

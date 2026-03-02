@@ -198,6 +198,82 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         [TestMethod]
         [DoNotParallelize]
+        public async Task Test003a_Should_Perform_Bulk_Publish_With_SkipWorkflowStage_And_Approvals()
+        {
+            try
+            {
+                await EnsureBulkTestContentTypeAndEntriesAsync();
+
+                List<EntryInfo> availableEntries = await FetchExistingEntries();
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
+
+                List<string> availableEnvironments = await GetAvailableEnvironments();
+
+                var publishDetails = new BulkPublishDetails
+                {
+                    Entries = availableEntries.Select(e => new BulkPublishEntry
+                    {
+                        Uid = e.Uid,
+                        ContentType = _contentTypeUid,
+                        Version = e.Version,
+                        Locale = "en-us"
+                    }).ToList(),
+                    Locales = new List<string> { "en-us" },
+                    Environments = availableEnvironments
+                };
+
+                ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails, skipWorkflowStage: true, approvals: true);
+                var responseJson = response.OpenJObjectResponse();
+
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Failed to perform bulk publish with skipWorkflowStage and approvals: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test004a_Should_Perform_Bulk_Unpublish_With_SkipWorkflowStage_And_Approvals()
+        {
+            try
+            {
+                await EnsureBulkTestContentTypeAndEntriesAsync();
+
+                List<EntryInfo> availableEntries = await FetchExistingEntries();
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
+
+                List<string> availableEnvironments = await GetAvailableEnvironments();
+
+                var unpublishDetails = new BulkPublishDetails
+                {
+                    Entries = availableEntries.Select(e => new BulkPublishEntry
+                    {
+                        Uid = e.Uid,
+                        ContentType = _contentTypeUid,
+                        Version = e.Version,
+                        Locale = "en-us"
+                    }).ToList(),
+                    Locales = new List<string> { "en-us" },
+                    Environments = availableEnvironments
+                };
+
+                ContentstackResponse response = _stack.BulkOperation().Unpublish(unpublishDetails, skipWorkflowStage: true, approvals: true);
+                var responseJson = response.OpenJObjectResponse();
+
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Failed to perform bulk unpublish with skipWorkflowStage and approvals: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
         public async Task Test005_Should_Perform_Bulk_Release_Operations()
         {
             try
@@ -567,6 +643,72 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             catch (Exception e)
             {
                 return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// Ensures bulk_test_content_type exists and has at least one entry so bulk tests can run in any order.
+        /// </summary>
+        private async Task EnsureBulkTestContentTypeAndEntriesAsync()
+        {
+            try
+            {
+                bool contentTypeExists = false;
+                try
+                {
+                    ContentstackResponse ctResponse = _stack.ContentType(_contentTypeUid).Fetch();
+                    contentTypeExists = ctResponse.IsSuccessStatusCode;
+                }
+                catch
+                {
+                    // Content type not found
+                }
+
+                if (!contentTypeExists)
+                {
+                    await CreateTestEnvironment();
+                    await CreateTestRelease();
+                    var contentModelling = new ContentModelling
+                    {
+                        Title = "bulk_test_content_type",
+                        Uid = _contentTypeUid,
+                        Schema = new List<Field>
+                        {
+                            new TextboxField
+                            {
+                                DisplayName = "Title",
+                                Uid = "title",
+                                DataType = "text",
+                                Mandatory = true,
+                                Unique = false,
+                                Multiple = false
+                            }
+                        }
+                    };
+                    _stack.ContentType().Create(contentModelling);
+                }
+
+                // Ensure at least one entry exists
+                List<EntryInfo> existing = await FetchExistingEntries();
+                if (existing == null || existing.Count == 0)
+                {
+                    var entry = new SimpleEntry { Title = "Bulk test entry" };
+                    ContentstackResponse createResponse = _stack.ContentType(_contentTypeUid).Entry().Create(entry);
+                    var responseJson = createResponse.OpenJObjectResponse();
+                    if (createResponse.IsSuccessStatusCode && responseJson["entry"] != null && responseJson["entry"]["uid"] != null)
+                    {
+                        _createdEntries.Add(new EntryInfo
+                        {
+                            Uid = responseJson["entry"]["uid"].ToString(),
+                            Title = responseJson["entry"]["title"]?.ToString() ?? "Bulk test entry",
+                            Version = responseJson["entry"]["_version"] != null ? (int)responseJson["entry"]["_version"] : 1
+                        });
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Caller will handle if entries are still missing
             }
         }
 

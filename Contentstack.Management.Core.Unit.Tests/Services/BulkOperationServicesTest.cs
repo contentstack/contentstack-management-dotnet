@@ -142,10 +142,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/publish", service.ResourcePath);
             Assert.AreEqual("POST", service.HttpMethod);
-            Assert.IsTrue(service.Headers.ContainsKey("skip_workflow_stage_check"));
-            Assert.IsTrue(service.Headers.ContainsKey("approvals"));
-            Assert.AreEqual("true", service.Headers["skip_workflow_stage_check"]);
-            Assert.AreEqual("true", service.Headers["approvals"]);
+            Assert.IsTrue(service.QueryResources.ContainsKey("skip_workflow_stage_check"));
+            Assert.IsTrue(service.QueryResources.ContainsKey("approvals"));
+            Assert.AreEqual("true", service.QueryResources["skip_workflow_stage_check"]);
+            Assert.AreEqual("true", service.QueryResources["approvals"]);
         }
 
         [TestMethod]
@@ -197,10 +197,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             var service = new BulkPublishService(_serializer, _stack, publishDetails, true, true, true);
 
             Assert.IsNotNull(service);
-            Assert.IsTrue(service.Headers.ContainsKey("skip_workflow_stage_check"));
-            Assert.IsTrue(service.Headers.ContainsKey("approvals"));
-            Assert.AreEqual("true", service.Headers["skip_workflow_stage_check"]);
-            Assert.AreEqual("true", service.Headers["approvals"]);
+            Assert.IsTrue(service.QueryResources.ContainsKey("skip_workflow_stage_check"));
+            Assert.IsTrue(service.QueryResources.ContainsKey("approvals"));
+            Assert.AreEqual("true", service.QueryResources["skip_workflow_stage_check"]);
+            Assert.AreEqual("true", service.QueryResources["approvals"]);
         }
 
         [TestMethod]
@@ -218,8 +218,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             var service = new BulkPublishService(_serializer, _stack, publishDetails, false, false, false);
 
             Assert.IsNotNull(service);
-            Assert.IsFalse(service.Headers.ContainsKey("skip_workflow_stage_check"));
-            Assert.IsFalse(service.Headers.ContainsKey("approvals"));
+            Assert.IsFalse(service.QueryResources.ContainsKey("skip_workflow_stage_check"));
+            Assert.IsFalse(service.QueryResources.ContainsKey("approvals"));
         }
 
         [TestMethod]
@@ -248,8 +248,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/unpublish", service.ResourcePath);
             Assert.AreEqual("POST", service.HttpMethod);
-            Assert.IsTrue(service.Headers.ContainsKey("skip_workflow_stage_check"));
-            Assert.IsTrue(service.Headers.ContainsKey("approvals"));
+            Assert.IsTrue(service.QueryResources.ContainsKey("skip_workflow_stage_check"));
+            Assert.IsTrue(service.QueryResources.ContainsKey("approvals"));
         }
 
         [TestMethod]

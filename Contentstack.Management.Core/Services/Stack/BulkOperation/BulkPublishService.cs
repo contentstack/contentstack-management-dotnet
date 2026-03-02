@@ -35,15 +35,15 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
             ResourcePath = "/bulk/publish";
             HttpMethod = "POST";
 
-            // Set headers based on parameters
+            // Set query parameters based on options
             if (_skipWorkflowStage)
             {
-                Headers["skip_workflow_stage_check"] = "true";
+                AddQueryResource("skip_workflow_stage_check", "true");
             }
 
             if (_approvals)
             {
-                Headers["approvals"] = "true";
+                AddQueryResource("approvals", "true");
             }
 
             if (_isNested)
