@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
     /// <summary>
-    /// Bulk operation integration tests. ClassInitialize ensures environment (find or create "bulk_test_env"), then finds or creates workflow "oggy" (2 stages: New stage 1, New stage 2) and publish rule (Stage 2) once.
+    /// Bulk operation integration tests. ClassInitialize ensures environment (find or create "bulk_test_env"), then finds or creates workflow "workflow_test" (2 stages: New stage 1, New stage 2) and publish rule (Stage 2) once.
     /// Tests are independent. Four workflow-based tests assign entries to Stage 1/Stage 2 then run bulk unpublish/publish with/without version and params.
     /// No cleanup so you can verify workflow, publish rules, and entry allotment in the UI.
     /// </summary>
@@ -35,7 +35,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private static string _bulkTestWorkflowStage2Uid;  // Stage 2 (Complete) – selected in publishing rule
         private static string _bulkTestPublishRuleUid;
         private static string _bulkTestEnvironmentUid;     // Environment used for workflow/publish rule (ensured in ClassInitialize or Test000b/000c)
-        private static string _bulkTestWorkflowSetupError; // Reason workflow setup failed (so workflow tests can show it)
+        private static string _bulkTestWorkflowSetupError; // Reason workflow setup failed (so workflow_tests can show it)
 
         /// <summary>
         /// Fails the test with a clear message from ContentstackErrorException or generic exception.
@@ -101,7 +101,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             try
             {
-                const string workflowName = "oggy";
+                const string workflowName = "workflow_test";
 
                 // Check if a workflow with the same name already exists (e.g. from a previous test run)
                 try
@@ -288,30 +288,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
-        /// <summary>
-        /// Ensures an environment exists for workflow/publish rule tests (find existing or create "bulk_test_env"). Sets _bulkTestEnvironmentUid.
-        /// </summary>
-        //[TestMethod]
-        //[DoNotParallelize]
-        //public async Task Test000c_Should_Ensure_Environment_For_Workflow_Tests()
-        //{
-        //    try
-        //    {
-        //        if (string.IsNullOrEmpty(_bulkTestEnvironmentUid))
-        //            await EnsureBulkTestEnvironmentAsync(_stack);
-
-        //        Assert.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid),
-        //            "Ensure environment failed: no existing environment and create failed. Create at least one environment in the stack or check permissions.");
-
-        //        ContentstackResponse fetchResponse = _stack.Environment(_bulkTestEnvironmentUid).Fetch();
-        //        Assert.IsTrue(fetchResponse.IsSuccessStatusCode,
-        //            $"Environment {_bulkTestEnvironmentUid} was set but fetch failed: HTTP {(int)fetchResponse.StatusCode}.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        FailWithError("Ensure environment for workflow tests", ex);
-        //    }
-        //}
 
         [TestMethod]
         [DoNotParallelize]
@@ -426,85 +402,85 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
-        //[TestMethod]
-        //[DoNotParallelize]
-        //public async Task Test003_Should_Perform_Bulk_Publish_Operation()
-        //{
-        //    try
-        //    {
-        //        // Fetch existing entries from the content type
-        //        List<EntryInfo> availableEntries = await FetchExistingEntries();
-        //        Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test003_Should_Perform_Bulk_Publish_Operation()
+        {
+           try
+           {
+               // Fetch existing entries from the content type
+               List<EntryInfo> availableEntries = await FetchExistingEntries();
+               Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
 
-        //        // Get available environments or use empty list if none available
-        //        List<string> availableEnvironments = await GetAvailableEnvironments();
+               // Get available environments or use empty list if none available
+               List<string> availableEnvironments = await GetAvailableEnvironments();
 
-        //        // Create bulk publish details
-        //        var publishDetails = new BulkPublishDetails
-        //        {
-        //            Entries = availableEntries.Select(e => new BulkPublishEntry
-        //            {
-        //                Uid = e.Uid,
-        //                ContentType = _contentTypeUid,
-        //                Version = 1,
-        //                Locale = "en-us"
-        //            }).ToList(),
-        //            Locales = new List<string> { "en-us" },
-        //            Environments = availableEnvironments
-        //        };
+               // Create bulk publish details
+               var publishDetails = new BulkPublishDetails
+               {
+                   Entries = availableEntries.Select(e => new BulkPublishEntry
+                   {
+                       Uid = e.Uid,
+                       ContentType = _contentTypeUid,
+                       Version = 1,
+                       Locale = "en-us"
+                   }).ToList(),
+                   Locales = new List<string> { "en-us" },
+                   Environments = availableEnvironments
+               };
 
-        //        // Perform bulk publish
-        //        ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails);
-        //        var responseJson = response.OpenJObjectResponse();
+               // Perform bulk publish
+               ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails);
+               var responseJson = response.OpenJObjectResponse();
 
-        //        Assert.IsNotNull(response);
-        //        Assert.IsTrue(response.IsSuccessStatusCode);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        FailWithError("Bulk publish", ex);
-        //    }
-        //}
+               Assert.IsNotNull(response);
+               Assert.IsTrue(response.IsSuccessStatusCode);
+           }
+           catch (Exception ex)
+           {
+               FailWithError("Bulk publish", ex);
+           }
+        }
 
-        //[TestMethod]
-        //[DoNotParallelize]
-        //public async Task Test004_Should_Perform_Bulk_Unpublish_Operation()
-        //{
-        //    try
-        //    {
-        //        // Fetch existing entries from the content type
-        //        List<EntryInfo> availableEntries = await FetchExistingEntries();
-        //        Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test004_Should_Perform_Bulk_Unpublish_Operation()
+        {
+           try
+           {
+               // Fetch existing entries from the content type
+               List<EntryInfo> availableEntries = await FetchExistingEntries();
+               Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
 
-        //        // Get available environments
-        //        List<string> availableEnvironments = await GetAvailableEnvironments();
+               // Get available environments
+               List<string> availableEnvironments = await GetAvailableEnvironments();
 
-        //        // Create bulk unpublish details
-        //        var unpublishDetails = new BulkPublishDetails
-        //        {
-        //            Entries = availableEntries.Select(e => new BulkPublishEntry
-        //            {
-        //                Uid = e.Uid,
-        //                ContentType = _contentTypeUid,
-        //                Version = 1,
-        //                Locale = "en-us"
-        //            }).ToList(),
-        //            Locales = new List<string> { "en-us" },
-        //            Environments = availableEnvironments
-        //        };
+               // Create bulk unpublish details
+               var unpublishDetails = new BulkPublishDetails
+               {
+                   Entries = availableEntries.Select(e => new BulkPublishEntry
+                   {
+                       Uid = e.Uid,
+                       ContentType = _contentTypeUid,
+                       Version = 1,
+                       Locale = "en-us"
+                   }).ToList(),
+                   Locales = new List<string> { "en-us" },
+                   Environments = availableEnvironments
+               };
 
-        //        // Perform bulk unpublish
-        //        ContentstackResponse response = _stack.BulkOperation().Unpublish(unpublishDetails);
-        //        var responseJson = response.OpenJObjectResponse();
+               // Perform bulk unpublish
+               ContentstackResponse response = _stack.BulkOperation().Unpublish(unpublishDetails);
+               var responseJson = response.OpenJObjectResponse();
 
-        //        Assert.IsNotNull(response);
-        //        Assert.IsTrue(response.IsSuccessStatusCode);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        FailWithError("Bulk unpublish", ex);
-        //    }
-        //}
+               Assert.IsNotNull(response);
+               Assert.IsTrue(response.IsSuccessStatusCode);
+           }
+           catch (Exception ex)
+           {
+               FailWithError("Bulk unpublish", ex);
+           }
+        }
 
         [TestMethod]
         [DoNotParallelize]
@@ -714,32 +690,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
-        //[TestMethod]
-        //[DoNotParallelize]
-        //public void Test004c_Should_Return_Error_When_Bulk_Unpublish_With_Invalid_Data()
-        //{
-        //    var invalidDetails = new BulkPublishDetails
-        //    {
-        //        Entries = new List<BulkPublishEntry>(),
-        //        Locales = new List<string> { "en-us" },
-        //        Environments = new List<string> { "non_existent_environment_uid" }
-        //    };
-
-        //    try
-        //    {
-        //        _stack.BulkOperation().Unpublish(invalidDetails);
-        //        Assert.Fail("Expected ContentstackErrorException was not thrown.");
-        //    }
-        //    catch (ContentstackErrorException ex)
-        //    {
-        //        Assert.IsFalse(ex.StatusCode >= HttpStatusCode.OK && (int)ex.StatusCode < 300, "Expected non-success status code.");
-        //        Assert.IsNotNull(ex.ErrorMessage ?? ex.Message, "Error message should be present.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        FailWithError("Bulk unpublish with invalid data (negative test)", ex);
-        //    }
-        //}
 
         [TestMethod]
         [DoNotParallelize]
@@ -933,111 +883,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 FailWithError("Bulk workflow operations", ex);
             }
-        }
-
-        //// --- Four workflow-based tests: workflow (2 stages) + publish rule (Stage 2) + entries assigned to Stage 1 / Stage 2 ---
-
-        //[TestMethod]
-        //[DoNotParallelize]
-        //public async Task Test_BulkUnpublish_WithoutVersion_WithParams()
-        //{
-        //    try
-        //    {
-        //        AssertWorkflowCreated();
-        //        await EnsureBulkTestContentTypeAndEntriesAsync();
-        //        List<EntryInfo> entries = await FetchExistingEntries();
-        //        Assert.IsTrue(entries.Count > 0, "No entries available for bulk operation");
-        //        await AssignEntriesToWorkflowStagesAsync(entries);
-        //        List<string> envs = await GetAvailableEnvironments();
-        //        var details = new BulkPublishDetails
-        //        {
-        //            Entries = entries.Select(e => new BulkPublishEntry { Uid = e.Uid, ContentType = _contentTypeUid, Version = 0, Locale = "en-us" }).ToList(),
-        //            Locales = new List<string> { "en-us" },
-        //            Environments = envs
-        //        };
-        //        ContentstackResponse response = _stack.BulkOperation().Unpublish(details, skipWorkflowStage: true, approvals: true);
-        //        Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk unpublish (no version, with params) failed: {(int)response.StatusCode}");
-        //    }
-        //    catch (Exception ex) { FailWithError("Bulk unpublish without version with params", ex); }
-        //}
-
-        //[TestMethod]
-        //[DoNotParallelize]
-        //public async Task Test_BulkPublish_WithVersion_WithParams()
-        //{
-        //    try
-        //    {
-        //        AssertWorkflowCreated();
-        //        await EnsureBulkTestContentTypeAndEntriesAsync();
-        //        List<EntryInfo> entries = await FetchExistingEntries();
-        //        Assert.IsTrue(entries.Count > 0, "No entries available for bulk operation");
-        //        await AssignEntriesToWorkflowStagesAsync(entries);
-        //        List<string> envs = await GetAvailableEnvironments();
-        //        var details = new BulkPublishDetails
-        //        {
-        //            Entries = entries.Select(e => new BulkPublishEntry { Uid = e.Uid, ContentType = _contentTypeUid, Version = e.Version, Locale = "en-us" }).ToList(),
-        //            Locales = new List<string> { "en-us" },
-        //            Environments = envs
-        //        };
-        //        ContentstackResponse response = _stack.BulkOperation().Publish(details, skipWorkflowStage: true, approvals: true, apiVersion: "3.2");
-        //        Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk publish (with version, with params) failed: {(int)response.StatusCode}");
-        //    }
-        //    catch (Exception ex) { FailWithError("Bulk publish with version with params", ex); }
-        //}
-
-        //[TestMethod]
-        //[DoNotParallelize]
-        //public async Task Test_BulkUnpublish_WithoutVersion_With_Params()
-        //{
-        //    try
-        //    {
-        //        AssertWorkflowCreated();
-        //        await EnsureBulkTestContentTypeAndEntriesAsync();
-        //        List<EntryInfo> entries = await FetchExistingEntries();
-        //        Assert.IsTrue(entries.Count > 0, "No entries available for bulk operation");
-        //        await AssignEntriesToWorkflowStagesAsync(entries);
-        //        List<string> envs = await GetAvailableEnvironments();
-        //        var details = new BulkPublishDetails
-        //        {
-        //            Entries = entries.Select(e => new BulkPublishEntry { Uid = e.Uid, ContentType = _contentTypeUid, Version = 0, Locale = "en-us" }).ToList(),
-        //            Locales = new List<string> { "en-us" },
-        //            Environments = envs
-        //        };
-        //        ContentstackResponse response = _stack.BulkOperation().Unpublish(details, skipWorkflowStage: true, approvals: true);
-        //        Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk unpublish (no version, no params) failed: {(int)response.StatusCode}");
-        //    }
-        //    catch (Exception ex) { FailWithError("Bulk unpublish without version without params", ex); }
-        //}
-
-        //[TestMethod]
-        //[DoNotParallelize]
-        //public async Task Test_BulkUnpublish_WithVersion_WithParams()
-        //{
-        //    try
-        //    {
-        //        AssertWorkflowCreated();
-        //        await EnsureBulkTestContentTypeAndEntriesAsync();
-        //        List<EntryInfo> entries = await FetchExistingEntries();
-        //        Assert.IsTrue(entries.Count > 0, "No entries available for bulk operation");
-        //        await AssignEntriesToWorkflowStagesAsync(entries);
-        //        List<string> envs = await GetAvailableEnvironments();
-        //        var details = new BulkPublishDetails
-        //        {
-        //            Entries = entries.Select(e => new BulkPublishEntry { Uid = e.Uid, ContentType = _contentTypeUid, Version = e.Version, Locale = "en-us" }).ToList(),
-        //            Locales = new List<string> { "en-us" },
-        //            Environments = envs
-        //        };
-        //        ContentstackResponse response = _stack.BulkOperation().Unpublish(details, skipWorkflowStage: true, approvals: true, apiVersion: "3.2");
-        //        Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk unpublish (with version, with params) failed: {(int)response.StatusCode}");
-        //    }
-        //    catch (Exception ex) { FailWithError("Bulk unpublish with version with params", ex); }
-        //}
-
-        [TestMethod]
-        [DoNotParallelize]
-        public void Test009_Should_Cleanup_Test_Resources()
-        {
-            // Cleanup skipped: workflow, publish rules, content type, entries, release, and environment are left so you can verify them in the UI.
         }
 
         private async Task CheckBulkJobStatus(string jobId, string bulkVersion = null)
@@ -1303,13 +1148,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         }
 
         /// <summary>
-        /// Finds or creates a workflow named "oggy" with 2 stages (New stage 1, New stage 2) and a publishing rule.
+        /// Finds or creates a workflow named "workflow_test" with 2 stages (New stage 1, New stage 2) and a publishing rule.
         /// Uses same payload as Test000a / final curl. Called once from ClassInitialize.
         /// </summary>
         private static async Task EnsureBulkTestWorkflowAndPublishingRuleAsync(Stack stack)
         {
             _bulkTestWorkflowSetupError = null;
-            const string workflowName = "oggy";
+            const string workflowName = "workflow_test";
             try
             {
                 await EnsureBulkTestEnvironmentAsync(stack);
@@ -1318,7 +1163,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     _bulkTestWorkflowSetupError = "No environment. Ensure environment failed (none found and create failed).";
                     return;
                 }
-                // Find existing workflow by name "oggy" (same as Test000a)
+                // Find existing workflow by name "workflow_test" (same as Test000a)
                 try
                 {
                     ContentstackResponse listResponse = stack.Workflow().FindAll();
