@@ -22,6 +22,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public async Task Initialize()
         {
+            TestReportHelper.Begin();
             try
             {
                 // First, ensure the client is logged in
@@ -88,10 +89,17 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test001_Should_Create_Delivery_Token()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             try
             {
+                TestReportHelper.LogRequest("_stack.DeliveryToken().Create()", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
                 ContentstackResponse response = _stack.DeliveryToken().Create(_testTokenModel);
+                sw.Stop();
+                TestReportHelper.LogResponse((int)response.StatusCode, response.StatusCode.ToString(),
+                    sw.ElapsedMilliseconds, response.OpenResponse());
 
+                TestReportHelper.LogAssertion(response.IsSuccessStatusCode, "Response is successful", type: "IsTrue");
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Create delivery token failed");
 
                 var responseObject = response.OpenJObjectResponse();
@@ -803,6 +811,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test019_Should_Delete_Delivery_Token()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             try
             {
                 // Ensure we have a token to delete
@@ -814,9 +823,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string tokenUidToDelete = _deliveryTokenUid;
                 Assert.IsNotNull(tokenUidToDelete, "Should have a valid token UID to delete");
 
-                // Test synchronous delete
+                TestReportHelper.LogRequest("_stack.DeliveryToken(uid).Delete()", "DELETE",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens/{tokenUidToDelete}");
                 ContentstackResponse response = _stack.DeliveryToken(tokenUidToDelete).Delete();
+                sw.Stop();
+                TestReportHelper.LogResponse((int)response.StatusCode, response.StatusCode.ToString(),
+                    sw.ElapsedMilliseconds, response.OpenResponse());
 
+                TestReportHelper.LogAssertion(response.IsSuccessStatusCode, "Delete response is successful", type: "IsTrue");
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Delete delivery token failed: {response.OpenResponse()}");
 
                 // Verify token is deleted by trying to fetch it
@@ -849,6 +863,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestCleanup]
         public async Task Cleanup()
         {
+            TestReportHelper.Flush();
             try
             {
                 // Clean up delivery token if it still exists

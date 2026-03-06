@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,8 +22,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void Initialize()
         {
+            TestReportHelper.Begin();
             StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
             _stack = Contentstack.Client.Stack(response.Stack.APIKey);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            TestReportHelper.Flush();
         }
 
         [TestMethod]
@@ -31,22 +38,28 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test001_Should_Create_Asset()
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             try
             {
                 AssetModel asset = new AssetModel("contentTypeSchema.json", path, "application/json", title:"New.json", description:"new test desc", parentUID: null, tags:"one,two");
+                TestReportHelper.LogRequest("_stack.Asset().Create(asset)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets");
                 ContentstackResponse response = _stack.Asset().Create(asset);
-                
+                sw.Stop();
+                TestReportHelper.LogResponse((int)response.StatusCode,
+                    response.StatusCode.ToString(), sw.ElapsedMilliseconds, response.OpenResponse());
+
                 if (response.IsSuccessStatusCode)
                 {
+                    TestReportHelper.LogAssertion(response.StatusCode == System.Net.HttpStatusCode.Created,
+                        "Status code is Created", expected: "Created", actual: response.StatusCode.ToString(), type: "AreEqual");
                     Assert.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode);
-                }
-                else
-                {
-                    // Don't fail the test if API returns an error - this might be expected behavior
                 }
             }
             catch (Exception e)
             {
+                sw.Stop();
+                TestReportHelper.LogAssertion(false, $"Exception: {e.GetType().Name} — {e.Message}", type: "Fail");
                 Assert.Fail("Asset Creation Failed ", e.Message);
             }
         }
@@ -295,14 +308,21 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test010_Should_Query_Assets()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             try
             {
+                TestReportHelper.LogRequest("_stack.Asset().Query().Find()", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets");
                 ContentstackResponse response = _stack.Asset().Query().Find();
-                
+                sw.Stop();
+                TestReportHelper.LogResponse((int)response.StatusCode,
+                    response.StatusCode.ToString(), sw.ElapsedMilliseconds, response.OpenResponse());
+
                 if (response.IsSuccessStatusCode)
                 {
-                    Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
                     var responseObject = response.OpenJObjectResponse();
+                    TestReportHelper.LogAssertion(responseObject["assets"] != null, "assets key present", type: "IsNotNull");
+                    Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
                     Assert.IsNotNull(responseObject["assets"], "Response should contain assets array");
                 }
                 else
@@ -312,6 +332,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (ContentstackErrorException ex)
             {
+                sw.Stop();
+                TestReportHelper.LogAssertion(false, $"ContentstackErrorException: {ex.Message}", type: "Fail");
                 Assert.Fail("Querying the Asset Failed ",ex.Message);
             }
         }

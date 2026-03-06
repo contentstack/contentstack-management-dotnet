@@ -21,8 +21,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public async Task Initialize()
         {
+            TestReportHelper.Begin();
             StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
             _stack = Contentstack.Client.Stack(response.Stack.APIKey);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            TestReportHelper.Flush();
         }
 
 
@@ -63,13 +70,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test001_Should_Create_Release()
         {
             string releaseUid = null;
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             try
             {
                 releaseUid = CreateTestRelease();
 
                 Assert.IsNotNull(releaseUid);
-                
+
+                TestReportHelper.LogRequest("_stack.Release().Create() + Fetch()", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseUid}");
                 ContentstackResponse contentstackResponse = _stack.Release(releaseUid).Fetch();
+                sw.Stop();
+                TestReportHelper.LogResponse((int)contentstackResponse.StatusCode,
+                    contentstackResponse.StatusCode.ToString(), sw.ElapsedMilliseconds, contentstackResponse.OpenResponse());
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -916,6 +929,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test019_Should_Delete_Release()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             try
             {
                 var releaseModel = new ReleaseModel
@@ -930,13 +944,22 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var createResponseJson = createResponse.OpenJObjectResponse();
                 string releaseToDeleteUid = createResponseJson["release"]["uid"].ToString();
 
+                TestReportHelper.LogRequest("_stack.Release(uid).Delete()", "DELETE",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseToDeleteUid}");
                 ContentstackResponse contentstackResponse = _stack.Release(releaseToDeleteUid).Delete();
+                sw.Stop();
+                TestReportHelper.LogResponse((int)contentstackResponse.StatusCode,
+                    contentstackResponse.StatusCode.ToString(), sw.ElapsedMilliseconds, contentstackResponse.OpenResponse());
 
+                TestReportHelper.LogAssertion(contentstackResponse != null, "Response not null", type: "IsNotNull");
+                TestReportHelper.LogAssertion(contentstackResponse.IsSuccessStatusCode, "Response is successful", type: "IsTrue");
                 Assert.IsNotNull(contentstackResponse);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
             }
             catch (Exception e)
             {
+                sw.Stop();
+                TestReportHelper.LogAssertion(false, $"Exception: {e.GetType().Name} — {e.Message}", type: "Fail");
                 Assert.Fail($"Delete release failed: {e.Message}");
             }
         }

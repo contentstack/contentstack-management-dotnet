@@ -19,6 +19,12 @@ DATE=$(date +'%d-%b-%Y')
 
 FILE_NAME="Contentstack-DotNet-Test-Case-$DATE"
 
+SDK_VERSION=$(grep -m1 '<Version>' Contentstack.Management.Core/contentstack.management.core.csproj | sed 's/.*<Version>\(.*\)<\/Version>.*/\1/' | tr -d '[:space:]')
+export SDK_VERSION="${SDK_VERSION:-unknown}"
+export BUILD_NUMBER="${BUILD_NUMBER:-local}"
+export COMMIT_SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+export TEST_ENV="${TEST_ENV:-integration}"
+
 echo "Running test case..."
 dotnet test --logger "trx;LogFileName=Report-$FILE_NAME.trx" --collect:"XPlat code coverage"
 
@@ -34,3 +40,13 @@ do
 done
 
 echo "Code coverage report generate."
+
+echo "Generating enhanced test report..."
+mkdir -p TestResults
+dotnet run --project tools/EnhancedTestReport/EnhancedTestReport.csproj -- \
+  --trx-dir "Contentstack.Management.Core.Unit.Tests/TestResults" \
+  --trx-dir "Contentstack.Management.Core.Tests/TestResults" \
+  --cobertura-dir "Contentstack.Management.Core.Unit.Tests/TestResults" \
+  --cobertura-dir "Contentstack.Management.Core.Tests/TestResults" \
+  --output "TestResults/EnhancedReport-$FILE_NAME.html"
+echo "Enhanced report written to TestResults/EnhancedReport-$FILE_NAME.html"

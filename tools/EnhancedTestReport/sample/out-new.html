@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contentstack Management .NET SDK - Enhanced Test Report</title>
+<style>
+:root {
+  --bg: #0f1419;
+  --surface: #1a2332;
+  --surface2: #243044;
+  --border: #2d3d52;
+  --text: #e6edf3;
+  --text-muted: #8b9cb3;
+  --accent: #58a6ff;
+  --accent-dim: #388bfd26;
+  --pass: #3fb950;
+  --fail: #f85149;
+  --warn: #d29922;
+  --font: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); padding: 24px; line-height: 1.5; font-size: 14px; }
+.container { max-width: 1100px; margin: 0 auto; background: var(--surface); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); overflow: hidden; border: 1px solid var(--border); }
+h1 { background: linear-gradient(135deg, #1f6feb 0%, #388bfd 100%); color: #fff; padding: 24px 28px; font-size: 1.35rem; font-weight: 600; letter-spacing: -0.02em; }
+.section-head { padding: 14px 24px; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; }
+.section-head:hover { background: #2a3850; }
+.section-head .chevron { display: inline-block; transition: transform 0.2s ease; color: var(--accent); }
+.section-head .chevron.open { transform: rotate(90deg); }
+.section-head .badge { font-size: 0.7rem; padding: 3px 10px; border-radius: 12px; font-weight: 500; }
+.section-head .badge.passed { background: rgba(63,185,80,0.2); color: var(--pass); }
+.section-head .badge.failed { background: rgba(248,81,73,0.2); color: var(--fail); }
+.summary { display: flex; flex-wrap: wrap; gap: 14px; padding: 20px 24px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+.summary-item { background: var(--surface); padding: 14px 20px; border-radius: 10px; border: 1px solid var(--border); min-width: 100px; }
+.summary-item strong { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 4px; }
+.summary-item span { font-size: 1.25rem; font-weight: 600; }
+.summary-item.passed span { color: var(--pass); }
+.summary-item.failed span { color: var(--fail); }
+.summary-item.skipped span { color: var(--text-muted); }
+.collapsible { display: none; }
+.collapsible.active { display: block; }
+.group-content { padding: 0; }
+.test-case { border-bottom: 1px solid var(--border); }
+.test-case:last-child { border-bottom: none; }
+.test-row { padding: 14px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; cursor: pointer; transition: background 0.15s; }
+.test-row:hover { background: var(--surface2); }
+.test-row.failed { background: rgba(248,81,73,0.06); }
+.test-name { flex: 1 1 280px; font-weight: 500; }
+.test-row .outcome { font-weight: 600; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; }
+.test-row .outcome.Passed { background: rgba(63,185,80,0.2); color: var(--pass); }
+.test-row .outcome.Failed { background: rgba(248,81,73,0.2); color: var(--fail); }
+.test-row .outcome.Skipped { background: rgba(139,156,179,0.2); color: var(--text-muted); }
+.test-row .duration { color: var(--text-muted); font-size: 0.85rem; }
+.test-row .detail-toggle { color: var(--accent); transition: transform 0.2s; }
+.test-row .detail-toggle.open { transform: rotate(90deg); }
+.test-details { display: none; padding: 0 24px 20px; }
+.test-details.open { display: block; }
+.detail-panel { background: var(--surface2); border-radius: 10px; border: 1px solid var(--border); margin-top: 12px; overflow: hidden; }
+.detail-section { border-bottom: 1px solid var(--border); }
+.detail-section:last-child { border-bottom: none; }
+.detail-section-title { padding: 12px 16px; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+.detail-section-title:hover { background: rgba(255,255,255,0.03); }
+.detail-section-title .icon { opacity: 0.9; }
+.detail-section-content { padding: 14px 16px; }
+.detail-section-content.collapsed { display: none; }
+.detail-section-content .sub { margin: 8px 0; font-size: 0.9rem; }
+.detail-section-content .sub label { color: var(--text-muted); display: inline-block; min-width: 120px; }
+.detail-section-content pre, .detail-section-content code { background: var(--bg); padding: 12px; border-radius: 8px; font-size: 0.85rem; overflow-x: auto; display: block; white-space: pre-wrap; word-break: break-all; border: 1px solid var(--border); }
+.detail-section-content pre { margin: 8px 0; }
+.assertion-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin: 8px 0; }
+.assertion-card .status { font-size: 1rem; }
+.assertion-card.fail { border-left: 3px solid var(--fail); }
+.assertion-card.pass { border-left: 3px solid var(--pass); }
+.req-resp-row { margin: 6px 0; }
+.req-resp-row .k { color: var(--text-muted); }
+.copy-btn { background: var(--accent); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-family: inherit; margin-top: 8px; }
+.copy-btn:hover { filter: brightness(1.1); }
+.empty-section { color: var(--text-muted); font-style: italic; padding: 12px 0; }
+.coverage-section { padding: 24px; }
+.coverage-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.coverage-table th, .coverage-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+.coverage-table th { background: var(--surface2); font-weight: 600; color: var(--text-muted); }
+.coverage-table tr:hover { background: var(--surface2); }
+.coverage-table .num { text-align: right; }
+.no-coverage { padding: 24px; color: var(--text-muted); text-align: center; }
+.empty-msg { color: var(--text-muted); }
+</style>
+</head>
+<body><div class="container"><h1>Contentstack Management .NET SDK – Enhanced Test Report</h1><h2 id="test-summary" class="section-head">Test results</h2><div class="summary"><div class="summary-item"><strong>Total</strong><span>2</span></div><div class="summary-item passed"><strong>Passed</strong><span>1</span></div><div class="summary-item failed"><strong>Failed</strong><span>1</span></div><div class="summary-item skipped"><strong>Skipped</strong><span>0</span></div><div class="summary-item"><strong>Duration</strong><span>579 ms</span></div></div><div class="test-group">
+<h2 class="toggler section-head" data-target="group-sample"><span class="chevron">▶</span> sample <span class="badge failed">2 tests</span></h2>
+<div id="group-sample" class="collapsible group-content"><div class="test-case"><div class="test-row failed" data-detail="test-87faa855" role="button" tabindex="0"><span class="detail-toggle">▶</span><span class="outcome Failed">Failed</span><span class="duration">456 ms</span><span class="test-name">TestTwo</span></div><div id="test-87faa855" class="test-details"><div class="detail-panel"><div class="detail-section"><div class="detail-section-title"><span class="icon">✓</span> Assertions</div><div class="detail-section-content"><div class="assertion-card fail"><span class="status">❌</span> <strong>Assert failed</strong> <span class="sub">Type: Fail</span></div></div></div><div class="detail-section"><div class="detail-section-title"><span class="icon">🌐</span> HTTP Requests</div><div class="detail-section-content"><div class="empty-section">No request data captured. Emit structured data from tests to populate.</div></div></div><div class="detail-section"><div class="detail-section-title"><span class="icon">📥</span> HTTP Responses</div><div class="detail-section-content"><div class="empty-section">No response data captured.</div></div></div><div class="detail-section"><div class="detail-section-title"><span class="icon">⚠️</span> Error Details</div><div class="detail-section-content"><div class="req-resp-row"><span class="k">Error Message:</span></div><pre>Assert failed</pre><div class="req-resp-row"><span class="k">Exception Type:</span> —</div><div class="req-resp-row"><span class="k">Stack Trace:</span></div><pre>at MyTest.TestTwo()</pre><div class="req-resp-row"><span class="k">Failed Assertion:</span> See Assertions #1 above.</div></div></div><div class="detail-section"><div class="detail-section-title"><span class="icon">ℹ️</span> Test Context</div><div class="detail-section-content"><div class="req-resp-row"><span class="k">Environment:</span> —</div><div class="req-resp-row"><span class="k">Locale:</span> —</div><div class="req-resp-row"><span class="k">SDK Version:</span> —</div><div class="req-resp-row"><span class="k">Build Number:</span> —</div><div class="req-resp-row"><span class="k">Commit SHA:</span> —</div><div class="req-resp-row"><span class="k">Test Data Source:</span> TRX</div></div></div></div></div></div><div class="test-case"><div class="test-row passed" data-detail="test-ca50e5e2" role="button" tabindex="0"><span class="detail-toggle">▶</span><span class="outcome Passed">Passed</span><span class="duration">123 ms</span><span class="test-name">TestOne</span></div><div id="test-ca50e5e2" class="test-details"><div class="detail-panel"><div class="detail-section"><div class="detail-section-title"><span class="icon">✓</span> Assertions</div><div class="detail-section-content"><div class="empty-section">No assertion details in TRX. Failed message is shown in Error Details.</div></div></div><div class="detail-section"><div class="detail-section-title"><span class="icon">🌐</span> HTTP Requests</div><div class="detail-section-content"><div class="empty-section">No request data captured. Emit structured data from tests to populate.</div></div></div><div class="detail-section"><div class="detail-section-title"><span class="icon">📥</span> HTTP Responses</div><div class="detail-section-content"><div class="empty-section">No response data captured.</div></div></div><div class="detail-section"><div class="detail-section-title"><span class="icon">ℹ️</span> Test Context</div><div class="detail-section-content"><div class="req-resp-row"><span class="k">Environment:</span> —</div><div class="req-resp-row"><span class="k">Locale:</span> —</div><div class="req-resp-row"><span class="k">SDK Version:</span> —</div><div class="req-resp-row"><span class="k">Build Number:</span> —</div><div class="req-resp-row"><span class="k">Commit SHA:</span> —</div><div class="req-resp-row"><span class="k">Test Data Source:</span> TRX</div></div></div></div></div></div></div></div><h2 id="coverage-summary" class="section-head">Code coverage</h2><div class="no-coverage">Coverage not collected (no Cobertura XML provided).</div>
+<script>
+(function() {
+  function byClass(c) { return document.getElementsByClassName(c); }
+  function byId(id) { return document.getElementById(id); }
+  function qs(s, r) { return (r || document).querySelector(s); }
+  function qsAll(s, r) { return (r || document).querySelectorAll(s); }
+  qsAll('.toggler').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var id = el.getAttribute('data-target');
+      var target = id && byId(id);
+      if (target) {
+        target.classList.toggle('active');
+        var chev = el.querySelector('.chevron');
+        if (chev) chev.classList.toggle('open');
+      }
+    });
+  });
+  qsAll('.section-head').forEach(function(h) {
+    var content = h.nextElementSibling;
+    if (content && content.classList.contains('group-content')) {
+      content.classList.add('active');
+      var chev = h.querySelector('.chevron');
+      if (chev) chev.classList.add('open');
+    }
+  });
+  qsAll('.test-row').forEach(function(row) {
+    row.addEventListener('click', function() {
+      var id = row.getAttribute('data-detail');
+      if (!id) return;
+      var detail = byId(id);
+      if (detail) {
+        detail.classList.toggle('open');
+        var toggle = row.querySelector('.detail-toggle');
+        if (toggle) toggle.classList.toggle('open');
+      }
+    });
+  });
+  qsAll('.copy-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var text = btn.getAttribute('data-copy');
+      if (text && navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function() { btn.textContent = 'Copied!'; setTimeout(function() { btn.textContent = 'Copy cURL'; }, 1500); });
+      }
+    });
+  });
+})();
+</script></div></body></html>

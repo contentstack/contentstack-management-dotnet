@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contentstack Management .NET SDK - Enhanced Test Report</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; color: #333; }
+.container { max-width: 1200px; margin: 0 auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+h1 { background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: #fff; padding: 20px 24px; font-size: 1.5rem; }
+h2 { padding: 16px 24px; background: #f8f9fa; border-bottom: 1px solid #dee2e6; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+h2:hover { background: #e9ecef; }
+h2 .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; font-weight: normal; }
+.summary { display: flex; flex-wrap: wrap; gap: 16px; padding: 20px 24px; background: #f8f9fa; border-bottom: 1px solid #dee2e6; }
+.summary-item { background: #fff; padding: 12px 20px; border-radius: 6px; border: 1px solid #dee2e6; }
+.summary-item strong { display: block; font-size: 1.5rem; }
+.summary-item.passed strong { color: #28a745; }
+.summary-item.failed strong { color: #dc3545; }
+.summary-item.skipped strong { color: #6c757d; }
+.test-group { border-bottom: 1px solid #dee2e6; }
+.test-item { padding: 12px 24px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.test-item:last-child { border-bottom: none; }
+.test-item.failed { background: #fff5f5; }
+.outcome { font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; }
+.outcome.Passed { background: #d4edda; color: #155724; }
+.outcome.Failed { background: #f8d7da; color: #721c24; }
+.outcome.NotExecuted, .outcome.Skipped { background: #e2e3e5; color: #383d41; }
+.duration { color: #6c757d; font-size: 0.9rem; }
+.details { padding: 12px 24px; background: #f8f9fa; margin: 0 24px 12px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; word-break: break-all; }
+.collapsible { display: none; }
+.collapsible.active { display: block; }
+.toggle { transition: transform 0.2s; }
+.toggle.open { transform: rotate(90deg); }
+.coverage-section { padding: 24px; }
+.coverage-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.coverage-table th, .coverage-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #dee2e6; }
+.coverage-table th { background: #f8f9fa; font-weight: 600; }
+.coverage-table tr:hover { background: #f8f9fa; }
+.coverage-table .num { text-align: right; }
+.no-coverage { padding: 24px; color: #6c757d; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Contentstack Management .NET SDK – Enhanced Test Report</h1>
+<h2 id="test-summary">Test results</h2><div class="summary"><div class="summary-item"><strong>Total</strong> 2</div><div class="summary-item passed"><strong>Passed</strong> 1</div><div class="summary-item failed"><strong>Failed</strong> 1</div><div class="summary-item skipped"><strong>Skipped</strong> 0</div><div class="summary-item"><strong>Duration</strong> 579 ms</div></div><div class="test-group">
+<h2 class="toggler" data-target="group-sample"><span class="toggle">▶</span> sample <span class="badge failed">2 tests</span></h2>
+<div id="group-sample" class="collapsible"><div class="test-item failed"><span class="outcome Failed">Failed</span><span class="duration">456 ms</span><span>TestTwo</span></div><div class="details">Message:
+Assert failed
+
+StackTrace:
+at MyTest.TestTwo()</div><div class="test-item passed"><span class="outcome Passed">Passed</span><span class="duration">123 ms</span><span>TestOne</span></div></div></div><h2 id="coverage-summary">Code coverage</h2>
+<div class="coverage-section">
+<table class="coverage-table">
+<thead><tr><th>File</th><th class="num">% Stmts</th><th class="num">% Branch</th><th class="num">% Funcs</th><th class="num">% Lines</th><th>Uncovered Line #s</th></tr></thead>
+<tbody><tr><td><strong>All files</strong></td><td class="num">90.00%</td><td class="num">80.00%</td><td class="num">100.00%</td><td class="num">90.00%</td><td></td></tr><tr><td>Contentstack.Management.Core/Foo.cs</td><td class="num">90.00%</td><td class="num">80.00%</td><td class="num">100.00%</td><td class="num">90.00%</td><td>11, 15</td></tr></tbody></table></div>
+<script>
+document.querySelectorAll('.toggler').forEach(function(el) {
+  el.addEventListener('click', function() {
+    var target = document.getElementById(el.getAttribute('data-target'));
+    if (target) {
+      target.classList.toggle('active');
+      el.querySelector('.toggle').classList.toggle('open');
+    }
+  });
+});
+document.querySelectorAll('.collapsible').forEach(function(c) { c.classList.add('active'); });
+document.querySelectorAll('.toggler .toggle').forEach(function(t) { t.classList.add('open'); });
+</script>
+</div>
+</body>
+</html>

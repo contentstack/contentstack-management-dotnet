@@ -91,8 +91,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public async Task Initialize()
         {
+            TestReportHelper.Begin();
             StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
             _stack = Contentstack.Client.Stack(response.Stack.APIKey);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            TestReportHelper.Flush();
         }
 
         [TestMethod]

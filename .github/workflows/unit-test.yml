@@ -21,3 +21,9 @@ jobs:
           path: ./Contentstack.Management.Core.Unit.Tests/TestResults/Report-Contentstack-DotNet-Test-Case.trx
           reporter: dotnet-trx
           fail-on-error: true
+      - name: Upload enhanced test report
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: enhanced-test-report
+          path: Contentstack.Management.Core.Unit.Tests/TestResults/EnhancedReport-Contentstack-DotNet-Test-Case.html

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Models.Fields;
@@ -18,8 +18,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void Initialize()
         {
+            TestReportHelper.Begin();
             StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
             _stack = Contentstack.Client.Stack(response.Stack.APIKey);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            TestReportHelper.Flush();
         }
 
         [TestMethod]
@@ -81,11 +88,18 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentTypeUid = "single_page"
                 };
 
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                TestReportHelper.LogRequest("_stack.ContentType(single_page).Entry().CreateAsync()", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/content_types/single_page/entries");
                 ContentstackResponse response = await _stack.ContentType("single_page").Entry().CreateAsync(singlePageEntry);
-                
+                sw.Stop();
+                TestReportHelper.LogResponse((int)response.StatusCode, response.StatusCode.ToString(),
+                    sw.ElapsedMilliseconds, response.OpenResponse());
+
                 if (response.IsSuccessStatusCode)
                 {
                     var responseObject = response.OpenJObjectResponse();
+                    TestReportHelper.LogAssertion(responseObject["entry"] != null, "entry key present", type: "IsNotNull");
                     Assert.IsNotNull(responseObject["entry"], "Response should contain entry object");
                     
                     var entryData = responseObject["entry"] as Newtonsoft.Json.Linq.JObject;

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage line-rate="0.85" branch-rate="0.70" version="1.9" timestamp="0">
+  <packages>
+    <package name="Contentstack.Management.Core" line-rate="0.85" branch-rate="0.70">
+      <classes>
+        <class name="Contentstack.Management.Core.Foo" filename="Contentstack.Management.Core/Foo.cs" line-rate="0.9" branch-rate="0.8">
+          <methods>
+            <method name="Bar" line-rate="1.0"/>
+            <method name="Baz" line-rate="0.5"/>
+          </methods>
+          <lines>
+            <line number="10" hits="1"/>
+            <line number="11" hits="0"/>
+            <line number="12" hits="1"/>
+            <line number="15" hits="0"/>
+          </lines>
+        </class>
+      </classes>
+    </package>
+  </packages>
+</coverage>
