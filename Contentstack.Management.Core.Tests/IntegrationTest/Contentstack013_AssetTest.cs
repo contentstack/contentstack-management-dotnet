@@ -74,7 +74,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 DashboardWidgetModel dashboard = new DashboardWidgetModel(path, "text/html", "Dashboard", isEnable: true, defaultWidth: "half", tags: "one,two");
                 ContentstackResponse response = _stack.Extension().Upload(dashboard);
-                
+                TestReportHelper.LogRequest("Extension.Upload (Dashboard)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/extensions");
                 if (response.IsSuccessStatusCode)
                 {
                     Assert.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode);
@@ -101,7 +102,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
                 }, tags: "one,two");
                 ContentstackResponse response = _stack.Extension().Upload(customWidget);
-                
+                TestReportHelper.LogRequest("Extension.Upload (CustomWidget)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/extensions");
                 if (response.IsSuccessStatusCode)
                 {
                     Assert.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode);
@@ -122,7 +124,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 CustomFieldModel fieldModel = new CustomFieldModel(path, "text/html", "Custom field Upload", "text", isMultiple: false, tags: "one,two");
                 ContentstackResponse response = _stack.Extension().Upload(fieldModel);
-                
+                TestReportHelper.LogRequest("Extension.Upload (CustomField)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/extensions");
                 if (response.IsSuccessStatusCode)
                 {
                     Assert.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode);
@@ -145,7 +148,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 AssetModel asset = new AssetModel("async_asset.json", path, "application/json", title:"Async Asset", description:"async test asset", parentUID: null, tags:"async,test");
                 ContentstackResponse response = _stack.Asset().CreateAsync(asset).Result;
-                
+                TestReportHelper.LogRequest("Asset.CreateAsync", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets");
                 if (response.IsSuccessStatusCode)
                 {
                     Assert.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode);
@@ -180,7 +184,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!string.IsNullOrEmpty(_testAssetUid))
                 {
                     ContentstackResponse response = _stack.Asset(_testAssetUid).Fetch();
-                    
+                    TestReportHelper.LogRequest("Asset.Fetch", "GET",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/{_testAssetUid}");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -213,7 +218,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!string.IsNullOrEmpty(_testAssetUid))
                 {
                     ContentstackResponse response = _stack.Asset(_testAssetUid).FetchAsync().Result;
-                    
+                    TestReportHelper.LogRequest("Asset.FetchAsync", "GET",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/{_testAssetUid}");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -249,7 +255,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     AssetModel updatedAsset = new AssetModel("updated_asset.json", path, "application/json", title:"Updated Asset", description:"updated test asset", parentUID: null, tags:"updated,test");
                     
                     ContentstackResponse response = _stack.Asset(_testAssetUid).Update(updatedAsset);
-                    
+                    TestReportHelper.LogRequest("Asset.Update", "PUT",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/{_testAssetUid}");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -285,7 +292,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     AssetModel updatedAsset = new AssetModel("async_updated_asset.json", path, "application/json", title:"Async Updated Asset", description:"async updated test asset", parentUID: null, tags:"async,updated,test");
                     
                     ContentstackResponse response = _stack.Asset(_testAssetUid).UpdateAsync(updatedAsset).Result;
-                    
+                    TestReportHelper.LogRequest("Asset.UpdateAsync", "PUT",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/{_testAssetUid}");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -349,7 +357,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 query.Skip(0);
                 
                 ContentstackResponse response = query.Find();
-                
+                TestReportHelper.LogRequest("Asset.Query.Find (with params)", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets");
                 if (response.IsSuccessStatusCode)
                 {
                     Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -381,7 +390,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!string.IsNullOrEmpty(_testAssetUid))
                 {
                     ContentstackResponse response = _stack.Asset(_testAssetUid).Delete();
-                    
+                    TestReportHelper.LogRequest("Asset.Delete", "DELETE",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/{_testAssetUid}");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -417,7 +427,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (!string.IsNullOrEmpty(assetUid))
                     {
                         ContentstackResponse deleteResponse = _stack.Asset(assetUid).DeleteAsync().Result;
-                        
+                        TestReportHelper.LogRequest("Asset.DeleteAsync", "DELETE",
+                            $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/{assetUid}");
                         if (deleteResponse.IsSuccessStatusCode)
                         {
                             Assert.AreEqual(System.Net.HttpStatusCode.OK, deleteResponse.StatusCode);
@@ -449,7 +460,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 ContentstackResponse response = _stack.Asset().Folder().Create("Test Folder", null);
-                
+                TestReportHelper.LogRequest("Asset.Folder.Create", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/folders");
                 if (response.IsSuccessStatusCode)
                 {
                     Assert.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode);
@@ -484,7 +496,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!string.IsNullOrEmpty(_testFolderUid))
                 {
                     ContentstackResponse response = _stack.Asset().Folder().Create("Test Subfolder", _testFolderUid);
-                    
+                    TestReportHelper.LogRequest("Asset.Folder.Create (subfolder)", "POST",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/folders");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode);
@@ -517,7 +530,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!string.IsNullOrEmpty(_testFolderUid))
                 {
                     ContentstackResponse response = _stack.Asset().Folder(_testFolderUid).Fetch();
-                    
+                    TestReportHelper.LogRequest("Asset.Folder.Fetch", "GET",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/folders/{_testFolderUid}");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -550,7 +564,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!string.IsNullOrEmpty(_testFolderUid))
                 {
                     ContentstackResponse response = _stack.Asset().Folder(_testFolderUid).FetchAsync().Result;
-                    
+                    TestReportHelper.LogRequest("Asset.Folder.FetchAsync", "GET",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/folders/{_testFolderUid}");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -583,7 +598,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!string.IsNullOrEmpty(_testFolderUid))
                 {
                     ContentstackResponse response = _stack.Asset().Folder(_testFolderUid).Update("Updated Test Folder", null);
-                    
+                    TestReportHelper.LogRequest("Asset.Folder.Update", "PUT",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/folders/{_testFolderUid}");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode);
@@ -617,7 +633,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!string.IsNullOrEmpty(_testFolderUid))
                 {
                     ContentstackResponse response = _stack.Asset().Folder(_testFolderUid).UpdateAsync("Async Updated Test Folder", null).Result;
-                    
+                    TestReportHelper.LogRequest("Asset.Folder.UpdateAsync", "PUT",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/folders/{_testFolderUid}");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode);
@@ -651,7 +668,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!string.IsNullOrEmpty(_testFolderUid))
                 {
                     ContentstackResponse response = _stack.Asset().Folder(_testFolderUid).Delete();
-                    
+                    TestReportHelper.LogRequest("Asset.Folder.Delete", "DELETE",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/folders/{_testFolderUid}");
                     if (response.IsSuccessStatusCode)
                     {
                         Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
@@ -686,7 +704,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (!string.IsNullOrEmpty(folderUid))
                     {
                         ContentstackResponse deleteResponse = _stack.Asset().Folder(folderUid).DeleteAsync().Result;
-                        
+                        TestReportHelper.LogRequest("Asset.Folder.DeleteAsync", "DELETE",
+                            $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/folders/{folderUid}");
                         if (deleteResponse.IsSuccessStatusCode)
                         {
                             Assert.AreEqual(System.Net.HttpStatusCode.OK, deleteResponse.StatusCode);
@@ -716,6 +735,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             string invalidAssetUid = "invalid_asset_uid_12345";
             
             // Test fetching non-existent asset - expect exception
+            TestReportHelper.LogRequest("Asset.Fetch (invalid - expected error)", "GET",
+                $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/{invalidAssetUid}");
             try
             {
                 _stack.Asset(invalidAssetUid).Fetch();
@@ -766,6 +787,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             
             // Test fetching non-existent folder - expect ContentstackErrorException
             bool fetchExceptionThrown = false;
+            TestReportHelper.LogRequest("Asset.Folder.Fetch (invalid - expected error)", "GET",
+                $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets/folders/{invalidFolderUid}");
             try
             {
                 _stack.Asset().Folder(invalidFolderUid).Fetch();
@@ -817,6 +840,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             string invalidPath = Path.Combine(System.Environment.CurrentDirectory, "non_existent_file.json");
             
             // Expect FileNotFoundException during AssetModel construction due to file not found
+            TestReportHelper.LogRequest("Asset.Create (invalid file - expected FileNotFoundException)", "POST", "");
             try
             {
                 new AssetModel("invalid_file.json", invalidPath, "application/json", title:"Invalid File Asset", description:"asset with invalid file", parentUID: null, tags:"invalid,file");
@@ -839,6 +863,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             assetQuery.Limit(-1); // Invalid limit
             assetQuery.Skip(-1); // Invalid skip
             
+            TestReportHelper.LogRequest("Asset.Query.Find (invalid params - expected error)", "GET",
+                $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets");
             try
             {
                 assetQuery.Find();
@@ -870,7 +896,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 assetQuery.Limit(1);
                 
                 ContentstackResponse response = assetQuery.Find();
-                
+                TestReportHelper.LogRequest("Asset.Query.Find (empty results)", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/assets");
                 if (response.IsSuccessStatusCode)
                 {
                     Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);

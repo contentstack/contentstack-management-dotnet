@@ -1,0 +1,15 @@
+[
+  { "key": "Stack.GetAll", "hasTest": true },
+  { "key": "Stack.Fetch", "hasTest": true },
+  { "key": "Stack.Create", "hasTest": true },
+  { "key": "Asset.Create", "hasTest": true },
+  { "key": "Asset.Fetch", "hasTest": true },
+  { "key": "ContentType.Create", "hasTest": true },
+  { "key": "ContentType.Fetch", "hasTest": true },
+  { "key": "BulkOperation.Publish", "hasTest": true },
+  { "key": "BulkOperation.Unpublish", "hasTest": true },
+  { "key": "GlobalField.Create", "hasTest": true },
+  { "key": "GlobalField.Fetch", "hasTest": true },
+  { "key": "DeliveryToken.Create", "hasTest": true },
+  { "key": "DeliveryToken.Delete", "hasTest": true }
+]

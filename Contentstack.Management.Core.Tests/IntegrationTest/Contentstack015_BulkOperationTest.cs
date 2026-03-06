@@ -133,6 +133,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                                         _bulkTestWorkflowStageUid = _bulkTestWorkflowStage2Uid;
                                         Assert.IsNotNull(_bulkTestWorkflowStage1Uid, "Stage 1 UID null in existing workflow.");
                                         Assert.IsNotNull(_bulkTestWorkflowStage2Uid, "Stage 2 UID null in existing workflow.");
+                                        TestReportHelper.LogRequest("Workflow.FindAll (existing)", "GET",
+                                            $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/workflows");
                                         return; // Already exists with stages – nothing more to do
                                     }
                                 }
@@ -194,6 +196,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string sentJson = JsonConvert.SerializeObject(new { workflow = workflowModel }, Formatting.Indented);
 
                 ContentstackResponse response = _stack.Workflow().Create(workflowModel);
+                TestReportHelper.LogRequest("Workflow.Create", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/workflows");
                 string responseBody = null;
                 try { responseBody = response.OpenResponse(); } catch { }
 
@@ -251,6 +255,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                                     && rule["uid"] != null)
                                 {
                                     _bulkTestPublishRuleUid = rule["uid"].ToString();
+                                    TestReportHelper.LogRequest("Workflow.PublishRule.FindAll (existing)", "GET",
+                                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/publishing_rules");
                                     return; // Already exists
                                 }
                             }
@@ -275,6 +281,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string sentJson = JsonConvert.SerializeObject(new { publishing_rule = publishRuleModel }, Formatting.Indented);
 
                 ContentstackResponse response = _stack.Workflow().PublishRule().Create(publishRuleModel);
+                TestReportHelper.LogRequest("Workflow.PublishRule.Create", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/publishing_rules");
                 string responseBody = null;
                 try { responseBody = response.OpenResponse(); } catch { }
 
@@ -349,6 +357,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Create the content type
                 ContentstackResponse response = _stack.ContentType().Create(contentModelling);
+                TestReportHelper.LogRequest("ContentType.Create", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/content_types");
                 var responseJson = response.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -407,6 +417,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     var entry = new SimpleEntry { Title = title };
                     ContentstackResponse response = _stack.ContentType(_contentTypeUid).Entry().Create(entry);
+                    TestReportHelper.LogRequest("Entry.Create", "POST",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/content_types/{_contentTypeUid}/entries");
                     var responseJson = response.OpenJObjectResponse();
 
                     Assert.IsNotNull(response);
@@ -541,6 +553,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails, skipWorkflowStage: true, approvals: true);
+                TestReportHelper.LogRequest("BulkOperation.Publish", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/bulk/publish");
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk publish failed with status {(int)response.StatusCode} ({response.StatusCode}).");
@@ -603,6 +617,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.BulkOperation().Unpublish(publishDetails, skipWorkflowStage: false, approvals: true);
+                TestReportHelper.LogRequest("BulkOperation.Unpublish", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/bulk/unpublish");
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk publish failed with status {(int)response.StatusCode} ({response.StatusCode}).");
@@ -665,6 +681,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails, skipWorkflowStage: true, approvals: true, apiVersion: "3.2");
+                TestReportHelper.LogRequest("BulkOperation.Publish (api_version 3.2)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/bulk/publish");
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk publish with api_version 3.2 failed with status {(int)response.StatusCode} ({response.StatusCode}).");
@@ -707,6 +725,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.BulkOperation().Unpublish(publishDetails, skipWorkflowStage: true, approvals: true, apiVersion: "3.2");
+                TestReportHelper.LogRequest("BulkOperation.Unpublish (api_version 3.2)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/bulk/unpublish");
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk unpublish with api_version 3.2 failed with status {(int)response.StatusCode} ({response.StatusCode}).");
@@ -792,6 +812,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Perform bulk release using AddItems in deployment mode
                 ContentstackResponse releaseResponse = _stack.BulkOperation().AddItems(releaseData, "2.0");
+                TestReportHelper.LogRequest("BulkOperation.AddItems", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/bulk/release/items");
                 var releaseResponseJson = releaseResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(releaseResponse);
@@ -844,6 +866,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
                
                 ContentstackResponse bulkUpdateResponse = _stack.BulkOperation().UpdateItems(releaseData, "2.0");
+                TestReportHelper.LogRequest("BulkOperation.UpdateItems", "PUT",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/bulk/release/items");
                 var bulkUpdateResponseJson = bulkUpdateResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(bulkUpdateResponse);
@@ -884,6 +908,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 // Skip actual delete so entries remain for UI verification. SDK usage is validated by building the payload.
+                TestReportHelper.LogRequest("BulkOperation.Delete (payload only, no HTTP)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/bulk/delete");
                 Assert.IsNotNull(deleteDetails);
                 Assert.IsTrue(deleteDetails.Entries.Count > 0);
             }
@@ -924,6 +950,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.BulkOperation().Update(workflowUpdateBody);
+                TestReportHelper.LogRequest("BulkOperation.Update (workflow)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/bulk/workflow");
                 var responseJson = response.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -1045,6 +1073,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test009_Should_Cleanup_Test_Resources()
         {
             // Cleanup skipped: workflow, publish rules, content type, entries, release, and environment are left so you can verify them in the UI.
+            TestReportHelper.LogRequest("Cleanup (skipped)", "GET", "");
         }
 
         private async Task CheckBulkJobStatus(string jobId, string bulkVersion = null)

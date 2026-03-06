@@ -1,0 +1,682 @@
+[
+  {
+    "Component": "Stack",
+    "Method": "AddSettings",
+    "Key": "Stack.AddSettings"
+  },
+  {
+    "Component": "Stack",
+    "Method": "Create",
+    "Key": "Stack.Create"
+  },
+  {
+    "Component": "Stack",
+    "Method": "Fetch",
+    "Key": "Stack.Fetch"
+  },
+  {
+    "Component": "Stack",
+    "Method": "GetAll",
+    "Key": "Stack.GetAll"
+  },
+  {
+    "Component": "Stack",
+    "Method": "ResetSettings",
+    "Key": "Stack.ResetSettings"
+  },
+  {
+    "Component": "Stack",
+    "Method": "Settings",
+    "Key": "Stack.Settings"
+  },
+  {
+    "Component": "Stack",
+    "Method": "Share",
+    "Key": "Stack.Share"
+  },
+  {
+    "Component": "Stack",
+    "Method": "TransferOwnership",
+    "Key": "Stack.TransferOwnership"
+  },
+  {
+    "Component": "Stack",
+    "Method": "UnShare",
+    "Key": "Stack.UnShare"
+  },
+  {
+    "Component": "Stack",
+    "Method": "Update",
+    "Key": "Stack.Update"
+  },
+  {
+    "Component": "Stack",
+    "Method": "UpdateUserRole",
+    "Key": "Stack.UpdateUserRole"
+  },
+  {
+    "Component": "ContentType",
+    "Method": "Create",
+    "Key": "ContentType.Create"
+  },
+  {
+    "Component": "ContentType",
+    "Method": "Delete",
+    "Key": "ContentType.Delete"
+  },
+  {
+    "Component": "ContentType",
+    "Method": "Fetch",
+    "Key": "ContentType.Fetch"
+  },
+  {
+    "Component": "ContentType",
+    "Method": "Update",
+    "Key": "ContentType.Update"
+  },
+  {
+    "Component": "Asset",
+    "Method": "Create",
+    "Key": "Asset.Create"
+  },
+  {
+    "Component": "Asset",
+    "Method": "Delete",
+    "Key": "Asset.Delete"
+  },
+  {
+    "Component": "Asset",
+    "Method": "Fetch",
+    "Key": "Asset.Fetch"
+  },
+  {
+    "Component": "Asset",
+    "Method": "Publish",
+    "Key": "Asset.Publish"
+  },
+  {
+    "Component": "Asset",
+    "Method": "References",
+    "Key": "Asset.References"
+  },
+  {
+    "Component": "Asset",
+    "Method": "Unpublish",
+    "Key": "Asset.Unpublish"
+  },
+  {
+    "Component": "Asset",
+    "Method": "Update",
+    "Key": "Asset.Update"
+  },
+  {
+    "Component": "BulkOperation",
+    "Method": "AddItems",
+    "Key": "BulkOperation.AddItems"
+  },
+  {
+    "Component": "BulkOperation",
+    "Method": "AddItemsWithDeployment",
+    "Key": "BulkOperation.AddItemsWithDeployment"
+  },
+  {
+    "Component": "BulkOperation",
+    "Method": "Delete",
+    "Key": "BulkOperation.Delete"
+  },
+  {
+    "Component": "BulkOperation",
+    "Method": "JobStatus",
+    "Key": "BulkOperation.JobStatus"
+  },
+  {
+    "Component": "BulkOperation",
+    "Method": "Publish",
+    "Key": "BulkOperation.Publish"
+  },
+  {
+    "Component": "BulkOperation",
+    "Method": "ReleaseItems",
+    "Key": "BulkOperation.ReleaseItems"
+  },
+  {
+    "Component": "BulkOperation",
+    "Method": "Unpublish",
+    "Key": "BulkOperation.Unpublish"
+  },
+  {
+    "Component": "BulkOperation",
+    "Method": "Update",
+    "Key": "BulkOperation.Update"
+  },
+  {
+    "Component": "BulkOperation",
+    "Method": "UpdateItems",
+    "Key": "BulkOperation.UpdateItems"
+  },
+  {
+    "Component": "BulkOperation",
+    "Method": "UpdateItemsWithDeployment",
+    "Key": "BulkOperation.UpdateItemsWithDeployment"
+  },
+  {
+    "Component": "Locale",
+    "Method": "Create",
+    "Key": "Locale.Create"
+  },
+  {
+    "Component": "Locale",
+    "Method": "Delete",
+    "Key": "Locale.Delete"
+  },
+  {
+    "Component": "Locale",
+    "Method": "Fetch",
+    "Key": "Locale.Fetch"
+  },
+  {
+    "Component": "Locale",
+    "Method": "Update",
+    "Key": "Locale.Update"
+  },
+  {
+    "Component": "GlobalField",
+    "Method": "Create",
+    "Key": "GlobalField.Create"
+  },
+  {
+    "Component": "GlobalField",
+    "Method": "Delete",
+    "Key": "GlobalField.Delete"
+  },
+  {
+    "Component": "GlobalField",
+    "Method": "Fetch",
+    "Key": "GlobalField.Fetch"
+  },
+  {
+    "Component": "GlobalField",
+    "Method": "Update",
+    "Key": "GlobalField.Update"
+  },
+  {
+    "Component": "Release",
+    "Method": "Clone",
+    "Key": "Release.Clone"
+  },
+  {
+    "Component": "Release",
+    "Method": "Create",
+    "Key": "Release.Create"
+  },
+  {
+    "Component": "Release",
+    "Method": "Delete",
+    "Key": "Release.Delete"
+  },
+  {
+    "Component": "Release",
+    "Method": "Deploy",
+    "Key": "Release.Deploy"
+  },
+  {
+    "Component": "Release",
+    "Method": "Fetch",
+    "Key": "Release.Fetch"
+  },
+  {
+    "Component": "Release",
+    "Method": "Update",
+    "Key": "Release.Update"
+  },
+  {
+    "Component": "ReleaseItem",
+    "Method": "Create",
+    "Key": "ReleaseItem.Create"
+  },
+  {
+    "Component": "ReleaseItem",
+    "Method": "CreateMultiple",
+    "Key": "ReleaseItem.CreateMultiple"
+  },
+  {
+    "Component": "ReleaseItem",
+    "Method": "Delete",
+    "Key": "ReleaseItem.Delete"
+  },
+  {
+    "Component": "ReleaseItem",
+    "Method": "GetAll",
+    "Key": "ReleaseItem.GetAll"
+  },
+  {
+    "Component": "ReleaseItem",
+    "Method": "UpdateReleaseItem",
+    "Key": "ReleaseItem.UpdateReleaseItem"
+  },
+  {
+    "Component": "Organization",
+    "Method": "AddUser",
+    "Key": "Organization.AddUser"
+  },
+  {
+    "Component": "Organization",
+    "Method": "GetInvitations",
+    "Key": "Organization.GetInvitations"
+  },
+  {
+    "Component": "Organization",
+    "Method": "GetOrganizations",
+    "Key": "Organization.GetOrganizations"
+  },
+  {
+    "Component": "Organization",
+    "Method": "GetStacks",
+    "Key": "Organization.GetStacks"
+  },
+  {
+    "Component": "Organization",
+    "Method": "RemoveUser",
+    "Key": "Organization.RemoveUser"
+  },
+  {
+    "Component": "Organization",
+    "Method": "ResendInvitation",
+    "Key": "Organization.ResendInvitation"
+  },
+  {
+    "Component": "Organization",
+    "Method": "Roles",
+    "Key": "Organization.Roles"
+  },
+  {
+    "Component": "Organization",
+    "Method": "TransferOwnership",
+    "Key": "Organization.TransferOwnership"
+  },
+  {
+    "Component": "Environment",
+    "Method": "Create",
+    "Key": "Environment.Create"
+  },
+  {
+    "Component": "Environment",
+    "Method": "Delete",
+    "Key": "Environment.Delete"
+  },
+  {
+    "Component": "Environment",
+    "Method": "Fetch",
+    "Key": "Environment.Fetch"
+  },
+  {
+    "Component": "Environment",
+    "Method": "Update",
+    "Key": "Environment.Update"
+  },
+  {
+    "Component": "Folder",
+    "Method": "Create",
+    "Key": "Folder.Create"
+  },
+  {
+    "Component": "Folder",
+    "Method": "Delete",
+    "Key": "Folder.Delete"
+  },
+  {
+    "Component": "Folder",
+    "Method": "Fetch",
+    "Key": "Folder.Fetch"
+  },
+  {
+    "Component": "Folder",
+    "Method": "Update",
+    "Key": "Folder.Update"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Create",
+    "Key": "Entry.Create"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Delete",
+    "Key": "Entry.Delete"
+  },
+  {
+    "Component": "Entry",
+    "Method": "DeleteMultipleLocal",
+    "Key": "Entry.DeleteMultipleLocal"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Export",
+    "Key": "Entry.Export"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Fetch",
+    "Key": "Entry.Fetch"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Import",
+    "Key": "Entry.Import"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Locales",
+    "Key": "Entry.Locales"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Localize",
+    "Key": "Entry.Localize"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Publish",
+    "Key": "Entry.Publish"
+  },
+  {
+    "Component": "Entry",
+    "Method": "PublishRequest",
+    "Key": "Entry.PublishRequest"
+  },
+  {
+    "Component": "Entry",
+    "Method": "References",
+    "Key": "Entry.References"
+  },
+  {
+    "Component": "Entry",
+    "Method": "SetWorkflow",
+    "Key": "Entry.SetWorkflow"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Unlocalize",
+    "Key": "Entry.Unlocalize"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Unpublish",
+    "Key": "Entry.Unpublish"
+  },
+  {
+    "Component": "Entry",
+    "Method": "Update",
+    "Key": "Entry.Update"
+  },
+  {
+    "Component": "Webhook",
+    "Method": "Create",
+    "Key": "Webhook.Create"
+  },
+  {
+    "Component": "Webhook",
+    "Method": "Delete",
+    "Key": "Webhook.Delete"
+  },
+  {
+    "Component": "Webhook",
+    "Method": "Executions",
+    "Key": "Webhook.Executions"
+  },
+  {
+    "Component": "Webhook",
+    "Method": "Fetch",
+    "Key": "Webhook.Fetch"
+  },
+  {
+    "Component": "Webhook",
+    "Method": "Logs",
+    "Key": "Webhook.Logs"
+  },
+  {
+    "Component": "Webhook",
+    "Method": "Retry",
+    "Key": "Webhook.Retry"
+  },
+  {
+    "Component": "Webhook",
+    "Method": "Update",
+    "Key": "Webhook.Update"
+  },
+  {
+    "Component": "Workflow",
+    "Method": "Create",
+    "Key": "Workflow.Create"
+  },
+  {
+    "Component": "Workflow",
+    "Method": "Delete",
+    "Key": "Workflow.Delete"
+  },
+  {
+    "Component": "Workflow",
+    "Method": "Disable",
+    "Key": "Workflow.Disable"
+  },
+  {
+    "Component": "Workflow",
+    "Method": "Enable",
+    "Key": "Workflow.Enable"
+  },
+  {
+    "Component": "Workflow",
+    "Method": "Fetch",
+    "Key": "Workflow.Fetch"
+  },
+  {
+    "Component": "Workflow",
+    "Method": "FindAll",
+    "Key": "Workflow.FindAll"
+  },
+  {
+    "Component": "Workflow",
+    "Method": "GetPublishRule",
+    "Key": "Workflow.GetPublishRule"
+  },
+  {
+    "Component": "Workflow",
+    "Method": "Update",
+    "Key": "Workflow.Update"
+  },
+  {
+    "Component": "Role",
+    "Method": "Create",
+    "Key": "Role.Create"
+  },
+  {
+    "Component": "Role",
+    "Method": "Delete",
+    "Key": "Role.Delete"
+  },
+  {
+    "Component": "Role",
+    "Method": "Fetch",
+    "Key": "Role.Fetch"
+  },
+  {
+    "Component": "Role",
+    "Method": "Update",
+    "Key": "Role.Update"
+  },
+  {
+    "Component": "Label",
+    "Method": "Create",
+    "Key": "Label.Create"
+  },
+  {
+    "Component": "Label",
+    "Method": "Delete",
+    "Key": "Label.Delete"
+  },
+  {
+    "Component": "Label",
+    "Method": "Fetch",
+    "Key": "Label.Fetch"
+  },
+  {
+    "Component": "Label",
+    "Method": "Update",
+    "Key": "Label.Update"
+  },
+  {
+    "Component": "Version",
+    "Method": "Delete",
+    "Key": "Version.Delete"
+  },
+  {
+    "Component": "Version",
+    "Method": "GetAll",
+    "Key": "Version.GetAll"
+  },
+  {
+    "Component": "Version",
+    "Method": "SetName",
+    "Key": "Version.SetName"
+  },
+  {
+    "Component": "User",
+    "Method": "ForgotPassword",
+    "Key": "User.ForgotPassword"
+  },
+  {
+    "Component": "User",
+    "Method": "ResetPassword",
+    "Key": "User.ResetPassword"
+  },
+  {
+    "Component": "AuditLog",
+    "Method": "Fetch",
+    "Key": "AuditLog.Fetch"
+  },
+  {
+    "Component": "AuditLog",
+    "Method": "FindAll",
+    "Key": "AuditLog.FindAll"
+  },
+  {
+    "Component": "VariantGroup",
+    "Method": "Find",
+    "Key": "VariantGroup.Find"
+  },
+  {
+    "Component": "VariantGroup",
+    "Method": "LinkContentTypes",
+    "Key": "VariantGroup.LinkContentTypes"
+  },
+  {
+    "Component": "VariantGroup",
+    "Method": "UnlinkContentTypes",
+    "Key": "VariantGroup.UnlinkContentTypes"
+  },
+  {
+    "Component": "Extension",
+    "Method": "Create",
+    "Key": "Extension.Create"
+  },
+  {
+    "Component": "Extension",
+    "Method": "Delete",
+    "Key": "Extension.Delete"
+  },
+  {
+    "Component": "Extension",
+    "Method": "Fetch",
+    "Key": "Extension.Fetch"
+  },
+  {
+    "Component": "Extension",
+    "Method": "Update",
+    "Key": "Extension.Update"
+  },
+  {
+    "Component": "Extension",
+    "Method": "Upload",
+    "Key": "Extension.Upload"
+  },
+  {
+    "Component": "PublishRule",
+    "Method": "Create",
+    "Key": "PublishRule.Create"
+  },
+  {
+    "Component": "PublishRule",
+    "Method": "Delete",
+    "Key": "PublishRule.Delete"
+  },
+  {
+    "Component": "PublishRule",
+    "Method": "Fetch",
+    "Key": "PublishRule.Fetch"
+  },
+  {
+    "Component": "PublishRule",
+    "Method": "FindAll",
+    "Key": "PublishRule.FindAll"
+  },
+  {
+    "Component": "PublishRule",
+    "Method": "Update",
+    "Key": "PublishRule.Update"
+  },
+  {
+    "Component": "PublishQueue",
+    "Method": "Cancel",
+    "Key": "PublishQueue.Cancel"
+  },
+  {
+    "Component": "PublishQueue",
+    "Method": "Fetch",
+    "Key": "PublishQueue.Fetch"
+  },
+  {
+    "Component": "PublishQueue",
+    "Method": "FindAll",
+    "Key": "PublishQueue.FindAll"
+  },
+  {
+    "Component": "DeliveryToken",
+    "Method": "Create",
+    "Key": "DeliveryToken.Create"
+  },
+  {
+    "Component": "DeliveryToken",
+    "Method": "Delete",
+    "Key": "DeliveryToken.Delete"
+  },
+  {
+    "Component": "DeliveryToken",
+    "Method": "Fetch",
+    "Key": "DeliveryToken.Fetch"
+  },
+  {
+    "Component": "DeliveryToken",
+    "Method": "Update",
+    "Key": "DeliveryToken.Update"
+  },
+  {
+    "Component": "ManagementToken",
+    "Method": "Create",
+    "Key": "ManagementToken.Create"
+  },
+  {
+    "Component": "ManagementToken",
+    "Method": "Delete",
+    "Key": "ManagementToken.Delete"
+  },
+  {
+    "Component": "ManagementToken",
+    "Method": "Fetch",
+    "Key": "ManagementToken.Fetch"
+  },
+  {
+    "Component": "ManagementToken",
+    "Method": "Update",
+    "Key": "ManagementToken.Update"
+  }
+]

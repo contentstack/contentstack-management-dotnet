@@ -180,7 +180,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = await _stack.ContentType("multi_page").Entry().CreateAsync(multiPageEntry);
-                
+                TestReportHelper.LogRequest("Entry.CreateAsync (multi_page)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/content_types/multi_page/entries");
                 if (response.IsSuccessStatusCode)
                 {
                     var responseObject = response.OpenJObjectResponse();
@@ -226,7 +227,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     Assert.IsNotNull(entryUid, "Created entry should have UID");
 
                     ContentstackResponse fetchResponse = await _stack.ContentType("single_page").Entry(entryUid).FetchAsync();
-                    
+                    TestReportHelper.LogRequest("Entry.FetchAsync", "GET",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/content_types/single_page/entries/{entryUid}");
                     if (fetchResponse.IsSuccessStatusCode)
                     {
                         var fetchObject = fetchResponse.OpenJObjectResponse();
@@ -285,7 +287,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     };
 
                     ContentstackResponse updateResponse = await _stack.ContentType("single_page").Entry(entryUid).UpdateAsync(updatedEntry);
-                    
+                    TestReportHelper.LogRequest("Entry.UpdateAsync", "PUT",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/content_types/single_page/entries/{entryUid}");
                     if (updateResponse.IsSuccessStatusCode)
                     {
                         var updateObject = updateResponse.OpenJObjectResponse();
@@ -321,7 +324,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 ContentstackResponse response = await _stack.ContentType("single_page").Entry().Query().FindAsync();
-                
+                TestReportHelper.LogRequest("Entry.Query.FindAsync", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/content_types/single_page/entries");
                 if (response.IsSuccessStatusCode)
                 {
                     var responseObject = response.OpenJObjectResponse();
@@ -365,7 +369,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     Assert.IsNotNull(entryUid, "Created entry should have UID");
 
                     ContentstackResponse deleteResponse = await _stack.ContentType("single_page").Entry(entryUid).DeleteAsync();
-                    
+                    TestReportHelper.LogRequest("Entry.DeleteAsync", "DELETE",
+                        $"https://{Contentstack.Client.contentstackOptions.Host}/v3/content_types/single_page/entries/{entryUid}");
                     if (deleteResponse.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"Successfully deleted entry: {entryUid}");

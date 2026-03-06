@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -265,7 +266,6 @@ Options:
                         if (!string.IsNullOrEmpty(pkgName) && !displayName.StartsWith(pkgName, StringComparison.Ordinal))
                             displayName = pkgName + "/" + displayName.TrimStart('/');
 
-                        var stmtRate = lineRate;
                         var row = new CoverageFileRow
                         {
                             File = displayName,
@@ -364,7 +364,7 @@ Options:
                             var requestUrl = NormalizeRequestUrl(req.RequestUrl ?? "");
                             var curlCommand = req.CurlCommand ?? "";
                             if (string.IsNullOrEmpty(curlCommand) && !string.IsNullOrEmpty(requestUrl))
-                                curlCommand = BuildCurlCommand(req.HttpMethod ?? "GET", requestUrl);
+                                curlCommand = BuildCurlCommand(req.HttpMethod ?? "GET", requestUrl, req.QueryParams ?? new(), req.Headers ?? new(), req.Body ?? "");
                             r.HttpRequests.Add(new HttpRequestRecord
                             {
                                 SdkMethod   = req.SdkMethod  ?? "",
@@ -499,6 +499,53 @@ Options:
         if (string.IsNullOrEmpty(url)) return "";
         var method = (httpMethod ?? "GET").ToUpperInvariant();
         return $"curl -X {method} \"{url}\"";
+    }
+
+    /// <summary>Builds a full cURL command with URL (including query), headers, and body.</summary>
+    static string BuildCurlCommand(string httpMethod, string requestUrl, Dictionary<string, string> queryParams, Dictionary<string, string> headers, string body)
+    {
+        var fullUrl = BuildFullRequestUrl(NormalizeRequestUrl(requestUrl ?? ""), queryParams);
+        if (string.IsNullOrEmpty(fullUrl)) return "";
+        var method = (httpMethod ?? "GET").ToUpperInvariant();
+        var sb = new System.Text.StringBuilder();
+        sb.Append("curl -X ").Append(method).Append(" ");
+        sb.Append("\"").Append(EscapeCurlUrl(fullUrl)).Append("\"");
+        foreach (var h in headers.Where(x => !string.IsNullOrEmpty(x.Key)))
+            sb.Append(" -H \"").Append(EscapeCurlHeader(h.Key)).Append(": ").Append(EscapeCurlHeader(h.Value)).Append("\"");
+        if (!string.IsNullOrEmpty(body))
+            sb.Append(" -d '").Append(EscapeCurlBody(body)).Append("'");
+        return sb.ToString();
+    }
+
+    static string BuildFullRequestUrl(string requestUrl, Dictionary<string, string> queryParams)
+    {
+        var baseUrl = requestUrl.Split('?')[0].Trim();
+        if (string.IsNullOrEmpty(baseUrl)) return requestUrl;
+        var existingQuery = requestUrl.Contains("?") ? requestUrl.Substring(requestUrl.IndexOf('?') + 1) : "";
+        var paramList = new List<string>();
+        if (!string.IsNullOrEmpty(existingQuery))
+            paramList.Add(existingQuery);
+        foreach (var kv in queryParams.Where(x => !string.IsNullOrEmpty(x.Key)))
+            paramList.Add($"{System.Uri.EscapeDataString(kv.Key)}={System.Uri.EscapeDataString(kv.Value ?? "")}");
+        return paramList.Count == 0 ? baseUrl : baseUrl + "?" + string.Join("&", paramList);
+    }
+
+    static string EscapeCurlUrl(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return s;
+        return s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+    }
+
+    static string EscapeCurlHeader(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return s;
+        return s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+    }
+
+    static string EscapeCurlBody(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return s;
+        return s.Replace("'", "'\\''");
     }
 
     static List<HttpRequestRecord> ParseRequestsFromStdOut(string stdOut)

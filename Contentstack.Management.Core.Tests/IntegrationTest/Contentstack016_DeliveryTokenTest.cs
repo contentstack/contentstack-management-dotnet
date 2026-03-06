@@ -155,6 +155,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = await _stack.DeliveryToken().CreateAsync(asyncTokenModel);
+                TestReportHelper.LogRequest("DeliveryToken.CreateAsync", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Async create delivery token failed");
 
@@ -191,6 +193,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
 
                 ContentstackResponse response = _stack.DeliveryToken(_deliveryTokenUid).Fetch();
+                TestReportHelper.LogRequest("DeliveryToken.Fetch", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens/{_deliveryTokenUid}");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Fetch delivery token failed");
 
@@ -221,6 +225,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
 
                 ContentstackResponse response = await _stack.DeliveryToken(_deliveryTokenUid).FetchAsync();
+                TestReportHelper.LogRequest("DeliveryToken.FetchAsync", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens/{_deliveryTokenUid}");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Async fetch delivery token failed");
 
@@ -276,6 +282,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.DeliveryToken(_deliveryTokenUid).Update(updateModel);
+                TestReportHelper.LogRequest("DeliveryToken.Update", "PUT",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens/{_deliveryTokenUid}");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Update delivery token failed");
 
@@ -332,6 +340,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = await _stack.DeliveryToken(_deliveryTokenUid).UpdateAsync(updateModel);
+                TestReportHelper.LogRequest("DeliveryToken.UpdateAsync", "PUT",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens/{_deliveryTokenUid}");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Async update delivery token failed");
 
@@ -361,6 +371,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
 
                 ContentstackResponse response = _stack.DeliveryToken().Query().Find();
+                TestReportHelper.LogRequest("DeliveryToken.Query.Find", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Query delivery tokens failed");
 
@@ -405,6 +417,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 parameters.Add("skip", "0");
 
                 ContentstackResponse response = _stack.DeliveryToken().Query().Limit(5).Skip(0).Find();
+                TestReportHelper.LogRequest("DeliveryToken.Query.Find (with params)", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Query delivery tokens with parameters failed");
 
@@ -458,6 +472,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.DeliveryToken().Create(multiEnvTokenModel);
+                TestReportHelper.LogRequest("DeliveryToken.Create (multi-env)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Create multi-environment delivery token failed");
 
@@ -519,6 +535,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.DeliveryToken().Create(complexScopeTokenModel);
+                TestReportHelper.LogRequest("DeliveryToken.Create (complex scope)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Create complex scope delivery token failed");
 
@@ -581,6 +599,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.DeliveryToken().Create(uiStructureTokenModel);
+                TestReportHelper.LogRequest("DeliveryToken.Create (UI structure)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Create UI structure delivery token failed");
 
@@ -622,6 +642,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
 
                 ContentstackResponse response = await _stack.DeliveryToken().Query().FindAsync();
+                TestReportHelper.LogRequest("DeliveryToken.Query.FindAsync", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Async query delivery tokens failed: {response.OpenResponse()}");
 
@@ -684,6 +706,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.DeliveryToken().Create(emptyDescTokenModel);
+                TestReportHelper.LogRequest("DeliveryToken.Create (empty description)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
 
                 Assert.IsTrue(response.IsSuccessStatusCode, $"Create token with empty description failed: {response.OpenResponse()}");
 
@@ -732,6 +756,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
                 };
 
+                TestReportHelper.LogRequest("DeliveryToken.Create (env-only - expected error)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
                 ContentstackResponse response;
                 try
                 {
@@ -782,6 +808,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
                 };
 
+                TestReportHelper.LogRequest("DeliveryToken.Create (branch-only - expected error)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/delivery_tokens");
                 ContentstackResponse response;
                 try
                 {

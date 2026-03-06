@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -46,23 +47,65 @@ namespace Contentstack.Management.Core.Tests
             Dictionary<string, string> queryParams = null)
         {
             if (_current == null) return;
-            var baseUrl = requestUrl?.Split('?')[0] ?? "";
-            var curlParts = $"curl -X {httpMethod.ToUpperInvariant()} \"{baseUrl}\"";
-            if (headers != null)
-                foreach (var h in headers)
-                    curlParts += $" -H \"{h.Key}: {h.Value}\"";
-            if (!string.IsNullOrEmpty(body))
-                curlParts += $" -d '{body}'";
+            var qp = queryParams ?? new Dictionary<string, string>();
+            var hd = headers ?? new Dictionary<string, string>();
+            var fullUrl = BuildFullRequestUrl(requestUrl ?? "", qp);
+            var curlCommand = BuildCurlCommand(httpMethod.ToUpperInvariant(), fullUrl, hd, body ?? "");
             _current.HttpRequests.Add(new RequestPayload
             {
                 SdkMethod   = sdkMethod,
                 HttpMethod  = httpMethod.ToUpperInvariant(),
                 RequestUrl  = requestUrl ?? "",
-                QueryParams = queryParams ?? new Dictionary<string, string>(),
-                Headers     = headers    ?? new Dictionary<string, string>(),
-                Body        = body       ?? "",
-                CurlCommand = curlParts
+                QueryParams = qp,
+                Headers     = hd,
+                Body        = body ?? "",
+                CurlCommand = curlCommand
             });
+        }
+
+        /// <summary>Builds full URL with query string from base URL and query params.</summary>
+        private static string BuildFullRequestUrl(string requestUrl, Dictionary<string, string> queryParams)
+        {
+            var baseUrl = requestUrl.Split('?')[0].Trim();
+            if (string.IsNullOrEmpty(baseUrl)) return requestUrl;
+            var existingQuery = requestUrl.Contains("?") ? requestUrl.Substring(requestUrl.IndexOf('?') + 1) : "";
+            var paramList = new List<string>();
+            if (!string.IsNullOrEmpty(existingQuery))
+                paramList.Add(existingQuery);
+            foreach (var kv in queryParams.Where(x => !string.IsNullOrEmpty(x.Key)))
+                paramList.Add($"{Uri.EscapeDataString(kv.Key)}={Uri.EscapeDataString(kv.Value ?? "")}");
+            return paramList.Count == 0 ? baseUrl : baseUrl + "?" + string.Join("&", paramList);
+        }
+
+        /// <summary>Builds a complete, copy-pasteable cURL command with URL, headers, and body.</summary>
+        private static string BuildCurlCommand(string httpMethod, string fullUrl, Dictionary<string, string> headers, string body)
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append("curl -X ").Append(httpMethod).Append(" ");
+            sb.Append("\"").Append(EscapeCurlUrl(fullUrl)).Append("\"");
+            foreach (var h in headers.Where(x => !string.IsNullOrEmpty(x.Key)))
+                sb.Append(" -H \"").Append(EscapeCurlHeader(h.Key)).Append(": ").Append(EscapeCurlHeader(h.Value)).Append("\"");
+            if (!string.IsNullOrEmpty(body))
+                sb.Append(" -d '").Append(EscapeCurlBody(body)).Append("'");
+            return sb.ToString();
+        }
+
+        private static string EscapeCurlUrl(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+            return s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+        }
+
+        private static string EscapeCurlHeader(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+            return s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+        }
+
+        private static string EscapeCurlBody(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+            return s.Replace("'", "'\\''");
         }
 
         public static void LogResponse(

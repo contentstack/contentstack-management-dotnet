@@ -290,6 +290,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.IsNotNull(releaseUid);
                 
                 ContentstackResponse contentstackResponse = await _stack.Release(releaseUid).FetchAsync();
+                TestReportHelper.LogRequest("Release.FetchAsync", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseUid}");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -328,6 +330,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 releaseUids = CreateSixNumberedReleases();
 
                 ContentstackResponse contentstackResponse = _stack.Release().Query().Find();
+                TestReportHelper.LogRequest("Release.Query.Find", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -367,6 +371,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 releaseUids = await CreateSixNumberedReleasesAsync();
 
                 ContentstackResponse contentstackResponse = await _stack.Release().Query().FindAsync();
+                TestReportHelper.LogRequest("Release.Query.FindAsync", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -407,6 +413,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 string releaseToFetch = releaseUids[2];
                 ContentstackResponse contentstackResponse = _stack.Release(releaseToFetch).Fetch();
+                TestReportHelper.LogRequest("Release.Fetch", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseToFetch}");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -437,6 +445,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 string releaseToFetch = releaseUids[4];
                 ContentstackResponse contentstackResponse = await _stack.Release(releaseToFetch).FetchAsync();
+                TestReportHelper.LogRequest("Release.FetchAsync", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseToFetch}");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -474,6 +484,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse contentstackResponse = _stack.Release(releaseUid).Update(updateModel);
+                TestReportHelper.LogRequest("Release.Update", "PUT",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseUid}");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -519,6 +531,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse contentstackResponse = await _stack.Release(releaseUid).UpdateAsync(updateModel);
+                TestReportHelper.LogRequest("Release.UpdateAsync", "PUT",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseUid}");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -560,6 +574,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string cloneDescription = _testReleaseDescription + " (Cloned)";
 
                 ContentstackResponse contentstackResponse = _stack.Release(originalReleaseUid).Clone(cloneName, cloneDescription);
+                TestReportHelper.LogRequest("Release.Clone", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{originalReleaseUid}/clone");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -614,6 +630,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string cloneDescription = _testReleaseDescription + " (Cloned Async)";
 
                 ContentstackResponse contentstackResponse = await _stack.Release(originalReleaseUid).CloneAsync(cloneName, cloneDescription);
+                TestReportHelper.LogRequest("Release.CloneAsync", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{originalReleaseUid}/clone");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -666,6 +684,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 parameters.Add("limit", "5");
 
                 ContentstackResponse contentstackResponse = _stack.Release().Query().Limit(5).Find();
+                TestReportHelper.LogRequest("Release.Query.Limit.Find", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -691,6 +711,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 parameters.Add("limit", "5");
 
                 ContentstackResponse contentstackResponse = await _stack.Release().Query().Limit(5).FindAsync();
+                TestReportHelper.LogRequest("Release.Query.Limit.FindAsync", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -722,6 +744,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 parameters.Add("include_count", "true");
 
                 ContentstackResponse contentstackResponse = _stack.Release().Create(releaseModel, parameters);
+                TestReportHelper.LogRequest("Release.Create (with params)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -757,6 +781,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 parameters.Add("include_count", "true");
 
                 ContentstackResponse contentstackResponse = await _stack.Release().CreateAsync(releaseModel, parameters);
+                TestReportHelper.LogRequest("Release.CreateAsync (with params)", "POST",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -784,6 +810,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 releaseUid = CreateTestRelease();
 
                 ContentstackResponse contentstackResponse = _stack.Release(releaseUid).Item().GetAll();
+                TestReportHelper.LogRequest("Release.Item.GetAll", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseUid}/items");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -818,6 +846,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 releaseUid = await CreateTestReleaseAsync();
 
                 ContentstackResponse contentstackResponse = await _stack.Release(releaseUid).Item().GetAllAsync();
+                TestReportHelper.LogRequest("Release.Item.GetAllAsync", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseUid}/items");
                 var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
@@ -850,6 +880,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 string nonExistentUid = "non_existent_release_uid_12345";
                 
+                TestReportHelper.LogRequest("Release.Fetch (not found - expected error)", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{nonExistentUid}");
                 try
                 {
                     ContentstackResponse contentstackResponse = _stack.Release(nonExistentUid).Fetch();
@@ -892,6 +924,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 string nonExistentUid = "non_existent_release_uid_12345";
                 
+                TestReportHelper.LogRequest("Release.FetchAsync (not found - expected error)", "GET",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{nonExistentUid}");
                 try
                 {
                     ContentstackResponse contentstackResponse = await _stack.Release(nonExistentUid).FetchAsync();
@@ -983,6 +1017,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string releaseToDeleteUid = createResponseJson["release"]["uid"].ToString();
 
                 ContentstackResponse contentstackResponse = await _stack.Release(releaseToDeleteUid).DeleteAsync();
+                TestReportHelper.LogRequest("Release.DeleteAsync", "DELETE",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseToDeleteUid}");
 
                 Assert.IsNotNull(contentstackResponse);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -1017,6 +1053,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string releaseToDeleteUid = createResponseJson["release"]["uid"].ToString();
 
                 ContentstackResponse deleteResponse = _stack.Release(releaseToDeleteUid).Delete();
+                TestReportHelper.LogRequest("Release.Delete (no Content-Type)", "DELETE",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseToDeleteUid}");
 
                 Assert.IsNotNull(deleteResponse);
                 Assert.IsTrue(deleteResponse.IsSuccessStatusCode, "Delete release (without Content-Type) must succeed.");
@@ -1061,6 +1099,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string releaseToDeleteUid = createResponseJson["release"]["uid"].ToString();
 
                 ContentstackResponse deleteResponse = await _stack.Release(releaseToDeleteUid).DeleteAsync();
+                TestReportHelper.LogRequest("Release.DeleteAsync (no Content-Type)", "DELETE",
+                    $"https://{Contentstack.Client.contentstackOptions.Host}/v3/stacks/releases/{releaseToDeleteUid}");
 
                 Assert.IsNotNull(deleteResponse);
                 Assert.IsTrue(deleteResponse.IsSuccessStatusCode, "Delete release async (without Content-Type) must succeed.");

@@ -41,6 +41,9 @@ done
 
 echo "Code coverage report generate."
 
+echo "Generating API surface (method coverage)..."
+dotnet run --project tools/ApiSurface/ApiSurface.csproj -- --output "tools/ApiSurface/api-surface.json" 2>/dev/null || true
+
 echo "Generating enhanced test report..."
 mkdir -p TestResults
 dotnet run --project tools/EnhancedTestReport/EnhancedTestReport.csproj -- \
@@ -48,5 +51,7 @@ dotnet run --project tools/EnhancedTestReport/EnhancedTestReport.csproj -- \
   --trx-dir "Contentstack.Management.Core.Tests/TestResults" \
   --cobertura-dir "Contentstack.Management.Core.Unit.Tests/TestResults" \
   --cobertura-dir "Contentstack.Management.Core.Tests/TestResults" \
+  --api-surface "tools/ApiSurface/api-surface.json" \
+  --js-api "tools/js-cma-api.json" \
   --output "TestResults/EnhancedReport-$FILE_NAME.html"
 echo "Enhanced report written to TestResults/EnhancedReport-$FILE_NAME.html"
