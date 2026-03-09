@@ -93,11 +93,49 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
             _stack = Contentstack.Client.Stack(response.Stack.APIKey);
+
+            // Create test environment and release for bulk operations (for new stack)
+            try
+            {
+                await CreateTestEnvironment();
+            }
+            catch (ContentstackErrorException ex)
+            {
+                // Environment may already exist on this stack; no action needed
+                Console.WriteLine($"[Initialize] CreateTestEnvironment skipped: HTTP {(int)ex.StatusCode} ({ex.StatusCode}). ErrorCode: {ex.ErrorCode}. Message: {ex.ErrorMessage ?? ex.Message}");
+            }
+
+            try
+            {
+                await CreateTestRelease();
+            }
+            catch (ContentstackErrorException ex)
+            {
+                // Release may already exist on this stack; no action needed
+                Console.WriteLine($"[Initialize] CreateTestRelease skipped: HTTP {(int)ex.StatusCode} ({ex.StatusCode}). ErrorCode: {ex.ErrorCode}. Message: {ex.ErrorMessage ?? ex.Message}");
+            }
+
+            // Ensure workflow (and bulk env) is initialized when running on a new stack
+            if (string.IsNullOrEmpty(_bulkTestWorkflowUid))
+            {
+                try
+                {
+                    EnsureBulkTestWorkflowAndPublishingRuleAsync(_stack).GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    // Workflow setup failed (e.g. auth, plan limits); record the reason so workflow-based tests can surface it
+                    _bulkTestWorkflowSetupError = ex is ContentstackErrorException cex
+                        ? $"HTTP {(int)cex.StatusCode} ({cex.StatusCode}). ErrorCode: {cex.ErrorCode}. Message: {cex.ErrorMessage ?? cex.Message}"
+                        : ex.Message;
+                    Console.WriteLine($"[Initialize] Workflow setup failed: {_bulkTestWorkflowSetupError}");
+                }
+            }
         }
 
         [TestMethod]
         [DoNotParallelize]
-        public async Task Test000a_Should_Create_Workflow_With_Two_Stages()
+        public void Test000a_Should_Create_Workflow_With_Two_Stages()
         {
             try
             {
@@ -215,7 +253,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         [TestMethod]
         [DoNotParallelize]
-        public async Task Test000b_Should_Create_Publishing_Rule_For_Workflow_Stage2()
+        public void Test000b_Should_Create_Publishing_Rule_For_Workflow_Stage2()
         {
             try
             {
@@ -223,7 +261,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowStage2Uid), "Workflow Stage 2 UID not set. Run Test000a first.");
 
                 if (string.IsNullOrEmpty(_bulkTestEnvironmentUid))
-                    await EnsureBulkTestEnvironmentAsync(_stack);
+                    EnsureBulkTestEnvironment(_stack);
                 Assert.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Run Test000c or ensure ClassInitialize ran (ensure environment failed).");
 
                 // Find existing publish rule for this workflow + stage + environment (e.g. from a previous run)
@@ -885,6 +923,84 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test009_Should_Cleanup_Test_Resources()
+        {
+            try
+            {
+                // 1. Delete all entries created during the test run
+                if (_createdEntries != null)
+                {
+                    foreach (var entry in _createdEntries)
+                    {
+                        try
+                        {
+                            _stack.ContentType(_contentTypeUid).Entry(entry.Uid).Delete();
+                            Console.WriteLine($"[Cleanup] Deleted entry: {entry.Uid}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[Cleanup] Failed to delete entry {entry.Uid}: {ex.Message}");
+                        }
+                    }
+                    _createdEntries.Clear();
+                }
+
+                // 2. Delete the content type
+                if (!string.IsNullOrEmpty(_contentTypeUid))
+                {
+                    try
+                    {
+                        _stack.ContentType(_contentTypeUid).Delete();
+                        Console.WriteLine($"[Cleanup] Deleted content type: {_contentTypeUid}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[Cleanup] Failed to delete content type {_contentTypeUid}: {ex.Message}");
+                    }
+                }
+
+                // 3. Delete the workflow and publishing rule
+                CleanupBulkTestWorkflowAndPublishingRule(_stack);
+                Console.WriteLine("[Cleanup] Workflow and publishing rule cleanup done.");
+
+                // 4. Delete the test release
+                if (!string.IsNullOrEmpty(_testReleaseUid))
+                {
+                    try
+                    {
+                        _stack.Release(_testReleaseUid).Delete();
+                        Console.WriteLine($"[Cleanup] Deleted release: {_testReleaseUid}");
+                        _testReleaseUid = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[Cleanup] Failed to delete release {_testReleaseUid}: {ex.Message}");
+                    }
+                }
+
+                // 5. Delete the test environment
+                if (!string.IsNullOrEmpty(_testEnvironmentUid))
+                {
+                    try
+                    {
+                        _stack.Environment(_testEnvironmentUid).Delete();
+                        Console.WriteLine($"[Cleanup] Deleted environment: {_testEnvironmentUid}");
+                        _testEnvironmentUid = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[Cleanup] Failed to delete environment {_testEnvironmentUid}: {ex.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                FailWithError("Cleanup test resources", ex);
+            }
+        }
+
         private async Task CheckBulkJobStatus(string jobId, string bulkVersion = null)
         {
             try
@@ -1085,6 +1201,34 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         }
 
         /// <summary>
+        /// Returns available environment UIDs for the given stack (synchronous).
+        /// </summary>
+        private static List<string> GetAvailableEnvironments(Stack stack)
+        {
+            try
+            {
+                ContentstackResponse response = stack.Environment().Query().Find();
+                var responseJson = response.OpenJObjectResponse();
+                if (response.IsSuccessStatusCode && responseJson["environments"] != null)
+                {
+                    var environments = responseJson["environments"] as JArray;
+                    if (environments != null && environments.Count > 0)
+                    {
+                        var uids = new List<string>();
+                        foreach (var env in environments)
+                        {
+                            if (env["uid"] != null)
+                                uids.Add(env["uid"].ToString());
+                        }
+                        return uids;
+                    }
+                }
+            }
+            catch { }
+            return new List<string>();
+        }
+
+        /// <summary>
         /// Returns available environment UIDs for the given stack (used by workflow setup).
         /// </summary>
         private static async Task<List<string>> GetAvailableEnvironmentsAsync(Stack stack)
@@ -1110,6 +1254,41 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch { }
             return new List<string>();
+        }
+
+        /// <summary>
+        /// Ensures an environment exists for workflow/publish rule tests: lists existing envs and uses the first, or creates "bulk_test_env" if none exist. Sets _bulkTestEnvironmentUid. Synchronous.
+        /// </summary>
+        private static void EnsureBulkTestEnvironment(Stack stack)
+        {
+            try
+            {
+                List<string> envs = GetAvailableEnvironments(stack);
+                if (envs != null && envs.Count > 0)
+                {
+                    _bulkTestEnvironmentUid = envs[0];
+                    return;
+                }
+
+                var environmentModel = new EnvironmentModel
+                {
+                    Name = "bulk_test_env",
+                    Urls = new List<LocalesUrl>
+                    {
+                        new LocalesUrl
+                        {
+                            Url = "https://bulk-test-environment.example.com",
+                            Locale = "en-us"
+                        }
+                    }
+                };
+
+                ContentstackResponse response = stack.Environment().Create(environmentModel);
+                var responseJson = response.OpenJObjectResponse();
+                if (response.IsSuccessStatusCode && responseJson["environment"]?["uid"] != null)
+                    _bulkTestEnvironmentUid = responseJson["environment"]["uid"].ToString();
+            }
+            catch { /* Leave _bulkTestEnvironmentUid null */ }
         }
 
         /// <summary>
