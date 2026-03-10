@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -103,6 +104,22 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Delete();
             Assert.IsTrue(response.IsSuccessStatusCode, $"Delete failed: {response.OpenResponse()}");
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test007_Should_Throw_When_Fetch_NonExistent_Taxonomy()
+        {
+            Assert.ThrowsException<ContentstackErrorException>(() =>
+                _stack.Taxonomy("non_existent_taxonomy_uid_12345").Fetch());
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test008_Should_Throw_When_Delete_NonExistent_Taxonomy()
+        {
+            Assert.ThrowsException<ContentstackErrorException>(() =>
+                _stack.Taxonomy("non_existent_taxonomy_uid_12345").Delete());
         }
     }
 }
