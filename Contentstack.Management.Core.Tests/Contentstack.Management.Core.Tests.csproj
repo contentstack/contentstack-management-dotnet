@@ -24,6 +24,7 @@
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.18.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,14 +36,17 @@
   <ItemGroup>
     <EmbeddedResource Include="Mock\*.json" />
   </ItemGroup>
+
   <ItemGroup>
-    <Content Include="appsettings.json">
+       <Content Include="appSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
   <ItemGroup>
     <None Remove="Microsoft.AspNetCore.Http" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Contentstack.Management.Core\contentstack.management.core.csproj" />
   </ItemGroup>

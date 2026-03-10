@@ -48,25 +48,25 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         }
 
         [TestMethod]
-        public void Should_Set_Skip_Workflow_Stage_Header_When_True()
+        public void Should_Set_Skip_Workflow_Stage_Query_Parameter_When_True()
         {
             var details = new BulkPublishDetails();
             var service = new BulkUnpublishService(serializer, new Management.Core.Models.Stack(null), details, skipWorkflowStage: true);
 
             Assert.IsNotNull(service);
-            Assert.IsTrue(service.Headers.ContainsKey("skip_workflow_stage_check"));
-            Assert.AreEqual("true", service.Headers["skip_workflow_stage_check"]);
+            Assert.IsTrue(service.QueryResources.ContainsKey("skip_workflow_stage_check"));
+            Assert.AreEqual("true", service.QueryResources["skip_workflow_stage_check"]);
         }
 
         [TestMethod]
-        public void Should_Set_Approvals_Header_When_True()
+        public void Should_Set_Approvals_Query_Parameter_When_True()
         {
             var details = new BulkPublishDetails();
             var service = new BulkUnpublishService(serializer, new Management.Core.Models.Stack(null), details, approvals: true);
 
             Assert.IsNotNull(service);
-            Assert.IsTrue(service.Headers.ContainsKey("approvals"));
-            Assert.AreEqual("true", service.Headers["approvals"]);
+            Assert.IsTrue(service.QueryResources.ContainsKey("approvals"));
+            Assert.AreEqual("true", service.QueryResources["approvals"]);
         }
 
         [TestMethod]
