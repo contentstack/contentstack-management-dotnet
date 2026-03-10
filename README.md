@@ -129,3 +129,7 @@ var path = Path.Combine(Environment.CurrentDirectory, "path/to/file");
 AssetModel asset = new AssetModel("Asset Title", path, "application/json");
 ContentstackResponse response = stack.Asset().Create(asset);
 ```
+
+### Test reports and security
+
+Generated test artifacts (TRX, coverage HTML, EnhancedReport HTML) **must not be committed**—they can contain stack URLs, tokens, and org data from test output. They are ignored via `.gitignore` under `**/TestResults/` and related patterns. See **[docs/TEST_REPORT_SECURITY.md](docs/TEST_REPORT_SECURITY.md)** for rationale and good practice.

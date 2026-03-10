@@ -1,0 +1,13 @@
+#!/bin/sh
+# Sample pre-commit hook: refuse commits that include test report artifacts.
+# Install: cp Scripts/pre-commit-no-test-artifacts.sample .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+#
+# Why: TRX and HTML reports can contain tokens, URLs, and org/stack data from TestReportHelper output.
+
+if git diff --cached --name-only | grep -E '(^|/)TestResults/|EnhancedReport.*\.html$|Report-.*\.trx$|coverage\.cobertura\.xml$'; then
+  echo "Commit blocked: staged files match test report artifact patterns."
+  echo "Remove them from the index: git reset HEAD -- <path>"
+  echo "See docs/TEST_REPORT_SECURITY.md"
+  exit 1
+fi
+exit 0

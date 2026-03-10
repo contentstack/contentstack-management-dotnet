@@ -18,8 +18,20 @@ packages/
 *.config
 *.nupkg
 *.nuspec
+
+# VSTest TRX – may contain full test stdout (URLs, headers, bodies) from TestReportHelper
 *.trx
-*/TestResults/*
+
+# Test output root – TRX, Cobertura, ReportGenerator HTML, EnhancedTestReport HTML.
+# Reports must never be committed (credentials / stack / org data).
+**/TestResults/
+**/TestResults/**
+
+# Explicit report artifacts if generated outside TestResults by mistake
+**/EnhancedReport*.html
+**/Coverage-*/**/*.html
+**/Coverage-*/**/*.htm
+
 */app.config
 */mono**
 */appSettings.json

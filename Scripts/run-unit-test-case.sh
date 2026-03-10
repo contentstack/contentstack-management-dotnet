@@ -14,4 +14,10 @@ FILE_NAME="Contentstack-DotNet-Test-Case"
 echo "Running test case..."
 dotnet test "Contentstack.Management.Core.Unit.Tests/Contentstack.Management.Core.Unit.Tests.csproj" --logger "trx;LogFileName=Report-$FILE_NAME.trx" --collect:"XPlat code coverage"
 
+echo "Generating enhanced HTML report..."
+dotnet run --project tools/EnhancedTestReport/EnhancedTestReport.csproj -- \
+  --trx-dir "Contentstack.Management.Core.Unit.Tests/TestResults" \
+  --cobertura-dir "Contentstack.Management.Core.Unit.Tests/TestResults" \
+  --output "Contentstack.Management.Core.Unit.Tests/TestResults/EnhancedReport-$FILE_NAME.html"
+
 echo "Test case Completed..."   

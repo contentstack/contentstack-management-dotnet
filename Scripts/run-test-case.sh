@@ -34,3 +34,11 @@ do
 done
 
 echo "Code coverage report generate."
+
+echo "Generating enhanced HTML report (merged TRX + Cobertura)..."
+dotnet run --project tools/EnhancedTestReport/EnhancedTestReport.csproj -- \
+  --trx-dir "Contentstack.Management.Core.Unit.Tests/TestResults" \
+  --trx-dir "Contentstack.Management.Core.Tests/TestResults" \
+  --cobertura-dir "Contentstack.Management.Core.Unit.Tests/TestResults" \
+  --cobertura-dir "Contentstack.Management.Core.Tests/TestResults" \
+  --output "Contentstack.Management.Core.Unit.Tests/TestResults/EnhancedReport-$FILE_NAME.html"
