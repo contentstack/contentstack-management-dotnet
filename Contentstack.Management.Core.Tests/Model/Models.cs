@@ -37,5 +37,20 @@ namespace Contentstack.Management.Core.Tests.Model
         [JsonProperty("taxonomies")]
         public List<TaxonomyModel> Taxonomies { get; set; }
     }
+
+    public class TermResponseModel
+    {
+        [JsonProperty("term")]
+        public TermModel Term { get; set; }
+    }
+
+    public class TermsResponseModel
+    {
+        [JsonProperty("terms")]
+        public List<TermModel> Terms { get; set; }
+
+        [JsonProperty("count")]
+        public int? Count { get; set; }
+    }
 }
 
