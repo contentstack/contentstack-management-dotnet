@@ -5,7 +5,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
-using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Models.Fields;
 using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Abstractions;
@@ -44,9 +43,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private static void FailWithError(string operation, Exception ex)
         {
             if (ex is ContentstackErrorException cex)
-                AssertLogger.Fail($"{operation} failed. HTTP {(int)cex.StatusCode} ({cex.StatusCode}). ErrorCode: {cex.ErrorCode}. Message: {cex.ErrorMessage ?? cex.Message}");
+                Assert.Fail($"{operation} failed. HTTP {(int)cex.StatusCode} ({cex.StatusCode}). ErrorCode: {cex.ErrorCode}. Message: {cex.ErrorMessage ?? cex.Message}");
             else
-                AssertLogger.Fail($"{operation} failed: {ex.Message}");
+                Assert.Fail($"{operation} failed: {ex.Message}");
         }
 
         /// <summary>
@@ -55,9 +54,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private static void AssertWorkflowCreated()
         {
             string reason = string.IsNullOrEmpty(_bulkTestWorkflowSetupError) ? "Check auth and stack permissions for workflow create." : _bulkTestWorkflowSetupError;
-            AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowUid), "Workflow was not created in ClassInitialize. " + reason, "WorkflowUid");
-            AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowStage1Uid), "Workflow Stage 1 (New stage 1) was not set. " + reason, "WorkflowStage1Uid");
-            AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowStage2Uid), "Workflow Stage 2 (New stage 2) was not set. " + reason, "WorkflowStage2Uid");
+            Assert.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowUid), "Workflow was not created in ClassInitialize. " + reason);
+            Assert.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowStage1Uid), "Workflow Stage 1 (New stage 1) was not set. " + reason);
+            Assert.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowStage2Uid), "Workflow Stage 2 (New stage 2) was not set. " + reason);
         }
 
         /// <summary>
@@ -138,7 +137,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test000a_Should_Create_Workflow_With_Two_Stages()
         {
-            TestOutputLogger.LogContext("TestScenario", "CreateWorkflowWithTwoStages");
             try
             {
                 const string workflowName = "workflow_test";
@@ -164,8 +162,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                                         _bulkTestWorkflowStage1Uid = existingStages[0]["uid"]?.ToString();
                                         _bulkTestWorkflowStage2Uid = existingStages[1]["uid"]?.ToString();
                                         _bulkTestWorkflowStageUid = _bulkTestWorkflowStage2Uid;
-                                        AssertLogger.IsNotNull(_bulkTestWorkflowStage1Uid, "Stage1Uid");
-                                        AssertLogger.IsNotNull(_bulkTestWorkflowStage2Uid, "Stage2Uid");
+                                        Assert.IsNotNull(_bulkTestWorkflowStage1Uid, "Stage 1 UID null in existing workflow.");
+                                        Assert.IsNotNull(_bulkTestWorkflowStage2Uid, "Stage 2 UID null in existing workflow.");
                                         return; // Already exists with stages – nothing more to do
                                     }
                                 }
@@ -230,20 +228,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string responseBody = null;
                 try { responseBody = response.OpenResponse(); } catch { }
 
-                AssertLogger.IsNotNull(response, "workflowCreateResponse");
-                AssertLogger.IsTrue(response.IsSuccessStatusCode,
-                    $"Workflow create failed: HTTP {(int)response.StatusCode}.\n--- REQUEST BODY ---\n{sentJson}\n--- RESPONSE BODY ---\n{responseBody}", "workflowCreateSuccess");
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode,
+                    $"Workflow create failed: HTTP {(int)response.StatusCode}.\n--- REQUEST BODY ---\n{sentJson}\n--- RESPONSE BODY ---\n{responseBody}");
 
                 var responseJson = JObject.Parse(responseBody ?? "{}");
                 var workflowObj = responseJson["workflow"];
-                AssertLogger.IsNotNull(workflowObj, "workflowObj");
-                AssertLogger.IsFalse(string.IsNullOrEmpty(workflowObj["uid"]?.ToString()), "Workflow UID is empty.", "workflowUid");
+                Assert.IsNotNull(workflowObj, "Response missing 'workflow' key.");
+                Assert.IsFalse(string.IsNullOrEmpty(workflowObj["uid"]?.ToString()), "Workflow UID is empty.");
 
                 _bulkTestWorkflowUid = workflowObj["uid"].ToString();
-                TestOutputLogger.LogContext("WorkflowUid", _bulkTestWorkflowUid);
                 var stages = workflowObj["workflow_stages"] as JArray;
-                AssertLogger.IsNotNull(stages, "workflow_stages");
-                AssertLogger.IsTrue(stages.Count >= 2, $"Expected at least 2 stages, got {stages.Count}.", "stagesCount");
+                Assert.IsNotNull(stages, "workflow_stages missing from response.");
+                Assert.IsTrue(stages.Count >= 2, $"Expected at least 2 stages, got {stages.Count}.");
                 _bulkTestWorkflowStage1Uid = stages[0]["uid"].ToString(); // New stage 1
                 _bulkTestWorkflowStage2Uid = stages[1]["uid"].ToString(); // New stage 2
                 _bulkTestWorkflowStageUid = _bulkTestWorkflowStage2Uid;
@@ -258,17 +255,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test000b_Should_Create_Publishing_Rule_For_Workflow_Stage2()
         {
-            TestOutputLogger.LogContext("TestScenario", "CreatePublishingRuleForWorkflowStage2");
             try
             {
-                AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowUid), "Workflow UID not set. Run Test000a first.", "WorkflowUid");
-                AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowStage2Uid), "Workflow Stage 2 UID not set. Run Test000a first.", "WorkflowStage2Uid");
+                Assert.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowUid), "Workflow UID not set. Run Test000a first.");
+                Assert.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowStage2Uid), "Workflow Stage 2 UID not set. Run Test000a first.");
 
                 if (string.IsNullOrEmpty(_bulkTestEnvironmentUid))
                     EnsureBulkTestEnvironment(_stack);
-                AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Run Test000c or ensure ClassInitialize ran (ensure environment failed).", "EnvironmentUid");
-                TestOutputLogger.LogContext("WorkflowUid", _bulkTestWorkflowUid ?? "");
-                TestOutputLogger.LogContext("EnvironmentUid", _bulkTestEnvironmentUid ?? "");
+                Assert.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Run Test000c or ensure ClassInitialize ran (ensure environment failed).");
 
                 // Find existing publish rule for this workflow + stage + environment (e.g. from a previous run)
                 try
@@ -315,14 +309,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string responseBody = null;
                 try { responseBody = response.OpenResponse(); } catch { }
 
-                AssertLogger.IsNotNull(response, "publishRuleResponse");
-                AssertLogger.IsTrue(response.IsSuccessStatusCode,
-                    $"Publish rule create failed: HTTP {(int)response.StatusCode}.\n--- REQUEST BODY ---\n{sentJson}\n--- RESPONSE BODY ---\n{responseBody}", "publishRuleCreateSuccess");
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode,
+                    $"Publish rule create failed: HTTP {(int)response.StatusCode}.\n--- REQUEST BODY ---\n{sentJson}\n--- RESPONSE BODY ---\n{responseBody}");
 
                 var responseJson = JObject.Parse(responseBody ?? "{}");
                 var ruleObj = responseJson["publishing_rule"];
-                AssertLogger.IsNotNull(ruleObj, "publishing_rule");
-                AssertLogger.IsFalse(string.IsNullOrEmpty(ruleObj["uid"]?.ToString()), "Publishing rule UID is empty.", "publishRuleUid");
+                Assert.IsNotNull(ruleObj, "Response missing 'publishing_rule' key.");
+                Assert.IsFalse(string.IsNullOrEmpty(ruleObj["uid"]?.ToString()), "Publishing rule UID is empty.");
 
                 _bulkTestPublishRuleUid = ruleObj["uid"].ToString();
             }
@@ -337,8 +331,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test001_Should_Create_Content_Type_With_Title_Field()
         {
-            TestOutputLogger.LogContext("TestScenario", "CreateContentTypeWithTitleField");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 try { await CreateTestEnvironment(); } catch (ContentstackErrorException) { /* optional */ }
@@ -366,10 +358,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse response = _stack.ContentType().Create(contentModelling);
                 var responseJson = response.OpenJObjectResponse();
 
-                AssertLogger.IsNotNull(response, "createContentTypeResponse");
-                AssertLogger.IsTrue(response.IsSuccessStatusCode, "contentTypeCreateSuccess");
-                AssertLogger.IsNotNull(responseJson["content_type"], "content_type");
-                AssertLogger.AreEqual(_contentTypeUid, responseJson["content_type"]["uid"].ToString(), "contentTypeUid");
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode);
+                Assert.IsNotNull(responseJson["content_type"]);
+                Assert.AreEqual(_contentTypeUid, responseJson["content_type"]["uid"].ToString());
             }
             catch (Exception ex)
             {
@@ -381,8 +373,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test002_Should_Create_Five_Entries()
         {
-            TestOutputLogger.LogContext("TestScenario", "CreateFiveEntries");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 AssertWorkflowCreated();
@@ -426,10 +416,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentstackResponse response = _stack.ContentType(_contentTypeUid).Entry().Create(entry);
                     var responseJson = response.OpenJObjectResponse();
 
-                    AssertLogger.IsNotNull(response, "createEntryResponse");
-                    AssertLogger.IsTrue(response.IsSuccessStatusCode, "entryCreateSuccess");
-                    AssertLogger.IsNotNull(responseJson["entry"], "entry");
-                    AssertLogger.IsNotNull(responseJson["entry"]["uid"], "entryUid");
+                    Assert.IsNotNull(response);
+                    Assert.IsTrue(response.IsSuccessStatusCode);
+                    Assert.IsNotNull(responseJson["entry"]);
+                    Assert.IsNotNull(responseJson["entry"]["uid"]);
 
                     int version = responseJson["entry"]["_version"] != null ? (int)responseJson["entry"]["_version"] : 1;
                     _createdEntries.Add(new EntryInfo
@@ -440,7 +430,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     });
                 }
 
-                AssertLogger.AreEqual(5, _createdEntries.Count, "Should have created exactly 5 entries", "createdEntriesCount");
+                Assert.AreEqual(5, _createdEntries.Count, "Should have created exactly 5 entries");
 
                 await AssignEntriesToWorkflowStagesAsync(_createdEntries);
             }
@@ -454,13 +444,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test003_Should_Perform_Bulk_Publish_Operation()
         {
-           TestOutputLogger.LogContext("TestScenario", "BulkPublishOperation");
-           TestOutputLogger.LogContext("ContentType", _contentTypeUid);
            try
            {
                // Fetch existing entries from the content type
                List<EntryInfo> availableEntries = await FetchExistingEntries();
-               AssertLogger.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation", "availableEntriesCount");
+               Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
 
                // Get available environments or use empty list if none available
                List<string> availableEnvironments = await GetAvailableEnvironments();
@@ -483,8 +471,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails, skipWorkflowStage: true, approvals: true);
                var responseJson = response.OpenJObjectResponse();
 
-               AssertLogger.IsNotNull(response, "bulkPublishResponse");
-               AssertLogger.IsTrue(response.IsSuccessStatusCode, "bulkPublishSuccess");
+               Assert.IsNotNull(response);
+               Assert.IsTrue(response.IsSuccessStatusCode);
            }
            catch (ContentstackErrorException cex) when ((int)cex.StatusCode == 422)
            {
@@ -501,13 +489,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test004_Should_Perform_Bulk_Unpublish_Operation()
         {
-           TestOutputLogger.LogContext("TestScenario", "BulkUnpublishOperation");
-           TestOutputLogger.LogContext("ContentType", _contentTypeUid);
            try
            {
                // Fetch existing entries from the content type
                List<EntryInfo> availableEntries = await FetchExistingEntries();
-               AssertLogger.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation", "availableEntriesCount");
+               Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
 
                // Get available environments
                List<string> availableEnvironments = await GetAvailableEnvironments();
@@ -530,8 +516,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                ContentstackResponse response = _stack.BulkOperation().Unpublish(unpublishDetails, skipWorkflowStage: true, approvals: true);
                var responseJson = response.OpenJObjectResponse();
 
-               AssertLogger.IsNotNull(response, "bulkUnpublishResponse");
-               AssertLogger.IsTrue(response.IsSuccessStatusCode, "bulkUnpublishSuccess");
+               Assert.IsNotNull(response);
+               Assert.IsTrue(response.IsSuccessStatusCode);
            }
            catch (ContentstackErrorException cex) when ((int)cex.StatusCode == 422)
            {
@@ -548,17 +534,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test003a_Should_Perform_Bulk_Publish_With_SkipWorkflowStage_And_Approvals()
         {
-            TestOutputLogger.LogContext("TestScenario", "BulkPublishWithSkipWorkflowStageAndApprovals");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 if (string.IsNullOrEmpty(_bulkTestEnvironmentUid))
                     await EnsureBulkTestEnvironmentAsync(_stack);
-                AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Ensure Test000c or ClassInitialize ran.", "EnvironmentUid");
-                TestOutputLogger.LogContext("EnvironmentUid", _bulkTestEnvironmentUid ?? "");
+                Assert.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Ensure Test000c or ClassInitialize ran.");
 
                 List<EntryInfo> availableEntries = await FetchExistingEntries();
-                AssertLogger.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation. Run Test002 first.", "availableEntriesCount");
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation. Run Test002 first.");
 
                 var publishDetails = new BulkPublishDetails
                 {
@@ -576,12 +559,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails, skipWorkflowStage: true, approvals: true);
 
-                AssertLogger.IsNotNull(response, "bulkPublishResponse");
-                AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Bulk publish failed with status {(int)response.StatusCode} ({response.StatusCode}).", "bulkPublishSuccess");
-                AssertLogger.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.", "statusCode");
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk publish failed with status {(int)response.StatusCode} ({response.StatusCode}).");
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.");
 
                 var responseJson = response.OpenJObjectResponse();
-                AssertLogger.IsNotNull(responseJson, "responseJson");
+                Assert.IsNotNull(responseJson);
             }
             catch (Exception ex)
             {
@@ -591,16 +574,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         ? JsonConvert.SerializeObject(cex.Errors, Formatting.Indented)
                         : "(none)";
                     string failMessage = string.Format(
-                        "Bulk publish with skipWorkflowStage and approvals failed. HTTP {0} ({1}). ErrorCode: {2}. Message: {3}. Errors: {4}",
+                        "Assert.Fail failed. Bulk publish with skipWorkflowStage and approvals failed. HTTP {0} ({1}). ErrorCode: {2}. Message: {3}. Errors: {4}",
                         (int)cex.StatusCode, cex.StatusCode, cex.ErrorCode, cex.ErrorMessage ?? cex.Message, errorsJson);
                     if ((int)cex.StatusCode == 422 && cex.ErrorCode == 141)
                     {
                         Console.WriteLine(failMessage);
-                        AssertLogger.AreEqual(422, (int)cex.StatusCode, "Expected 422 Unprocessable Entity.", "statusCode");
-                        AssertLogger.AreEqual(141, cex.ErrorCode, "Expected ErrorCode 141 (entries do not satisfy publish rules).", "errorCode");
+                        Assert.AreEqual(422, (int)cex.StatusCode, "Expected 422 Unprocessable Entity.");
+                        Assert.AreEqual(141, cex.ErrorCode, "Expected ErrorCode 141 (entries do not satisfy publish rules).");
                         return;
                     }
-                    AssertLogger.Fail(failMessage);
+                    Assert.Fail(failMessage);
                 }
                 else
                 {
@@ -613,17 +596,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test004a_Should_Perform_Bulk_UnPublish_With_SkipWorkflowStage_And_Approvals()
         {
-            TestOutputLogger.LogContext("TestScenario", "BulkUnpublishWithSkipWorkflowStageAndApprovals");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 if (string.IsNullOrEmpty(_bulkTestEnvironmentUid))
                     await EnsureBulkTestEnvironmentAsync(_stack);
-                AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Ensure Test000c or ClassInitialize ran.", "EnvironmentUid");
-                TestOutputLogger.LogContext("EnvironmentUid", _bulkTestEnvironmentUid ?? "");
+                Assert.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Ensure Test000c or ClassInitialize ran.");
 
                 List<EntryInfo> availableEntries = await FetchExistingEntries();
-                AssertLogger.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation. Run Test002 first.", "availableEntriesCount");
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation. Run Test002 first.");
 
                 var publishDetails = new BulkPublishDetails
                 {
@@ -641,12 +621,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = _stack.BulkOperation().Unpublish(publishDetails, skipWorkflowStage: false, approvals: true);
 
-                AssertLogger.IsNotNull(response, "bulkUnpublishResponse");
-                AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Bulk publish failed with status {(int)response.StatusCode} ({response.StatusCode}).", "bulkUnpublishSuccess");
-                AssertLogger.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.", "statusCode");
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk publish failed with status {(int)response.StatusCode} ({response.StatusCode}).");
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.");
 
                 var responseJson = response.OpenJObjectResponse();
-                AssertLogger.IsNotNull(responseJson, "responseJson");
+                Assert.IsNotNull(responseJson);
             }
             catch (Exception ex)
             {
@@ -656,16 +636,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         ? JsonConvert.SerializeObject(cex.Errors, Formatting.Indented)
                         : "(none)";
                     string failMessage = string.Format(
-                        "Bulk unpublish with skipWorkflowStage and approvals failed. HTTP {0} ({1}). ErrorCode: {2}. Message: {3}. Errors: {4}",
+                        "Assert.Fail failed. Bulk unpublish with skipWorkflowStage and approvals failed. HTTP {0} ({1}). ErrorCode: {2}. Message: {3}. Errors: {4}",
                         (int)cex.StatusCode, cex.StatusCode, cex.ErrorCode, cex.ErrorMessage ?? cex.Message, errorsJson);
                     if ((int)cex.StatusCode == 422 && (cex.ErrorCode == 141 || cex.ErrorCode == 0))
                     {
                         Console.WriteLine(failMessage);
-                        AssertLogger.AreEqual(422, (int)cex.StatusCode, "Expected 422 Unprocessable Entity.", "statusCode");
-                        AssertLogger.IsTrue(cex.ErrorCode == 141 || cex.ErrorCode == 0, "Expected ErrorCode 141 or 0 (entries do not satisfy publish rules).", "errorCode");
+                        Assert.AreEqual(422, (int)cex.StatusCode, "Expected 422 Unprocessable Entity.");
+                        Assert.IsTrue(cex.ErrorCode == 141 || cex.ErrorCode == 0, "Expected ErrorCode 141 or 0 (entries do not satisfy publish rules).");
                         return;
                     }
-                    AssertLogger.Fail(failMessage);
+                    Assert.Fail(failMessage);
                 }
                 else
                 {
@@ -678,16 +658,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test003b_Should_Perform_Bulk_Publish_With_ApiVersion_3_2_With_SkipWorkflowStage_And_Approvals()
         {
-            TestOutputLogger.LogContext("TestScenario", "BulkPublishApiVersion32WithSkipWorkflowStageAndApprovals");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 if (string.IsNullOrEmpty(_bulkTestEnvironmentUid))
                     await EnsureBulkTestEnvironmentAsync(_stack);
-                AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Ensure Test000c or ClassInitialize ran.", "EnvironmentUid");
+                Assert.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Ensure Test000c or ClassInitialize ran.");
 
                 List<EntryInfo> availableEntries = await FetchExistingEntries();
-                AssertLogger.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation. Run Test002 first.", "availableEntriesCount");
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation. Run Test002 first.");
 
                 var publishDetails = new BulkPublishDetails
                 {
@@ -705,12 +683,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails, skipWorkflowStage: true, approvals: true, apiVersion: "3.2");
 
-                AssertLogger.IsNotNull(response, "bulkPublishResponse");
-                AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Bulk publish with api_version 3.2 failed with status {(int)response.StatusCode} ({response.StatusCode}).", "bulkPublishSuccess");
-                AssertLogger.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.", "statusCode");
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk publish with api_version 3.2 failed with status {(int)response.StatusCode} ({response.StatusCode}).");
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.");
 
                 var responseJson = response.OpenJObjectResponse();
-                AssertLogger.IsNotNull(responseJson, "responseJson");
+                Assert.IsNotNull(responseJson);
             }
             catch (Exception ex)
             {
@@ -722,16 +700,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test004b_Should_Perform_Bulk_UnPublish_With_ApiVersion_3_2_With_SkipWorkflowStage_And_Approvals()
         {
-            TestOutputLogger.LogContext("TestScenario", "BulkUnpublishApiVersion32WithSkipWorkflowStageAndApprovals");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 if (string.IsNullOrEmpty(_bulkTestEnvironmentUid))
                     await EnsureBulkTestEnvironmentAsync(_stack);
-                AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Ensure Test000c or ClassInitialize ran.", "EnvironmentUid");
+                Assert.IsFalse(string.IsNullOrEmpty(_bulkTestEnvironmentUid), "No environment. Ensure Test000c or ClassInitialize ran.");
 
                 List<EntryInfo> availableEntries = await FetchExistingEntries();
-                AssertLogger.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation. Run Test002 first.", "availableEntriesCount");
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation. Run Test002 first.");
 
                 var publishDetails = new BulkPublishDetails
                 {
@@ -749,12 +725,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = _stack.BulkOperation().Unpublish(publishDetails, skipWorkflowStage: true, approvals: true, apiVersion: "3.2");
 
-                AssertLogger.IsNotNull(response, "bulkUnpublishResponse");
-                AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Bulk unpublish with api_version 3.2 failed with status {(int)response.StatusCode} ({response.StatusCode}).", "bulkUnpublishSuccess");
-                AssertLogger.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.", "statusCode");
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode, $"Bulk unpublish with api_version 3.2 failed with status {(int)response.StatusCode} ({response.StatusCode}).");
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.");
 
                 var responseJson = response.OpenJObjectResponse();
-                AssertLogger.IsNotNull(responseJson, "responseJson");
+                Assert.IsNotNull(responseJson);
             }
             catch (Exception ex)
             {
@@ -767,19 +743,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test005_Should_Perform_Bulk_Release_Operations()
         {
-            TestOutputLogger.LogContext("TestScenario", "BulkReleaseOperations");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 // Fetch existing entries from the content type
                 List<EntryInfo> availableEntries = await FetchExistingEntries();
-                AssertLogger.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation", "availableEntriesCount");
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
                 
                 // Fetch an available release
                 string availableReleaseUid = await FetchAvailableRelease();
-                AssertLogger.IsFalse(string.IsNullOrEmpty(availableReleaseUid), "No release available for bulk operations", "availableReleaseUid");
-                if (!string.IsNullOrEmpty(availableReleaseUid))
-                    TestOutputLogger.LogContext("ReleaseUid", availableReleaseUid);
+                Assert.IsFalse(string.IsNullOrEmpty(availableReleaseUid), "No release available for bulk operations");
 
                 // First, add items to the release
                 var addItemsData = new BulkAddItemsData
@@ -813,11 +785,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse releaseResponse = _stack.BulkOperation().AddItems(releaseData, "2.0");
                 var releaseResponseJson = releaseResponse.OpenJObjectResponse();
 
-                AssertLogger.IsNotNull(releaseResponse, "releaseResponse");
-                AssertLogger.IsTrue(releaseResponse.IsSuccessStatusCode, "releaseAddItemsSuccess");
+                Assert.IsNotNull(releaseResponse);
+                Assert.IsTrue(releaseResponse.IsSuccessStatusCode);
 
                 // Check if job was created
-                AssertLogger.IsNotNull(releaseResponseJson["job_id"], "job_id");
+                Assert.IsNotNull(releaseResponseJson["job_id"]);
                 string jobId = releaseResponseJson["job_id"].ToString();
 
                 // Wait a bit and check job status
@@ -834,19 +806,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test006_Should_Update_Items_In_Release()
         {
-            TestOutputLogger.LogContext("TestScenario", "UpdateItemsInRelease");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 // Fetch existing entries from the content type
                 List<EntryInfo> availableEntries = await FetchExistingEntries();
-                AssertLogger.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation", "availableEntriesCount");
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
                 
                 // Fetch an available release
                 string availableReleaseUid = await FetchAvailableRelease();
-                AssertLogger.IsFalse(string.IsNullOrEmpty(availableReleaseUid), "No release available for bulk operations", "availableReleaseUid");
-                if (!string.IsNullOrEmpty(availableReleaseUid))
-                    TestOutputLogger.LogContext("ReleaseUid", availableReleaseUid);
+                Assert.IsFalse(string.IsNullOrEmpty(availableReleaseUid), "No release available for bulk operations");
 
                 // Alternative: Test bulk update items with version 2.0 for release items
                 var releaseData = new BulkAddItemsData
@@ -869,8 +837,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse bulkUpdateResponse = _stack.BulkOperation().UpdateItems(releaseData, "2.0");
                 var bulkUpdateResponseJson = bulkUpdateResponse.OpenJObjectResponse();
 
-                AssertLogger.IsNotNull(bulkUpdateResponse, "bulkUpdateResponse");
-                AssertLogger.IsTrue(bulkUpdateResponse.IsSuccessStatusCode, "bulkUpdateSuccess");
+                Assert.IsNotNull(bulkUpdateResponse);
+                Assert.IsTrue(bulkUpdateResponse.IsSuccessStatusCode);
 
                 if (bulkUpdateResponseJson["job_id"] != null)
                 {
@@ -891,12 +859,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test007_Should_Perform_Bulk_Delete_Operation()
         {
-            TestOutputLogger.LogContext("TestScenario", "BulkDeleteOperation");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 List<EntryInfo> availableEntries = await FetchExistingEntries();
-                AssertLogger.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation", "availableEntriesCount");
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
 
                 var deleteDetails = new BulkDeleteDetails
                 {
@@ -909,8 +875,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 // Skip actual delete so entries remain for UI verification. SDK usage is validated by building the payload.
-                AssertLogger.IsNotNull(deleteDetails, "deleteDetails");
-                AssertLogger.IsTrue(deleteDetails.Entries.Count > 0, "deleteDetailsEntriesCount");
+                Assert.IsNotNull(deleteDetails);
+                Assert.IsTrue(deleteDetails.Entries.Count > 0);
             }
             catch (Exception ex)
             {
@@ -923,13 +889,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test008_Should_Perform_Bulk_Workflow_Operations()
         {
-            TestOutputLogger.LogContext("TestScenario", "BulkWorkflowOperations");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 // Fetch existing entries from the content type
                 List<EntryInfo> availableEntries = await FetchExistingEntries();
-                AssertLogger.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation", "availableEntriesCount");
+                Assert.IsTrue(availableEntries.Count > 0, "No entries available for bulk operation");
 
                 // Test bulk workflow update operations (use real stage UID from EnsureBulkTestWorkflowAndPublishingRuleAsync when available)
                 string workflowStageUid = !string.IsNullOrEmpty(_bulkTestWorkflowStageUid) ? _bulkTestWorkflowStageUid : "workflow_stage_uid";
@@ -953,9 +917,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse response = _stack.BulkOperation().Update(workflowUpdateBody);
                 var responseJson = response.OpenJObjectResponse();
 
-                AssertLogger.IsNotNull(response, "bulkWorkflowResponse");
-                AssertLogger.IsTrue(response.IsSuccessStatusCode, "bulkWorkflowSuccess");
-                AssertLogger.IsNotNull(responseJson["job_id"], "job_id");
+                Assert.IsNotNull(response);
+                Assert.IsTrue(response.IsSuccessStatusCode);
+                Assert.IsNotNull(responseJson["job_id"]);
                 string jobId = responseJson["job_id"].ToString();
                 await CheckBulkJobStatus(jobId);
             }
@@ -973,8 +937,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test009_Should_Cleanup_Test_Resources()
         {
-            TestOutputLogger.LogContext("TestScenario", "CleanupTestResources");
-            TestOutputLogger.LogContext("ContentType", _contentTypeUid);
             try
             {
                 // 1. Delete all entries created during the test run
@@ -1056,8 +1018,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse statusResponse = await _stack.BulkOperation().JobStatusAsync(jobId, bulkVersion);
                 var statusJson = statusResponse.OpenJObjectResponse();
 
-                AssertLogger.IsNotNull(statusResponse, "jobStatusResponse");
-                AssertLogger.IsTrue(statusResponse.IsSuccessStatusCode, "jobStatusSuccess");
+                Assert.IsNotNull(statusResponse);
+                Assert.IsTrue(statusResponse.IsSuccessStatusCode);
             }
             catch (Exception e)
             {

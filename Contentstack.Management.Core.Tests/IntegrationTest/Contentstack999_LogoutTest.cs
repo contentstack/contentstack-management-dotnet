@@ -1,5 +1,4 @@
-using System;
-using Contentstack.Management.Core.Tests.Helpers;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
@@ -11,19 +10,18 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test001_Should_Return_Success_On_Logout()
         {
-            TestOutputLogger.LogContext("TestScenario", "Logout");
             try
             {
                 ContentstackClient client = Contentstack.Client;
                 ContentstackResponse contentstackResponse = client.Logout();
                 string loginResponse = contentstackResponse.OpenResponse();
 
-                AssertLogger.IsNull(client.contentstackOptions.Authtoken, "Authtoken");
-                AssertLogger.IsNotNull(loginResponse, "loginResponse");
+                Assert.IsNull(client.contentstackOptions.Authtoken);
+                Assert.IsNotNull(loginResponse);
             }
             catch (Exception e)
             {
-                AssertLogger.Fail(e.Message);
+                Assert.Fail(e.Message);
             }
         }
     }

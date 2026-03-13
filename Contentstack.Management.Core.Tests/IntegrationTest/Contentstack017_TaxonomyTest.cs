@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
-using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
@@ -48,87 +47,76 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test001_Should_Create_Taxonomy()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test001_Should_Create_Taxonomy");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = _stack.Taxonomy().Create(_createModel);
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Create failed: {response.OpenResponse()}", "CreateSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Create failed: {response.OpenResponse()}");
 
             var wrapper = response.OpenTResponse<TaxonomyResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Taxonomy, "Wrapper taxonomy");
-            AssertLogger.AreEqual(_createModel.Uid, wrapper.Taxonomy.Uid, "TaxonomyUid");
-            AssertLogger.AreEqual(_createModel.Name, wrapper.Taxonomy.Name, "TaxonomyName");
-            AssertLogger.AreEqual(_createModel.Description, wrapper.Taxonomy.Description, "TaxonomyDescription");
+            Assert.IsNotNull(wrapper?.Taxonomy);
+            Assert.AreEqual(_createModel.Uid, wrapper.Taxonomy.Uid);
+            Assert.AreEqual(_createModel.Name, wrapper.Taxonomy.Name);
+            Assert.AreEqual(_createModel.Description, wrapper.Taxonomy.Description);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test002_Should_Fetch_Taxonomy()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test002_Should_Fetch_Taxonomy");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Fetch();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Fetch failed: {response.OpenResponse()}", "FetchSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Fetch failed: {response.OpenResponse()}");
 
             var wrapper = response.OpenTResponse<TaxonomyResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Taxonomy, "Wrapper taxonomy");
-            AssertLogger.AreEqual(_taxonomyUid, wrapper.Taxonomy.Uid, "TaxonomyUid");
-            AssertLogger.IsNotNull(wrapper.Taxonomy.Name, "Taxonomy name");
+            Assert.IsNotNull(wrapper?.Taxonomy);
+            Assert.AreEqual(_taxonomyUid, wrapper.Taxonomy.Uid);
+            Assert.IsNotNull(wrapper.Taxonomy.Name);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test003_Should_Query_Taxonomies()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test003_Should_Query_Taxonomies");
             ContentstackResponse response = _stack.Taxonomy().Query().Find();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Query failed: {response.OpenResponse()}", "QuerySuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Query failed: {response.OpenResponse()}");
 
             var wrapper = response.OpenTResponse<TaxonomiesResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Taxonomies, "Wrapper taxonomies");
-            AssertLogger.IsTrue(wrapper.Taxonomies.Count >= 0, "Taxonomies count", "TaxonomiesCount");
+            Assert.IsNotNull(wrapper?.Taxonomies);
+            Assert.IsTrue(wrapper.Taxonomies.Count >= 0);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test004_Should_Update_Taxonomy()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test004_Should_Update_Taxonomy");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             var updateModel = new TaxonomyModel
             {
                 Name = "Taxonomy Integration Test Updated",
                 Description = "Updated description"
             };
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Update(updateModel);
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Update failed: {response.OpenResponse()}", "UpdateSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Update failed: {response.OpenResponse()}");
 
             var wrapper = response.OpenTResponse<TaxonomyResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Taxonomy, "Wrapper taxonomy");
-            AssertLogger.AreEqual("Taxonomy Integration Test Updated", wrapper.Taxonomy.Name, "UpdatedName");
-            AssertLogger.AreEqual("Updated description", wrapper.Taxonomy.Description, "UpdatedDescription");
+            Assert.IsNotNull(wrapper?.Taxonomy);
+            Assert.AreEqual("Taxonomy Integration Test Updated", wrapper.Taxonomy.Name);
+            Assert.AreEqual("Updated description", wrapper.Taxonomy.Description);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test005_Should_Fetch_Taxonomy_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test005_Should_Fetch_Taxonomy_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).FetchAsync();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"FetchAsync failed: {response.OpenResponse()}", "FetchAsyncSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"FetchAsync failed: {response.OpenResponse()}");
 
             var wrapper = response.OpenTResponse<TaxonomyResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Taxonomy, "Wrapper taxonomy");
-            AssertLogger.AreEqual(_taxonomyUid, wrapper.Taxonomy.Uid, "TaxonomyUid");
+            Assert.IsNotNull(wrapper?.Taxonomy);
+            Assert.AreEqual(_taxonomyUid, wrapper.Taxonomy.Uid);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test006_Should_Create_Taxonomy_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test006_Should_Create_Taxonomy_Async");
             _asyncCreatedTaxonomyUid = "taxonomy_async_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-            TestOutputLogger.LogContext("AsyncCreatedTaxonomyUid", _asyncCreatedTaxonomyUid);
             var model = new TaxonomyModel
             {
                 Uid = _asyncCreatedTaxonomyUid,
@@ -136,79 +124,71 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Description = "Created via CreateAsync"
             };
             ContentstackResponse response = await _stack.Taxonomy().CreateAsync(model);
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"CreateAsync failed: {response.OpenResponse()}", "CreateAsyncSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"CreateAsync failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TaxonomyResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Taxonomy, "Wrapper taxonomy");
-            AssertLogger.AreEqual(_asyncCreatedTaxonomyUid, wrapper.Taxonomy.Uid, "AsyncTaxonomyUid");
+            Assert.IsNotNull(wrapper?.Taxonomy);
+            Assert.AreEqual(_asyncCreatedTaxonomyUid, wrapper.Taxonomy.Uid);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test007_Should_Update_Taxonomy_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test007_Should_Update_Taxonomy_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             var updateModel = new TaxonomyModel
             {
                 Name = "Taxonomy Integration Test Updated Async",
                 Description = "Updated via UpdateAsync"
             };
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).UpdateAsync(updateModel);
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"UpdateAsync failed: {response.OpenResponse()}", "UpdateAsyncSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"UpdateAsync failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TaxonomyResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Taxonomy, "Wrapper taxonomy");
-            AssertLogger.AreEqual("Taxonomy Integration Test Updated Async", wrapper.Taxonomy.Name, "UpdatedAsyncName");
+            Assert.IsNotNull(wrapper?.Taxonomy);
+            Assert.AreEqual("Taxonomy Integration Test Updated Async", wrapper.Taxonomy.Name);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test008_Should_Query_Taxonomies_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test008_Should_Query_Taxonomies_Async");
             ContentstackResponse response = await _stack.Taxonomy().Query().FindAsync();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Query FindAsync failed: {response.OpenResponse()}", "QueryFindAsyncSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Query FindAsync failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TaxonomiesResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Taxonomies, "Wrapper taxonomies");
-            AssertLogger.IsTrue(wrapper.Taxonomies.Count >= 0, "Taxonomies count", "TaxonomiesCount");
+            Assert.IsNotNull(wrapper?.Taxonomies);
+            Assert.IsTrue(wrapper.Taxonomies.Count >= 0);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test009_Should_Get_Taxonomy_Locales()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test009_Should_Get_Taxonomy_Locales");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Locales();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Locales failed: {response.OpenResponse()}", "LocalesSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Locales failed: {response.OpenResponse()}");
             var jobj = response.OpenJObjectResponse();
-            AssertLogger.IsNotNull(jobj["taxonomies"], "Taxonomies in locales response");
+            Assert.IsNotNull(jobj["taxonomies"]);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test010_Should_Get_Taxonomy_Locales_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test010_Should_Get_Taxonomy_Locales_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).LocalesAsync();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"LocalesAsync failed: {response.OpenResponse()}", "LocalesAsyncSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"LocalesAsync failed: {response.OpenResponse()}");
             var jobj = response.OpenJObjectResponse();
-            AssertLogger.IsNotNull(jobj["taxonomies"], "Taxonomies in locales response");
+            Assert.IsNotNull(jobj["taxonomies"]);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test011_Should_Localize_Taxonomy()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test011_Should_Localize_Taxonomy");
             _weCreatedTestLocale = false;
             ContentstackResponse localesResponse = _stack.Locale().Query().Find();
-            AssertLogger.IsTrue(localesResponse.IsSuccessStatusCode, $"Query locales failed: {localesResponse.OpenResponse()}", "QueryLocalesSuccess");
+            Assert.IsTrue(localesResponse.IsSuccessStatusCode, $"Query locales failed: {localesResponse.OpenResponse()}");
             var jobj = localesResponse.OpenJObjectResponse();
             var localesArray = jobj["locales"] as JArray ?? jobj["items"] as JArray;
             if (localesArray == null || localesArray.Count == 0)
             {
-                AssertLogger.Inconclusive("Stack has no locales; skipping taxonomy localize tests.");
+                Assert.Inconclusive("Stack has no locales; skipping taxonomy localize tests.");
                 return;
             }
             string masterLocale = "en-us";
@@ -246,12 +226,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             if (string.IsNullOrEmpty(_testLocaleCode))
             {
-                AssertLogger.Inconclusive("Stack has no non-master locale and could not create one; skipping taxonomy localize tests.");
+                Assert.Inconclusive("Stack has no non-master locale and could not create one; skipping taxonomy localize tests.");
                 return;
             }
 
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("TestLocaleCode", _testLocaleCode ?? "");
             var localizeModel = new TaxonomyModel
             {
                 Uid = _taxonomyUid,
@@ -261,19 +239,17 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             var coll = new ParameterCollection();
             coll.Add("locale", _testLocaleCode);
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Localize(localizeModel, coll);
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Localize failed: {response.OpenResponse()}", "LocalizeSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Localize failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TaxonomyResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Taxonomy, "Wrapper taxonomy");
+            Assert.IsNotNull(wrapper?.Taxonomy);
             if (!string.IsNullOrEmpty(wrapper.Taxonomy.Locale))
-                AssertLogger.AreEqual(_testLocaleCode, wrapper.Taxonomy.Locale, "LocalizedLocale");
+                Assert.AreEqual(_testLocaleCode, wrapper.Taxonomy.Locale);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test013_Should_Throw_When_Localize_With_Invalid_Locale()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test013_Should_Throw_When_Localize_With_Invalid_Locale");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             var localizeModel = new TaxonomyModel
             {
                 Uid = _taxonomyUid,
@@ -282,25 +258,23 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             };
             var coll = new ParameterCollection();
             coll.Add("locale", "invalid_locale_code_xyz");
-            AssertLogger.ThrowsException<ContentstackErrorException>(() =>
-                _stack.Taxonomy(_taxonomyUid).Localize(localizeModel, coll), "LocalizeInvalidLocale");
+            Assert.ThrowsException<ContentstackErrorException>(() =>
+                _stack.Taxonomy(_taxonomyUid).Localize(localizeModel, coll));
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test014_Should_Import_Taxonomy()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test014_Should_Import_Taxonomy");
             string importUid = "taxonomy_import_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-            TestOutputLogger.LogContext("ImportUid", importUid);
             string json = $"{{\"taxonomy\":{{\"uid\":\"{importUid}\",\"name\":\"Imported Taxonomy\",\"description\":\"Imported\"}}}}";
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(json)))
             {
                 var importModel = new TaxonomyImportModel(stream, "taxonomy.json");
                 ContentstackResponse response = _stack.Taxonomy().Import(importModel);
-                AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Import failed: {response.OpenResponse()}", "ImportSuccess");
+                Assert.IsTrue(response.IsSuccessStatusCode, $"Import failed: {response.OpenResponse()}");
                 var wrapper = response.OpenTResponse<TaxonomyResponseModel>();
-                AssertLogger.IsNotNull(wrapper?.Taxonomy, "Imported taxonomy");
+                Assert.IsNotNull(wrapper?.Taxonomy);
                 _importedTaxonomyUid = wrapper.Taxonomy.Uid ?? importUid;
             }
         }
@@ -309,17 +283,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test015_Should_Import_Taxonomy_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test015_Should_Import_Taxonomy_Async");
             string importUid = "taxonomy_import_async_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-            TestOutputLogger.LogContext("ImportUid", importUid);
             string json = $"{{\"taxonomy\":{{\"uid\":\"{importUid}\",\"name\":\"Imported Async\",\"description\":\"Imported via Async\"}}}}";
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(json)))
             {
                 var importModel = new TaxonomyImportModel(stream, "taxonomy.json");
                 ContentstackResponse response = await _stack.Taxonomy().ImportAsync(importModel);
-                AssertLogger.IsTrue(response.IsSuccessStatusCode, $"ImportAsync failed: {response.OpenResponse()}", "ImportAsyncSuccess");
+                Assert.IsTrue(response.IsSuccessStatusCode, $"ImportAsync failed: {response.OpenResponse()}");
                 var wrapper = response.OpenTResponse<TaxonomyResponseModel>();
-                AssertLogger.IsNotNull(wrapper?.Taxonomy, "Imported taxonomy");
+                Assert.IsNotNull(wrapper?.Taxonomy);
             }
         }
 
@@ -327,10 +299,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test016_Should_Create_Root_Term()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test016_Should_Create_Root_Term");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             _rootTermUid = "term_root_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid);
             var termModel = new TermModel
             {
                 Uid = _rootTermUid,
@@ -338,10 +307,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ParentUid = null
             };
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms().Create(termModel);
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Create term failed: {response.OpenResponse()}", "CreateTermSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Create term failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
-            AssertLogger.AreEqual(_rootTermUid, wrapper.Term.Uid, "RootTermUid");
+            Assert.IsNotNull(wrapper?.Term);
+            Assert.AreEqual(_rootTermUid, wrapper.Term.Uid);
             _createdTermUids.Add(_rootTermUid);
         }
 
@@ -349,11 +318,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test017_Should_Create_Child_Term()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test017_Should_Create_Child_Term");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             _childTermUid = "term_child_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-            TestOutputLogger.LogContext("ChildTermUid", _childTermUid);
             var termModel = new TermModel
             {
                 Uid = _childTermUid,
@@ -361,10 +326,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ParentUid = _rootTermUid
             };
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms().Create(termModel);
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Create child term failed: {response.OpenResponse()}", "CreateChildTermSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Create child term failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
-            AssertLogger.AreEqual(_childTermUid, wrapper.Term.Uid, "ChildTermUid");
+            Assert.IsNotNull(wrapper?.Term);
+            Assert.AreEqual(_childTermUid, wrapper.Term.Uid);
             _createdTermUids.Add(_childTermUid);
         }
 
@@ -372,185 +337,147 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test018_Should_Fetch_Term()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test018_Should_Fetch_Term");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).Fetch();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Fetch term failed: {response.OpenResponse()}", "FetchTermSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Fetch term failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
-            AssertLogger.AreEqual(_rootTermUid, wrapper.Term.Uid, "RootTermUid");
+            Assert.IsNotNull(wrapper?.Term);
+            Assert.AreEqual(_rootTermUid, wrapper.Term.Uid);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test019_Should_Fetch_Term_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test019_Should_Fetch_Term_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).FetchAsync();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"FetchAsync term failed: {response.OpenResponse()}", "FetchAsyncTermSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"FetchAsync term failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
-            AssertLogger.AreEqual(_rootTermUid, wrapper.Term.Uid, "RootTermUid");
+            Assert.IsNotNull(wrapper?.Term);
+            Assert.AreEqual(_rootTermUid, wrapper.Term.Uid);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test020_Should_Query_Terms()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test020_Should_Query_Terms");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms().Query().Find();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Query terms failed: {response.OpenResponse()}", "QueryTermsSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Query terms failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermsResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Terms, "Terms in response");
-            AssertLogger.IsTrue(wrapper.Terms.Count >= 0, "Terms count", "TermsCount");
+            Assert.IsNotNull(wrapper?.Terms);
+            Assert.IsTrue(wrapper.Terms.Count >= 0);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test021_Should_Query_Terms_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test021_Should_Query_Terms_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms().Query().FindAsync();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Query terms Async failed: {response.OpenResponse()}", "QueryTermsAsyncSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Query terms Async failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermsResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Terms, "Terms in response");
-            AssertLogger.IsTrue(wrapper.Terms.Count >= 0, "Terms count", "TermsCount");
+            Assert.IsNotNull(wrapper?.Terms);
+            Assert.IsTrue(wrapper.Terms.Count >= 0);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test022_Should_Update_Term()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test022_Should_Update_Term");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             var updateModel = new TermModel
             {
                 Name = "Root Term Updated",
                 ParentUid = null
             };
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).Update(updateModel);
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Update term failed: {response.OpenResponse()}", "UpdateTermSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Update term failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
-            AssertLogger.AreEqual("Root Term Updated", wrapper.Term.Name, "UpdatedTermName");
+            Assert.IsNotNull(wrapper?.Term);
+            Assert.AreEqual("Root Term Updated", wrapper.Term.Name);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test023_Should_Update_Term_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test023_Should_Update_Term_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             var updateModel = new TermModel
             {
                 Name = "Root Term Updated Async",
                 ParentUid = null
             };
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).UpdateAsync(updateModel);
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"UpdateAsync term failed: {response.OpenResponse()}", "UpdateAsyncTermSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"UpdateAsync term failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
-            AssertLogger.AreEqual("Root Term Updated Async", wrapper.Term.Name, "UpdatedAsyncTermName");
+            Assert.IsNotNull(wrapper?.Term);
+            Assert.AreEqual("Root Term Updated Async", wrapper.Term.Name);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test024_Should_Get_Term_Ancestors()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test024_Should_Get_Term_Ancestors");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("ChildTermUid", _childTermUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_childTermUid).Ancestors();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Ancestors failed: {response.OpenResponse()}", "AncestorsSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Ancestors failed: {response.OpenResponse()}");
             var jobj = response.OpenJObjectResponse();
-            AssertLogger.IsNotNull(jobj, "Ancestors response");
+            Assert.IsNotNull(jobj);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test025_Should_Get_Term_Ancestors_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test025_Should_Get_Term_Ancestors_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("ChildTermUid", _childTermUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_childTermUid).AncestorsAsync();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"AncestorsAsync failed: {response.OpenResponse()}", "AncestorsAsyncSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"AncestorsAsync failed: {response.OpenResponse()}");
             var jobj = response.OpenJObjectResponse();
-            AssertLogger.IsNotNull(jobj, "Ancestors async response");
+            Assert.IsNotNull(jobj);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test026_Should_Get_Term_Descendants()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test026_Should_Get_Term_Descendants");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).Descendants();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Descendants failed: {response.OpenResponse()}", "DescendantsSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Descendants failed: {response.OpenResponse()}");
             var jobj = response.OpenJObjectResponse();
-            AssertLogger.IsNotNull(jobj, "Descendants response");
+            Assert.IsNotNull(jobj);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test027_Should_Get_Term_Descendants_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test027_Should_Get_Term_Descendants_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).DescendantsAsync();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"DescendantsAsync failed: {response.OpenResponse()}", "DescendantsAsyncSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"DescendantsAsync failed: {response.OpenResponse()}");
             var jobj = response.OpenJObjectResponse();
-            AssertLogger.IsNotNull(jobj, "Descendants async response");
+            Assert.IsNotNull(jobj);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test028_Should_Get_Term_Locales()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test028_Should_Get_Term_Locales");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).Locales();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Term Locales failed: {response.OpenResponse()}", "TermLocalesSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Term Locales failed: {response.OpenResponse()}");
             var jobj = response.OpenJObjectResponse();
-            AssertLogger.IsNotNull(jobj["terms"], "Terms in locales response");
+            Assert.IsNotNull(jobj["terms"]);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test029_Should_Get_Term_Locales_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test029_Should_Get_Term_Locales_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).LocalesAsync();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Term LocalesAsync failed: {response.OpenResponse()}", "TermLocalesAsyncSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Term LocalesAsync failed: {response.OpenResponse()}");
             var jobj = response.OpenJObjectResponse();
-            AssertLogger.IsNotNull(jobj["terms"], "Terms in locales async response");
+            Assert.IsNotNull(jobj["terms"]);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test030_Should_Localize_Term()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test030_Should_Localize_Term");
             if (string.IsNullOrEmpty(_testLocaleCode))
             {
-                AssertLogger.Inconclusive("No non-master locale available.");
+                Assert.Inconclusive("No non-master locale available.");
                 return;
             }
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
-            TestOutputLogger.LogContext("TestLocaleCode", _testLocaleCode ?? "");
             var localizeModel = new TermModel
             {
                 Uid = _rootTermUid,
@@ -560,19 +487,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             var coll = new ParameterCollection();
             coll.Add("locale", _testLocaleCode);
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).Localize(localizeModel, coll);
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Term Localize failed: {response.OpenResponse()}", "TermLocalizeSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Term Localize failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
+            Assert.IsNotNull(wrapper?.Term);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test032_Should_Move_Term()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test032_Should_Move_Term");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("ChildTermUid", _childTermUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             var moveModel = new TermMoveModel
             {
                 ParentUid = _rootTermUid,
@@ -593,23 +516,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
                 catch (ContentstackErrorException ex)
                 {
-                    AssertLogger.Inconclusive(string.Format("Move term failed: {0}", ex.Message));
+                    Assert.Inconclusive("Move term failed: {0}", ex.Message);
                     return;
                 }
             }
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Move term failed: {response.OpenResponse()}", "MoveTermSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Move term failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
+            Assert.IsNotNull(wrapper?.Term);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test033_Should_Move_Term_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test033_Should_Move_Term_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("ChildTermUid", _childTermUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             var moveModel = new TermMoveModel
             {
                 ParentUid = _rootTermUid,
@@ -630,48 +549,40 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
                 catch (ContentstackErrorException ex)
                 {
-                    AssertLogger.Inconclusive(string.Format("Move term failed: {0}", ex.Message));
+                    Assert.Inconclusive("Move term failed: {0}", ex.Message);
                     return;
                 }
             }
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"MoveAsync term failed: {response.OpenResponse()}", "MoveAsyncTermSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"MoveAsync term failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
+            Assert.IsNotNull(wrapper?.Term);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test034_Should_Search_Terms()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test034_Should_Search_Terms");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms().Search("Root");
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Search terms failed: {response.OpenResponse()}", "SearchTermsSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"Search terms failed: {response.OpenResponse()}");
             var jobj = response.OpenJObjectResponse();
-            AssertLogger.IsNotNull(jobj["terms"] ?? jobj["items"], "Terms or items in search response");
+            Assert.IsNotNull(jobj["terms"] ?? jobj["items"]);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async Task Test035_Should_Search_Terms_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test035_Should_Search_Terms_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms().SearchAsync("Root");
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"SearchAsync terms failed: {response.OpenResponse()}", "SearchAsyncTermsSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"SearchAsync terms failed: {response.OpenResponse()}");
             var jobj = response.OpenJObjectResponse();
-            AssertLogger.IsNotNull(jobj["terms"] ?? jobj["items"], "Terms or items in search async response");
+            Assert.IsNotNull(jobj["terms"] ?? jobj["items"]);
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test036_Should_Create_Term_Async()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test036_Should_Create_Term_Async");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             string termUid = "term_async_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-            TestOutputLogger.LogContext("AsyncTermUid", termUid);
             var termModel = new TermModel
             {
                 Uid = termUid,
@@ -679,9 +590,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ParentUid = _rootTermUid
             };
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms().CreateAsync(termModel).GetAwaiter().GetResult();
-            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"CreateAsync term failed: {response.OpenResponse()}", "CreateAsyncTermSuccess");
+            Assert.IsTrue(response.IsSuccessStatusCode, $"CreateAsync term failed: {response.OpenResponse()}");
             var wrapper = response.OpenTResponse<TermResponseModel>();
-            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
+            Assert.IsNotNull(wrapper?.Term);
             _createdTermUids.Add(termUid);
         }
 
@@ -689,59 +600,50 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test037_Should_Throw_When_Update_NonExistent_Taxonomy()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test037_Should_Throw_When_Update_NonExistent_Taxonomy");
             var updateModel = new TaxonomyModel { Name = "No", Description = "No" };
-            AssertLogger.ThrowsException<ContentstackErrorException>(() =>
-                _stack.Taxonomy("non_existent_taxonomy_uid_12345").Update(updateModel), "UpdateNonExistentTaxonomy");
+            Assert.ThrowsException<ContentstackErrorException>(() =>
+                _stack.Taxonomy("non_existent_taxonomy_uid_12345").Update(updateModel));
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test038_Should_Throw_When_Fetch_NonExistent_Taxonomy()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test038_Should_Throw_When_Fetch_NonExistent_Taxonomy");
-            AssertLogger.ThrowsException<ContentstackErrorException>(() =>
-                _stack.Taxonomy("non_existent_taxonomy_uid_12345").Fetch(), "FetchNonExistentTaxonomy");
+            Assert.ThrowsException<ContentstackErrorException>(() =>
+                _stack.Taxonomy("non_existent_taxonomy_uid_12345").Fetch());
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test039_Should_Throw_When_Delete_NonExistent_Taxonomy()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test039_Should_Throw_When_Delete_NonExistent_Taxonomy");
-            AssertLogger.ThrowsException<ContentstackErrorException>(() =>
-                _stack.Taxonomy("non_existent_taxonomy_uid_12345").Delete(), "DeleteNonExistentTaxonomy");
+            Assert.ThrowsException<ContentstackErrorException>(() =>
+                _stack.Taxonomy("non_existent_taxonomy_uid_12345").Delete());
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test040_Should_Throw_When_Fetch_NonExistent_Term()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test040_Should_Throw_When_Fetch_NonExistent_Term");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            AssertLogger.ThrowsException<ContentstackErrorException>(() =>
-                _stack.Taxonomy(_taxonomyUid).Terms("non_existent_term_uid_12345").Fetch(), "FetchNonExistentTerm");
+            Assert.ThrowsException<ContentstackErrorException>(() =>
+                _stack.Taxonomy(_taxonomyUid).Terms("non_existent_term_uid_12345").Fetch());
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test041_Should_Throw_When_Update_NonExistent_Term()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test041_Should_Throw_When_Update_NonExistent_Term");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             var updateModel = new TermModel { Name = "No", ParentUid = null };
-            AssertLogger.ThrowsException<ContentstackErrorException>(() =>
-                _stack.Taxonomy(_taxonomyUid).Terms("non_existent_term_uid_12345").Update(updateModel), "UpdateNonExistentTerm");
+            Assert.ThrowsException<ContentstackErrorException>(() =>
+                _stack.Taxonomy(_taxonomyUid).Terms("non_existent_term_uid_12345").Update(updateModel));
         }
 
         [TestMethod]
         [DoNotParallelize]
         public void Test042_Should_Throw_When_Delete_NonExistent_Term()
         {
-            TestOutputLogger.LogContext("TestScenario", "Test042_Should_Throw_When_Delete_NonExistent_Term");
-            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
-            AssertLogger.ThrowsException<ContentstackErrorException>(() =>
-                _stack.Taxonomy(_taxonomyUid).Terms("non_existent_term_uid_12345").Delete(), "DeleteNonExistentTerm");
+            Assert.ThrowsException<ContentstackErrorException>(() =>
+                _stack.Taxonomy(_taxonomyUid).Terms("non_existent_term_uid_12345").Delete());
         }
 
         private static Stack GetStack()
