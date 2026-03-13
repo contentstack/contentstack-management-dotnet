@@ -21,7 +21,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private static string _asyncCreatedTaxonomyUid;
         private static string _importedTaxonomyUid;
         private static string _testLocaleCode;
+        private static string _asyncTestLocaleCode;
         private static bool _weCreatedTestLocale;
+        private static bool _weCreatedAsyncTestLocale;
         private static List<string> _createdTermUids;
         private static string _rootTermUid;
         private static string _childTermUid;
@@ -213,13 +215,17 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             string masterLocale = "en-us";
             _testLocaleCode = null;
+            _asyncTestLocaleCode = null;
             foreach (var item in localesArray)
             {
                 var code = item["code"]?.ToString();
                 if (string.IsNullOrEmpty(code)) continue;
-                if (!string.Equals(code, masterLocale, StringComparison.OrdinalIgnoreCase))
-                {
+                if (string.Equals(code, masterLocale, StringComparison.OrdinalIgnoreCase)) continue;
+                if (_testLocaleCode == null)
                     _testLocaleCode = code;
+                else if (_asyncTestLocaleCode == null)
+                {
+                    _asyncTestLocaleCode = code;
                     break;
                 }
             }
@@ -249,6 +255,27 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.Inconclusive("Stack has no non-master locale and could not create one; skipping taxonomy localize tests.");
                 return;
             }
+            if (string.IsNullOrEmpty(_asyncTestLocaleCode))
+            {
+                try
+                {
+                    _asyncTestLocaleCode = "mr-in";
+                    var localeModel = new LocaleModel
+                    {
+                        Code = _asyncTestLocaleCode,
+                        Name = "Marathi (India)"
+                    };
+                    ContentstackResponse createResponse = _stack.Locale().Create(localeModel);
+                    if (createResponse.IsSuccessStatusCode)
+                        _weCreatedAsyncTestLocale = true;
+                    else
+                        _asyncTestLocaleCode = null;
+                }
+                catch (ContentstackErrorException)
+                {
+                    _asyncTestLocaleCode = null;
+                }
+            }
 
             TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             TestOutputLogger.LogContext("TestLocaleCode", _testLocaleCode ?? "");
@@ -266,6 +293,34 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             AssertLogger.IsNotNull(wrapper?.Taxonomy, "Wrapper taxonomy");
             if (!string.IsNullOrEmpty(wrapper.Taxonomy.Locale))
                 AssertLogger.AreEqual(_testLocaleCode, wrapper.Taxonomy.Locale, "LocalizedLocale");
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test012_Should_Localize_Taxonomy_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test012_Should_Localize_Taxonomy_Async");
+            if (string.IsNullOrEmpty(_asyncTestLocaleCode))
+            {
+                AssertLogger.Inconclusive("No second non-master locale available; skipping async taxonomy localize test.");
+                return;
+            }
+            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
+            TestOutputLogger.LogContext("AsyncTestLocaleCode", _asyncTestLocaleCode ?? "");
+            var localizeModel = new TaxonomyModel
+            {
+                Uid = _taxonomyUid,
+                Name = "Taxonomy Localized Async",
+                Description = "Localized description async"
+            };
+            var coll = new ParameterCollection();
+            coll.Add("locale", _asyncTestLocaleCode);
+            ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).LocalizeAsync(localizeModel, coll);
+            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"LocalizeAsync failed: {response.OpenResponse()}", "LocalizeAsyncSuccess");
+            var wrapper = response.OpenTResponse<TaxonomyResponseModel>();
+            AssertLogger.IsNotNull(wrapper?.Taxonomy, "Wrapper taxonomy");
+            if (!string.IsNullOrEmpty(wrapper.Taxonomy.Locale))
+                AssertLogger.AreEqual(_asyncTestLocaleCode, wrapper.Taxonomy.Locale, "LocalizedAsyncLocale");
         }
 
         [TestMethod]
@@ -567,6 +622,33 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         [TestMethod]
         [DoNotParallelize]
+        public async Task Test031_Should_Localize_Term_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test031_Should_Localize_Term_Async");
+            if (string.IsNullOrEmpty(_asyncTestLocaleCode))
+            {
+                AssertLogger.Inconclusive("No second non-master locale available.");
+                return;
+            }
+            TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
+            TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
+            TestOutputLogger.LogContext("AsyncTestLocaleCode", _asyncTestLocaleCode ?? "");
+            var localizeModel = new TermModel
+            {
+                Uid = _rootTermUid,
+                Name = "Root Term Localized Async",
+                ParentUid = null
+            };
+            var coll = new ParameterCollection();
+            coll.Add("locale", _asyncTestLocaleCode);
+            ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).LocalizeAsync(localizeModel, coll);
+            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Term LocalizeAsync failed: {response.OpenResponse()}", "TermLocalizeAsyncSuccess");
+            var wrapper = response.OpenTResponse<TermResponseModel>();
+            AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
         public void Test032_Should_Move_Term()
         {
             TestOutputLogger.LogContext("TestScenario", "Test032_Should_Move_Term");
@@ -576,27 +658,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             var moveModel = new TermMoveModel
             {
                 ParentUid = _rootTermUid,
-                Order = 0
+                Order = 1
             };
-            ContentstackResponse response = null;
-            try
-            {
-                response = _stack.Taxonomy(_taxonomyUid).Terms(_childTermUid).Move(moveModel, null);
-            }
-            catch (ContentstackErrorException)
-            {
-                try
-                {
-                    var coll = new ParameterCollection();
-                    coll.Add("force", true);
-                    response = _stack.Taxonomy(_taxonomyUid).Terms(_childTermUid).Move(moveModel, coll);
-                }
-                catch (ContentstackErrorException ex)
-                {
-                    AssertLogger.Inconclusive(string.Format("Move term failed: {0}", ex.Message));
-                    return;
-                }
-            }
+            var coll = new ParameterCollection();
+            coll.Add("force", true);
+            ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_childTermUid).Move(moveModel, coll);
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Move term failed: {response.OpenResponse()}", "MoveTermSuccess");
             var wrapper = response.OpenTResponse<TermResponseModel>();
             AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
@@ -615,25 +681,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ParentUid = _rootTermUid,
                 Order = 1
             };
-            ContentstackResponse response = null;
-            try
-            {
-                response = await _stack.Taxonomy(_taxonomyUid).Terms(_childTermUid).MoveAsync(moveModel, null);
-            }
-            catch (ContentstackErrorException)
-            {
-                try
-                {
-                    var coll = new ParameterCollection();
-                    coll.Add("force", true);
-                    response = await _stack.Taxonomy(_taxonomyUid).Terms(_childTermUid).MoveAsync(moveModel, coll);
-                }
-                catch (ContentstackErrorException ex)
-                {
-                    AssertLogger.Inconclusive(string.Format("Move term failed: {0}", ex.Message));
-                    return;
-                }
-            }
+            var coll = new ParameterCollection();
+            coll.Add("force", true);
+            ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_childTermUid).MoveAsync(moveModel, coll);
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"MoveAsync term failed: {response.OpenResponse()}", "MoveAsyncTermSuccess");
             var wrapper = response.OpenTResponse<TermResponseModel>();
             AssertLogger.IsNotNull(wrapper?.Term, "Term in response");
@@ -817,6 +867,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     catch (Exception ex)
                     {
                         Console.WriteLine($"[Cleanup] Failed to delete main taxonomy {_taxonomyUid}: {ex.Message}");
+                    }
+                }
+
+                if (_weCreatedAsyncTestLocale && !string.IsNullOrEmpty(_asyncTestLocaleCode))
+                {
+                    try
+                    {
+                        stack.Locale(_asyncTestLocaleCode).Delete();
+                        Console.WriteLine($"[Cleanup] Deleted async test locale: {_asyncTestLocaleCode}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[Cleanup] Failed to delete async test locale {_asyncTestLocaleCode}: {ex.Message}");
                     }
                 }
 

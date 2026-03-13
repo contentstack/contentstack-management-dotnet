@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Net.Http;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Helpers;
@@ -16,12 +17,20 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     public class Contentstack001_LoginTest
     {
         private readonly IConfigurationRoot _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
+        private static ContentstackClient CreateClientWithLogging()
+        {
+            var handler = new LoggingHttpHandler();
+            var httpClient = new HttpClient(handler);
+            return new ContentstackClient(httpClient, new ContentstackClientOptions());
+        }
+
         [TestMethod]
         [DoNotParallelize]
         public void Test001_Should_Return_Failuer_On_Wrong_Login_Credentials()
         {
             TestOutputLogger.LogContext("TestScenario", "WrongCredentials");
-            ContentstackClient client = new ContentstackClient();
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("mock_user", "mock_pasword");
             
             try
@@ -42,7 +51,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test002_Should_Return_Failuer_On_Wrong_Async_Login_Credentials()
         {
             TestOutputLogger.LogContext("TestScenario", "WrongCredentialsAsync");
-            ContentstackClient client = new ContentstackClient();
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("mock_user", "mock_pasword");
             var response = client.LoginAsync(credentials);
 
@@ -65,7 +74,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async System.Threading.Tasks.Task Test003_Should_Return_Success_On_Async_Login()
         {
             TestOutputLogger.LogContext("TestScenario", "AsyncLoginSuccess");
-            ContentstackClient client = new ContentstackClient();
+            ContentstackClient client = CreateClientWithLogging();
             
             try
             {
@@ -90,7 +99,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "SyncLoginSuccess");
             try
             {
-                ContentstackClient client = new ContentstackClient();
+                ContentstackClient client = CreateClientWithLogging();
                 
                 ContentstackResponse contentstackResponse = client.Login(Contentstack.Credential);
                 string loginResponse = contentstackResponse.OpenResponse();
@@ -111,7 +120,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "GetUser");
             try
             {
-                ContentstackClient client = new ContentstackClient();
+                ContentstackClient client = CreateClientWithLogging();
                 
                 client.Login(Contentstack.Credential);
                 
@@ -135,7 +144,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "GetUserAsync");
             try
             {
-                ContentstackClient client = new ContentstackClient();
+                ContentstackClient client = CreateClientWithLogging();
                 
                 await client.LoginAsync(Contentstack.Credential);
                 
@@ -165,7 +174,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ParameterCollection collection = new ParameterCollection();
                 collection.Add("include_orgs_roles", true);
             
-                ContentstackClient client = new ContentstackClient();
+                ContentstackClient client = CreateClientWithLogging();
                 
                 client.Login(Contentstack.Credential);
                 
@@ -189,7 +198,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test008_Should_Fail_Login_With_Invalid_MfaSecret()
         {
             TestOutputLogger.LogContext("TestScenario", "InvalidMfaSecret");
-            ContentstackClient client = new ContentstackClient();
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
             string invalidMfaSecret = "INVALID_BASE32_SECRET!@#";
             
@@ -213,7 +222,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test009_Should_Generate_TOTP_Token_With_Valid_MfaSecret()
         {
             TestOutputLogger.LogContext("TestScenario", "ValidMfaSecret");
-            ContentstackClient client = new ContentstackClient();
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
             string validMfaSecret = "JBSWY3DPEHPK3PXP";
             
@@ -243,7 +252,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async System.Threading.Tasks.Task Test010_Should_Generate_TOTP_Token_With_Valid_MfaSecret_Async()
         {
             TestOutputLogger.LogContext("TestScenario", "ValidMfaSecretAsync");
-            ContentstackClient client = new ContentstackClient();
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
             string validMfaSecret = "JBSWY3DPEHPK3PXP";
             
@@ -273,7 +282,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test011_Should_Prefer_Explicit_Token_Over_MfaSecret()
         {
             TestOutputLogger.LogContext("TestScenario", "ExplicitTokenOverMfa");
-            ContentstackClient client = new ContentstackClient();
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
             string validMfaSecret = "JBSWY3DPEHPK3PXP";
             string explicitToken = "123456";
