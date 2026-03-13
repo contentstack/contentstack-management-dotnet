@@ -33,6 +33,7 @@ class IntegrationTestReportGenerator:
             'statements_pct': 0,
             'functions_pct': 0
         }
+        self.file_coverage = []
 
     # ──────────────────── TRX PARSING ────────────────────
 
@@ -161,8 +162,99 @@ class IntegrationTestReportGenerator:
                     covered_methods += 1
             if total_methods > 0:
                 self.coverage['functions_pct'] = (covered_methods / total_methods) * 100
+
+            self._parse_file_coverage(root)
         except Exception as e:
             print(f"Warning: Could not parse coverage file: {e}")
+
+    def _parse_file_coverage(self, root):
+        file_data = {}
+        for cls in root.iter('class'):
+            filename = cls.get('filename', '')
+            if not filename:
+                continue
+
+            if filename not in file_data:
+                file_data[filename] = {
+                    'lines': {},
+                    'branches_covered': 0,
+                    'branches_total': 0,
+                    'methods_total': 0,
+                    'methods_covered': 0,
+                }
+
+            entry = file_data[filename]
+
+            for method in cls.findall('methods/method'):
+                entry['methods_total'] += 1
+                if float(method.get('line-rate', 0)) > 0:
+                    entry['methods_covered'] += 1
+
+            for line in cls.iter('line'):
+                num = int(line.get('number', 0))
+                hits = int(line.get('hits', 0))
+                is_branch = line.get('branch', 'False').lower() == 'true'
+
+                if num in entry['lines']:
+                    entry['lines'][num]['hits'] = max(entry['lines'][num]['hits'], hits)
+                    if is_branch:
+                        entry['lines'][num]['is_branch'] = True
+                        cond = line.get('condition-coverage', '')
+                        covered, total = self._parse_condition_coverage(cond)
+                        entry['lines'][num]['br_covered'] = max(entry['lines'][num].get('br_covered', 0), covered)
+                        entry['lines'][num]['br_total'] = max(entry['lines'][num].get('br_total', 0), total)
+                else:
+                    br_covered, br_total = 0, 0
+                    if is_branch:
+                        cond = line.get('condition-coverage', '')
+                        br_covered, br_total = self._parse_condition_coverage(cond)
+                    entry['lines'][num] = {
+                        'hits': hits,
+                        'is_branch': is_branch,
+                        'br_covered': br_covered,
+                        'br_total': br_total,
+                    }
+
+        self.file_coverage = []
+        for filename in sorted(file_data.keys()):
+            entry = file_data[filename]
+            lines_total = len(entry['lines'])
+            lines_covered = sum(1 for l in entry['lines'].values() if l['hits'] > 0)
+            uncovered = sorted(num for num, l in entry['lines'].items() if l['hits'] == 0)
+
+            br_total = sum(l.get('br_total', 0) for l in entry['lines'].values() if l.get('is_branch'))
+            br_covered = sum(l.get('br_covered', 0) for l in entry['lines'].values() if l.get('is_branch'))
+
+            self.file_coverage.append({
+                'filename': filename,
+                'lines_pct': (lines_covered / lines_total * 100) if lines_total > 0 else 100,
+                'statements_pct': (lines_covered / lines_total * 100) if lines_total > 0 else 100,
+                'branches_pct': (br_covered / br_total * 100) if br_total > 0 else 100,
+                'functions_pct': (entry['methods_covered'] / entry['methods_total'] * 100) if entry['methods_total'] > 0 else 100,
+                'uncovered_lines': uncovered,
+            })
+
+    @staticmethod
+    def _parse_condition_coverage(cond_str):
+        m = re.match(r'(\d+)%\s*\((\d+)/(\d+)\)', cond_str)
+        if m:
+            return int(m.group(2)), int(m.group(3))
+        return 0, 0
+
+    @staticmethod
+    def _collapse_line_ranges(lines):
+        if not lines:
+            return ''
+        ranges = []
+        start = prev = lines[0]
+        for num in lines[1:]:
+            if num == prev + 1:
+                prev = num
+            else:
+                ranges.append(f"{start}-{prev}" if start != prev else str(start))
+                start = prev = num
+        ranges.append(f"{start}-{prev}" if start != prev else str(start))
+        return ','.join(ranges)
 
     # ──────────────────── STRUCTURED OUTPUT ────────────────────
 
@@ -252,6 +344,7 @@ class IntegrationTestReportGenerator:
         html += self._html_pass_rate(pass_rate)
         html += self._html_coverage_table()
         html += self._html_test_navigation(by_file)
+        html += self._html_file_coverage_table()
         html += self._html_footer()
         html += self._html_scripts()
         html += "</div></body></html>"
@@ -331,6 +424,17 @@ class IntegrationTestReportGenerator:
         .cov-good {{ color: #28a745; }}
         .cov-warn {{ color: #ffc107; }}
         .cov-bad {{ color: #dc3545; }}
+        .file-coverage-section {{ margin-top: 0; border-top: 3px solid #e9ecef; }}
+        .file-cov-table td {{ font-size: 0.95em; font-weight: 600; padding: 10px 15px; border-bottom: 1px solid #e9ecef; }}
+        .file-cov-table tr:last-child td {{ border-bottom: none; }}
+        .file-cov-table tbody tr:hover {{ background: #f8f9fa; }}
+        .fc-summary-row {{ background: #f0f2ff; }}
+        .fc-summary-row td {{ border-bottom: 2px solid #667eea !important; }}
+        .fc-file-col {{ text-align: left !important; }}
+        .fc-file-cell {{ text-align: left !important; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.88em !important; }}
+        .fc-dir {{ color: #888; }}
+        .fc-uncov-col {{ text-align: left !important; }}
+        .fc-uncov-cell {{ text-align: left !important; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.82em !important; color: #dc3545; font-weight: 400 !important; }}
         .test-results {{ padding: 40px; }}
         .test-results > h2 {{ margin-bottom: 30px; font-size: 2em; }}
         .category {{ margin-bottom: 30px; }}
@@ -473,6 +577,69 @@ class IntegrationTestReportGenerator:
         </table>
     </div>
 """
+
+    def _html_file_coverage_table(self):
+        if not self.file_coverage:
+            return ""
+
+        def cov_class(pct):
+            if pct >= 80: return 'cov-good'
+            if pct >= 50: return 'cov-warn'
+            return 'cov-bad'
+
+        c = self.coverage
+        html = """
+    <div class="coverage-section file-coverage-section">
+        <h2>File-wise Code Coverage</h2>
+        <table class="coverage-table file-cov-table">
+            <thead><tr>
+                <th class="fc-file-col">File</th>
+                <th>% Stmts</th><th>% Branch</th><th>% Funcs</th><th>% Lines</th>
+                <th class="fc-uncov-col">Uncovered Line #s</th>
+            </tr></thead>
+            <tbody>
+"""
+        html += f"""            <tr class="fc-summary-row">
+                <td class="fc-file-cell"><strong>All files</strong></td>
+                <td class="{cov_class(c['statements_pct'])}">{c['statements_pct']:.1f}%</td>
+                <td class="{cov_class(c['branches_pct'])}">{c['branches_pct']:.1f}%</td>
+                <td class="{cov_class(c['functions_pct'])}">{c['functions_pct']:.1f}%</td>
+                <td class="{cov_class(c['lines_pct'])}">{c['lines_pct']:.1f}%</td>
+                <td class="fc-uncov-cell"></td>
+            </tr>
+"""
+
+        for fc in self.file_coverage:
+            uncovered = fc['uncovered_lines']
+            if len(uncovered) == 0:
+                uncov_str = ''
+            elif len(uncovered) == 1:
+                uncov_str = str(uncovered[0])
+            else:
+                uncov_str = f"{uncovered[0]}-{uncovered[-1]}"
+            display_name = fc['filename']
+            parts = display_name.replace('\\', '/').rsplit('/', 1)
+            if len(parts) == 2:
+                dir_part, base = parts
+                display_name = f'<span class="fc-dir">{self._esc(dir_part)}/</span>{self._esc(base)}'
+            else:
+                display_name = self._esc(display_name)
+
+            html += f"""            <tr>
+                <td class="fc-file-cell">{display_name}</td>
+                <td class="{cov_class(fc['statements_pct'])}">{fc['statements_pct']:.1f}%</td>
+                <td class="{cov_class(fc['branches_pct'])}">{fc['branches_pct']:.1f}%</td>
+                <td class="{cov_class(fc['functions_pct'])}">{fc['functions_pct']:.1f}%</td>
+                <td class="{cov_class(fc['lines_pct'])}">{fc['lines_pct']:.1f}%</td>
+                <td class="fc-uncov-cell">{self._esc(uncov_str)}</td>
+            </tr>
+"""
+
+        html += """            </tbody>
+        </table>
+    </div>
+"""
+        return html
 
     def _html_test_navigation(self, by_file):
         html = '<div class="test-results"><h2>Test Results by Integration File</h2>'
