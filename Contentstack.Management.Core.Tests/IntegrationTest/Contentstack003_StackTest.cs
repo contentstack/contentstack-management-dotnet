@@ -11,12 +11,26 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     [TestClass]
     public class Contentstack003_StackTest
     {
+        private static ContentstackClient _client;
         private readonly string _locale = "en-us";
         private string _stackName = "DotNet Management Stack";
         private string _updatestackName = "DotNet Management SDK Stack";
         private string _description = "Integration testing Stack for DotNet Management SDK";
         
         private OrganizationModel _org = Contentstack.Organization;
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            _client = Contentstack.CreateAuthenticatedClient();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            try { _client?.Logout(); } catch { }
+            _client = null;
+        }
 
         [TestMethod]
         [DoNotParallelize]
@@ -25,7 +39,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "ReturnAllStacks");
             try
             {
-                Stack stack = Contentstack.Client.Stack();
+                Stack stack = _client.Stack();
 
                 ContentstackResponse contentstackResponse = stack.GetAll();
 
@@ -45,7 +59,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "ReturnAllStacksAsync");
             try
             {
-                Stack stack = Contentstack.Client.Stack();
+                Stack stack = _client.Stack();
 
                 ContentstackResponse contentstackResponse = await stack.GetAllAsync();
 
@@ -66,7 +80,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "CreateStack");
             try
             {
-                Stack stack = Contentstack.Client.Stack();
+                Stack stack = _client.Stack();
                 ContentstackResponse contentstackResponse = stack.Create(_stackName, _locale, _org.Uid);
 
                 var response = contentstackResponse.OpenJObjectResponse();
@@ -94,7 +108,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("StackApiKey", Contentstack.Stack.APIKey);
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
                 ContentstackResponse contentstackResponse = stack.Update(_updatestackName);
 
                 var response = contentstackResponse.OpenJObjectResponse();
@@ -124,7 +138,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("StackApiKey", Contentstack.Stack.APIKey);
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
                 ContentstackResponse contentstackResponse = await stack.UpdateAsync(_updatestackName, _description);
 
                 var response = contentstackResponse.OpenJObjectResponse();
@@ -152,7 +166,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("StackApiKey", Contentstack.Stack.APIKey);
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
                 ContentstackResponse contentstackResponse = stack.Fetch();
 
                 var response = contentstackResponse.OpenJObjectResponse();
@@ -179,7 +193,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("StackApiKey", Contentstack.Stack.APIKey);
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
                 ContentstackResponse contentstackResponse = await stack.FetchAsync();
 
                 var response = contentstackResponse.OpenJObjectResponse();
@@ -206,7 +220,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("StackApiKey", Contentstack.Stack.APIKey);
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
                 StackSettings settings = new StackSettings()
                 {
                     StackVariables = new Dictionary<string, object>()
@@ -240,7 +254,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("StackApiKey", Contentstack.Stack.APIKey);
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
 
                 ContentstackResponse contentstackResponse = stack.Settings();
 
@@ -266,7 +280,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("StackApiKey", Contentstack.Stack.APIKey);
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
 
                 ContentstackResponse contentstackResponse = stack.ResetSettings();
 
@@ -292,7 +306,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("StackApiKey", Contentstack.Stack.APIKey);
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
                 StackSettings settings = new StackSettings()
                 {
                     Rte = new Dictionary<string, object>()
@@ -324,7 +338,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("StackApiKey", Contentstack.Stack.APIKey);
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
 
                 ContentstackResponse contentstackResponse = await stack.ResetSettingsAsync();
 
@@ -350,7 +364,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("StackApiKey", Contentstack.Stack.APIKey);
             try
             {
-                Stack stack = Contentstack.Client.Stack(Contentstack.Stack.APIKey);
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
 
                 ContentstackResponse contentstackResponse = await stack.SettingsAsync();
 

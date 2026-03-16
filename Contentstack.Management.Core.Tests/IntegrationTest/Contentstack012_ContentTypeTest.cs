@@ -10,17 +10,31 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     [TestClass]
     public class Contentstack005_ContentTypeTest
     {
+        private static ContentstackClient _client;
         private Stack _stack;
         private ContentModelling _singlePage;
         private ContentModelling _multiPage;
 
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            _client = Contentstack.CreateAuthenticatedClient();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            try { _client?.Logout(); } catch { }
+            _client = null;
+        }
+
         [TestInitialize]
         public void Initialize ()
         {
-            StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
-            _stack = Contentstack.Client.Stack(response.Stack.APIKey);
-            _singlePage = Contentstack.serialize<ContentModelling>(Contentstack.Client.serializer, "singlepageCT.json");
-            _multiPage = Contentstack.serialize<ContentModelling>(Contentstack.Client.serializer, "multiPageCT.json");
+            StackResponse response = StackResponse.getStack(_client.serializer);
+            _stack = _client.Stack(response.Stack.APIKey);
+            _singlePage = Contentstack.serialize<ContentModelling>(_client.serializer, "singlepageCT.json");
+            _multiPage = Contentstack.serialize<ContentModelling>(_client.serializer, "multiPageCT.json");
         }
 
         [TestMethod]
@@ -93,7 +107,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "UpdateContentType");
             TestOutputLogger.LogContext("ContentType", _multiPage.Uid);
-            _multiPage.Schema = Contentstack.serializeArray<List<Models.Fields.Field>>(Contentstack.Client.serializer, "contentTypeSchema.json"); ;
+            _multiPage.Schema = Contentstack.serializeArray<List<Models.Fields.Field>>(_client.serializer, "contentTypeSchema.json"); ;
             ContentstackResponse response = _stack.ContentType(_multiPage.Uid).Update(_multiPage);
             ContentTypeModel ContentType = response.OpenTResponse<ContentTypeModel>();
             AssertLogger.IsNotNull(response, "response");
@@ -113,7 +127,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 // Load the existing schema
-                _multiPage.Schema = Contentstack.serializeArray<List<Models.Fields.Field>>(Contentstack.Client.serializer, "contentTypeSchema.json");
+                _multiPage.Schema = Contentstack.serializeArray<List<Models.Fields.Field>>(_client.serializer, "contentTypeSchema.json");
                 
                 // Add a new text field to the schema
                 var newTextField = new Models.Fields.TextboxField

@@ -17,6 +17,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     [TestClass]
     public class Contentstack017_TaxonomyTest
     {
+        private static ContentstackClient _client;
         private static string _taxonomyUid;
         private static string _asyncCreatedTaxonomyUid;
         private static string _importedTaxonomyUid;
@@ -30,11 +31,17 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private Stack _stack;
         private TaxonomyModel _createModel;
 
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            _client = Contentstack.CreateAuthenticatedClient();
+        }
+
         [TestInitialize]
         public void Initialize()
         {
-            StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
-            _stack = Contentstack.Client.Stack(response.Stack.APIKey);
+            StackResponse response = StackResponse.getStack(_client.serializer);
+            _stack = _client.Stack(response.Stack.APIKey);
             if (_taxonomyUid == null)
                 _taxonomyUid = "taxonomy_integration_test_" + Guid.NewGuid().ToString("N").Substring(0, 8);
             _createdTermUids = _createdTermUids ?? new List<string>();
@@ -796,8 +803,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         private static Stack GetStack()
         {
-            StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
-            return Contentstack.Client.Stack(response.Stack.APIKey);
+            StackResponse response = StackResponse.getStack(_client.serializer);
+            return _client.Stack(response.Stack.APIKey);
         }
 
         [ClassCleanup]
@@ -900,6 +907,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 Console.WriteLine($"[Cleanup] Cleanup failed: {ex.Message}");
             }
+
+            try { _client?.Logout(); } catch { }
+            _client = null;
         }
     }
 }

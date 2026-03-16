@@ -14,15 +14,29 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     [TestClass]
     public class Contentstack004_ReleaseTest
     {
+        private static ContentstackClient _client;
         private Stack _stack;
         private string _testReleaseName = "DotNet SDK Integration Test Release";
         private string _testReleaseDescription = "Release created for .NET SDK integration testing";
 
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            _client = Contentstack.CreateAuthenticatedClient();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            try { _client?.Logout(); } catch { }
+            _client = null;
+        }
+
         [TestInitialize]
         public async Task Initialize()
         {
-            StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
-            _stack = Contentstack.Client.Stack(response.Stack.APIKey);
+            StackResponse response = StackResponse.getStack(_client.serializer);
+            _stack = _client.Stack(response.Stack.APIKey);
         }
 
 

@@ -15,40 +15,32 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     [TestClass]
     public class Contentstack016_DeliveryTokenTest
     {
+        private static ContentstackClient _client;
         private Stack _stack;
         private string _deliveryTokenUid;
         private string _testEnvironmentUid = "test_delivery_environment";
         private DeliveryTokenModel _testTokenModel;
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            _client = Contentstack.CreateAuthenticatedClient();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            try { _client?.Logout(); } catch { }
+            _client = null;
+        }
 
         [TestInitialize]
         public async Task Initialize()
         {
             try
             {
-                // First, ensure the client is logged in
-                try
-                {
-                    ContentstackResponse loginResponse = Contentstack.Client.Login(Contentstack.Credential);
-                    if (!loginResponse.IsSuccessStatusCode)
-                    {
-                        AssertLogger.Fail($"Login failed: {loginResponse.OpenResponse()}");
-                    }
-                }
-                catch (Exception loginEx)
-                {
-                    // If already logged in, that's fine - continue with the test
-                    if (loginEx.Message.Contains("already logged in"))
-                    {
-                        Console.WriteLine("Client already logged in, continuing with test");
-                    }
-                    else
-                    {
-                        throw; // Re-throw if it's a different error
-                    }
-                }
-
-                StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
-                _stack = Contentstack.Client.Stack(response.Stack.APIKey);
+                StackResponse response = StackResponse.getStack(_client.serializer);
+                _stack = _client.Stack(response.Stack.APIKey);
 
                 await CreateTestEnvironment();
 

@@ -12,14 +12,29 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     [TestClass]
     public class Contentstack004_GlobalFieldTest
     {
+        private static ContentstackClient _client;
         private Stack _stack;
         private ContentModelling _modelling;
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            _client = Contentstack.CreateAuthenticatedClient();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            try { _client?.Logout(); } catch { }
+            _client = null;
+        }
+
         [TestInitialize]
         public void Initialize ()
         {
-            StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
-            _stack = Contentstack.Client.Stack(response.Stack.APIKey);
-            _modelling = Contentstack.serialize<ContentModelling>(Contentstack.Client.serializer, "globalfield.json");
+            StackResponse response = StackResponse.getStack(_client.serializer);
+            _stack = _client.Stack(response.Stack.APIKey);
+            _modelling = Contentstack.serialize<ContentModelling>(_client.serializer, "globalfield.json");
         }
 
         [TestMethod]
