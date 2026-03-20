@@ -1,4 +1,8 @@
 using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Contentstack.Management.Core.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Contentstack.Management.Core.Tests.Helpers
@@ -109,6 +113,51 @@ namespace Contentstack.Management.Core.Tests.Helpers
         {
             TestOutputLogger.LogAssertion("Inconclusive", "N/A", message ?? "", false);
             Assert.Inconclusive(message);
+        }
+
+        /// <summary>
+        /// Asserts a Contentstack API error with an HTTP status in the allowed set.
+        /// </summary>
+        public static ContentstackErrorException ThrowsContentstackError(Action action, string name, params HttpStatusCode[] acceptableStatuses)
+        {
+            var ex = ThrowsException<ContentstackErrorException>(action, name);
+            IsTrue(
+                acceptableStatuses.Contains(ex.StatusCode),
+                $"Expected one of [{string.Join(", ", acceptableStatuses)}] but was {ex.StatusCode}",
+                "statusCode");
+            return ex;
+        }
+
+        /// <summary>
+        /// Async variant: runs the task and expects <see cref="ContentstackErrorException"/> with an allowed status.
+        /// </summary>
+        public static async Task<ContentstackErrorException> ThrowsContentstackErrorAsync(Func<Task> action, string name, params HttpStatusCode[] acceptableStatuses)
+        {
+            try
+            {
+                await action();
+                TestOutputLogger.LogAssertion($"ThrowsContentstackErrorAsync({name})", "ContentstackErrorException", "NoException", false);
+                throw new AssertFailedException($"Expected exception ContentstackErrorException was not thrown.");
+            }
+            catch (ContentstackErrorException ex)
+            {
+                IsTrue(
+                    acceptableStatuses.Contains(ex.StatusCode),
+                    $"Expected one of [{string.Join(", ", acceptableStatuses)}] but was {ex.StatusCode}",
+                    "statusCode");
+                TestOutputLogger.LogAssertion($"ThrowsContentstackErrorAsync({name})", nameof(ContentstackErrorException), ex.StatusCode.ToString(), true);
+                return ex;
+            }
+            catch (AssertFailedException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TestOutputLogger.LogAssertion($"ThrowsContentstackErrorAsync({name})", nameof(ContentstackErrorException), ex.GetType().Name, false);
+                throw new AssertFailedException(
+                    $"Expected exception ContentstackErrorException but got {ex.GetType().Name}: {ex.Message}", ex);
+            }
         }
     }
 }

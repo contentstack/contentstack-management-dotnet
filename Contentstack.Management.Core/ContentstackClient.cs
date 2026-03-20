@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Linq;
 using Newtonsoft.Json;
@@ -201,6 +201,7 @@ namespace Contentstack.Management.Core
             }
             SerializerSettings.Converters.Add(new NodeJsonConverter());
             SerializerSettings.Converters.Add(new TextNodeJsonConverter());
+            SerializerSettings.Converters.Add(new FieldJsonConverter());
         }
 
         protected void BuildPipeline()

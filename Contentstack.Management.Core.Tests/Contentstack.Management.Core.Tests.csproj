@@ -39,7 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>
-       <Content Include="appSettings.json">
+    <Content Include="appSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Mock\customUpload.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
