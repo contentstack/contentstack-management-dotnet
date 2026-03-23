@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Models.Fields;
 using Contentstack.Management.Core.Utils;
+using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -26,6 +27,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test001_Should_Create_Entry()
         {
+            TestOutputLogger.LogContext("TestScenario", "CreateSinglePageEntry");
             try
             {
                 // First ensure the content type exists by trying to fetch it
@@ -73,6 +75,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
                 }
 
+                TestOutputLogger.LogContext("ContentType", "single_page");
                 // Create entry for single_page content type
                 var singlePageEntry = new SinglePageEntry
                 {
@@ -82,27 +85,28 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = await _stack.ContentType("single_page").Entry().CreateAsync(singlePageEntry);
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     var responseObject = response.OpenJObjectResponse();
-                    Assert.IsNotNull(responseObject["entry"], "Response should contain entry object");
-                    
+                    AssertLogger.IsNotNull(responseObject["entry"], "responseObject_entry");
+
                     var entryData = responseObject["entry"] as Newtonsoft.Json.Linq.JObject;
-                    Assert.IsNotNull(entryData["uid"], "Entry should have UID");
-                    Assert.AreEqual(singlePageEntry.Title, entryData["title"]?.ToString(), "Entry title should match");
-                    Assert.AreEqual(singlePageEntry.Url, entryData["url"]?.ToString(), "Entry URL should match");
-                    
+                    AssertLogger.IsNotNull(entryData["uid"], "entry_uid");
+                    AssertLogger.AreEqual(singlePageEntry.Title, entryData["title"]?.ToString(), "Entry title should match", "entry_title");
+                    AssertLogger.AreEqual(singlePageEntry.Url, entryData["url"]?.ToString(), "Entry URL should match", "entry_url");
+
+                    TestOutputLogger.LogContext("Entry", entryData["uid"]?.ToString());
                     Console.WriteLine($"Successfully created single page entry: {entryData["uid"]}");
                 }
                 else
                 {
-                    Assert.Fail("Entry Creation Failed");
+                    AssertLogger.Fail("Entry Creation Failed");
                 }
             }
             catch (Exception ex)
             {
-                Assert.Fail("Entry Creation Failed", ex.Message);
+                AssertLogger.Fail("Entry Creation Failed", ex.Message);
                 Console.WriteLine($"Create single page entry test encountered exception: {ex.Message}");
             }
         }
@@ -111,6 +115,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test002_Should_Create_MultiPage_Entry()
         {
+            TestOutputLogger.LogContext("TestScenario", "CreateMultiPageEntry");
             try
             {
                 // First ensure the content type exists by trying to fetch it
@@ -157,6 +162,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
                 }
 
+                TestOutputLogger.LogContext("ContentType", "multi_page");
                 // Create entry for multi_page content type
                 var multiPageEntry = new MultiPageEntry
                 {
@@ -166,27 +172,28 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = await _stack.ContentType("multi_page").Entry().CreateAsync(multiPageEntry);
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     var responseObject = response.OpenJObjectResponse();
-                    Assert.IsNotNull(responseObject["entry"], "Response should contain entry object");
-                    
+                    AssertLogger.IsNotNull(responseObject["entry"], "responseObject_entry");
+
                     var entryData = responseObject["entry"] as Newtonsoft.Json.Linq.JObject;
-                    Assert.IsNotNull(entryData["uid"], "Entry should have UID");
-                    Assert.AreEqual(multiPageEntry.Title, entryData["title"]?.ToString(), "Entry title should match");
-                    Assert.AreEqual(multiPageEntry.Url, entryData["url"]?.ToString(), "Entry URL should match");
-                    
+                    AssertLogger.IsNotNull(entryData["uid"], "entry_uid");
+                    AssertLogger.AreEqual(multiPageEntry.Title, entryData["title"]?.ToString(), "Entry title should match", "entry_title");
+                    AssertLogger.AreEqual(multiPageEntry.Url, entryData["url"]?.ToString(), "Entry URL should match", "entry_url");
+
+                    TestOutputLogger.LogContext("Entry", entryData["uid"]?.ToString());
                     Console.WriteLine($"Successfully created multi page entry: {entryData["uid"]}");
                 }
                 else
                 {
-                    Assert.Fail("Entry Crreation Failed");
+                    AssertLogger.Fail("Entry Crreation Failed");
                 }
             }
             catch (Exception ex)
             {
-                Assert.Fail("Entry Creation Failed ", ex.Message);
+                AssertLogger.Fail("Entry Creation Failed ", ex.Message);
             }
         }
 
@@ -194,8 +201,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test003_Should_Fetch_Entry()
         {
+            TestOutputLogger.LogContext("TestScenario", "FetchEntry");
             try
             {
+                TestOutputLogger.LogContext("ContentType", "single_page");
                 var singlePageEntry = new SinglePageEntry
                 {
                     Title = "Test Entry for Fetch",
@@ -204,39 +213,40 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse createResponse = await _stack.ContentType("single_page").Entry().CreateAsync(singlePageEntry);
-                
+
                 if (createResponse.IsSuccessStatusCode)
                 {
                     var createObject = createResponse.OpenJObjectResponse();
                     var entryUid = createObject["entry"]["uid"]?.ToString();
-                    Assert.IsNotNull(entryUid, "Created entry should have UID");
+                    AssertLogger.IsNotNull(entryUid, "created_entry_uid");
+                    TestOutputLogger.LogContext("Entry", entryUid);
 
                     ContentstackResponse fetchResponse = await _stack.ContentType("single_page").Entry(entryUid).FetchAsync();
-                    
+
                     if (fetchResponse.IsSuccessStatusCode)
                     {
                         var fetchObject = fetchResponse.OpenJObjectResponse();
-                        Assert.IsNotNull(fetchObject["entry"], "Response should contain entry object");
-                        
+                        AssertLogger.IsNotNull(fetchObject["entry"], "fetchObject_entry");
+
                         var entryData = fetchObject["entry"] as Newtonsoft.Json.Linq.JObject;
-                        Assert.AreEqual(entryUid, entryData["uid"]?.ToString(), "Fetched entry UID should match");
-                        Assert.AreEqual(singlePageEntry.Title, entryData["title"]?.ToString(), "Fetched entry title should match");
-                        
+                        AssertLogger.AreEqual(entryUid, entryData["uid"]?.ToString(), "Fetched entry UID should match", "fetched_entry_uid");
+                        AssertLogger.AreEqual(singlePageEntry.Title, entryData["title"]?.ToString(), "Fetched entry title should match", "fetched_entry_title");
+
                         Console.WriteLine($"Successfully fetched entry: {entryUid}");
                     }
                     else
                     {
-                        Assert.Fail("Entry Fetch Failed");
+                        AssertLogger.Fail("Entry Fetch Failed");
                     }
                 }
                 else
                 {
-                    Assert.Fail("Entry Creation for Fetch Failed");
+                    AssertLogger.Fail("Entry Creation for Fetch Failed");
                 }
             }
             catch (Exception ex)
             {
-                Assert.Fail("Entry Fetch Failed", ex.Message);
+                AssertLogger.Fail("Entry Fetch Failed", ex.Message);
             }
         }
 
@@ -244,8 +254,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test004_Should_Update_Entry()
         {
+            TestOutputLogger.LogContext("TestScenario", "UpdateEntry");
             try
             {
+                TestOutputLogger.LogContext("ContentType", "single_page");
                 // First create an entry to update
                 var singlePageEntry = new SinglePageEntry
                 {
@@ -255,12 +267,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse createResponse = await _stack.ContentType("single_page").Entry().CreateAsync(singlePageEntry);
-                
+
                 if (createResponse.IsSuccessStatusCode)
                 {
                     var createObject = createResponse.OpenJObjectResponse();
                     var entryUid = createObject["entry"]["uid"]?.ToString();
-                    Assert.IsNotNull(entryUid, "Created entry should have UID");
+                    AssertLogger.IsNotNull(entryUid, "created_entry_uid");
+                    TestOutputLogger.LogContext("Entry", entryUid);
 
                     // Update the entry
                     var updatedEntry = new SinglePageEntry
@@ -271,32 +284,32 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     };
 
                     ContentstackResponse updateResponse = await _stack.ContentType("single_page").Entry(entryUid).UpdateAsync(updatedEntry);
-                    
+
                     if (updateResponse.IsSuccessStatusCode)
                     {
                         var updateObject = updateResponse.OpenJObjectResponse();
-                        Assert.IsNotNull(updateObject["entry"], "Response should contain entry object");
-                        
+                        AssertLogger.IsNotNull(updateObject["entry"], "updateObject_entry");
+
                         var entryData = updateObject["entry"] as Newtonsoft.Json.Linq.JObject;
-                        Assert.AreEqual(entryUid, entryData["uid"]?.ToString(), "Updated entry UID should match");
-                        Assert.AreEqual(updatedEntry.Title, entryData["title"]?.ToString(), "Updated entry title should match");
-                        Assert.AreEqual(updatedEntry.Url, entryData["url"]?.ToString(), "Updated entry URL should match");
-                        
+                        AssertLogger.AreEqual(entryUid, entryData["uid"]?.ToString(), "Updated entry UID should match", "updated_entry_uid");
+                        AssertLogger.AreEqual(updatedEntry.Title, entryData["title"]?.ToString(), "Updated entry title should match", "updated_entry_title");
+                        AssertLogger.AreEqual(updatedEntry.Url, entryData["url"]?.ToString(), "Updated entry URL should match", "updated_entry_url");
+
                         Console.WriteLine($"Successfully updated entry: {entryUid}");
                     }
                     else
                     {
-                        Assert.Fail("Entry Update Failed");
+                        AssertLogger.Fail("Entry Update Failed");
                     }
                 }
                 else
                 {
-                    Assert.Fail("Entry Creation for Update Failed");
+                    AssertLogger.Fail("Entry Creation for Update Failed");
                 }
             }
             catch (Exception ex)
             {
-                Assert.Fail("Entry Update Failed",ex.Message);
+                AssertLogger.Fail("Entry Update Failed",ex.Message);
             }
         }
 
@@ -304,28 +317,30 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test005_Should_Query_Entries()
         {
+            TestOutputLogger.LogContext("TestScenario", "QueryEntries");
             try
             {
+                TestOutputLogger.LogContext("ContentType", "single_page");
                 ContentstackResponse response = await _stack.ContentType("single_page").Entry().Query().FindAsync();
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     var responseObject = response.OpenJObjectResponse();
-                    Assert.IsNotNull(responseObject["entries"], "Response should contain entries array");
-                    
+                    AssertLogger.IsNotNull(responseObject["entries"], "responseObject_entries");
+
                     var entries = responseObject["entries"] as Newtonsoft.Json.Linq.JArray;
-                    Assert.IsNotNull(entries, "Entries should be an array");
-                    
+                    AssertLogger.IsNotNull(entries, "entries_array");
+
                     Console.WriteLine($"Successfully queried {entries.Count} entries for single_page content type");
                 }
                 else
                 {
-                    Assert.Fail("Entry Query Failed");
+                    AssertLogger.Fail("Entry Query Failed");
                 }
             }
             catch (Exception ex)
             {
-                Assert.Fail("Entry Query Failed ", ex.Message);
+                AssertLogger.Fail("Entry Query Failed ", ex.Message);
             }
         }
 
@@ -333,8 +348,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test006_Should_Delete_Entry()
         {
+            TestOutputLogger.LogContext("TestScenario", "DeleteEntry");
             try
             {
+                TestOutputLogger.LogContext("ContentType", "single_page");
                 var singlePageEntry = new SinglePageEntry
                 {
                     Title = "Entry to Delete",
@@ -343,15 +360,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse createResponse = await _stack.ContentType("single_page").Entry().CreateAsync(singlePageEntry);
-                
+
                 if (createResponse.IsSuccessStatusCode)
                 {
                     var createObject = createResponse.OpenJObjectResponse();
                     var entryUid = createObject["entry"]["uid"]?.ToString();
-                    Assert.IsNotNull(entryUid, "Created entry should have UID");
+                    AssertLogger.IsNotNull(entryUid, "created_entry_uid");
+                    TestOutputLogger.LogContext("Entry", entryUid);
 
                     ContentstackResponse deleteResponse = await _stack.ContentType("single_page").Entry(entryUid).DeleteAsync();
-                    
+
                     if (deleteResponse.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"Successfully deleted entry: {entryUid}");
@@ -363,12 +381,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
                 else
                 {
-                    Assert.Fail("Entry Delete Async Failed");
+                    AssertLogger.Fail("Entry Delete Async Failed");
                 }
             }
             catch (Exception ex)
             {
-                Assert.Fail("Entry Delete Async Failed ", ex.Message);
+                AssertLogger.Fail("Entry Delete Async Failed ", ex.Message);
             }
         }
 

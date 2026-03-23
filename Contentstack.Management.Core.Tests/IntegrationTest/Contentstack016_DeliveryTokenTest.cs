@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Models.Token;
+using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Queryable;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,7 +31,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentstackResponse loginResponse = Contentstack.Client.Login(Contentstack.Credential);
                     if (!loginResponse.IsSuccessStatusCode)
                     {
-                        Assert.Fail($"Login failed: {loginResponse.OpenResponse()}");
+                        AssertLogger.Fail($"Login failed: {loginResponse.OpenResponse()}");
                     }
                 }
                 catch (Exception loginEx)
@@ -80,7 +81,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Initialize failed: {ex.Message}");
+                AssertLogger.Fail($"Initialize failed: {ex.Message}");
             }
         }
 
@@ -88,28 +89,30 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test001_Should_Create_Delivery_Token()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test001_Should_Create_Delivery_Token");
             try
             {
                 ContentstackResponse response = _stack.DeliveryToken().Create(_testTokenModel);
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Create delivery token failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Create delivery token failed", "CreateDeliveryTokenSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
-                Assert.IsNotNull(responseObject["token"], "Response should contain token object");
+                AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
                 var tokenData = responseObject["token"] as JObject;
-                Assert.IsNotNull(tokenData["uid"], "Token should have UID");
-                Assert.AreEqual(_testTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match");
-                Assert.AreEqual(_testTokenModel.Description, tokenData["description"]?.ToString(), "Token description should match");
+                AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
+                AssertLogger.AreEqual(_testTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match", "TokenName");
+                AssertLogger.AreEqual(_testTokenModel.Description, tokenData["description"]?.ToString(), "Token description should match", "TokenDescription");
 
                 _deliveryTokenUid = tokenData["uid"]?.ToString();
-                Assert.IsNotNull(_deliveryTokenUid, "Delivery token UID should not be null");
+                AssertLogger.IsNotNull(_deliveryTokenUid, "Delivery token UID should not be null");
 
+                TestOutputLogger.LogContext("DeliveryTokenUid", _deliveryTokenUid ?? "");
                 Console.WriteLine($"Created delivery token with UID: {_deliveryTokenUid}");
             }
             catch (Exception ex)
             {
-                Assert.Fail("Create delivery token test failed", ex.Message);
+                AssertLogger.Fail("Create delivery token test failed", ex.Message);
             }
         }
 
@@ -117,6 +120,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test002_Should_Create_Delivery_Token_Async()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test002_Should_Create_Delivery_Token_Async");
             try
             {
                 var asyncTokenModel = new DeliveryTokenModel
@@ -148,16 +152,17 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = await _stack.DeliveryToken().CreateAsync(asyncTokenModel);
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Async create delivery token failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Async create delivery token failed", "AsyncCreateSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
-                Assert.IsNotNull(responseObject["token"], "Response should contain token object");
+                AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
                 var tokenData = responseObject["token"] as JObject;
-                Assert.IsNotNull(tokenData["uid"], "Token should have UID");
-                Assert.AreEqual(asyncTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match");
+                AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
+                AssertLogger.AreEqual(asyncTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match", "AsyncTokenName");
 
                 string asyncTokenUid = tokenData["uid"]?.ToString();
+                TestOutputLogger.LogContext("AsyncCreatedTokenUid", asyncTokenUid ?? "");
 
                 if (!string.IsNullOrEmpty(asyncTokenUid))
                 {
@@ -167,7 +172,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                Assert.Fail("Async create delivery token test failed", ex.Message);
+                AssertLogger.Fail("Async create delivery token test failed", ex.Message);
             }
         }
 
@@ -175,6 +180,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test003_Should_Fetch_Delivery_Token()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test003_Should_Fetch_Delivery_Token");
             try
             {
                 if (string.IsNullOrEmpty(_deliveryTokenUid))
@@ -182,22 +188,23 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     await Test001_Should_Create_Delivery_Token();
                 }
 
+                TestOutputLogger.LogContext("DeliveryTokenUid", _deliveryTokenUid ?? "");
                 ContentstackResponse response = _stack.DeliveryToken(_deliveryTokenUid).Fetch();
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Fetch delivery token failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Fetch delivery token failed", "FetchSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
-                Assert.IsNotNull(responseObject["token"], "Response should contain token object");
+                AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
                 var tokenData = responseObject["token"] as JObject;
-                Assert.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match");
-                Assert.AreEqual(_testTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match");
-                Assert.IsNotNull(tokenData["token"], "Token should have access token");
+                AssertLogger.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match", "TokenUid");
+                AssertLogger.AreEqual(_testTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match", "TokenName");
+                AssertLogger.IsNotNull(tokenData["token"], "Token should have access token");
 
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Fetch delivery token test failed: {ex.Message}");
+                AssertLogger.Fail($"Fetch delivery token test failed: {ex.Message}");
             }
         }
 
@@ -205,6 +212,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test004_Should_Fetch_Delivery_Token_Async()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test004_Should_Fetch_Delivery_Token_Async");
             try
             {
                 if (string.IsNullOrEmpty(_deliveryTokenUid))
@@ -212,20 +220,21 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     await Test001_Should_Create_Delivery_Token();
                 }
 
+                TestOutputLogger.LogContext("DeliveryTokenUid", _deliveryTokenUid ?? "");
                 ContentstackResponse response = await _stack.DeliveryToken(_deliveryTokenUid).FetchAsync();
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Async fetch delivery token failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Async fetch delivery token failed", "AsyncFetchSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
-                Assert.IsNotNull(responseObject["token"], "Response should contain token object");
+                AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
                 var tokenData = responseObject["token"] as JObject;
-                Assert.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match");
-                Assert.IsNotNull(tokenData["token"], "Token should have access token");
+                AssertLogger.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match", "TokenUid");
+                AssertLogger.IsNotNull(tokenData["token"], "Token should have access token");
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Async fetch delivery token test failed: {ex.Message}");
+                AssertLogger.Fail($"Async fetch delivery token test failed: {ex.Message}");
             }
         }
 
@@ -233,6 +242,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test005_Should_Update_Delivery_Token()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test005_Should_Update_Delivery_Token");
             try
             {
                 if (string.IsNullOrEmpty(_deliveryTokenUid))
@@ -240,6 +250,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     await Test001_Should_Create_Delivery_Token();
                 }
 
+                TestOutputLogger.LogContext("DeliveryTokenUid", _deliveryTokenUid ?? "");
                 var updateModel = new DeliveryTokenModel
                 {
                     Name = "Updated Test Delivery Token",
@@ -269,19 +280,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = _stack.DeliveryToken(_deliveryTokenUid).Update(updateModel);
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Update delivery token failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Update delivery token failed", "UpdateSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
-                Assert.IsNotNull(responseObject["token"], "Response should contain token object");
+                AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
                 var tokenData = responseObject["token"] as JObject;
-                Assert.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match");
-                Assert.AreEqual(updateModel.Name, tokenData["name"]?.ToString(), "Updated token name should match");
-                Assert.AreEqual(updateModel.Description, tokenData["description"]?.ToString(), "Updated token description should match");
+                AssertLogger.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match", "TokenUid");
+                AssertLogger.AreEqual(updateModel.Name, tokenData["name"]?.ToString(), "Updated token name should match", "UpdatedTokenName");
+                AssertLogger.AreEqual(updateModel.Description, tokenData["description"]?.ToString(), "Updated token description should match", "UpdatedTokenDescription");
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Update delivery token test failed: {ex.Message}");
+                AssertLogger.Fail($"Update delivery token test failed: {ex.Message}");
             }
         }
 
@@ -289,6 +300,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test006_Should_Update_Delivery_Token_Async()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test006_Should_Update_Delivery_Token_Async");
             try
             {
                 if (string.IsNullOrEmpty(_deliveryTokenUid))
@@ -296,6 +308,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     await Test001_Should_Create_Delivery_Token();
                 }
 
+                TestOutputLogger.LogContext("DeliveryTokenUid", _deliveryTokenUid ?? "");
                 var updateModel = new DeliveryTokenModel
                 {
                     Name = "Async Updated Test Delivery Token",
@@ -325,19 +338,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = await _stack.DeliveryToken(_deliveryTokenUid).UpdateAsync(updateModel);
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Async update delivery token failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Async update delivery token failed", "AsyncUpdateSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
-                Assert.IsNotNull(responseObject["token"], "Response should contain token object");
+                AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
                 var tokenData = responseObject["token"] as JObject;
-                Assert.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match");
-                Assert.AreEqual(updateModel.Name, tokenData["name"]?.ToString(), "Updated token name should match");
+                AssertLogger.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match", "TokenUid");
+                AssertLogger.AreEqual(updateModel.Name, tokenData["name"]?.ToString(), "Updated token name should match", "UpdatedTokenName");
 
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Async update delivery token test failed: {ex.Message}");
+                AssertLogger.Fail($"Async update delivery token test failed: {ex.Message}");
             }
         }
 
@@ -345,6 +358,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test007_Should_Query_All_Delivery_Tokens()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test007_Should_Query_All_Delivery_Tokens");
             try
             {
                 if (string.IsNullOrEmpty(_deliveryTokenUid))
@@ -352,15 +366,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     await Test001_Should_Create_Delivery_Token();
                 }
 
+                TestOutputLogger.LogContext("DeliveryTokenUid", _deliveryTokenUid ?? "");
                 ContentstackResponse response = _stack.DeliveryToken().Query().Find();
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Query delivery tokens failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Query delivery tokens failed", "QuerySuccess");
 
                 var responseObject = response.OpenJObjectResponse();
-                Assert.IsNotNull(responseObject["tokens"], "Response should contain tokens array");
+                AssertLogger.IsNotNull(responseObject["tokens"], "Response should contain tokens array");
 
                 var tokens = responseObject["tokens"] as JArray;
-                Assert.IsTrue(tokens.Count > 0, "Should have at least one delivery token");
+                AssertLogger.IsTrue(tokens.Count > 0, "Should have at least one delivery token", "TokensCountGreaterThanZero");
 
                 bool foundTestToken = false;
                 foreach (var token in tokens)
@@ -372,12 +387,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
                 }
 
-                Assert.IsTrue(foundTestToken, "Test token should be found in query results");
+                AssertLogger.IsTrue(foundTestToken, "Test token should be found in query results", "TestTokenFoundInQuery");
 
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Query delivery tokens test failed: {ex.Message}");
+                AssertLogger.Fail($"Query delivery tokens test failed: {ex.Message}");
             }
         }
 
@@ -385,6 +400,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test008_Should_Query_Delivery_Tokens_With_Parameters()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test008_Should_Query_Delivery_Tokens_With_Parameters");
             try
             {
                 if (string.IsNullOrEmpty(_deliveryTokenUid))
@@ -392,24 +408,25 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     await Test001_Should_Create_Delivery_Token();
                 }
 
+                TestOutputLogger.LogContext("DeliveryTokenUid", _deliveryTokenUid ?? "");
                 var parameters = new ParameterCollection();
                 parameters.Add("limit", "5");
                 parameters.Add("skip", "0");
 
                 ContentstackResponse response = _stack.DeliveryToken().Query().Limit(5).Skip(0).Find();
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Query delivery tokens with parameters failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Query delivery tokens with parameters failed", "QueryWithParamsSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
-                Assert.IsNotNull(responseObject["tokens"], "Response should contain tokens array");
+                AssertLogger.IsNotNull(responseObject["tokens"], "Response should contain tokens array");
 
                 var tokens = responseObject["tokens"] as JArray;
-                Assert.IsTrue(tokens.Count <= 5, "Should respect limit parameter");
+                AssertLogger.IsTrue(tokens.Count <= 5, "Should respect limit parameter", "RespectLimitParam");
 
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Query delivery tokens with parameters test failed: {ex.Message}");
+                AssertLogger.Fail($"Query delivery tokens with parameters test failed: {ex.Message}");
             }
         }
 
@@ -417,10 +434,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test009_Should_Create_Token_With_Multiple_Environments()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test009_Should_Create_Token_With_Multiple_Environments");
             try
             {
                 string secondEnvironmentUid = "test_delivery_environment_2";
                 await CreateTestEnvironment(secondEnvironmentUid);
+                TestOutputLogger.LogContext("SecondEnvironmentUid", secondEnvironmentUid);
 
                 var multiEnvTokenModel = new DeliveryTokenModel
                 {
@@ -451,17 +470,18 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = _stack.DeliveryToken().Create(multiEnvTokenModel);
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Create multi-environment delivery token failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Create multi-environment delivery token failed", "MultiEnvCreateSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
                 var tokenData = responseObject["token"] as JObject;
-                Assert.IsNotNull(tokenData["uid"], "Token should have UID");
+                AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
 
                 string multiEnvTokenUid = tokenData["uid"]?.ToString();
+                TestOutputLogger.LogContext("MultiEnvTokenUid", multiEnvTokenUid ?? "");
 
                 var scope = tokenData["scope"] as JArray;
-                Assert.IsNotNull(scope, "Token should have scope");
-                Assert.IsTrue(scope.Count > 0, "Token should have at least one scope");
+                AssertLogger.IsNotNull(scope, "Token should have scope");
+                AssertLogger.IsTrue(scope.Count > 0, "Token should have at least one scope", "ScopeCount");
 
                 if (!string.IsNullOrEmpty(multiEnvTokenUid))
                 {
@@ -473,7 +493,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Multi-environment delivery token test failed: {ex.Message}");
+                AssertLogger.Fail($"Multi-environment delivery token test failed: {ex.Message}");
             }
         }
 
@@ -481,6 +501,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test011_Should_Create_Token_With_Complex_Scope()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test011_Should_Create_Token_With_Complex_Scope");
             try
             {
                 var complexScopeTokenModel = new DeliveryTokenModel
@@ -512,18 +533,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = _stack.DeliveryToken().Create(complexScopeTokenModel);
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Create complex scope delivery token failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Create complex scope delivery token failed", "ComplexScopeCreateSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
                 var tokenData = responseObject["token"] as JObject;
-                Assert.IsNotNull(tokenData["uid"], "Token should have UID");
+                AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
 
                 string complexScopeTokenUid = tokenData["uid"]?.ToString();
+                TestOutputLogger.LogContext("ComplexScopeTokenUid", complexScopeTokenUid ?? "");
 
                 // Verify multiple scopes
                 var scope = tokenData["scope"] as JArray;
-                Assert.IsNotNull(scope, "Token should have scope");
-                Assert.IsTrue(scope.Count >= 2, "Token should have multiple scopes");
+                AssertLogger.IsNotNull(scope, "Token should have scope");
+                AssertLogger.IsTrue(scope.Count >= 2, "Token should have multiple scopes", "ScopeCountMultiple");
 
                 // Clean up the complex scope token
                 if (!string.IsNullOrEmpty(complexScopeTokenUid))
@@ -534,7 +556,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Complex scope delivery token test failed: {ex.Message}");
+                AssertLogger.Fail($"Complex scope delivery token test failed: {ex.Message}");
             }
         }
 
@@ -542,6 +564,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test012_Should_Create_Token_With_UI_Structure()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test012_Should_Create_Token_With_UI_Structure");
             try
             {
                 // Test with the exact structure from UI as provided by user
@@ -574,19 +597,20 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = _stack.DeliveryToken().Create(uiStructureTokenModel);
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Create UI structure delivery token failed");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "Create UI structure delivery token failed", "UIStructureCreateSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
                 var tokenData = responseObject["token"] as JObject;
-                Assert.IsNotNull(tokenData["uid"], "Token should have UID");
-                Assert.AreEqual(uiStructureTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match");
+                AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
+                AssertLogger.AreEqual(uiStructureTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match", "UITokenName");
 
                 // Verify the scope structure matches UI format
                 var scope = tokenData["scope"] as JArray;
-                Assert.IsNotNull(scope, "Token should have scope");
-                Assert.IsTrue(scope.Count == 2, "Token should have 2 scope modules (environment and branch)");
+                AssertLogger.IsNotNull(scope, "Token should have scope");
+                AssertLogger.IsTrue(scope.Count == 2, "Token should have 2 scope modules (environment and branch)", "UIScopeCount");
 
                 string uiTokenUid = tokenData["uid"]?.ToString();
+                TestOutputLogger.LogContext("UITokenUid", uiTokenUid ?? "");
 
                 // Clean up the UI structure token
                 if (!string.IsNullOrEmpty(uiTokenUid))
@@ -597,7 +621,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                Assert.Fail($"UI structure delivery token test failed: {ex.Message}");
+                AssertLogger.Fail($"UI structure delivery token test failed: {ex.Message}");
             }
         }
 
@@ -605,6 +629,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test015_Should_Query_Delivery_Tokens_Async()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test015_Should_Query_Delivery_Tokens_Async");
             try
             {
                 // Ensure we have at least one token
@@ -613,15 +638,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     await Test001_Should_Create_Delivery_Token();
                 }
 
+                TestOutputLogger.LogContext("DeliveryTokenUid", _deliveryTokenUid ?? "");
                 ContentstackResponse response = await _stack.DeliveryToken().Query().FindAsync();
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Async query delivery tokens failed: {response.OpenResponse()}");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Async query delivery tokens failed: {response.OpenResponse()}", "AsyncQuerySuccess");
 
                 var responseObject = response.OpenJObjectResponse();
-                Assert.IsNotNull(responseObject["tokens"], "Response should contain tokens array");
+                AssertLogger.IsNotNull(responseObject["tokens"], "Response should contain tokens array");
 
                 var tokens = responseObject["tokens"] as JArray;
-                Assert.IsTrue(tokens.Count > 0, "Should have at least one delivery token");
+                AssertLogger.IsTrue(tokens.Count > 0, "Should have at least one delivery token", "AsyncTokensCount");
 
                 bool foundTestToken = false;
                 foreach (var token in tokens)
@@ -633,12 +659,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
                 }
 
-                Assert.IsTrue(foundTestToken, "Test token should be found in async query results");
+                AssertLogger.IsTrue(foundTestToken, "Test token should be found in async query results", "TestTokenFoundInAsyncQuery");
 
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Async query delivery tokens test failed: {ex.Message}");
+                AssertLogger.Fail($"Async query delivery tokens test failed: {ex.Message}");
             }
         }
 
@@ -646,6 +672,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test016_Should_Create_Token_With_Empty_Description()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test016_Should_Create_Token_With_Empty_Description");
             try
             {
                 var emptyDescTokenModel = new DeliveryTokenModel
@@ -677,14 +704,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse response = _stack.DeliveryToken().Create(emptyDescTokenModel);
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Create token with empty description failed: {response.OpenResponse()}");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Create token with empty description failed: {response.OpenResponse()}", "EmptyDescCreateSuccess");
 
                 var responseObject = response.OpenJObjectResponse();
                 var tokenData = responseObject["token"] as JObject;
-                Assert.IsNotNull(tokenData["uid"], "Token should have UID");
-                Assert.AreEqual(emptyDescTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match");
+                AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
+                AssertLogger.AreEqual(emptyDescTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match", "EmptyDescTokenName");
 
                 string emptyDescTokenUid = tokenData["uid"]?.ToString();
+                TestOutputLogger.LogContext("EmptyDescTokenUid", emptyDescTokenUid ?? "");
 
                 // Clean up the empty description token
                 if (!string.IsNullOrEmpty(emptyDescTokenUid))
@@ -695,7 +723,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Empty description token test failed: {ex.Message}");
+                AssertLogger.Fail($"Empty description token test failed: {ex.Message}");
             }
         }
 
@@ -703,6 +731,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test017_Should_Validate_Environment_Scope_Requirement()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test017_Should_Validate_Environment_Scope_Requirement");
             try
             {
                 // Test that environment-only scope is rejected by API
@@ -737,15 +766,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
 
                 // If no exception was thrown, check the response status
-                Assert.IsFalse(response.IsSuccessStatusCode, "Environment-only token should be rejected by API");
-                Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.BadRequest ||
+                AssertLogger.IsFalse(response.IsSuccessStatusCode, "Environment-only token should be rejected by API", "EnvOnlyRejected");
+                AssertLogger.IsTrue(response.StatusCode == System.Net.HttpStatusCode.BadRequest ||
                              response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity,
-                    $"Expected 400 or 422 for environment-only token, got {response.StatusCode}");
+                    $"Expected 400 or 422 for environment-only token, got {response.StatusCode}", "Expected400Or422");
 
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Environment scope validation test failed: {ex.Message}");
+                AssertLogger.Fail($"Environment scope validation test failed: {ex.Message}");
             }
         }
 
@@ -753,6 +782,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test018_Should_Validate_Branch_Scope_Requirement()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test018_Should_Validate_Branch_Scope_Requirement");
             try
             {
                 // Test that branch-only scope is rejected by API
@@ -787,15 +817,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
 
                 // If no exception was thrown, check the response status
-                Assert.IsFalse(response.IsSuccessStatusCode, "Branch-only token should be rejected by API");
-                Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.BadRequest ||
+                AssertLogger.IsFalse(response.IsSuccessStatusCode, "Branch-only token should be rejected by API", "BranchOnlyRejected");
+                AssertLogger.IsTrue(response.StatusCode == System.Net.HttpStatusCode.BadRequest ||
                              response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity,
-                    $"Expected 400 or 422 for branch-only token, got {response.StatusCode}");
+                    $"Expected 400 or 422 for branch-only token, got {response.StatusCode}", "Expected400Or422");
 
             }
             catch (Exception ex)
             {
-                Assert.Fail($"Branch scope validation test failed: {ex.Message}");
+                AssertLogger.Fail($"Branch scope validation test failed: {ex.Message}");
             }
         }
 
@@ -803,6 +833,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test019_Should_Delete_Delivery_Token()
         {
+            TestOutputLogger.LogContext("TestScenario", "Test019_Should_Delete_Delivery_Token");
             try
             {
                 // Ensure we have a token to delete
@@ -812,24 +843,25 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
 
                 string tokenUidToDelete = _deliveryTokenUid;
-                Assert.IsNotNull(tokenUidToDelete, "Should have a valid token UID to delete");
+                AssertLogger.IsNotNull(tokenUidToDelete, "Should have a valid token UID to delete");
 
+                TestOutputLogger.LogContext("TokenUidToDelete", tokenUidToDelete ?? "");
                 // Test synchronous delete
                 ContentstackResponse response = _stack.DeliveryToken(tokenUidToDelete).Delete();
 
-                Assert.IsTrue(response.IsSuccessStatusCode, $"Delete delivery token failed: {response.OpenResponse()}");
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Delete delivery token failed: {response.OpenResponse()}", "DeleteSuccess");
 
                 // Verify token is deleted by trying to fetch it
                 try
                 {
                     ContentstackResponse fetchResponse = _stack.DeliveryToken(tokenUidToDelete).Fetch();
-                    Assert.IsFalse(fetchResponse.IsSuccessStatusCode, "Deleted token should not be fetchable");
+                    AssertLogger.IsFalse(fetchResponse.IsSuccessStatusCode, "Deleted token should not be fetchable", "DeletedTokenNotFetchable");
 
                     // Verify the response indicates the token was not found
-                    Assert.IsTrue(fetchResponse.StatusCode == System.Net.HttpStatusCode.NotFound ||
+                    AssertLogger.IsTrue(fetchResponse.StatusCode == System.Net.HttpStatusCode.NotFound ||
                                  fetchResponse.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity ||
                                  fetchResponse.StatusCode == System.Net.HttpStatusCode.BadRequest,
-                        $"Expected 404, 422, or 400 for deleted token fetch, got {fetchResponse.StatusCode}");
+                        $"Expected 404, 422, or 400 for deleted token fetch, got {fetchResponse.StatusCode}", "Expected404Or422Or400");
                 }
                 catch (Exception ex)
                 {
@@ -842,7 +874,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                Assert.Fail("Delete delivery token test failed", ex.Message);
+                AssertLogger.Fail("Delete delivery token test failed", ex.Message);
             }
         }
 
@@ -869,7 +901,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                Assert.Fail("Cleanup failed", ex.Message);
+                AssertLogger.Fail("Cleanup failed", ex.Message);
             }
         }
 

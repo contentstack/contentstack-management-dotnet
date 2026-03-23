@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
+using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -19,7 +21,9 @@ namespace Contentstack.Management.Core.Tests
         new Lazy<ContentstackClient>(() =>
         {
             ContentstackClientOptions options = Config.GetSection("Contentstack").Get<ContentstackClientOptions>();
-            return new ContentstackClient(new OptionsWrapper<ContentstackClientOptions>(options));
+            var handler = new LoggingHttpHandler();
+            var httpClient = new HttpClient(handler);
+            return new ContentstackClient(httpClient, options);
         });
 
 
