@@ -60,18 +60,21 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             AssertLogger.IsFalse(string.IsNullOrEmpty(_bulkTestWorkflowStage2Uid), "Workflow Stage 2 (New stage 2) was not set. " + reason, "WorkflowStage2Uid");
         }
 
+        private static ContentstackClient _client;
+
         /// <summary>
         /// Returns a Stack instance for the test run (used by ClassInitialize/ClassCleanup).
         /// </summary>
         private static Stack GetStack()
         {
-            StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
-            return Contentstack.Client.Stack(response.Stack.APIKey);
+            StackResponse response = StackResponse.getStack(_client.serializer);
+            return _client.Stack(response.Stack.APIKey);
         }
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
+            _client = Contentstack.CreateAuthenticatedClient();
             try
             {
                 Stack stack = GetStack();
@@ -87,13 +90,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public static void ClassCleanup()
         {
             // Intentionally no cleanup: workflow, publish rules, and entries are left so you can verify them in the UI.
+            try { _client?.Logout(); } catch { }
+            _client = null;
         }
 
         [TestInitialize]
         public async Task Initialize()
         {
-            StackResponse response = StackResponse.getStack(Contentstack.Client.serializer);
-            _stack = Contentstack.Client.Stack(response.Stack.APIKey);
+            StackResponse response = StackResponse.getStack(_client.serializer);
+            _stack = _client.Stack(response.Stack.APIKey);
 
             // Create test environment and release for bulk operations (for new stack)
             try

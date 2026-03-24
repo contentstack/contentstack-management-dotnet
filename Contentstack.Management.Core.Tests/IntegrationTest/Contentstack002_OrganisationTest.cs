@@ -13,6 +13,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     [TestClass]
     public class Contentstack002_OrganisationTest
     {
+        private static ContentstackClient _client;
         private double _count;
         static string RoleUID = "";
         static string EmailSync = "testcs@contentstack.com";
@@ -21,6 +22,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         static string InviteIDAsync = "";
         private readonly IFixture _fixture = new Fixture();
 
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            _client = Contentstack.CreateAuthenticatedClient();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            try { _client?.Logout(); } catch { }
+            _client = null;
+        }
+
         [TestMethod]
         [DoNotParallelize]
         public void Test001_Should_Return_All_Organizations()
@@ -28,7 +42,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "GetAllOrganizations");
             try
             {
-                Organization organization = Contentstack.Client.Organization();
+                Organization organization = _client.Organization();
 
                 ContentstackResponse contentstackResponse = organization.GetOrganizations();
 
@@ -50,7 +64,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "GetAllOrganizationsAsync");
             try
             {
-                Organization organization = Contentstack.Client.Organization();
+                Organization organization = _client.Organization();
 
                 ContentstackResponse contentstackResponse = await organization.GetOrganizationsAsync();
 
@@ -73,7 +87,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "SkipOrganizations");
             try
             {
-                Organization organization = Contentstack.Client.Organization();
+                Organization organization = _client.Organization();
                 ParameterCollection collection = new ParameterCollection();
                 collection.Add("skip", 4);
                 ContentstackResponse contentstackResponse = organization.GetOrganizations(collection);
@@ -98,7 +112,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 var org = Contentstack.Organization;
                 TestOutputLogger.LogContext("OrganizationUid", org.Uid);
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
 
                 ContentstackResponse contentstackResponse = organization.GetOrganizations();
 
@@ -124,7 +138,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
                 ParameterCollection collection = new ParameterCollection();
                 collection.Add("include_plan", true);
 
@@ -150,7 +164,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
 
                 ContentstackResponse contentstackResponse = organization.Roles();
 
@@ -175,7 +189,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
 
                 ContentstackResponse contentstackResponse = await organization.RolesAsync();
 
@@ -198,7 +212,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
                 UserInvitation invitation = new UserInvitation()
                 {
                     Email = EmailSync,
@@ -230,7 +244,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
                 UserInvitation invitation = new UserInvitation()
                 {
                     Email = EmailAsync,
@@ -261,7 +275,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
 
                 ContentstackResponse contentstackResponse = organization.ResendInvitation(InviteID);
 
@@ -284,7 +298,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
                 ContentstackResponse contentstackResponse = await organization.ResendInvitationAsync(InviteIDAsync);
 
                 var response = contentstackResponse.OpenJObjectResponse();
@@ -306,7 +320,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
 
                 ContentstackResponse contentstackResponse = organization.RemoveUser(new System.Collections.Generic.List<string>() { EmailSync } );
 
@@ -329,7 +343,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
                 ContentstackResponse contentstackResponse = await organization.RemoveUserAsync(new System.Collections.Generic.List<string>() { EmailAsync });
 
                 var response = contentstackResponse.OpenJObjectResponse();
@@ -351,7 +365,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
 
                 ContentstackResponse contentstackResponse = organization.GetInvitations();
 
@@ -376,7 +390,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
                 ContentstackResponse contentstackResponse = await organization.GetInvitationsAsync();
 
                 var response = contentstackResponse.OpenJObjectResponse();
@@ -399,7 +413,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
 
                 ContentstackResponse contentstackResponse = organization.GetStacks();
 
@@ -424,7 +438,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var org = Contentstack.Organization;
-                Organization organization = Contentstack.Client.Organization(org.Uid);
+                Organization organization = _client.Organization(org.Uid);
                 ContentstackResponse contentstackResponse = await organization.GetStacksAsync();
 
                 var response = contentstackResponse.OpenJObjectResponse();

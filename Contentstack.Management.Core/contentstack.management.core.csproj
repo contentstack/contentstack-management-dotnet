@@ -3,11 +3,11 @@
   <!-- On non-Windows (e.g. macOS/Linux), build only netstandard2.0; .NET Framework (net471/net472) is Windows-only and reference assemblies are not available. -->
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
     <TargetFrameworks>netstandard2.0;net471;net472</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+      <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    </PropertyGroup>
+    <PropertyGroup>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <Title>Contentstack Management</Title>
