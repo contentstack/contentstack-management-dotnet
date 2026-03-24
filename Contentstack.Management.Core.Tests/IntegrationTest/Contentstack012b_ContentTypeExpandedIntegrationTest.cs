@@ -592,12 +592,165 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var fetched = (await _stack.ContentType(ctUid).FetchAsync()).OpenTResponse<ContentTypeModel>().Modelling;
                 var taxField = fetched.Schema.OfType<TaxonomyField>().FirstOrDefault(f => f.Uid == "taxonomies");
                 AssertLogger.IsNotNull(taxField, "taxonomy field async");
+                AssertLogger.IsTrue(taxField.Taxonomies.Any(t => t.TaxonomyUid == taxUid), "binding uid async");
             }
             finally
             {
                 TryDeleteContentType(ctUid);
                 await TryDeleteTaxonomyAsync(taxUid);
             }
+        }
+
+        #endregion
+
+        #region Negative paths — taxonomy field and extension
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test025_Should_Error_Create_ContentType_TaxonomyField_NonExistentTaxonomy_Sync()
+        {
+            var sfx = NewSuffix();
+            var fakeTaxUid = "non_existent_tax_ct_" + sfx;
+            var ctUid = "ct_bad_tax_" + sfx;
+            var modelling = BuildContentTypeWithTaxonomyField(ctUid, fakeTaxUid, sfx);
+            try
+            {
+                AssertLogger.ThrowsContentstackError(
+                    () => _stack.ContentType().Create(modelling),
+                    "CreateCtTaxonomyMissing",
+                    HttpStatusCode.BadRequest,
+                    HttpStatusCode.NotFound,
+                    (HttpStatusCode)422);
+            }
+            finally
+            {
+                TryDeleteContentType(ctUid);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test026_Should_Error_Create_ContentType_TaxonomyField_NonExistentTaxonomy_Async()
+        {
+            var sfx = NewSuffix();
+            var fakeTaxUid = "non_existent_tax_ct_" + sfx;
+            var ctUid = "ct_bad_tax_a_" + sfx;
+            var modelling = BuildContentTypeWithTaxonomyField(ctUid, fakeTaxUid, sfx);
+            try
+            {
+                await AssertLogger.ThrowsContentstackErrorAsync(
+                    async () => await _stack.ContentType().CreateAsync(modelling),
+                    "CreateCtTaxonomyMissingAsync",
+                    HttpStatusCode.BadRequest,
+                    HttpStatusCode.NotFound,
+                    (HttpStatusCode)422);
+            }
+            finally
+            {
+                TryDeleteContentType(ctUid);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test027_Should_Error_Create_ContentType_ExtensionField_NonExistentExtension_Sync()
+        {
+            var sfx = NewSuffix();
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
+            try
+            {
+                model.Schema.Add(new ExtensionField
+                {
+                    DisplayName = "Fake Extension",
+                    Uid = "ext_bad_" + sfx,
+                    DataType = "extension",
+                    extension_uid = "non_existent_ext_" + sfx,
+                    Mandatory = false
+                });
+                AssertLogger.ThrowsContentstackError(
+                    () => _stack.ContentType().Create(model),
+                    "CreateCtExtensionMissing",
+                    HttpStatusCode.BadRequest,
+                    HttpStatusCode.NotFound,
+                    (HttpStatusCode)422);
+            }
+            finally
+            {
+                TryDeleteContentType(model.Uid);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test028_Should_Error_Create_ContentType_ExtensionField_NonExistentExtension_Async()
+        {
+            var sfx = NewSuffix();
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
+            try
+            {
+                model.Schema.Add(new ExtensionField
+                {
+                    DisplayName = "Fake Extension",
+                    Uid = "ext_bad_a_" + sfx,
+                    DataType = "extension",
+                    extension_uid = "non_existent_ext_" + sfx,
+                    Mandatory = false
+                });
+                await AssertLogger.ThrowsContentstackErrorAsync(
+                    async () => await _stack.ContentType().CreateAsync(model),
+                    "CreateCtExtensionMissingAsync",
+                    HttpStatusCode.BadRequest,
+                    HttpStatusCode.NotFound,
+                    (HttpStatusCode)422);
+            }
+            finally
+            {
+                TryDeleteContentType(model.Uid);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test029_Should_Error_Extension_Fetch_NonExistent_Sync()
+        {
+            AssertLogger.ThrowsContentstackError(
+                () => _stack.Extension("non_existent_ext_res_" + NewSuffix()).Fetch(),
+                "ExtensionFetchMissing",
+                HttpStatusCode.NotFound,
+                (HttpStatusCode)422);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test030_Should_Error_Extension_Fetch_NonExistent_Async()
+        {
+            await AssertLogger.ThrowsContentstackErrorAsync(
+                async () => await _stack.Extension("non_existent_ext_res_" + NewSuffix()).FetchAsync(),
+                "ExtensionFetchMissingAsync",
+                HttpStatusCode.NotFound,
+                (HttpStatusCode)422);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test031_Should_Error_Extension_Delete_NonExistent_Sync()
+        {
+            AssertLogger.ThrowsContentstackError(
+                () => _stack.Extension("non_existent_ext_res_" + NewSuffix()).Delete(),
+                "ExtensionDeleteMissing",
+                HttpStatusCode.NotFound,
+                (HttpStatusCode)422);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test032_Should_Error_Extension_Delete_NonExistent_Async()
+        {
+            await AssertLogger.ThrowsContentstackErrorAsync(
+                async () => await _stack.Extension("non_existent_ext_res_" + NewSuffix()).DeleteAsync(),
+                "ExtensionDeleteMissingAsync",
+                HttpStatusCode.NotFound,
+                (HttpStatusCode)422);
         }
 
         #endregion
