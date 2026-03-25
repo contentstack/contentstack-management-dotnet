@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -80,6 +80,18 @@ namespace Contentstack.Management.Core.Models.Fields
         /// </summary>
         [JsonProperty(propertyName: "ref_multiple")]
         public bool RefMultiple { get; set; }
+
+        /// <summary>
+        /// When true, the field is a JSON Rich Text Editor (JRTE).
+        /// </summary>
+        [JsonProperty(propertyName: "allow_json_rte")]
+        public bool? AllowJsonRte { get; set; }
+
+        /// <summary>
+        /// Allows embedding entries in the JSON RTE / rich text configuration.
+        /// </summary>
+        [JsonProperty(propertyName: "embed_entry")]
+        public bool? EmbedEntry { get; set; }
 
     }
     public class FileFieldMetadata: FieldMetadata

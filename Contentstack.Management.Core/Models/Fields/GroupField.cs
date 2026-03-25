@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -11,6 +11,6 @@ namespace Contentstack.Management.Core.Models.Fields
         [JsonProperty(propertyName: "schema")]
         public List<Field> Schema { get; set; }
         [JsonProperty(propertyName: "max_instance")]
-        public int MaxInstance { get; set; }
+        public int? MaxInstance { get; set; }
     }
 }
