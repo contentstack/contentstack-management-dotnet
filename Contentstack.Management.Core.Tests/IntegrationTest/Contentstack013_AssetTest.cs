@@ -10,6 +10,7 @@ using Contentstack.Management.Core.Models.CustomExtension;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Exceptions;
+using Contentstack.Management.Core.Queryable;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -936,6 +937,217 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             catch (Exception e)
             {
                 AssertLogger.Fail(e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test031_Should_Fetch_Asset_With_Locale_Parameter()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FetchAssetWithLocaleParameter");
+            try
+            {
+                if (string.IsNullOrEmpty(_testAssetUid))
+                {
+                    Test005_Should_Create_Asset_Async();
+                }
+
+                if (!string.IsNullOrEmpty(_testAssetUid))
+                {
+                    TestOutputLogger.LogContext("AssetUID", _testAssetUid);
+                    var coll = new ParameterCollection();
+                    coll.Add("locale", "en-us");
+                    ContentstackResponse response = _stack.Asset(_testAssetUid).Fetch(coll);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "FetchAssetWithLocale_StatusCode");
+                        var responseObject = response.OpenJObjectResponse();
+                        AssertLogger.IsNotNull(responseObject["asset"], "FetchAssetWithLocale_ResponseContainsAsset");
+                    }
+                    else
+                    {
+                        AssertLogger.Fail("Fetch asset with locale parameter failed");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Asset Fetch with locale parameter failed ", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test032_Should_Fetch_Asset_Async_With_Locale_Parameter()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FetchAssetAsyncWithLocaleParameter");
+            try
+            {
+                if (string.IsNullOrEmpty(_testAssetUid))
+                {
+                    Test005_Should_Create_Asset_Async();
+                }
+
+                if (!string.IsNullOrEmpty(_testAssetUid))
+                {
+                    TestOutputLogger.LogContext("AssetUID", _testAssetUid);
+                    var coll = new ParameterCollection();
+                    coll.Add("locale", "en-us");
+                    ContentstackResponse response = _stack.Asset(_testAssetUid).FetchAsync(coll).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "FetchAssetAsyncWithLocale_StatusCode");
+                        var responseObject = response.OpenJObjectResponse();
+                        AssertLogger.IsNotNull(responseObject["asset"], "FetchAssetAsyncWithLocale_ResponseContainsAsset");
+                    }
+                    else
+                    {
+                        AssertLogger.Fail("Fetch asset async with locale parameter failed");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Asset Fetch async with locale parameter failed ", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test033_Should_Query_Assets_With_Locale_Parameter()
+        {
+            TestOutputLogger.LogContext("TestScenario", "QueryAssetsWithLocaleParameter");
+            try
+            {
+                TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+                var coll = new ParameterCollection();
+                coll.Add("locale", "en-us");
+                var query = _stack.Asset().Query();
+                query.Limit(5);
+                query.Skip(0);
+
+                ContentstackResponse response = query.Find(coll);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "QueryAssetsWithLocale_StatusCode");
+                    var responseObject = response.OpenJObjectResponse();
+                    AssertLogger.IsNotNull(responseObject["assets"], "QueryAssetsWithLocale_ResponseContainsAssets");
+                }
+                else
+                {
+                    AssertLogger.Fail("Querying assets with locale parameter failed");
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Querying assets with locale parameter failed ", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test034_Should_Handle_Fetch_With_Invalid_Locale_Parameter()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FetchAssetWithInvalidLocaleParameter");
+            try
+            {
+                if (string.IsNullOrEmpty(_testAssetUid))
+                {
+                    Test005_Should_Create_Asset_Async();
+                }
+
+                if (string.IsNullOrEmpty(_testAssetUid))
+                {
+                    AssertLogger.Fail("No asset UID for invalid locale fetch test");
+                    return;
+                }
+
+                TestOutputLogger.LogContext("AssetUID", _testAssetUid);
+                var coll = new ParameterCollection();
+                coll.Add("locale", "invalid_locale_code_xyz");
+
+                try
+                {
+                    ContentstackResponse response = _stack.Asset(_testAssetUid).Fetch(coll);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseObject = response.OpenJObjectResponse();
+                        AssertLogger.IsNotNull(responseObject["asset"], "FetchInvalidLocale_ResponseContainsAssetWhenApiIgnoresParam");
+                    }
+                }
+                catch (ContentstackErrorException ex)
+                {
+                    AssertLogger.IsTrue(
+                        ex.Message.Contains("locale", StringComparison.OrdinalIgnoreCase)
+                        || ex.Message.Contains("invalid", StringComparison.OrdinalIgnoreCase)
+                        || ex.Message.Contains("not found", StringComparison.OrdinalIgnoreCase)
+                        || ex.Message.Contains("error", StringComparison.OrdinalIgnoreCase),
+                        $"Expected error indication in exception, got: {ex.Message}",
+                        "FetchInvalidLocale_ExceptionMessage");
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Fetch with invalid locale parameter failed unexpectedly ", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test035_Should_Handle_Fetch_Invalid_Asset_With_Locale_Parameter()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FetchInvalidAssetWithLocaleParameter");
+            string invalidAssetUid = "invalid_asset_uid_12345";
+            TestOutputLogger.LogContext("InvalidAssetUID", invalidAssetUid);
+            var coll = new ParameterCollection();
+            coll.Add("locale", "en-us");
+
+            try
+            {
+                _stack.Asset(invalidAssetUid).Fetch(coll);
+                AssertLogger.Fail("Expected exception for invalid asset fetch with locale, but operation succeeded");
+            }
+            catch (ContentstackErrorException ex)
+            {
+                AssertLogger.IsTrue(ex.Message.Contains("not found") || ex.Message.Contains("invalid"),
+                    $"Expected 'not found' or 'invalid' in exception message, got: {ex.Message}",
+                    "InvalidAssetFetchWithLocale_ExceptionMessage");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test036_Should_Handle_Query_With_Invalid_Locale_Parameter()
+        {
+            TestOutputLogger.LogContext("TestScenario", "QueryAssetsWithInvalidLocaleParameter");
+            TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+            var coll = new ParameterCollection();
+            coll.Add("locale", "invalid_locale_code_xyz");
+            var query = _stack.Asset().Query();
+            query.Limit(1);
+            query.Skip(0);
+
+            try
+            {
+                ContentstackResponse response = query.Find(coll);
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "QueryInvalidLocale_StatusCode");
+                    var responseObject = response.OpenJObjectResponse();
+                    AssertLogger.IsNotNull(responseObject["assets"], "QueryInvalidLocale_ResponseContainsAssetsWhenApiIgnoresParam");
+                }
+            }
+            catch (ContentstackErrorException ex)
+            {
+                AssertLogger.IsTrue(
+                    ex.Message.Contains("locale", StringComparison.OrdinalIgnoreCase)
+                    || ex.Message.Contains("invalid", StringComparison.OrdinalIgnoreCase)
+                    || ex.Message.Contains("error", StringComparison.OrdinalIgnoreCase),
+                    $"Expected error indication in exception, got: {ex.Message}",
+                    "QueryInvalidLocale_ExceptionMessage");
             }
         }
 
