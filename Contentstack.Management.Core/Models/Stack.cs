@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
@@ -700,6 +700,27 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
 
             return new Label(this, uid);
+        }
+
+        /// <summary>
+        /// <see cref="Models.Taxonomy" /> allows you to organize and categorize content using a hierarchical structure of terms.
+        /// </summary>
+        /// <param name="uid">Optional, taxonomy uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("&lt;AUTHTOKEN&gt;", "&lt;API_HOST&gt;");
+        /// Stack stack = client.Stack("&lt;API_KEY&gt;");
+        /// ContentstackResponse response = stack.Taxonomy("&lt;TAXONOMY_UID&gt;").Fetch();
+        /// ContentstackResponse list = stack.Taxonomy().Query().Find();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Taxonomy" /></returns>
+        public Taxonomy Taxonomy(string uid = null)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new Taxonomy(this, uid);
         }
 
         /// <summary>

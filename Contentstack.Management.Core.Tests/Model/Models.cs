@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Models;
 using System.Collections.Generic;
 
@@ -24,6 +24,33 @@ namespace Contentstack.Management.Core.Tests.Model
     {
         [JsonProperty("content_types")]
         public List<ContentModelling> Modellings { get; set; }
+    }
+
+    public class TaxonomyResponseModel
+    {
+        [JsonProperty("taxonomy")]
+        public TaxonomyModel Taxonomy { get; set; }
+    }
+
+    public class TaxonomiesResponseModel
+    {
+        [JsonProperty("taxonomies")]
+        public List<TaxonomyModel> Taxonomies { get; set; }
+    }
+
+    public class TermResponseModel
+    {
+        [JsonProperty("term")]
+        public TermModel Term { get; set; }
+    }
+
+    public class TermsResponseModel
+    {
+        [JsonProperty("terms")]
+        public List<TermModel> Terms { get; set; }
+
+        [JsonProperty("count")]
+        public int? Count { get; set; }
     }
 }
 

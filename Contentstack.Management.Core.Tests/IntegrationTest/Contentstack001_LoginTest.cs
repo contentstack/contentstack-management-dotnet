@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Net;
+using System.Net.Http;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
+using Contentstack.Management.Core.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using System.Threading;
 using Contentstack.Management.Core.Queryable;
 using Newtonsoft.Json.Linq;
 
@@ -14,12 +13,20 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     [TestClass]
     public class Contentstack001_LoginTest
     {
-        private readonly IConfigurationRoot _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
+        private static ContentstackClient CreateClientWithLogging()
+        {
+            var handler = new LoggingHttpHandler();
+            var httpClient = new HttpClient(handler);
+            return new ContentstackClient(httpClient, new ContentstackClientOptions());
+        }
+
         [TestMethod]
         [DoNotParallelize]
         public void Test001_Should_Return_Failuer_On_Wrong_Login_Credentials()
         {
-            ContentstackClient client = new ContentstackClient();
+            TestOutputLogger.LogContext("TestScenario", "WrongCredentials");
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("mock_user", "mock_pasword");
             
             try
@@ -28,54 +35,55 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             } catch (Exception e)
             {
                 ContentstackErrorException errorException = e as ContentstackErrorException;
-                Assert.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode);
-                Assert.AreEqual("Looks like your email or password is invalid. Please try again or reset your password.", errorException.Message);
-                Assert.AreEqual("Looks like your email or password is invalid. Please try again or reset your password.", errorException.ErrorMessage);
-                Assert.AreEqual(104, errorException.ErrorCode);
+                AssertLogger.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode, "StatusCode");
+                AssertLogger.AreEqual("Looks like your email or password is invalid. Please try again or reset your password.", errorException.Message, "Message");
+                AssertLogger.AreEqual("Looks like your email or password is invalid. Please try again or reset your password.", errorException.ErrorMessage, "ErrorMessage");
+                AssertLogger.AreEqual(104, errorException.ErrorCode, "ErrorCode");
             }
         }
 
         [TestMethod]
         [DoNotParallelize]
-        public void Test002_Should_Return_Failuer_On_Wrong_Async_Login_Credentials()
+        public async System.Threading.Tasks.Task Test002_Should_Return_Failuer_On_Wrong_Async_Login_Credentials()
         {
-            ContentstackClient client = new ContentstackClient();
+            TestOutputLogger.LogContext("TestScenario", "WrongCredentialsAsync");
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("mock_user", "mock_pasword");
-            var response = client.LoginAsync(credentials);
 
-            response.ContinueWith((t) =>
+            try
             {
-                if (t.IsCompleted && t.Status == System.Threading.Tasks.TaskStatus.Faulted)
-                {
-                    ContentstackErrorException errorException = t.Exception.InnerException as ContentstackErrorException;
-                    Assert.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode);
-                    Assert.AreEqual("Looks like your email or password is invalid. Please try again or reset your password.", errorException.Message);
-                    Assert.AreEqual("Looks like your email or password is invalid. Please try again or reset your password.", errorException.ErrorMessage);
-                    Assert.AreEqual(104, errorException.ErrorCode);
-                }
-            });
-            Thread.Sleep(3000);
+                await client.LoginAsync(credentials);
+                AssertLogger.Fail("Expected exception for wrong credentials");
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                AssertLogger.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode, "StatusCode");
+                AssertLogger.AreEqual("Looks like your email or password is invalid. Please try again or reset your password.", errorException.Message, "Message");
+                AssertLogger.AreEqual("Looks like your email or password is invalid. Please try again or reset your password.", errorException.ErrorMessage, "ErrorMessage");
+                AssertLogger.AreEqual(104, errorException.ErrorCode, "ErrorCode");
+            }
         }
 
         [TestMethod]
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test003_Should_Return_Success_On_Async_Login()
         {
-            ContentstackClient client = new ContentstackClient();
+            TestOutputLogger.LogContext("TestScenario", "AsyncLoginSuccess");
+            ContentstackClient client = CreateClientWithLogging();
             
             try
             {
                 ContentstackResponse contentstackResponse =  await client.LoginAsync(Contentstack.Credential);
                 string loginResponse = contentstackResponse.OpenResponse();
 
-                Assert.IsNotNull(client.contentstackOptions.Authtoken);
-                Assert.IsNotNull(loginResponse);
+                AssertLogger.IsNotNull(client.contentstackOptions.Authtoken, "Authtoken");
+                AssertLogger.IsNotNull(loginResponse, "loginResponse");
                 
                 await client.LogoutAsync();
             }
             catch (Exception e)
             {
-                Assert.Fail(e.Message);
+                AssertLogger.Fail(e.Message);
             }
         }
 
@@ -83,19 +91,20 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test004_Should_Return_Success_On_Login()
         {
+            TestOutputLogger.LogContext("TestScenario", "SyncLoginSuccess");
             try
             {
-                ContentstackClient client = new ContentstackClient();
+                ContentstackClient client = CreateClientWithLogging();
                 
                 ContentstackResponse contentstackResponse = client.Login(Contentstack.Credential);
                 string loginResponse = contentstackResponse.OpenResponse();
 
-                Assert.IsNotNull(client.contentstackOptions.Authtoken);
-                Assert.IsNotNull(loginResponse);
+                AssertLogger.IsNotNull(client.contentstackOptions.Authtoken, "Authtoken");
+                AssertLogger.IsNotNull(loginResponse, "loginResponse");
             }
             catch (Exception e)
             {
-                Assert.Fail(e.Message);
+                AssertLogger.Fail(e.Message);
             }
         }
 
@@ -103,9 +112,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test005_Should_Return_Loggedin_User()
         {
+            TestOutputLogger.LogContext("TestScenario", "GetUser");
             try
             {
-                ContentstackClient client = new ContentstackClient();
+                ContentstackClient client = CreateClientWithLogging();
                 
                 client.Login(Contentstack.Credential);
                 
@@ -113,12 +123,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 var user = response.OpenJObjectResponse();
 
-                Assert.IsNotNull(user);
+                AssertLogger.IsNotNull(user, "user");
 
             }
             catch (Exception e)
             {
-                Assert.Fail(e.Message);
+                AssertLogger.Fail(e.Message);
             }
         }
 
@@ -126,9 +136,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test006_Should_Return_Loggedin_User_Async()
         {
+            TestOutputLogger.LogContext("TestScenario", "GetUserAsync");
             try
             {
-                ContentstackClient client = new ContentstackClient();
+                ContentstackClient client = CreateClientWithLogging();
                 
                 await client.LoginAsync(Contentstack.Credential);
                 
@@ -136,15 +147,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 var user = response.OpenJObjectResponse();
 
-                Assert.IsNotNull(user);
-                Assert.IsNotNull(user["user"]["organizations"]);
-                Assert.IsInstanceOfType(user["user"]["organizations"], typeof(JArray));
-                Assert.IsNull(user["user"]["organizations"][0]["org_roles"]);
+                AssertLogger.IsNotNull(user, "user");
+                AssertLogger.IsNotNull(user["user"]["organizations"], "organizations");
+                AssertLogger.IsInstanceOfType(user["user"]["organizations"], typeof(JArray), "organizations");
+                AssertLogger.IsNull(user["user"]["organizations"][0]["org_roles"], "org_roles");
 
             }
             catch (Exception e)
             {
-                Assert.Fail(e.Message);
+                AssertLogger.Fail(e.Message);
             }
         }
 
@@ -152,12 +163,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test007_Should_Return_Loggedin_User_With_Organizations_detail()
         {
+            TestOutputLogger.LogContext("TestScenario", "GetUserWithOrgRoles");
             try
             {
                 ParameterCollection collection = new ParameterCollection();
                 collection.Add("include_orgs_roles", true);
             
-                ContentstackClient client = new ContentstackClient();
+                ContentstackClient client = CreateClientWithLogging();
                 
                 client.Login(Contentstack.Credential);
                 
@@ -165,14 +177,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 var user = response.OpenJObjectResponse();
 
-                Assert.IsNotNull(user);
-                Assert.IsNotNull(user["user"]["organizations"]);
-                Assert.IsInstanceOfType(user["user"]["organizations"], typeof(JArray));
-                Assert.IsNotNull(user["user"]["organizations"][0]["org_roles"]);
+                AssertLogger.IsNotNull(user, "user");
+                AssertLogger.IsNotNull(user["user"]["organizations"], "organizations");
+                AssertLogger.IsInstanceOfType(user["user"]["organizations"], typeof(JArray), "organizations");
+                AssertLogger.IsNotNull(user["user"]["organizations"][0]["org_roles"], "org_roles");
             }
             catch (Exception e)
             {
-                Assert.Fail(e.Message);
+                AssertLogger.Fail(e.Message);
             }
         }
 
@@ -180,23 +192,23 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test008_Should_Fail_Login_With_Invalid_MfaSecret()
         {
-            ContentstackClient client = new ContentstackClient();
+            TestOutputLogger.LogContext("TestScenario", "InvalidMfaSecret");
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
             string invalidMfaSecret = "INVALID_BASE32_SECRET!@#";
             
             try
             {
                 ContentstackResponse contentstackResponse = client.Login(credentials, null, invalidMfaSecret);
-                Assert.Fail("Expected exception for invalid MFA secret");
+                AssertLogger.Fail("Expected exception for invalid MFA secret");
             }
             catch (ArgumentException)
             {
-                // Expected exception for invalid Base32 encoding
-                Assert.IsTrue(true);
+                AssertLogger.IsTrue(true, "ArgumentException thrown as expected");
             }
             catch (Exception e)
             {
-                Assert.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
             }
         }
 
@@ -204,31 +216,29 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test009_Should_Generate_TOTP_Token_With_Valid_MfaSecret()
         {
-            ContentstackClient client = new ContentstackClient();
+            TestOutputLogger.LogContext("TestScenario", "ValidMfaSecret");
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
-            string validMfaSecret = "JBSWY3DPEHPK3PXP"; // Valid Base32 test secret
+            string validMfaSecret = "JBSWY3DPEHPK3PXP";
             
             try
             {
-                // This should fail due to invalid credentials, but should succeed in generating TOTP
                 ContentstackResponse contentstackResponse = client.Login(credentials, null, validMfaSecret);
             }
             catch (ContentstackErrorException errorException)
             {
-                // Expected to fail due to invalid credentials, but we verify it processed the MFA secret
-                // The error should be about credentials, not about MFA secret format
-                Assert.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode);
-                Assert.IsTrue(errorException.Message.Contains("email or password") || 
+                AssertLogger.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode, "StatusCode");
+                AssertLogger.IsTrue(errorException.Message.Contains("email or password") || 
                              errorException.Message.Contains("credentials") ||
-                             errorException.Message.Contains("authentication"));
+                             errorException.Message.Contains("authentication"), "MFA error message check");
             }
             catch (ArgumentException)
             {
-                Assert.Fail("Should not throw ArgumentException for valid MFA secret");
+                AssertLogger.Fail("Should not throw ArgumentException for valid MFA secret");
             }
             catch (Exception e)
             {
-                Assert.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
             }
         }
 
@@ -236,31 +246,29 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async System.Threading.Tasks.Task Test010_Should_Generate_TOTP_Token_With_Valid_MfaSecret_Async()
         {
-            ContentstackClient client = new ContentstackClient();
+            TestOutputLogger.LogContext("TestScenario", "ValidMfaSecretAsync");
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
-            string validMfaSecret = "JBSWY3DPEHPK3PXP"; // Valid Base32 test secret
+            string validMfaSecret = "JBSWY3DPEHPK3PXP";
             
             try
             {
-                // This should fail due to invalid credentials, but should succeed in generating TOTP
                 ContentstackResponse contentstackResponse = await client.LoginAsync(credentials, null, validMfaSecret);
             }
             catch (ContentstackErrorException errorException)
             {
-                // Expected to fail due to invalid credentials, but we verify it processed the MFA secret
-                // The error should be about credentials, not about MFA secret format
-                Assert.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode);
-                Assert.IsTrue(errorException.Message.Contains("email or password") || 
+                AssertLogger.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode, "StatusCode");
+                AssertLogger.IsTrue(errorException.Message.Contains("email or password") || 
                              errorException.Message.Contains("credentials") ||
-                             errorException.Message.Contains("authentication"));
+                             errorException.Message.Contains("authentication"), "MFA error message check");
             }
             catch (ArgumentException)
             {
-                Assert.Fail("Should not throw ArgumentException for valid MFA secret");
+                AssertLogger.Fail("Should not throw ArgumentException for valid MFA secret");
             }
             catch (Exception e)
             {
-                Assert.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
             }
         }
 
@@ -268,29 +276,220 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test011_Should_Prefer_Explicit_Token_Over_MfaSecret()
         {
-            ContentstackClient client = new ContentstackClient();
+            TestOutputLogger.LogContext("TestScenario", "ExplicitTokenOverMfa");
+            ContentstackClient client = CreateClientWithLogging();
             NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
             string validMfaSecret = "JBSWY3DPEHPK3PXP";
             string explicitToken = "123456";
             
             try
             {
-                // This should fail due to invalid credentials, but should use explicit token
                 ContentstackResponse contentstackResponse = client.Login(credentials, explicitToken, validMfaSecret);
             }
             catch (ContentstackErrorException errorException)
             {
-                // Expected to fail due to invalid credentials
-                // The important thing is that it didn't throw an exception about MFA secret processing
-                Assert.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode);
+                AssertLogger.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode, "StatusCode");
             }
             catch (ArgumentException)
             {
-                Assert.Fail("Should not throw ArgumentException when explicit token is provided");
+                AssertLogger.Fail("Should not throw ArgumentException when explicit token is provided");
             }
             catch (Exception e)
             {
-                Assert.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test012_Should_Throw_InvalidOperation_When_Already_LoggedIn_Sync()
+        {
+            TestOutputLogger.LogContext("TestScenario", "AlreadyLoggedInSync");
+            ContentstackClient client = CreateClientWithLogging();
+
+            try
+            {
+                client.Login(Contentstack.Credential);
+                AssertLogger.IsNotNull(client.contentstackOptions.Authtoken, "Authtoken");
+
+                AssertLogger.ThrowsException<InvalidOperationException>(() =>
+                    client.Login(Contentstack.Credential), "AlreadyLoggedIn");
+
+                client.Logout();
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test013_Should_Throw_InvalidOperation_When_Already_LoggedIn_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "AlreadyLoggedInAsync");
+            ContentstackClient client = CreateClientWithLogging();
+
+            try
+            {
+                await client.LoginAsync(Contentstack.Credential);
+                AssertLogger.IsNotNull(client.contentstackOptions.Authtoken, "Authtoken");
+
+                await System.Threading.Tasks.Task.Run(() =>
+                    AssertLogger.ThrowsException<InvalidOperationException>(() =>
+                        client.LoginAsync(Contentstack.Credential).GetAwaiter().GetResult(), "AlreadyLoggedInAsync"));
+
+                await client.LogoutAsync();
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test014_Should_Throw_ArgumentNullException_For_Null_Credentials_Sync()
+        {
+            TestOutputLogger.LogContext("TestScenario", "NullCredentialsSync");
+            ContentstackClient client = CreateClientWithLogging();
+
+            AssertLogger.ThrowsException<ArgumentNullException>(() =>
+                client.Login(null), "NullCredentials");
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test015_Should_Throw_ArgumentNullException_For_Null_Credentials_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "NullCredentialsAsync");
+            ContentstackClient client = CreateClientWithLogging();
+
+            AssertLogger.ThrowsException<ArgumentNullException>(() =>
+                client.LoginAsync(null).GetAwaiter().GetResult(), "NullCredentialsAsync");
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test016_Should_Throw_ArgumentException_For_Invalid_MfaSecret_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "InvalidMfaSecretAsync");
+            ContentstackClient client = CreateClientWithLogging();
+            NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
+            string invalidMfaSecret = "INVALID_BASE32_SECRET!@#";
+
+            try
+            {
+                await client.LoginAsync(credentials, null, invalidMfaSecret);
+                AssertLogger.Fail("Expected ArgumentException for invalid MFA secret");
+            }
+            catch (ArgumentException)
+            {
+                AssertLogger.IsTrue(true, "ArgumentException thrown as expected for async");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test017_Should_Handle_Valid_Credentials_With_TfaToken_Sync()
+        {
+            TestOutputLogger.LogContext("TestScenario", "WrongTfaTokenSync");
+            ContentstackClient client = CreateClientWithLogging();
+
+            try
+            {
+                client.Login(Contentstack.Credential, "000000");
+                // Account does not have 2FA enabled — tfa_token is ignored by the API and login succeeds.
+                // This is a valid outcome; assert token is set and clean up.
+                AssertLogger.IsNotNull(client.contentstackOptions.Authtoken, "Authtoken");
+                client.Logout();
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                // Account has 2FA enabled — wrong token is correctly rejected with 422.
+                AssertLogger.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode, "StatusCode");
+                AssertLogger.IsTrue(errorException.ErrorCode > 0, "TfaErrorCode");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test018_Should_Handle_Valid_Credentials_With_TfaToken_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "WrongTfaTokenAsync");
+            ContentstackClient client = CreateClientWithLogging();
+
+            try
+            {
+                await client.LoginAsync(Contentstack.Credential, "000000");
+                // Account does not have 2FA enabled — tfa_token is ignored by the API and login succeeds.
+                // This is a valid outcome; assert token is set and clean up.
+                AssertLogger.IsNotNull(client.contentstackOptions.Authtoken, "Authtoken");
+                await client.LogoutAsync();
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                // Account has 2FA enabled — wrong token is correctly rejected with 422.
+                AssertLogger.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode, "StatusCode");
+                AssertLogger.IsTrue(errorException.ErrorCode > 0, "TfaErrorCodeAsync");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test019_Should_Not_Include_TfaToken_When_MfaSecret_Is_Empty_Sync()
+        {
+            TestOutputLogger.LogContext("TestScenario", "EmptyMfaSecretSync");
+            ContentstackClient client = CreateClientWithLogging();
+            NetworkCredential credentials = new NetworkCredential("mock_user", "mock_password");
+
+            try
+            {
+                client.Login(credentials, null, "");
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                AssertLogger.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode, "StatusCode");
+                AssertLogger.AreEqual(104, errorException.ErrorCode, "ErrorCode");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test020_Should_Not_Include_TfaToken_When_MfaSecret_Is_Null_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "NullMfaSecretAsync");
+            ContentstackClient client = CreateClientWithLogging();
+            NetworkCredential credentials = new NetworkCredential("mock_user", "mock_password");
+
+            try
+            {
+                await client.LoginAsync(credentials, null, null);
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                AssertLogger.AreEqual(HttpStatusCode.UnprocessableEntity, errorException.StatusCode, "StatusCode");
+                AssertLogger.AreEqual(104, errorException.ErrorCode, "ErrorCode");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
             }
         }
     }

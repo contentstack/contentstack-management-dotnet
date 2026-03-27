@@ -1,0 +1,153 @@
+{
+  "title": "Medium Complexity",
+  "uid": "medium_complexity",
+  "description": "Medium complexity content type for field type testing",
+  "options": {
+    "is_page": true,
+    "singleton": false,
+    "title": "title",
+    "sub_title": [],
+    "url_pattern": "/:title",
+    "url_prefix": "/test/"
+  },
+  "schema": [
+    {
+      "display_name": "Title",
+      "uid": "title",
+      "data_type": "text",
+      "mandatory": true,
+      "unique": true,
+      "field_metadata": { "_default": true, "version": 3 },
+      "multiple": false,
+      "non_localizable": false
+    },
+    {
+      "display_name": "URL",
+      "uid": "url",
+      "data_type": "text",
+      "mandatory": false,
+      "field_metadata": { "_default": true, "version": 3 },
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false
+    },
+    {
+      "display_name": "Summary",
+      "uid": "summary",
+      "data_type": "text",
+      "mandatory": false,
+      "field_metadata": { "description": "", "default_value": "", "multiline": true, "version": 3 },
+      "format": "",
+      "error_messages": { "format": "" },
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false
+    },
+    {
+      "display_name": "View Count",
+      "uid": "view_count",
+      "data_type": "number",
+      "mandatory": false,
+      "field_metadata": { "description": "Number of views", "default_value": 0 },
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false,
+      "min": 0
+    },
+    {
+      "display_name": "Is Featured",
+      "uid": "is_featured",
+      "data_type": "boolean",
+      "mandatory": false,
+      "field_metadata": { "description": "Mark as featured content", "default_value": false },
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false
+    },
+    {
+      "display_name": "Publish Date",
+      "uid": "publish_date",
+      "data_type": "isodate",
+      "startDate": null,
+      "endDate": null,
+      "mandatory": false,
+      "field_metadata": { "description": "", "default_value": { "custom": false, "date": "", "time": "" } },
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false
+    },
+    {
+      "display_name": "Hero Image",
+      "uid": "hero_image",
+      "data_type": "file",
+      "mandatory": false,
+      "field_metadata": { "description": "Main hero image", "rich_text_type": "standard", "image": true },
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false,
+      "dimension": { "width": { "min": null, "max": null }, "height": { "min": null, "max": null } }
+    },
+    {
+      "display_name": "External Link",
+      "uid": "external_link",
+      "data_type": "link",
+      "mandatory": false,
+      "field_metadata": { "description": "", "default_value": { "title": "", "url": "" } },
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false
+    },
+    {
+      "display_name": "Status",
+      "uid": "status",
+      "data_type": "text",
+      "display_type": "dropdown",
+      "enum": {
+        "advanced": true,
+        "choices": [
+          { "value": "draft", "key": "Draft" },
+          { "value": "review", "key": "In Review" },
+          { "value": "published", "key": "Published" },
+          { "value": "archived", "key": "Archived" }
+        ]
+      },
+      "mandatory": false,
+      "field_metadata": { "description": "", "default_value": "draft", "default_key": "Draft", "version": 3 },
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false
+    },
+    {
+      "display_name": "Categories",
+      "uid": "categories",
+      "data_type": "text",
+      "display_type": "checkbox",
+      "enum": {
+        "advanced": true,
+        "choices": [
+          { "value": "technology", "key": "Technology" },
+          { "value": "business", "key": "Business" },
+          { "value": "lifestyle", "key": "Lifestyle" },
+          { "value": "science", "key": "Science" }
+        ]
+      },
+      "mandatory": false,
+      "field_metadata": { "description": "", "default_value": "", "default_key": "", "version": 3 },
+      "multiple": true,
+      "non_localizable": false,
+      "unique": false
+    },
+    {
+      "display_name": "Tags",
+      "uid": "content_tags",
+      "data_type": "text",
+      "mandatory": false,
+      "field_metadata": { "description": "Content tags", "default_value": "", "version": 3 },
+      "format": "",
+      "error_messages": { "format": "" },
+      "multiple": true,
+      "non_localizable": false,
+      "unique": false
+    }
+  ]
+}

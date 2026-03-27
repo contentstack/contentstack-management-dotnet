@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
+using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -14,15 +16,6 @@ namespace Contentstack.Management.Core.Tests
 {
     public class Contentstack
     {
-        private static readonly Lazy<ContentstackClient>
-        client =
-        new Lazy<ContentstackClient>(() =>
-        {
-            ContentstackClientOptions options = Config.GetSection("Contentstack").Get<ContentstackClientOptions>();
-            return new ContentstackClient(new OptionsWrapper<ContentstackClientOptions>(options));
-        });
-
-
         private static readonly Lazy<IConfigurationRoot>
         config =
         new Lazy<IConfigurationRoot>(() =>
@@ -42,12 +35,27 @@ namespace Contentstack.Management.Core.Tests
             return Config.GetSection("Contentstack:Organization").Get<OrganizationModel>();
         });
 
-        public static ContentstackClient Client { get { return client.Value; } }
         public static IConfigurationRoot Config{ get { return config.Value; } }
         public static NetworkCredential Credential { get { return credential.Value; } }
         public static OrganizationModel Organization { get { return organization.Value; } }
 
         public static StackModel Stack { get; set; }
+
+        /// <summary>
+        /// Creates a new ContentstackClient, logs in via the Login API (never from config),
+        /// and returns the authenticated client. Callers are responsible for calling Logout()
+        /// when done.
+        /// </summary>
+        public static ContentstackClient CreateAuthenticatedClient()
+        {
+            ContentstackClientOptions options = Config.GetSection("Contentstack").Get<ContentstackClientOptions>();
+            options.Authtoken = null;
+            var handler = new LoggingHttpHandler();
+            var httpClient = new HttpClient(handler);
+            var client = new ContentstackClient(httpClient, options);
+            client.Login(Credential);
+            return client;
+        }
 
         public static T serialize<T>(JsonSerializer serializer, string filePath)
         {
