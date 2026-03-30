@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
@@ -9,7 +9,7 @@ namespace Contentstack.Management.Core.Models
     public class Workflow: BaseModel<WorkflowModel>
     {
         internal Workflow(Stack stack, string uid)
-            : base(stack, "workflows", uid)
+            : base(stack, "workflow", uid)
         {
             resourcePath = uid == null ? "/workflows" : $"/workflows/{uid}";
         }

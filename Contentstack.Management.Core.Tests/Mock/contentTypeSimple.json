@@ -1,0 +1,33 @@
+{
+  "title": "Simple Test",
+  "uid": "simple_test",
+  "description": "Simple content type for basic CRUD operations",
+  "options": {
+    "is_page": false,
+    "singleton": false,
+    "title": "title",
+    "sub_title": []
+  },
+  "schema": [
+    {
+      "display_name": "Title",
+      "uid": "title",
+      "data_type": "text",
+      "mandatory": true,
+      "unique": true,
+      "field_metadata": { "_default": true, "version": 3 },
+      "multiple": false,
+      "non_localizable": false
+    },
+    {
+      "display_name": "Description",
+      "uid": "description",
+      "data_type": "text",
+      "mandatory": false,
+      "field_metadata": { "description": "", "default_value": "", "multiline": true, "version": 3 },
+      "multiple": false,
+      "non_localizable": false,
+      "unique": false
+    }
+  ]
+}

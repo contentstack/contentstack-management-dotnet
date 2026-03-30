@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 namespace Contentstack.Management.Core.Models
 {
@@ -37,7 +37,7 @@ namespace Contentstack.Management.Core.Models
         public bool AllUsers { get; set; } = true;
         [JsonProperty(propertyName: "specificStages")]
         public bool SpecificStages { get; set; } = false;
-        [JsonProperty(propertyName: "enabspecificUsersled")]
+        [JsonProperty(propertyName: "specificUsers")]
         public bool SpecificUsers { get; set; } = false;
         [JsonProperty(propertyName: "entry_lock")]
         public string EntryLock { get; set; }

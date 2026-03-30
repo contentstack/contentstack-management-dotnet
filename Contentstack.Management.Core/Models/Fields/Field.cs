@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.Fields
@@ -35,5 +35,11 @@ namespace Contentstack.Management.Core.Models.Fields
 
         [JsonProperty(propertyName: "unique")]
         public bool Unique { get; set; }
+
+        /// <summary>
+        /// Presentation widget for text fields (e.g. dropdown, checkbox).
+        /// </summary>
+        [JsonProperty(propertyName: "display_type")]
+        public string DisplayType { get; set; }
     }
 }
