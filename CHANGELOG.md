@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.8.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.8.0)
+ - Feat
+   - **Entry Variant support**
+     - `EntryVariant` model for create, fetch, find, update, and delete on entry variant endpoints
+     - `Entry.Variant(uid)` to access variant operations for a given entry
+     - Publish with variants: `PublishVariant`, `PublishVariantRules`, and `Variants` / `VariantRules` on `PublishUnpublishDetails`; serialization updated in `PublishUnpublishService`
+     - Unit tests for `EntryVariant` and publish payload serialization; integration tests (`Contentstack021_EntryVariantTest`) for Product Banner lifecycle and negative cases
+
 ## [v0.7.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.7.0)
  - Feat
    - **Bulk publish/unpublish: query parameters (DX-3233)**

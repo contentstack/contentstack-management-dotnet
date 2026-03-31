@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Models;
@@ -69,6 +69,46 @@ namespace Contentstack.Management.Core.Services.Models
 
                     writer.WriteEndArray();
                 }
+
+                if (details.Variants != null && details.Variants.Count > 0)
+                {
+                    writer.WritePropertyName("variants");
+                    writer.WriteStartArray();
+                    foreach (var variant in details.Variants)
+                    {
+                        writer.WriteStartObject();
+                        if (variant.Uid != null)
+                        {
+                            writer.WritePropertyName("uid");
+                            writer.WriteValue(variant.Uid);
+                        }
+                        if (variant.Version.HasValue)
+                        {
+                            writer.WritePropertyName("version");
+                            writer.WriteValue(variant.Version.Value);
+                        }
+                        writer.WriteEndObject();
+                    }
+                    writer.WriteEndArray();
+                }
+
+                if (details.VariantRules != null)
+                {
+                    writer.WritePropertyName("variant_rules");
+                    writer.WriteStartObject();
+                    if (details.VariantRules.PublishLatestBase.HasValue)
+                    {
+                        writer.WritePropertyName("publish_latest_base");
+                        writer.WriteValue(details.VariantRules.PublishLatestBase.Value);
+                    }
+                    if (details.VariantRules.PublishLatestBaseConditionally.HasValue)
+                    {
+                        writer.WritePropertyName("publish_latest_base_conditionally");
+                        writer.WriteValue(details.VariantRules.PublishLatestBaseConditionally.Value);
+                    }
+                    writer.WriteEndObject();
+                }
+
                 writer.WriteEndObject();
 
                 if (details.Version!=null)
