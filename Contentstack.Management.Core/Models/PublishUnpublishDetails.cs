@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -9,6 +9,10 @@ namespace Contentstack.Management.Core.Models
         public List<string> Locales { get; set; }
 
         public List<string> Environments { get; set; }
+
+        public List<PublishVariant> Variants { get; set; }
+
+        public PublishVariantRules VariantRules { get; set; }
 
         public int? Version { get; set; }
 
