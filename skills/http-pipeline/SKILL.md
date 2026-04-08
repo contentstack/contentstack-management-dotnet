@@ -5,8 +5,6 @@ description: Use when changing HTTP handlers, retry behavior, or pipeline orderi
 
 # HTTP pipeline and retries – Contentstack Management .NET SDK
 
-**Deep dive:** [`references/retry-and-handlers.md`](references/retry-and-handlers.md) (handler order, configuration, tests).
-
 ## When to use
 
 - Modifying [`RetryHandler`](../../Contentstack.Management.Core/Runtime/Pipeline/RetryHandler/RetryHandler.cs), [`DefaultRetryPolicy`](../../Contentstack.Management.Core/Runtime/Pipeline/RetryHandler/DefaultRetryPolicy.cs), or [`RetryConfiguration`](../../Contentstack.Management.Core/Runtime/Pipeline/RetryHandler/RetryConfiguration.cs).
@@ -15,29 +13,37 @@ description: Use when changing HTTP handlers, retry behavior, or pipeline orderi
 
 ## Instructions
 
-### Pipeline construction
+### Pipeline construction and handler order
 
-- [`ContentstackClient.BuildPipeline`](../../Contentstack.Management.Core/ContentstackClient.cs) creates:
-  1. [`HttpHandler`](../../Contentstack.Management.Core/Runtime/Pipeline/HttpHandler/HttpHandler.cs) — wraps the SDK `HttpClient`.
-  2. [`RetryHandler`](../../Contentstack.Management.Core/Runtime/Pipeline/RetryHandler/RetryHandler.cs) — applies `RetryPolicy` (custom from options, or `DefaultRetryPolicy` from `RetryConfiguration.FromOptions`).
+[`ContentstackClient.BuildPipeline`](../../Contentstack.Management.Core/ContentstackClient.cs) registers handlers in this **outer-to-inner** order for execution:
 
-- Custom policies: `ContentstackClientOptions.RetryPolicy` can supply a user-defined `RetryPolicy`; otherwise `DefaultRetryPolicy` + `RetryConfiguration` apply.
+1. [`HttpHandler`](../../Contentstack.Management.Core/Runtime/Pipeline/HttpHandler/HttpHandler.cs) — sends the `HttpRequestMessage` via the SDK’s `HttpClient`.
+2. [`RetryHandler`](../../Contentstack.Management.Core/Runtime/Pipeline/RetryHandler/RetryHandler.cs) — wraps the inner handler and applies **`RetryPolicy`**.
+
+Incoming calls traverse **RetryHandler** first, which delegates to **HttpHandler** for the actual HTTP call, then inspects success/failure and may retry.
+
+### Policy selection
+
+- If **`ContentstackClientOptions.RetryPolicy`** is set, that instance is used.
+- Otherwise **`RetryConfiguration.FromOptions(contentstackOptions)`** builds a **`RetryConfiguration`**, then **`new DefaultRetryPolicy(retryConfiguration)`**.
 
 ### Retry configuration
 
-- Defaults and toggles (retry limit, delay, which error classes to retry) live in [`RetryConfiguration`](../../Contentstack.Management.Core/Runtime/Pipeline/RetryHandler/RetryConfiguration.cs).
-- HTTP status codes handled by default policy include 5xx, 429, timeouts, and related cases—see `DefaultRetryPolicy` for the authoritative set.
+[`RetryConfiguration`](../../Contentstack.Management.Core/Runtime/Pipeline/RetryHandler/RetryConfiguration.cs) holds defaults and toggles, including:
+
+- **`RetryOnError`**, **`RetryLimit`**, **`RetryDelay`**
+- Network vs HTTP retries: **`RetryOnNetworkFailure`**, **`RetryOnDnsFailure`**, **`RetryOnSocketFailure`**, **`MaxNetworkRetries`**, **`NetworkRetryDelay`**, **`RetryOnHttpServerError`**, etc.
+
+Exact defaults and edge cases belong in code comments and unit tests—**do not duplicate** the full matrix here; change the source and tests together.
+
+### HTTP status codes (default policy)
+
+[`DefaultRetryPolicy`](../../Contentstack.Management.Core/Runtime/Pipeline/RetryHandler/DefaultRetryPolicy.cs) maintains a set of status codes that may trigger HTTP retries (e.g. selected 5xx, 429, timeouts, **Unauthorized** in the default set). When adjusting this list, consider:
+
+- Risk of retrying non-idempotent operations.
+- Interaction with auth refresh / OAuth flows on **`ContentstackClient`**.
 
 ### Tests
 
-- Unit tests under [`Contentstack.Management.Core.Unit.Tests/Runtime/Pipeline/`](../../Contentstack.Management.Core.Unit.Tests/Runtime/Pipeline/) (e.g. `RetryHandler`, `RetryDelayCalculator`) should be updated when behavior changes.
-
-### Relationship to other docs
-
-- [`../framework/SKILL.md`](../framework/SKILL.md) has a short overview; this skill is the **detailed** place for pipeline edits.
-
-## References
-
-- [`references/retry-and-handlers.md`](references/retry-and-handlers.md) — retries and handlers detail.
-- [`../framework/SKILL.md`](../framework/SKILL.md) — TFMs and packaging.
-- [`../contentstack-management-dotnet-sdk/SKILL.md`](../contentstack-management-dotnet-sdk/SKILL.md) — client options and public API.
+- Unit tests under [`Contentstack.Management.Core.Unit.Tests/Runtime/Pipeline/`](../../Contentstack.Management.Core.Unit.Tests/Runtime/Pipeline/) — e.g. `RetryHandler`, `RetryDelayCalculator`, `DefaultRetryPolicy`, `NetworkErrorDetector`, etc. Update these when behavior changes.
+- Keep tests deterministic (short delays, mocked inner handlers).

@@ -29,7 +29,4 @@ description: Use when building or updating DocFX API documentation under docfx_p
 
 - End-user NuGet and usage examples stay in root [`README.md`](../../README.md). DocFX is for **API reference** material.
 
-## References
-
-- [`../dev-workflow/SKILL.md`](../dev-workflow/SKILL.md) — if docs become part of CI later.
-- [DocFX](https://dotnet.github.io/docfx/) (official).
+[DocFX](https://dotnet.github.io/docfx/) (official).

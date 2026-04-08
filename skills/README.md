@@ -13,14 +13,14 @@ Source of truth for detailed guidance. Read [`AGENTS.md`](../AGENTS.md) first, t
 
 ## How to use these skills
 
-- **In the repo:** open `skills/<folder>/SKILL.md` for the topic you need. Longer templates and checklists live under `skills/<folder>/references/*.md` where linked.
+- **In the repo:** open `skills/<folder>/SKILL.md` for the topic you need.
 - **In Cursor / other AI chats:** reference a skill by path, e.g. `skills/http-pipeline/SKILL.md` or `@skills/http-pipeline` if your tooling resolves that alias to this folder.
 
 ## Example prompts
 
-- “Add a new CMA endpoint wrapper following `skills/contentstack-management-dotnet-sdk/SKILL.md` and `references/cma-architecture.md`.”
-- “Adjust retry behavior for 429 responses using `skills/http-pipeline/` and update unit tests under `Contentstack.Management.Core.Unit.Tests/Runtime/Pipeline/`.”
-- “Write a unit test with MSTest + Moq following `skills/testing/references/mstest-patterns.md`.”
+- “Add a new CMA endpoint wrapper following `skills/contentstack-management-dotnet-sdk/SKILL.md`.”
+- “Adjust retry behavior for 429 responses using `skills/http-pipeline/SKILL.md` and update unit tests under `Contentstack.Management.Core.Unit.Tests/Runtime/Pipeline/`.”
+- “Write a unit test with MSTest + Moq following `skills/testing/SKILL.md`.”
 
 ## When to use which skill
 
@@ -36,4 +36,4 @@ Source of truth for detailed guidance. Read [`AGENTS.md`](../AGENTS.md) first, t
 | [`aspnetcore-integration/`](aspnetcore-integration/) | `Contentstack.Management.ASPNETCore` package, `IHttpClientFactory`, DI registration. |
 | [`documentation/`](documentation/) | Building or updating DocFX API documentation under `docfx_project/`. |
 
-Each folder contains **`SKILL.md`** with YAML frontmatter (`name`, `description`). **Deep dives:** see the **Quick reference** line at the top of each `SKILL.md` for links to `references/`.
+Each folder contains **`SKILL.md`** with YAML frontmatter (`name`, `description`).

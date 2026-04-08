@@ -39,9 +39,3 @@ description: Use for target frameworks, assembly signing, NuGet packaging, OS-sp
   - [`RetryHandler`](../../Contentstack.Management.Core/Runtime/Pipeline/RetryHandler/RetryHandler.cs) — applies retry policy (default or custom).
 - Options: [`RetryConfiguration`](../../Contentstack.Management.Core/Runtime/Pipeline/RetryHandler/RetryConfiguration.cs) and `ContentstackClientOptions` retry-related settings.
 - For deep changes to retry rules, handler ordering, or custom `RetryPolicy`, see [`../http-pipeline/SKILL.md`](../http-pipeline/SKILL.md).
-
-## References
-
-- [`../http-pipeline/SKILL.md`](../http-pipeline/SKILL.md) — pipeline and retries in detail.
-- [`../dev-workflow/SKILL.md`](../dev-workflow/SKILL.md) — CI and pack commands.
-- [`../contentstack-management-dotnet-sdk/SKILL.md`](../contentstack-management-dotnet-sdk/SKILL.md) — public API.

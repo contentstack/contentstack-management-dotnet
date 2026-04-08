@@ -29,8 +29,3 @@ When extending DI support, align with Microsoft.Extensions.DependencyInjection a
 ### Core dependency
 
 - The ASP.NET Core project references the core management package; public types come from [`Contentstack.Management.Core`](../../Contentstack.Management.Core/).
-
-## References
-
-- [`../contentstack-management-dotnet-sdk/SKILL.md`](../contentstack-management-dotnet-sdk/SKILL.md) — core client and options.
-- [`../framework/SKILL.md`](../framework/SKILL.md) — NuGet and TFMs.

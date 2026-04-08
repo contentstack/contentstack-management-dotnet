@@ -44,8 +44,4 @@ description: Use for branches, CI, build/test scripts, and NuGet release flow in
 - Contributors need `CSManagementSDK.snk` for a full signed build matching the repo; see [`../framework/SKILL.md`](../framework/SKILL.md).
 - NuGet push uses repository secrets (`NUGET_API_KEY`, etc.)—never commit keys.
 
-## References
-
-- [`../framework/SKILL.md`](../framework/SKILL.md) — TFMs, pack, signing.
-- [`../testing/SKILL.md`](../testing/SKILL.md) — test projects and credentials.
-- [`../../AGENTS.md`](../../AGENTS.md) — top-level commands table.
+Top-level commands: [`../../AGENTS.md`](../../AGENTS.md).

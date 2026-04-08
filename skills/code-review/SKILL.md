@@ -5,8 +5,6 @@ description: Use when reviewing or preparing a pull request for contentstack-man
 
 # Code review – Contentstack Management .NET SDK
 
-**Deep dive:** [`references/checklist.md`](references/checklist.md) (copy-paste PR checklist sections).
-
 ## When to use
 
 - Before requesting review or merging a PR.
@@ -29,7 +27,7 @@ description: Use when reviewing or preparing a pull request for contentstack-man
 - **Style:** Follow [`../csharp-style/SKILL.md`](../csharp-style/SKILL.md); match surrounding code.
 - **Documentation:** User-visible behavior changes reflected in `README.md` or package release notes when needed.
 
-For markdown blocks to paste into PRs, use [`references/checklist.md`](references/checklist.md).
+For markdown blocks to paste into PRs, copy from **PR review checklist (copy-paste)** below.
 
 ### Severity (optional labels)
 
@@ -37,8 +35,58 @@ For markdown blocks to paste into PRs, use [`references/checklist.md`](reference
 - **Major:** Missing tests for risky logic; breaking API without process.
 - **Minor:** Naming nits, non-user-facing cleanup.
 
-## References
+### PR review checklist (copy-paste)
 
-- [`references/checklist.md`](references/checklist.md) — detailed PR checklist.
-- [`../dev-workflow/SKILL.md`](../dev-workflow/SKILL.md) — CI and branches.
-- [`../contentstack-management-dotnet-sdk/SKILL.md`](../contentstack-management-dotnet-sdk/SKILL.md) — API boundaries.
+Copy sections into a PR comment when useful. This checklist is for **this** repo (`HttpClient` + pipeline + MSTest), **not** the Content Delivery .NET SDK.
+
+#### Branch policy
+
+```markdown
+- [ ] **Default:** PR targets **`development`** unless this is a documented **hotfix** to **`main`**
+- [ ] If base is **`main`**: head branch is **`staging`** (see `.github/workflows/check-branch.yml`)
+```
+
+#### Breaking changes
+
+```markdown
+- [ ] No public method/property removed or narrowed without deprecation / major version plan
+- [ ] `JsonProperty` / JSON names for API-facing models unchanged unless intentional and documented
+- [ ] New required `ContentstackClientOptions` fields have safe defaults or are optional
+- [ ] Strong naming: assembly signing still consistent if keys or `csproj` changed
+```
+
+#### HTTP and pipeline
+
+```markdown
+- [ ] New or changed HTTP calls go through existing client/pipeline (`ContentstackClient` → `IContentstackService` → pipeline), not ad-hoc `HttpClient` usage inside services without justification
+- [ ] Retry-sensitive changes reviewed alongside `RetryHandler` / `DefaultRetryPolicy` and unit tests under `Contentstack.Management.Core.Unit.Tests/Runtime/Pipeline/`
+- [ ] Headers, query params, and path segments align with CMA docs; no hardcoded production URLs where options.Host should be used
+```
+
+#### Services and query API
+
+```markdown
+- [ ] `IContentstackService` implementations set `ResourcePath`, `HttpMethod`, `Parameters` / `QueryResources` / `PathResources` / `Content` consistently with sibling services
+- [ ] New fluent `Query` methods only add to `ParameterCollection` with correct API parameter names
+```
+
+#### Tests
+
+```markdown
+- [ ] Unit tests use MSTest; `sh ./Scripts/run-unit-test-case.sh` passes for core changes
+- [ ] Integration tests only when needed; no secrets committed (`appsettings.json` stays local)
+```
+
+#### Security and hygiene
+
+```markdown
+- [ ] No API keys, tokens, or passwords in source or test data checked into git
+- [ ] OAuth / token handling does not log secrets
+```
+
+#### Documentation
+
+```markdown
+- [ ] User-visible behavior reflected in `README.md` or release notes when appropriate
+- [ ] `skills/` updated if agent/contributor workflow changed
+```

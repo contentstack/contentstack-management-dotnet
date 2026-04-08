@@ -44,8 +44,3 @@ New features should land in the same folder that similar code uses; avoid new ro
 
 - Do not introduce a different language version or disable nullable without an explicit team decision.
 - Do not impose style rules that contradict the majority of files in the same directory.
-
-## References
-
-- [`../contentstack-management-dotnet-sdk/SKILL.md`](../contentstack-management-dotnet-sdk/SKILL.md) — API surface.
-- [`../testing/SKILL.md`](../testing/SKILL.md) — test conventions.
