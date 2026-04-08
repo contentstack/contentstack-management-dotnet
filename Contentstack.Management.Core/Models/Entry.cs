@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -12,9 +12,12 @@ namespace Contentstack.Management.Core.Models
 {
     public class Entry: BaseModel<IEntry>
     {
+        internal string contentTypeUid;
+
         internal Entry(Stack stack, string contentTyppe, string uid)
             : base(stack, "entry", uid)
         {
+            contentTypeUid = contentTyppe;
             resourcePath = uid == null ? $"/content_types/{contentTyppe}/entries" : $"/content_types/{contentTyppe}/entries/{uid}";
         }
 
@@ -32,6 +35,19 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidNotEmpty();
             return new Query(stack, resourcePath);
+        }
+
+        /// <summary>
+        /// The Variant on Entry will allow to fetch, create, update or delete entry variants.
+        /// </summary>
+        /// <param name="uid">The UID of the variant.</param>
+        /// <returns>The <see cref="EntryVariant"/></returns>
+        public EntryVariant Variant(string uid = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            return new EntryVariant(stack, contentTypeUid, Uid, uid);
         }
 
         /// <summary>
