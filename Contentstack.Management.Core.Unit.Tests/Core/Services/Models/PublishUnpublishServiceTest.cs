@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using AutoFixture;
@@ -83,6 +83,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var resourcePath = _fixture.Create<string>();
             var fieldName = _fixture.Create<string>();
             var details = _fixture.Create<PublishUnpublishDetails>();
+            details.Variants = null;
+            details.VariantRules = null;
             PublishUnpublishService service = new PublishUnpublishService(
                 serializer,
                 new Management.Core.Models.Stack(null, apiKey),
@@ -111,6 +113,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var resourcePath = _fixture.Create<string>();
             var fieldName = _fixture.Create<string>();
             var details = _fixture.Create<PublishUnpublishDetails>();
+            details.Variants = null;
+            details.VariantRules = null;
             var locale = _fixture.Create<string>();
             PublishUnpublishService service = new PublishUnpublishService(
                 serializer,
@@ -177,6 +181,41 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual(resourcePath, service.ResourcePath);
             Assert.AreEqual($"{{\"{fieldName}\": {{}}}}", Encoding.Default.GetString(service.ByteContent));
+        }
+        [TestMethod]
+        public void Should_Create_Content_Body_With_Variants()
+        {
+            var apiKey = "api_key";
+            var resourcePath = "/publish";
+            var fieldName = "entry";
+            var details = new PublishUnpublishDetails()
+            {
+                Locales = new List<string> { "en-us" },
+                Environments = new List<string> { "development" },
+                Variants = new List<PublishVariant>
+                {
+                    new PublishVariant { Uid = "cs123", Version = 1 }
+                },
+                VariantRules = new PublishVariantRules
+                {
+                    PublishLatestBase = true,
+                    PublishLatestBaseConditionally = false
+                }
+            };
+            PublishUnpublishService service = new PublishUnpublishService(
+                serializer,
+                new Management.Core.Models.Stack(null, apiKey),
+                details,
+                resourcePath,
+                fieldName);
+            service.ContentBody();
+
+            string expectedJson = "{\"entry\":{\"locales\":[\"en-us\"],\"environments\":[\"development\"],\"variants\":[{\"uid\":\"cs123\",\"version\":1}],\"variant_rules\":{\"publish_latest_base\":true,\"publish_latest_base_conditionally\":false}}}";
+            
+            Assert.IsNotNull(service);
+            Assert.AreEqual("POST", service.HttpMethod);
+            Assert.AreEqual(resourcePath, service.ResourcePath);
+            Assert.AreEqual(expectedJson, Encoding.Default.GetString(service.ByteContent));
         }
     }
 }

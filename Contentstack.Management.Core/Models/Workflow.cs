@@ -235,7 +235,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, $"{resourcePath}/disable");
+            var service = new FetchDeleteService(stack.client.serializer, stack, $"{resourcePath}/enable");
             return stack.client.InvokeSync(service);
         }
 
@@ -254,7 +254,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, $"{resourcePath}/disable");
+            var service = new FetchDeleteService(stack.client.serializer, stack, $"{resourcePath}/enable");
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
