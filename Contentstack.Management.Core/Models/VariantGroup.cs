@@ -112,6 +112,7 @@ namespace Contentstack.Management.Core.Models
                 stack,
                 $"{resourcePath}/variants",
                 contentTypeUids,
+                this.Uid,
                 true,
                 collection
             );
@@ -145,6 +146,7 @@ namespace Contentstack.Management.Core.Models
                 stack,
                 $"{resourcePath}/variants",
                 contentTypeUids,
+                this.Uid,
                 true,
                 collection
             );
@@ -180,6 +182,7 @@ namespace Contentstack.Management.Core.Models
                 stack,
                 $"{resourcePath}/variants",
                 contentTypeUids,
+                this.Uid,
                 false,
                 collection
             );
@@ -213,6 +216,7 @@ namespace Contentstack.Management.Core.Models
                 stack,
                 $"{resourcePath}/variants",
                 contentTypeUids,
+                this.Uid,
                 false,
                 collection
             );
