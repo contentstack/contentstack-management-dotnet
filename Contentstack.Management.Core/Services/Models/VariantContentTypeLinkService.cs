@@ -10,6 +10,7 @@ namespace Contentstack.Management.Core.Services.Models
     internal class VariantContentTypeLinkService : ContentstackService
     {
         private readonly List<string> _contentTypeUids;
+        private readonly string _variantGroupUid;
         private readonly bool _isLink;
 
         internal VariantContentTypeLinkService(
@@ -17,6 +18,7 @@ namespace Contentstack.Management.Core.Services.Models
             Core.Models.Stack stack,
             string resourcePath,
             List<string> contentTypeUids,
+            string variantGroupUid,
             bool isLink,
             ParameterCollection collection = null
         )
@@ -45,8 +47,9 @@ namespace Contentstack.Management.Core.Services.Models
             }
 
             this.ResourcePath = resourcePath;
-            this.HttpMethod = "POST";
+            this.HttpMethod = "PUT";
             _contentTypeUids = contentTypeUids;
+            _variantGroupUid = variantGroupUid;
             _isLink = isLink;
 
             if (collection != null && collection.Count > 0)
@@ -61,9 +64,9 @@ namespace Contentstack.Management.Core.Services.Models
             {
                 JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
+                
                 writer.WritePropertyName("content_types");
                 writer.WriteStartArray();
-
                 foreach (var uid in _contentTypeUids)
                 {
                     writer.WriteStartObject();
@@ -73,8 +76,16 @@ namespace Contentstack.Management.Core.Services.Models
                     writer.WriteValue(_isLink ? "linked" : "unlinked");
                     writer.WriteEndObject();
                 }
-
                 writer.WriteEndArray();
+
+                writer.WritePropertyName("uid");
+                writer.WriteValue(_variantGroupUid);
+
+                writer.WritePropertyName("branches");
+                writer.WriteStartArray();
+                writer.WriteValue("main");
+                writer.WriteEndArray();
+
                 writer.WriteEndObject();
 
                 this.ByteContent = System.Text.Encoding.UTF8.GetBytes(stringWriter.ToString());

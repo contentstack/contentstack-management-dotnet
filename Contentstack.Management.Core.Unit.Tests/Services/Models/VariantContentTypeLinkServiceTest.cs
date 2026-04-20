@@ -33,6 +33,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         {
             string resourcePath = "/variant_groups/test_uid/content_types";
             List<string> contentTypeUids = new List<string> { "ct_uid_1", "ct_uid_2" };
+            string variantGroupUid = "test_variant_uid";
             bool isLink = true;
 
             var service = new VariantContentTypeLinkService(
@@ -40,11 +41,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 _stack,
                 resourcePath,
                 contentTypeUids,
+                variantGroupUid,
                 isLink
             );
 
             Assert.AreEqual(resourcePath, service.ResourcePath);
-            Assert.AreEqual("POST", service.HttpMethod);
+            Assert.AreEqual("PUT", service.HttpMethod);
             Assert.IsFalse(service.UseQueryString);
         }
 
@@ -53,6 +55,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         {
             string resourcePath = "/variant_groups/test_uid/content_types";
             List<string> contentTypeUids = new List<string> { "ct_uid_1", "ct_uid_2" };
+            string variantGroupUid = "test_variant_uid";
             bool isLink = false;
 
             var service = new VariantContentTypeLinkService(
@@ -60,11 +63,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 _stack,
                 resourcePath,
                 contentTypeUids,
+                variantGroupUid,
                 isLink
             );
 
             Assert.AreEqual(resourcePath, service.ResourcePath);
-            Assert.AreEqual("POST", service.HttpMethod);
+            Assert.AreEqual("PUT", service.HttpMethod);
             Assert.IsFalse(service.UseQueryString);
         }
 
@@ -76,6 +80,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 null,
                 "/variant_groups/test_uid/content_types",
                 new List<string> { "ct_uid" },
+                "test_variant_uid",
                 true
             ));
         }
@@ -88,6 +93,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 _stack,
                 null,
                 new List<string> { "ct_uid" },
+                "test_variant_uid",
                 true
             ));
         }
@@ -100,6 +106,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 _stack,
                 "/variant_groups/test_uid/content_types",
                 null,
+                "test_variant_uid",
                 true
             ));
         }
@@ -112,6 +119,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 _stack,
                 "/variant_groups/test_uid/content_types",
                 new List<string>(),
+                "test_variant_uid",
                 true
             ));
         }
@@ -128,6 +136,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 stackWithoutApiKey,
                 "/variant_groups/test_uid/content_types",
                 new List<string> { "ct_uid" },
+                "test_variant_uid",
                 true
             ));
         }
@@ -137,6 +146,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         {
             string resourcePath = "/variant_groups/test_uid/content_types";
             List<string> contentTypeUids = new List<string> { "ct_uid_1", "ct_uid_2" };
+            string variantGroupUid = "test_variant_uid";
             bool isLink = true;
 
             var service = new VariantContentTypeLinkService(
@@ -144,6 +154,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 _stack,
                 resourcePath,
                 contentTypeUids,
+                variantGroupUid,
                 isLink
             );
 
@@ -171,6 +182,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         {
             string resourcePath = "/variant_groups/test_uid/content_types";
             List<string> contentTypeUids = new List<string> { "ct_uid_1", "ct_uid_2" };
+            string variantGroupUid = "test_variant_uid";
             bool isLink = false;
 
             var service = new VariantContentTypeLinkService(
@@ -178,6 +190,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 _stack,
                 resourcePath,
                 contentTypeUids,
+                variantGroupUid,
                 isLink
             );
 
@@ -188,6 +201,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             
             // Parse the JSON to verify structure
             var jsonObject = JsonConvert.DeserializeObject<dynamic>(requestBody);
+            
+            // Check root properties
+            Assert.AreEqual("test_variant_uid", (string)jsonObject.uid);
+            Assert.IsNotNull(jsonObject.branches);
+            
             Assert.IsNotNull(jsonObject.content_types);
             
             var contentTypes = jsonObject.content_types;
@@ -205,6 +223,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         {
             string resourcePath = "/variant_groups/test_uid/content_types";
             List<string> contentTypeUids = new List<string> { "single_ct_uid" };
+            string variantGroupUid = "test_variant_uid";
             bool isLink = true;
 
             var service = new VariantContentTypeLinkService(
@@ -212,6 +231,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 _stack,
                 resourcePath,
                 contentTypeUids,
+                variantGroupUid,
                 isLink
             );
 
@@ -222,6 +242,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             
             // Parse the JSON to verify structure
             var jsonObject = JsonConvert.DeserializeObject<dynamic>(requestBody);
+            
+            // Check root properties
+            Assert.AreEqual("test_variant_uid", (string)jsonObject.uid);
+            Assert.IsNotNull(jsonObject.branches);
+            
             Assert.IsNotNull(jsonObject.content_types);
             
             var contentTypes = jsonObject.content_types;
@@ -236,6 +261,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         {
             string resourcePath = "/variant_groups/test_uid/content_types";
             List<string> contentTypeUids = new List<string> { "ct_uid" };
+            string variantGroupUid = "test_variant_uid";
             bool isLink = true;
             var parameters = new ParameterCollection();
             parameters.Add("include_count", "true");
@@ -245,12 +271,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 _stack,
                 resourcePath,
                 contentTypeUids,
+                variantGroupUid,
                 isLink,
                 parameters
             );
 
             Assert.AreEqual(resourcePath, service.ResourcePath);
-            Assert.AreEqual("POST", service.HttpMethod);
+            Assert.AreEqual("PUT", service.HttpMethod);
             // UseQueryString should be true when parameters are provided
             Assert.IsTrue(service.UseQueryString);
         }
@@ -260,6 +287,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         {
             string resourcePath = "/variant_groups/test_uid/content_types";
             List<string> contentTypeUids = new List<string> { "ct_uid" };
+            string variantGroupUid = "test_variant_uid";
             bool isLink = true;
 
             var service = new VariantContentTypeLinkService(
@@ -267,12 +295,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
                 _stack,
                 resourcePath,
                 contentTypeUids,
+                variantGroupUid,
                 isLink,
                 null
             );
 
             Assert.AreEqual(resourcePath, service.ResourcePath);
-            Assert.AreEqual("POST", service.HttpMethod);
+            Assert.AreEqual("PUT", service.HttpMethod);
             Assert.IsFalse(service.UseQueryString);
         }
     }
