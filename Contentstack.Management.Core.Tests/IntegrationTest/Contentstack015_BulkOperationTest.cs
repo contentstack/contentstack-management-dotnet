@@ -1789,6 +1789,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             [JsonProperty(propertyName: "title")]
             public string Title { get; set; }
+
+            [JsonProperty(propertyName: "_variant")]
+            public object Variant { get; set; }
         }
 
         public class EntryInfo

@@ -15,6 +15,42 @@ import argparse
 from datetime import datetime
 
 
+def _make_xml_parser():
+    """
+    Harden ElementTree parsing against external entity resolution (XXE).
+    resolve_entities=False is available on Python 3.8+; see:
+    https://docs.python.org/3.10/library/xml.html#xml-vulnerabilities
+    """
+    if sys.version_info >= (3, 8):
+        try:
+            return ET.XMLParser(resolve_entities=False)
+        except TypeError:
+            pass
+    return ET.XMLParser()
+
+
+def _sanitize_output_path(output_path):
+    """
+    Reject path traversal: output must resolve under the current working directory.
+    """
+    if not output_path or not isinstance(output_path, str):
+        raise ValueError("Invalid output path")
+    cwd = os.path.abspath(os.getcwd())
+    candidate = os.path.abspath(os.path.normpath(output_path))
+    try:
+        common = os.path.commonpath([cwd, candidate])
+    except ValueError as e:
+        raise ValueError(
+            "Output path must be on the same drive as the working directory "
+            "and must not escape it (path traversal)."
+        ) from e
+    if common != cwd:
+        raise ValueError(
+            f"Output path must be inside the working directory ({cwd}). Refusing: {output_path!r}"
+        )
+    return candidate
+
+
 class IntegrationTestReportGenerator:
     def __init__(self, trx_path, coverage_path=None):
         self.trx_path = trx_path
@@ -38,9 +74,15 @@ class IntegrationTestReportGenerator:
     # ──────────────────── TRX PARSING ────────────────────
 
     def parse_trx(self):
-        tree = ET.parse(self.trx_path)
+        tree = ET.parse(self.trx_path, parser=_make_xml_parser())
         root = tree.getroot()
         ns = {'t': 'http://microsoft.com/schemas/VisualStudio/TeamTest/2010'}
+
+        unit_tests_by_id = {}
+        for ut in root.findall('.//t:UnitTest', ns):
+            tid = ut.get('id')
+            if tid:
+                unit_tests_by_id[tid] = ut
 
         counters = root.find('.//t:ResultSummary/t:Counters', ns)
         if counters is not None:
@@ -82,7 +124,8 @@ class IntegrationTestReportGenerator:
             duration_str = result.get('duration', '0')
             duration = self._parse_duration(duration_str)
 
-            test_def = root.find(f".//t:UnitTest[@id='{test_id}']/t:TestMethod", ns)
+            ut_el = unit_tests_by_id.get(test_id)
+            test_def = ut_el.find('t:TestMethod', ns) if ut_el is not None else None
             class_name = test_def.get('className', '') if test_def is not None else ''
 
             if 'IntegrationTest' not in class_name:
@@ -147,7 +190,7 @@ class IntegrationTestReportGenerator:
         if not self.coverage_path or not os.path.exists(self.coverage_path):
             return
         try:
-            tree = ET.parse(self.coverage_path)
+            tree = ET.parse(self.coverage_path, parser=_make_xml_parser())
             root = tree.getroot()
             self.coverage['lines_pct'] = float(root.get('line-rate', 0)) * 100
             self.coverage['branches_pct'] = float(root.get('branch-rate', 0)) * 100
@@ -331,6 +374,7 @@ class IntegrationTestReportGenerator:
     # ──────────────────── HTML GENERATION ────────────────────
 
     def generate_html(self, output_path):
+        output_path = _sanitize_output_path(output_path)
         pass_rate = (self.results['passed'] / self.results['total'] * 100) if self.results['total'] > 0 else 0
         duration_display = self._format_duration_display(self.results['duration_seconds'])
 
@@ -351,7 +395,7 @@ class IntegrationTestReportGenerator:
 
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(html)
-        return output_path
+        return os.path.abspath(output_path)
 
     def _html_head(self):
         return f"""<!DOCTYPE html>
@@ -912,12 +956,16 @@ def main():
     output_file = args.output or f'integration-test-report_{timestamp}.html'
 
     print(f"\nGenerating HTML report...")
-    generator.generate_html(output_file)
+    try:
+        resolved_output = generator.generate_html(output_file)
+    except ValueError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
     print(f"\n{'=' * 70}")
-    print(f"  Report generated: {os.path.abspath(output_file)}")
+    print(f"  Report generated: {resolved_output}")
     print(f"{'=' * 70}")
-    print(f"\n  open {os.path.abspath(output_file)}")
+    print(f"\n  open {resolved_output}")
 
 
 if __name__ == "__main__":

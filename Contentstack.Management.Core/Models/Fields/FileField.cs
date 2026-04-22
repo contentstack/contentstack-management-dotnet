@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -9,9 +9,9 @@ namespace Contentstack.Management.Core.Models.Fields
         [JsonProperty(propertyName: "extensions")]
         public List<string> Extensions { get; set; }
         [JsonProperty(propertyName: "max")]
-        public int Maxsize { get; set; }
+        public int? Maxsize { get; set; }
         [JsonProperty(propertyName: "min")]
-        public int MinSize { get; set; }
+        public int? MinSize { get; set; }
         
     }
     public class ImageField : FileField
@@ -27,8 +27,8 @@ namespace Contentstack.Management.Core.Models.Fields
     public class Dimension
     {
         [JsonProperty(propertyName: "height")]
-        public Dictionary<string, int> Height { get; set; }
+        public Dictionary<string, int?> Height { get; set; }
         [JsonProperty(propertyName: "width")]
-        public Dictionary<string, int> Width { get; set; }
+        public Dictionary<string, int?> Width { get; set; }
     }
 }
