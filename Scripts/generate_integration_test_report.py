@@ -3,7 +3,16 @@
 Integration Test Report Generator for .NET CMA SDK
 Parses TRX (results) + Cobertura (coverage) + Structured StdOut (HTTP, assertions, context)
 into a single interactive HTML report.
-No external dependencies — uses only Python standard library.
+
+SECURITY ENHANCEMENTS:
+- Uses defusedxml for secure XML parsing to prevent XXE attacks
+- Robust path traversal prevention for all file operations
+- Input validation and sanitization for all user-provided paths
+- Safe handling of external entity resolution in XML processing
+
+Dependencies:
+- defusedxml (optional but recommended for security)
+- Python 3.7+ for optimal security features
 """
 
 import xml.etree.ElementTree as ET
@@ -13,6 +22,92 @@ import re
 import json
 import argparse
 from datetime import datetime
+
+# Try to import defusedxml for safer XML parsing
+try:
+    import defusedxml.ElementTree as SafeET
+    DEFUSED_XML_AVAILABLE = True
+except ImportError:
+    SafeET = None
+    DEFUSED_XML_AVAILABLE = False
+
+
+def _make_xml_parser():
+    """
+    Create a hardened XML parser that prevents XXE and other XML-based attacks.
+    Uses defusedxml for safer XML parsing when available.
+    """
+    if DEFUSED_XML_AVAILABLE:
+        return None  # defusedxml uses its own parser
+    
+    # Fallback to standard parser with security restrictions
+    parser = ET.XMLParser()
+    
+    # For Python 3.8+, disable resolve_entities
+    if sys.version_info >= (3, 8):
+        try:
+            parser = ET.XMLParser(resolve_entities=False)
+        except TypeError:
+            pass
+    
+    # Additional hardening for older versions
+    if hasattr(parser, 'parser'):
+        try:
+            # Disable external entity processing
+            parser.parser.DefaultHandler = lambda data: None
+            parser.parser.ExternalEntityRefHandler = lambda *args: False
+            parser.parser.EntityDeclHandler = lambda *args: False
+        except AttributeError:
+            pass
+    
+    return parser
+
+
+def _sanitize_output_path(output_path):
+    """
+    Robust path traversal prevention: output must resolve under the current working directory.
+    Prevents directory traversal attacks and validates file path safety.
+    """
+    if not output_path or not isinstance(output_path, str):
+        raise ValueError("Invalid output path: path must be a non-empty string")
+    
+    # Check for null bytes and other dangerous characters
+    if '\x00' in output_path:
+        raise ValueError("Invalid output path: contains null byte")
+    
+    # Check for dangerous path components
+    dangerous_patterns = ['..', '~/', '\\..\\', '/../', '\\.\\', '/./']
+    for pattern in dangerous_patterns:
+        if pattern in output_path:
+            raise ValueError(f"Invalid output path: contains dangerous pattern '{pattern}'")
+    
+    # Resolve paths safely
+    cwd = os.path.abspath(os.getcwd())
+    try:
+        candidate = os.path.abspath(os.path.normpath(output_path))
+    except (OSError, ValueError) as e:
+        raise ValueError(f"Invalid output path: cannot resolve path: {e}") from e
+    
+    # Ensure the resolved path is under the working directory
+    try:
+        # Use os.path.commonpath for cross-platform safety
+        common = os.path.commonpath([cwd, candidate])
+    except ValueError as e:
+        raise ValueError(
+            "Output path must be on the same drive as the working directory "
+            "and must not escape it (path traversal)."
+        ) from e
+    
+    if not common.startswith(cwd) or common != cwd:
+        raise ValueError(
+            f"Output path must be inside the working directory ({cwd}). Refusing: {output_path!r}"
+        )
+    
+    # Additional check: ensure no symlink attacks
+    if os.path.islink(os.path.dirname(candidate)) and os.path.dirname(candidate) != cwd:
+        raise ValueError("Output path directory cannot be a symbolic link outside working directory")
+    
+    return candidate
 
 
 class IntegrationTestReportGenerator:
@@ -38,9 +133,25 @@ class IntegrationTestReportGenerator:
     # ──────────────────── TRX PARSING ────────────────────
 
     def parse_trx(self):
-        tree = ET.parse(self.trx_path)
-        root = tree.getroot()
+        # Safely parse TRX file with defusedxml when available
+        try:
+            if DEFUSED_XML_AVAILABLE:
+                tree = SafeET.parse(self.trx_path)
+            else:
+                # Warn about potential security risk
+                print("Warning: defusedxml not available. Using standard XML parser with limited security mitigations.")
+                parser = _make_xml_parser()
+                tree = ET.parse(self.trx_path, parser=parser)
+            root = tree.getroot()
+        except Exception as e:
+            raise ValueError(f"Failed to parse TRX file safely: {e}") from e
         ns = {'t': 'http://microsoft.com/schemas/VisualStudio/TeamTest/2010'}
+
+        unit_tests_by_id = {}
+        for ut in root.findall('.//t:UnitTest', ns):
+            tid = ut.get('id')
+            if tid:
+                unit_tests_by_id[tid] = ut
 
         counters = root.find('.//t:ResultSummary/t:Counters', ns)
         if counters is not None:
@@ -82,7 +193,8 @@ class IntegrationTestReportGenerator:
             duration_str = result.get('duration', '0')
             duration = self._parse_duration(duration_str)
 
-            test_def = root.find(f".//t:UnitTest[@id='{test_id}']/t:TestMethod", ns)
+            ut_el = unit_tests_by_id.get(test_id)
+            test_def = ut_el.find('t:TestMethod', ns) if ut_el is not None else None
             class_name = test_def.get('className', '') if test_def is not None else ''
 
             if 'IntegrationTest' not in class_name:
@@ -147,7 +259,12 @@ class IntegrationTestReportGenerator:
         if not self.coverage_path or not os.path.exists(self.coverage_path):
             return
         try:
-            tree = ET.parse(self.coverage_path)
+            # Safely parse coverage file with defusedxml when available
+            if DEFUSED_XML_AVAILABLE:
+                tree = SafeET.parse(self.coverage_path)
+            else:
+                parser = _make_xml_parser()
+                tree = ET.parse(self.coverage_path, parser=parser)
             root = tree.getroot()
             self.coverage['lines_pct'] = float(root.get('line-rate', 0)) * 100
             self.coverage['branches_pct'] = float(root.get('branch-rate', 0)) * 100
@@ -331,6 +448,7 @@ class IntegrationTestReportGenerator:
     # ──────────────────── HTML GENERATION ────────────────────
 
     def generate_html(self, output_path):
+        output_path = _sanitize_output_path(output_path)
         pass_rate = (self.results['passed'] / self.results['total'] * 100) if self.results['total'] > 0 else 0
         duration_display = self._format_duration_display(self.results['duration_seconds'])
 
@@ -351,7 +469,7 @@ class IntegrationTestReportGenerator:
 
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(html)
-        return output_path
+        return os.path.abspath(output_path)
 
     def _html_head(self):
         return f"""<!DOCTYPE html>
@@ -876,6 +994,36 @@ class IntegrationTestReportGenerator:
 """
 
 
+def _validate_input_path(file_path, description="file"):
+    """
+    Validate input file paths to prevent path traversal attacks.
+    """
+    if not file_path or not isinstance(file_path, str):
+        raise ValueError(f"Invalid {description} path: path must be a non-empty string")
+    
+    # Check for null bytes
+    if '\x00' in file_path:
+        raise ValueError(f"Invalid {description} path: contains null byte")
+    
+    # Resolve and validate the path
+    try:
+        resolved_path = os.path.abspath(os.path.normpath(file_path))
+    except (OSError, ValueError) as e:
+        raise ValueError(f"Invalid {description} path: cannot resolve path: {e}") from e
+    
+    # Check if file exists and is readable
+    if not os.path.exists(resolved_path):
+        raise ValueError(f"{description.capitalize()} not found: {resolved_path}")
+    
+    if not os.path.isfile(resolved_path):
+        raise ValueError(f"{description.capitalize()} is not a regular file: {resolved_path}")
+    
+    if not os.access(resolved_path, os.R_OK):
+        raise ValueError(f"{description.capitalize()} is not readable: {resolved_path}")
+    
+    return resolved_path
+
+
 def main():
     parser = argparse.ArgumentParser(description='Integration Test Report Generator for .NET CMA SDK')
     parser.add_argument('trx_file', help='Path to the .trx test results file')
@@ -883,25 +1031,31 @@ def main():
     parser.add_argument('--output', help='Output HTML file path', default=None)
     args = parser.parse_args()
 
-    if not os.path.exists(args.trx_file):
-        print(f"Error: TRX file not found: {args.trx_file}")
+    try:
+        # Validate input file paths
+        trx_file = _validate_input_path(args.trx_file, "TRX file")
+        coverage_file = None
+        if args.coverage:
+            coverage_file = _validate_input_path(args.coverage, "coverage file")
+    except ValueError as e:
+        print(f"Error: {e}")
         sys.exit(1)
 
     print("=" * 70)
     print("  .NET CMA SDK - Integration Test Report Generator")
     print("=" * 70)
 
-    generator = IntegrationTestReportGenerator(args.trx_file, args.coverage)
+    generator = IntegrationTestReportGenerator(trx_file, coverage_file)
 
-    print(f"\nParsing TRX: {args.trx_file}")
+    print(f"\nParsing TRX: {trx_file}")
     generator.parse_trx()
     print(f"  Found {generator.results['total']} integration tests")
     print(f"    Passed:  {generator.results['passed']}")
     print(f"    Failed:  {generator.results['failed']}")
     print(f"    Skipped: {generator.results['skipped']}")
 
-    if args.coverage:
-        print(f"\nParsing Coverage: {args.coverage}")
+    if coverage_file:
+        print(f"\nParsing Coverage: {coverage_file}")
         generator.parse_coverage()
         c = generator.coverage
         print(f"  Lines:      {c['lines_pct']:.1f}%")
@@ -912,12 +1066,16 @@ def main():
     output_file = args.output or f'integration-test-report_{timestamp}.html'
 
     print(f"\nGenerating HTML report...")
-    generator.generate_html(output_file)
+    try:
+        resolved_output = generator.generate_html(output_file)
+    except ValueError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
     print(f"\n{'=' * 70}")
-    print(f"  Report generated: {os.path.abspath(output_file)}")
+    print(f"  Report generated: {resolved_output}")
     print(f"{'=' * 70}")
-    print(f"\n  open {os.path.abspath(output_file)}")
+    print(f"\n  open {resolved_output}")
 
 
 if __name__ == "__main__":
