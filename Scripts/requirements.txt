@@ -1,0 +1,3 @@
+# Requirements for Scripts directory
+# For secure XML parsing in generate_integration_test_report.py
+defusedxml>=0.7.1
