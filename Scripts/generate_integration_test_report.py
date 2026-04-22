@@ -4,15 +4,15 @@ Integration Test Report Generator for .NET CMA SDK
 Parses TRX (results) + Cobertura (coverage) + Structured StdOut (HTTP, assertions, context)
 into a single interactive HTML report.
 
-SECURITY ENHANCEMENTS:
+SECURITY FEATURES:
 - Uses defusedxml for secure XML parsing to prevent XXE attacks
-- Robust path traversal prevention for all file operations
+- Robust path traversal prevention for all file operations  
 - Input validation and sanitization for all user-provided paths
-- Safe handling of external entity resolution in XML processing
+- No insecure XML parsing fallbacks (security-first approach)
 
-Dependencies:
-- defusedxml (optional but recommended for security)
-- Python 3.7+ for optimal security features
+Requirements:
+- defusedxml>=0.7.1 (REQUIRED for secure XML parsing)
+- Python 3.7+ recommended
 """
 
 import xml.etree.ElementTree as ET
@@ -23,44 +23,17 @@ import json
 import argparse
 from datetime import datetime
 
-# Try to import defusedxml for safer XML parsing
+# Import defusedxml for secure XML parsing (required dependency)
 try:
     import defusedxml.ElementTree as SafeET
     DEFUSED_XML_AVAILABLE = True
-except ImportError:
-    SafeET = None
-    DEFUSED_XML_AVAILABLE = False
+except ImportError as e:
+    print("ERROR: defusedxml is required for secure XML parsing.")
+    print("Install it with: pip install defusedxml")
+    print("This prevents XXE vulnerabilities in XML processing.")
+    sys.exit(1)
 
 
-def _make_xml_parser():
-    """
-    Create a hardened XML parser that prevents XXE and other XML-based attacks.
-    Uses defusedxml for safer XML parsing when available.
-    """
-    if DEFUSED_XML_AVAILABLE:
-        return None  # defusedxml uses its own parser
-    
-    # Fallback to standard parser with security restrictions
-    parser = ET.XMLParser()
-    
-    # For Python 3.8+, disable resolve_entities
-    if sys.version_info >= (3, 8):
-        try:
-            parser = ET.XMLParser(resolve_entities=False)
-        except TypeError:
-            pass
-    
-    # Additional hardening for older versions
-    if hasattr(parser, 'parser'):
-        try:
-            # Disable external entity processing
-            parser.parser.DefaultHandler = lambda data: None
-            parser.parser.ExternalEntityRefHandler = lambda *args: False
-            parser.parser.EntityDeclHandler = lambda *args: False
-        except AttributeError:
-            pass
-    
-    return parser
 
 
 def _sanitize_output_path(output_path):
@@ -133,15 +106,9 @@ class IntegrationTestReportGenerator:
     # ──────────────────── TRX PARSING ────────────────────
 
     def parse_trx(self):
-        # Safely parse TRX file with defusedxml when available
+        # Safely parse TRX file with defusedxml (required for security)
         try:
-            if DEFUSED_XML_AVAILABLE:
-                tree = SafeET.parse(self.trx_path)
-            else:
-                # Warn about potential security risk
-                print("Warning: defusedxml not available. Using standard XML parser with limited security mitigations.")
-                parser = _make_xml_parser()
-                tree = ET.parse(self.trx_path, parser=parser)
+            tree = SafeET.parse(self.trx_path)
             root = tree.getroot()
         except Exception as e:
             raise ValueError(f"Failed to parse TRX file safely: {e}") from e
@@ -259,12 +226,8 @@ class IntegrationTestReportGenerator:
         if not self.coverage_path or not os.path.exists(self.coverage_path):
             return
         try:
-            # Safely parse coverage file with defusedxml when available
-            if DEFUSED_XML_AVAILABLE:
-                tree = SafeET.parse(self.coverage_path)
-            else:
-                parser = _make_xml_parser()
-                tree = ET.parse(self.coverage_path, parser=parser)
+            # Safely parse coverage file with defusedxml (required for security)
+            tree = SafeET.parse(self.coverage_path)
             root = tree.getroot()
             self.coverage['lines_pct'] = float(root.get('line-rate', 0)) * 100
             self.coverage['branches_pct'] = float(root.get('branch-rate', 0)) * 100
