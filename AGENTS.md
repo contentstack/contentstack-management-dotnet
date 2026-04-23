@@ -29,7 +29,7 @@
 | **Test (integration)** | `dotnet test Contentstack.Management.Core.Tests/Contentstack.Management.Core.Tests.csproj` — requires local `appsettings.json` with credentials (see [`skills/testing/SKILL.md`](skills/testing/SKILL.md)). |
 | **Pack (release)** | `dotnet pack -c Release -o out` (as in [`.github/workflows/nuget-publish.yml`](.github/workflows/nuget-publish.yml)). |
 
-**CI:** [`.github/workflows/unit-test.yml`](.github/workflows/unit-test.yml) (unit tests on PR/push). **Branches:** PRs normally target **`development`**; **`main`** is for **hotfixes**. PRs **into `main`** must come from **`staging`** per [`.github/workflows/check-branch.yml`](.github/workflows/check-branch.yml).
+**CI:** [`.github/workflows/unit-test.yml`](.github/workflows/unit-test.yml) (unit tests on PR/push). **Branches:** feature work merges to **`development`**; **release PRs** are **`development` → `main`** (no `staging`). After `main` advances, [`.github/workflows/back-merge-pr.yml`](.github/workflows/back-merge-pr.yml) can open **`main` → `development`**. **Releases:** create a **GitHub Release** to run [`.github/workflows/nuget-publish.yml`](.github/workflows/nuget-publish.yml) (`release: created`). [`.github/workflows/check-version-bump.yml`](.github/workflows/check-version-bump.yml) enforces version + `CHANGELOG.md` on relevant PRs.
 
 ## Where the documentation lives: skills
 
