@@ -1,0 +1,117 @@
+# Release-affecting changes under Contentstack.Management*/ or Directory.Build.props / core csproj
+# require Directory.Build.props Version + CHANGELOG.md updates vs latest tag.
+
+name: Check Version Bump
+
+on:
+  pull_request:
+
+jobs:
+  version-bump:
+    name: Version & changelog bump
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed files
+        id: detect
+        run: |
+          FILES=$(git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}")
+          echo "Changed files:"
+          echo "$FILES"
+
+          CODE_CHANGED=false
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              Contentstack.Management.Core.Unit.Tests/*|Contentstack.Management.Core.Tests/*)
+                continue
+                ;;
+            esac
+            if [[ "$f" == "Directory.Build.props" ]] || \
+               [[ "$f" == Contentstack.Management.Core/* ]] || \
+               [[ "$f" == Contentstack.Management.ASPNETCore/* ]]; then
+              CODE_CHANGED=true
+              break
+            fi
+          done <<< "$FILES"
+
+          PROPS_CHANGED=false
+          CHANGELOG_CHANGED=false
+          echo "$FILES" | grep -qx 'Directory.Build.props' && PROPS_CHANGED=true
+          echo "$FILES" | grep -qx 'CHANGELOG.md' && CHANGELOG_CHANGED=true
+
+          VERSION_FILES_OK=false
+          if [ "$PROPS_CHANGED" = true ] && [ "$CHANGELOG_CHANGED" = true ]; then
+            VERSION_FILES_OK=true
+          fi
+
+          echo "code_changed=$CODE_CHANGED" >> "$GITHUB_OUTPUT"
+          echo "version_files_ok=$VERSION_FILES_OK" >> "$GITHUB_OUTPUT"
+
+      - name: Skip when no release-affecting code changed
+        if: steps.detect.outputs.code_changed != 'true'
+        run: |
+          echo "No management SDK / version props changes. Skipping version-bump check."
+          exit 0
+
+      - name: Fail when version files were not both updated
+        if: steps.detect.outputs.code_changed == 'true' && steps.detect.outputs.version_files_ok != 'true'
+        run: |
+          echo "::error::Bump <Version> in Directory.Build.props and add a ## [vX.Y.Z] section at the top of CHANGELOG.md."
+          exit 1
+
+      - name: Validate version vs latest tag and changelog header
+        if: steps.detect.outputs.code_changed == 'true' && steps.detect.outputs.version_files_ok == 'true'
+        run: |
+          set -euo pipefail
+          PROJ_VERSION=$(python3 <<'PY'
+          import re
+          text = open("Directory.Build.props").read()
+          m = re.search(r"<Version>\s*([^<]+)\s*</Version>", text)
+          if not m:
+              raise SystemExit("Could not read <Version> from Directory.Build.props")
+          print(m.group(1).strip())
+          PY
+          )
+
+          git fetch --tags --force 2>/dev/null || true
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No existing tags found. Skipping semver vs tag check."
+            CHANGELOG_HEAD=$(sed -nE 's/^## \[v?([0-9]+\.[0-9]+\.[0-9]+)\].*/\1/p' CHANGELOG.md | head -1)
+            if [ -z "$CHANGELOG_HEAD" ]; then
+              echo "::error::Could not find a ## [vX.Y.Z] entry at the top of CHANGELOG.md."
+              exit 1
+            fi
+            if [ "$CHANGELOG_HEAD" != "$PROJ_VERSION" ]; then
+              echo "::error::CHANGELOG top version ($CHANGELOG_HEAD) does not match Directory.Build.props Version ($PROJ_VERSION)."
+              exit 1
+            fi
+            exit 0
+          fi
+
+          LATEST_VERSION="${LATEST_TAG#v}"
+          LATEST_VERSION="${LATEST_VERSION%%-*}"
+          if [ "$(printf '%s\n' "$LATEST_VERSION" "$PROJ_VERSION" | sort -V | tail -1)" != "$PROJ_VERSION" ]; then
+            echo "::error::Version ($PROJ_VERSION) must be greater than latest tag ($LATEST_TAG)."
+            exit 1
+          fi
+          if [ "$PROJ_VERSION" = "$LATEST_VERSION" ]; then
+            echo "::error::Version ($PROJ_VERSION) must be strictly greater than latest tag version ($LATEST_VERSION)."
+            exit 1
+          fi
+
+          CHANGELOG_HEAD=$(sed -nE 's/^## \[v?([0-9]+\.[0-9]+\.[0-9]+)\].*/\1/p' CHANGELOG.md | head -1)
+          if [ -z "$CHANGELOG_HEAD" ]; then
+            echo "::error::Could not find a ## [vX.Y.Z] entry at the top of CHANGELOG.md."
+            exit 1
+          fi
+          if [ "$CHANGELOG_HEAD" != "$PROJ_VERSION" ]; then
+            echo "::error::CHANGELOG top version ($CHANGELOG_HEAD) does not match Directory.Build.props Version ($PROJ_VERSION)."
+            exit 1
+          fi
+          echo "Version bump check passed: Directory.Build.props and CHANGELOG at $PROJ_VERSION (latest tag: $LATEST_TAG)."
