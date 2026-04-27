@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.9.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
+ - Fix
+   - **Variant Group HTTP method correction**: Updated variant group link/unlink operations to use PUT method instead of POST for API compliance
+   - Enhanced integration test coverage for variant group operations
+
 ## [v0.8.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.8.0)
  - Feat
    - **Entry Variant support**
