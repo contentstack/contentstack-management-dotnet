@@ -14,8 +14,7 @@ description: Use when reviewing or preparing a pull request for contentstack-man
 
 ### Branch and merge expectations
 
-- **Typical PRs** should target **`development`**. Use **`main`** as the base branch only for **hotfixes**.
-- **When the base is `main`:** only PRs from **`staging`** are allowed (enforced by [`.github/workflows/check-branch.yml`](../../.github/workflows/check-branch.yml)). Confirm head/base match team intent before approving.
+- **Feature/fix PRs** target **`development`**. **Release PRs** use **`development` → `main`** (no `staging`). Confirm head/base match the intended step in that flow before approving.
 
 ### Summary checklist
 
@@ -42,8 +41,8 @@ Copy sections into a PR comment when useful. This checklist is for **this** repo
 #### Branch policy
 
 ```markdown
-- [ ] **Default:** PR targets **`development`** unless this is a documented **hotfix** to **`main`**
-- [ ] If base is **`main`**: head branch is **`staging`** (see `.github/workflows/check-branch.yml`)
+- [ ] **Feature/fix:** PR targets **`development`**
+- [ ] **Release:** if merging to **`main`**, this is the agreed **`development` → `main`** release PR (not a bypass of version/tag checks)
 ```
 
 #### Breaking changes
