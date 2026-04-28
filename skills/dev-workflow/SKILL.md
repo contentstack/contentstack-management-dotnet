@@ -15,17 +15,19 @@ description: Use for branches, CI, build/test scripts, and NuGet release flow in
 
 ### Branch policy
 
-- **Default workflow:** open PRs against **`development`** for regular feature and fix work. **`main`** is reserved for **hotfixes** (PRs raised directly to `main` only when patching production).
-- **When the PR target is `main`:** GitHub Actions requires the head branch to be **`staging`**—other head branches are rejected by [`.github/workflows/check-branch.yml`](../../.github/workflows/check-branch.yml). Coordinate with SRE/release if a hotfix must use a different flow.
-- Do not bypass enforced checks without org approval.
+- **Default:** open PRs against **`development`** for feature and fix work.
+- **Releases:** open a **release PR `development` → `main`** (no `staging`). After `main` is updated, [`.github/workflows/back-merge-pr.yml`](../../.github/workflows/back-merge-pr.yml) opens **`main` → `development`** when needed so branches stay aligned.
+- **Publishing:** create a **GitHub Release** (after the release commit is on `main`) to trigger [`.github/workflows/nuget-publish.yml`](../../.github/workflows/nuget-publish.yml) (`release: created`).
+- **Version gate:** PRs that touch product code or `Directory.Build.props` need matching bumps in `Directory.Build.props` and `CHANGELOG.md` per [`.github/workflows/check-version-bump.yml`](../../.github/workflows/check-version-bump.yml).
 
 ### Key workflows
 
 | Workflow | Role |
 | -------- | ---- |
 | [`unit-test.yml`](../../.github/workflows/unit-test.yml) | On PR and push: runs [`Scripts/run-unit-test-case.sh`](../../Scripts/run-unit-test-case.sh) (unit tests + TRX + coverlet). |
-| [`check-branch.yml`](../../.github/workflows/check-branch.yml) | For PRs **into `main`**, enforces head branch **`staging`**. |
-| [`nuget-publish.yml`](../../.github/workflows/nuget-publish.yml) | On release: `dotnet pack -c Release -o out` and push to NuGet / GitHub Packages. |
+| [`back-merge-pr.yml`](../../.github/workflows/back-merge-pr.yml) | After pushes to **`main`**, opens **`main` → `development`** PR if needed. |
+| [`check-version-bump.yml`](../../.github/workflows/check-version-bump.yml) | On PR: requires version + changelog when SDK sources / props change. |
+| [`nuget-publish.yml`](../../.github/workflows/nuget-publish.yml) | On **GitHub Release** (`created`): `dotnet pack -c Release -o out` and push to NuGet / GitHub Packages. |
 | [`policy-scan.yml`](../../.github/workflows/policy-scan.yml), [`sca-scan.yml`](../../.github/workflows/sca-scan.yml) | Security / compliance scans. |
 
 ### Local commands

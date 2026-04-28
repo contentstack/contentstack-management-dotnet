@@ -8,6 +8,9 @@
      - Added testing infrastructure: `MockHttpStatusHandler`, `MockNetworkErrorHandler`, and `AssertLogger` helpers
      - Enhanced test coverage with error validation across Login, Organization, Stack, Release, Global Field, Content Type, Nested Global Field, Asset, Entry, Bulk Operation, Delivery Token, Taxonomy, Environment, Role, Workflow, Entry Variant, and Variant Group operations
      - Improved exception handling in `BaseModel` and service layers
+ - Fix
+   - **Variant Group HTTP method correction**: Updated variant group link/unlink operations to use PUT method instead of POST for API compliance
+   - Enhanced integration test coverage for variant group operations
 
 ## [v0.8.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.8.0)
  - Feat
