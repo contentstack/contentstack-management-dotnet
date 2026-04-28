@@ -214,6 +214,8 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         public ContentstackResponse Update(BulkWorkflowUpdateBody updateBody)
         {
+            if (updateBody == null) throw new ArgumentNullException("body");
+            
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
@@ -228,6 +230,8 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> UpdateAsync(BulkWorkflowUpdateBody updateBody)
         {
+            if (updateBody == null) throw new ArgumentNullException("body");
+            
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
@@ -545,6 +549,8 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         public ContentstackResponse JobStatus(string jobId, string bulkVersion = null)
         {
+            if (string.IsNullOrWhiteSpace(jobId)) throw new ArgumentNullException(nameof(jobId));
+            
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
@@ -560,6 +566,8 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task</returns>
         public Task<ContentstackResponse> JobStatusAsync(string jobId, string bulkVersion = null)
         {
+            if (string.IsNullOrWhiteSpace(jobId)) throw new ArgumentNullException(nameof(jobId));
+            
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 

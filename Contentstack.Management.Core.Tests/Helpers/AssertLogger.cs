@@ -16,6 +16,13 @@ namespace Contentstack.Management.Core.Tests.Helpers
             Assert.IsNotNull(value);
         }
 
+        public static void IsNotNull(object value, string message, string name)
+        {
+            bool passed = value != null;
+            TestOutputLogger.LogAssertion($"IsNotNull({name})", "NotNull", value?.ToString() ?? "null", passed);
+            Assert.IsNotNull(value, message);
+        }
+
         public static void IsNull(object value, string name = "")
         {
             bool passed = value == null;
@@ -92,6 +99,31 @@ namespace Contentstack.Management.Core.Tests.Helpers
             catch (Exception ex)
             {
                 TestOutputLogger.LogAssertion($"ThrowsException<{typeof(T).Name}>({name})", typeof(T).Name, ex.GetType().Name, false);
+                throw new AssertFailedException(
+                    $"Expected exception {typeof(T).Name} but got {ex.GetType().Name}: {ex.Message}", ex);
+            }
+        }
+
+        public static async Task<T> ThrowsExceptionAsync<T>(Func<Task> action, string name = "") where T : Exception
+        {
+            try
+            {
+                await action();
+                TestOutputLogger.LogAssertion($"ThrowsExceptionAsync<{typeof(T).Name}>({name})", typeof(T).Name, "NoException", false);
+                throw new AssertFailedException($"Expected exception {typeof(T).Name} was not thrown.");
+            }
+            catch (T ex)
+            {
+                TestOutputLogger.LogAssertion($"ThrowsExceptionAsync<{typeof(T).Name}>({name})", typeof(T).Name, typeof(T).Name, true);
+                return ex;
+            }
+            catch (AssertFailedException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TestOutputLogger.LogAssertion($"ThrowsExceptionAsync<{typeof(T).Name}>({name})", typeof(T).Name, ex.GetType().Name, false);
                 throw new AssertFailedException(
                     $"Expected exception {typeof(T).Name} but got {ex.GetType().Name}: {ex.Message}", ex);
             }
