@@ -97,9 +97,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(
                     cex.StatusCode == HttpStatusCode.Unauthorized || 
                     cex.StatusCode == HttpStatusCode.Forbidden ||
+                    cex.StatusCode == HttpStatusCode.BadRequest || // API returns 400 for malformed tokens
                     cex.StatusCode == HttpStatusCode.PreconditionFailed ||
                     cex.StatusCode == (HttpStatusCode)422, // API treats not found as auth failure
-                    $"Expected 401/403/412/422 for auth error, got {(int)cex.StatusCode} ({cex.StatusCode})",
+                    $"Expected 400/401/403/412/422 for auth error, got {(int)cex.StatusCode} ({cex.StatusCode})",
                     assertionName);
             }
             else if (ex is InvalidOperationException && ex.Message.Contains("not logged in"))

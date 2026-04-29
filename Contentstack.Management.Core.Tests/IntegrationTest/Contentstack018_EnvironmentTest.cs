@@ -1013,7 +1013,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test044_Should_Fail_With_Null_Environment_UID_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Test044_Should_Fail_With_Null_Environment_UID_Sync");
-            AssertLogger.ThrowsException<InvalidOperationException>(
+            AssertLogger.ThrowsException<ArgumentException>(
                 () => _stack.Environment(null).Fetch(),
                 "FetchNullUidSync");
         }
@@ -1022,7 +1022,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test045_Should_Fail_With_Empty_Environment_UID_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Test045_Should_Fail_With_Empty_Environment_UID_Sync");
-            AssertLogger.ThrowsException<InvalidOperationException>(
+            AssertLogger.ThrowsException<ArgumentException>(
                 () => _stack.Environment("").Fetch(),
                 "FetchEmptyUidSync");
         }
@@ -1123,15 +1123,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         try
         {
             await _stack.Environment(null).FetchAsync();
-            AssertLogger.Fail("Expected InvalidOperationException for null UID");
+            AssertLogger.Fail("Expected ArgumentException for null UID");
         }
-        catch (InvalidOperationException)
+        catch (ArgumentException)
         {
-            AssertLogger.IsTrue(true, "InvalidOperationException thrown as expected", "FetchNullUidAsync");
+            AssertLogger.IsTrue(true, "ArgumentException thrown as expected", "FetchNullUidAsync");
         }
         catch (Exception ex)
         {
-            AssertLogger.Fail($"Expected InvalidOperationException but got {ex.GetType().Name}");
+            AssertLogger.Fail($"Expected ArgumentException but got {ex.GetType().Name}");
         }
         }
 
@@ -1142,15 +1142,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 await _stack.Environment("").FetchAsync();
-                AssertLogger.Fail("Expected InvalidOperationException for empty UID");
+                AssertLogger.Fail("Expected ArgumentException for empty UID");
             }
-            catch (InvalidOperationException)
+            catch (ArgumentException)
             {
-                AssertLogger.IsTrue(true, "InvalidOperationException thrown as expected", "FetchEmptyUidAsync");
+                AssertLogger.IsTrue(true, "ArgumentException thrown as expected", "FetchEmptyUidAsync");
             }
             catch (Exception ex)
             {
-                AssertLogger.Fail($"Expected InvalidOperationException but got {ex.GetType().Name}");
+                AssertLogger.Fail($"Expected ArgumentException but got {ex.GetType().Name}");
             }
         }
 

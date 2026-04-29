@@ -3151,7 +3151,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 // Act & Assert - SDK should validate UID before API call
-                AssertLogger.ThrowsException<InvalidOperationException>(() =>
+                AssertLogger.ThrowsException<ArgumentException>(() =>
                 {
                     _stack.Workflow(null).Fetch();
                 }, "fetchWorkflowNullUID");
@@ -3160,7 +3160,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                FailWithError("Expected InvalidOperationException for null workflow UID", ex);
+                FailWithError("Expected ArgumentException for null workflow UID", ex);
             }
         }
 
@@ -3172,7 +3172,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 // Act & Assert - SDK should validate UID before API call
-                AssertLogger.ThrowsException<InvalidOperationException>(() =>
+                AssertLogger.ThrowsException<ArgumentException>(() =>
                 {
                     _stack.Workflow("").Fetch();
                 }, "fetchWorkflowEmptyUID");
@@ -3181,7 +3181,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                FailWithError("Expected InvalidOperationException for empty workflow UID", ex);
+                FailWithError("Expected ArgumentException for empty workflow UID", ex);
             }
         }
 

@@ -244,7 +244,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "FetchContentType_NoUID");
             
-            AssertLogger.ThrowsException<InvalidOperationException>(
+            AssertLogger.ThrowsException<ArgumentException>(
                 () => _stack.ContentType().Fetch(),
                 "Fetch_NoUID");
         }
@@ -255,7 +255,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "FetchAsyncContentType_NoUID");
 
-            await AssertLogger.ThrowsExceptionAsync<InvalidOperationException>(
+            await AssertLogger.ThrowsExceptionAsync<ArgumentException>(
                 () => _stack.ContentType().FetchAsync(),
                 "FetchAsync_NoUID");
         }
@@ -268,7 +268,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
             var model = CreateValidContentTypeModel("update_no_uid");
             
-            AssertLogger.ThrowsException<InvalidOperationException>(
+            AssertLogger.ThrowsException<ArgumentException>(
                 () => _stack.ContentType().Update(model),
                 "Update_NoUID");
         }
@@ -290,7 +290,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "DeleteContentType_NoUID");
             
-            AssertLogger.ThrowsException<InvalidOperationException>(
+            AssertLogger.ThrowsException<ArgumentException>(
                 () => _stack.ContentType().Delete(),
                 "Delete_NoUID");
         }

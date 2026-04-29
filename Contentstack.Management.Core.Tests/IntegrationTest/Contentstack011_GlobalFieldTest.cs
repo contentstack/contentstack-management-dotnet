@@ -689,7 +689,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "FetchGlobalField_EmptyUID");
             
-            AssertLogger.ThrowsException<InvalidOperationException>(
+            AssertLogger.ThrowsException<ArgumentException>(
                 () => _stack.GlobalField("").Fetch(),
                 "FetchEmptyUID");
         }
@@ -700,7 +700,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "UpdateGlobalField_EmptyUID");
             
-            AssertLogger.ThrowsException<InvalidOperationException>(
+            AssertLogger.ThrowsException<ArgumentException>(
                 () => _stack.GlobalField("").Update(_modelling),
                 "UpdateEmptyUID");
         }
@@ -711,7 +711,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "DeleteGlobalField_EmptyUID");
             
-            AssertLogger.ThrowsException<InvalidOperationException>(
+            AssertLogger.ThrowsException<ArgumentException>(
                 () => _stack.GlobalField("").Delete(),
                 "DeleteEmptyUID");
         }
@@ -871,9 +871,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 await _stack.GlobalField("").FetchAsync();
-                AssertLogger.Fail("Expected InvalidOperationException for empty UID");
+                AssertLogger.Fail("Expected ArgumentException for empty UID");
             }
-            catch (InvalidOperationException)
+            catch (ArgumentException)
             {
                 // Expected exception - test passes
             }
@@ -888,9 +888,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 await _stack.GlobalField("").UpdateAsync(_modelling);
-                AssertLogger.Fail("Expected InvalidOperationException for empty UID");
+                AssertLogger.Fail("Expected ArgumentException for empty UID");
             }
-            catch (InvalidOperationException)
+            catch (ArgumentException)
             {
                 // Expected exception - test passes
             }
@@ -905,9 +905,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 await _stack.GlobalField("").DeleteAsync();
-                AssertLogger.Fail("Expected InvalidOperationException for empty UID");
+                AssertLogger.Fail("Expected ArgumentException for empty UID");
             }
-            catch (InvalidOperationException)
+            catch (ArgumentException)
             {
                 // Expected exception - test passes
             }
