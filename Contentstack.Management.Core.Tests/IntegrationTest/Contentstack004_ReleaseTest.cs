@@ -19,6 +19,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private string _testReleaseName = "DotNet SDK Integration Test Release";
         private string _testReleaseDescription = "Release created for .NET SDK integration testing";
 
+        /// <summary>Stable bogus UID for negative-path release API tests.</summary>
+        private const string NonExistentReleaseUid = "non_existent_release_uid_12345";
+
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
@@ -39,7 +42,115 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             _stack = _client.Stack(response.Stack.APIKey);
         }
 
+        /// <summary>
+        /// Asserts a missing-release or generic not-found style API error (used for fetch/update/delete/clone source/deploy on bogus UID).
+        /// </summary>
+        private static void AssertReleaseNotFoundOrApiError(Exception ex, string assertContext)
+        {
+            if (ex is ContentstackErrorException csException)
+            {
+                Assert.IsTrue(
+                    csException.ErrorMessage?.Contains("Release does not exist") == true ||
+                    csException.ErrorCode == 141 ||
+                    csException.Message?.Contains("Release does not exist") == true,
+                    $"{assertContext}: Expected 'Release does not exist' or error 141, but got ErrorCode={csException.ErrorCode}, Message='{csException.Message}', ErrorMessage='{csException.ErrorMessage}'"
+                );
+            }
+            else
+            {
+                Assert.IsTrue(
+                    ex.Message?.Contains("Release does not exist") == true ||
+                    ex.Message?.Contains("not found") == true ||
+                    ex.Message?.Contains("404") == true,
+                    $"{assertContext}: Expected not-found style error, but got: {ex.Message}"
+                );
+            }
+        }
 
+        private void ExpectReleaseNotFoundFailure(Func<ContentstackResponse> invoke, string context)
+        {
+            try
+            {
+                ContentstackResponse response = invoke();
+                Assert.IsFalse(response.IsSuccessStatusCode, context);
+            }
+            catch (Exception ex)
+            {
+                AssertReleaseNotFoundOrApiError(ex, context);
+            }
+        }
+
+        private async Task ExpectReleaseNotFoundFailureAsync(Func<Task<ContentstackResponse>> invokeAsync, string context)
+        {
+            try
+            {
+                ContentstackResponse response = await invokeAsync();
+                Assert.IsFalse(response.IsSuccessStatusCode, context);
+            }
+            catch (Exception ex)
+            {
+                AssertReleaseNotFoundOrApiError(ex, context);
+            }
+        }
+
+        /// <summary>
+        /// Asserts a validation-style API error for create/update body issues (message wording varies by stack).
+        /// </summary>
+        private static void AssertValidationOrBadRequestApiError(Exception ex, string assertContext)
+        {
+            if (ex is ContentstackErrorException csException)
+            {
+                string combined = $"{csException.ErrorMessage} {csException.Message}".ToLowerInvariant();
+                Assert.IsTrue(
+                    combined.Contains("name") ||
+                    combined.Contains("required") ||
+                    combined.Contains("invalid") ||
+                    combined.Contains("blank") ||
+                    combined.Contains("empty") ||
+                    (int)csException.StatusCode == 400 ||
+                    (int)csException.StatusCode == 422,
+                    $"{assertContext}: Expected validation/bad request, but got ErrorCode={csException.ErrorCode}, StatusCode={csException.StatusCode}, Message='{csException.Message}', ErrorMessage='{csException.ErrorMessage}'"
+                );
+            }
+            else
+            {
+                string msg = ex.Message?.ToLowerInvariant() ?? string.Empty;
+                Assert.IsTrue(
+                    msg.Contains("name") ||
+                    msg.Contains("required") ||
+                    msg.Contains("invalid") ||
+                    msg.Contains("400") ||
+                    msg.Contains("422"),
+                    $"{assertContext}: Expected validation-style error, but got: {ex.Message}"
+                );
+            }
+        }
+
+        private void ExpectValidationOrBadRequestFailure(Func<ContentstackResponse> invoke, string context)
+        {
+            try
+            {
+                ContentstackResponse response = invoke();
+                Assert.IsFalse(response.IsSuccessStatusCode, context);
+            }
+            catch (Exception ex)
+            {
+                AssertValidationOrBadRequestApiError(ex, context);
+            }
+        }
+
+        private async Task ExpectValidationOrBadRequestFailureAsync(Func<Task<ContentstackResponse>> invokeAsync, string context)
+        {
+            try
+            {
+                ContentstackResponse response = await invokeAsync();
+                Assert.IsFalse(response.IsSuccessStatusCode, context);
+            }
+            catch (Exception ex)
+            {
+                AssertValidationOrBadRequestApiError(ex, context);
+            }
+        }
 
         /// <summary>
         /// Helper method to create a clean release for testing
@@ -849,35 +960,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             try
             {
-                string nonExistentUid = "non_existent_release_uid_12345";
-                
-                try
-                {
-                    ContentstackResponse contentstackResponse = _stack.Release(nonExistentUid).Fetch();
-                    Assert.IsFalse(contentstackResponse.IsSuccessStatusCode);
-                }
-                catch (Exception ex)
-                {
-          
-                    if (ex is ContentstackErrorException csException)
-                    {
-                        Assert.IsTrue(
-                            csException.ErrorMessage?.Contains("Release does not exist") == true ||
-                            csException.ErrorCode == 141 ||
-                            csException.Message?.Contains("Release does not exist") == true,
-                            $"Expected 'Release does not exist' error, but got: ErrorCode={csException.ErrorCode}, Message='{csException.Message}', ErrorMessage='{csException.ErrorMessage}'"
-                        );
-                    }
-                    else
-                    {
-                        Assert.IsTrue(
-                            ex.Message?.Contains("Release does not exist") == true ||
-                            ex.Message?.Contains("not found") == true ||
-                            ex.Message?.Contains("404") == true,
-                            $"Expected 'Release does not exist' error, but got: {ex.Message}"
-                        );
-                    }
-                }
+                ExpectReleaseNotFoundFailure(() => _stack.Release(NonExistentReleaseUid).Fetch(), "Fetch non-existent release");
             }
             catch (Exception e)
             {
@@ -891,34 +974,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             try
             {
-                string nonExistentUid = "non_existent_release_uid_12345";
-                
-                try
-                {
-                    ContentstackResponse contentstackResponse = await _stack.Release(nonExistentUid).FetchAsync();
-                    Assert.IsFalse(contentstackResponse.IsSuccessStatusCode);
-                }
-                catch (Exception ex)
-                {
-                    if (ex is ContentstackErrorException csException)
-                    {
-                        Assert.IsTrue(
-                            csException.ErrorMessage?.Contains("Release does not exist") == true ||
-                            csException.ErrorCode == 141 ||
-                            csException.Message?.Contains("Release does not exist") == true,
-                            $"Expected 'Release does not exist' error, but got: ErrorCode={csException.ErrorCode}, Message='{csException.Message}', ErrorMessage='{csException.ErrorMessage}'"
-                        );
-                    }
-                    else
-                    {
-                        Assert.IsTrue(
-                            ex.Message?.Contains("Release does not exist") == true ||
-                            ex.Message?.Contains("not found") == true ||
-                            ex.Message?.Contains("404") == true,
-                            $"Expected 'Release does not exist' error, but got: {ex.Message}"
-                        );
-                    }
-                }
+                await ExpectReleaseNotFoundFailureAsync(() => _stack.Release(NonExistentReleaseUid).FetchAsync(), "FetchAsync non-existent release");
             }
             catch (Exception e)
             {
@@ -1069,6 +1125,532 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             catch (Exception e)
             {
                 Assert.Fail($"Delete release async without Content-Type header failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test023_Should_Fail_When_Create_Release_With_Null_Name()
+        {
+            try
+            {
+                var releaseModel = new ReleaseModel
+                {
+                    Name = null,
+                    Description = _testReleaseDescription,
+                    Locked = false,
+                    Archived = false
+                };
+                ExpectValidationOrBadRequestFailure(() => _stack.Release().Create(releaseModel), "Create with null name");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Create release null name negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test024_Should_Fail_When_Create_Release_With_Null_Name_Async()
+        {
+            try
+            {
+                var releaseModel = new ReleaseModel
+                {
+                    Name = null,
+                    Description = _testReleaseDescription,
+                    Locked = false,
+                    Archived = false
+                };
+                await ExpectValidationOrBadRequestFailureAsync(() => _stack.Release().CreateAsync(releaseModel), "CreateAsync with null name");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Create release null name async negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test025_Should_Fail_When_Create_Release_With_Empty_Name()
+        {
+            try
+            {
+                var releaseModel = new ReleaseModel
+                {
+                    Name = string.Empty,
+                    Description = _testReleaseDescription,
+                    Locked = false,
+                    Archived = false
+                };
+                ExpectValidationOrBadRequestFailure(() => _stack.Release().Create(releaseModel), "Create with empty name");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Create release empty name negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test026_Should_Fail_When_Create_Release_With_Empty_Name_Async()
+        {
+            try
+            {
+                var releaseModel = new ReleaseModel
+                {
+                    Name = string.Empty,
+                    Description = _testReleaseDescription,
+                    Locked = false,
+                    Archived = false
+                };
+                await ExpectValidationOrBadRequestFailureAsync(() => _stack.Release().CreateAsync(releaseModel), "CreateAsync with empty name");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Create release empty name async negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test027_Should_Fail_When_Update_Non_Existent_Release()
+        {
+            try
+            {
+                var updateModel = new ReleaseModel
+                {
+                    Name = _testReleaseName + " Ghost",
+                    Description = _testReleaseDescription,
+                    Locked = false,
+                    Archived = false
+                };
+                ExpectReleaseNotFoundFailure(() => _stack.Release(NonExistentReleaseUid).Update(updateModel), "Update non-existent release");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Update non-existent release negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test028_Should_Fail_When_Update_Non_Existent_Release_Async()
+        {
+            try
+            {
+                var updateModel = new ReleaseModel
+                {
+                    Name = _testReleaseName + " Ghost Async",
+                    Description = _testReleaseDescription,
+                    Locked = false,
+                    Archived = false
+                };
+                await ExpectReleaseNotFoundFailureAsync(() => _stack.Release(NonExistentReleaseUid).UpdateAsync(updateModel), "UpdateAsync non-existent release");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Update non-existent release async negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test029_Should_Fail_When_Clone_Non_Existent_Release()
+        {
+            try
+            {
+                string cloneName = _testReleaseName + " Clone Target Should Never Exist";
+                ExpectReleaseNotFoundFailure(() => _stack.Release(NonExistentReleaseUid).Clone(cloneName, _testReleaseDescription), "Clone non-existent release");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Clone non-existent release negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test030_Should_Fail_When_Clone_Non_Existent_Release_Async()
+        {
+            try
+            {
+                string cloneName = _testReleaseName + " Clone Target Should Never Exist Async";
+                await ExpectReleaseNotFoundFailureAsync(() => _stack.Release(NonExistentReleaseUid).CloneAsync(cloneName, _testReleaseDescription), "CloneAsync non-existent release");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Clone non-existent release async negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test031_Should_Throw_When_Clone_With_Null_Name()
+        {
+            string releaseUid = null;
+            try
+            {
+                releaseUid = CreateTestRelease();
+                Assert.ThrowsException<ArgumentNullException>(() => _stack.Release(releaseUid).Clone(null, _testReleaseDescription));
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(releaseUid))
+                {
+                    try { _stack.Release(releaseUid).Delete(); } catch { }
+                }
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test032_Should_Throw_When_Clone_With_Null_Name_Async()
+        {
+            string releaseUid = null;
+            try
+            {
+                releaseUid = await CreateTestReleaseAsync();
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _stack.Release(releaseUid).CloneAsync(null, _testReleaseDescription));
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(releaseUid))
+                {
+                    try { await _stack.Release(releaseUid).DeleteAsync(); } catch { }
+                }
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test033_Should_Fail_When_Get_Release_Items_For_Non_Existent_Release()
+        {
+            try
+            {
+                ExpectReleaseNotFoundFailure(() => _stack.Release(NonExistentReleaseUid).Item().GetAll(), "GetAll items non-existent release");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Get release items for non-existent release failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test034_Should_Fail_When_Get_Release_Items_For_Non_Existent_Release_Async()
+        {
+            try
+            {
+                await ExpectReleaseNotFoundFailureAsync(() => _stack.Release(NonExistentReleaseUid).Item().GetAllAsync(), "GetAllAsync items non-existent release");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Get release items async for non-existent release failed: {e.Message}");
+            }
+        }
+
+        private static void AssertDeployOrEnvironmentOrNotFoundApiError(Exception ex, string assertContext)
+        {
+            if (ex is ContentstackErrorException csException)
+            {
+                string combined = $"{csException.ErrorMessage} {csException.Message}".ToLowerInvariant();
+                Assert.IsTrue(
+                    IsReleaseNotFoundContentstackError(csException) ||
+                    combined.Contains("environment") ||
+                    combined.Contains("locale") ||
+                    combined.Contains("invalid") ||
+                    combined.Contains("not found") ||
+                    (int)csException.StatusCode == 400 ||
+                    (int)csException.StatusCode == 422,
+                    $"{assertContext}: Unexpected deploy error ErrorCode={csException.ErrorCode}, StatusCode={csException.StatusCode}, Message='{csException.Message}', ErrorMessage='{csException.ErrorMessage}'"
+                );
+            }
+            else
+            {
+                string msg = ex.Message?.ToLowerInvariant() ?? string.Empty;
+                Assert.IsTrue(
+                    msg.Contains("release") ||
+                    msg.Contains("environment") ||
+                    msg.Contains("not found") ||
+                    msg.Contains("400") ||
+                    msg.Contains("422"),
+                    $"{assertContext}: Unexpected deploy error: {ex.Message}"
+                );
+            }
+        }
+
+        private static bool IsReleaseNotFoundContentstackError(ContentstackErrorException csException)
+        {
+            return csException.ErrorMessage?.Contains("Release does not exist") == true ||
+                   csException.ErrorCode == 141 ||
+                   csException.Message?.Contains("Release does not exist") == true;
+        }
+
+        private void ExpectDeployFailure(Func<ContentstackResponse> invoke, string context)
+        {
+            try
+            {
+                ContentstackResponse response = invoke();
+                Assert.IsFalse(response.IsSuccessStatusCode, context);
+            }
+            catch (Exception ex)
+            {
+                AssertDeployOrEnvironmentOrNotFoundApiError(ex, context);
+            }
+        }
+
+        private async Task ExpectDeployFailureAsync(Func<Task<ContentstackResponse>> invokeAsync, string context)
+        {
+            try
+            {
+                ContentstackResponse response = await invokeAsync();
+                Assert.IsFalse(response.IsSuccessStatusCode, context);
+            }
+            catch (Exception ex)
+            {
+                AssertDeployOrEnvironmentOrNotFoundApiError(ex, context);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test035_Should_Fail_When_Deploy_Non_Existent_Release()
+        {
+            try
+            {
+                var deployModel = new DeployModel
+                {
+                    Environments = new List<string> { "fake_environment_uid_for_negative_test" },
+                    Locales = new List<string> { "en-us" }
+                };
+                ExpectDeployFailure(() => _stack.Release(NonExistentReleaseUid).Deploy(deployModel), "Deploy non-existent release");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Deploy non-existent release negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test036_Should_Fail_When_Deploy_Non_Existent_Release_Async()
+        {
+            try
+            {
+                var deployModel = new DeployModel
+                {
+                    Environments = new List<string> { "fake_environment_uid_for_negative_test" },
+                    Locales = new List<string> { "en-us" }
+                };
+                await ExpectDeployFailureAsync(() => _stack.Release(NonExistentReleaseUid).DeployAsync(deployModel), "DeployAsync non-existent release");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Deploy non-existent release async negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test037_Should_Fail_When_Deploy_With_Invalid_Environment()
+        {
+            string releaseUid = null;
+            try
+            {
+                releaseUid = CreateTestRelease();
+                var deployModel = new DeployModel
+                {
+                    Environments = new List<string> { "fake_environment_uid_for_negative_test" },
+                    Locales = new List<string> { "en-us" }
+                };
+                ExpectDeployFailure(() => _stack.Release(releaseUid).Deploy(deployModel), "Deploy with invalid environment");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Deploy invalid environment negative test failed: {e.Message}");
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(releaseUid))
+                {
+                    try { _stack.Release(releaseUid).Delete(); } catch { }
+                }
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test038_Should_Fail_When_Deploy_With_Invalid_Environment_Async()
+        {
+            string releaseUid = null;
+            try
+            {
+                releaseUid = await CreateTestReleaseAsync();
+                var deployModel = new DeployModel
+                {
+                    Environments = new List<string> { "fake_environment_uid_for_negative_test" },
+                    Locales = new List<string> { "en-us" }
+                };
+                await ExpectDeployFailureAsync(() => _stack.Release(releaseUid).DeployAsync(deployModel), "DeployAsync with invalid environment");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Deploy invalid environment async negative test failed: {e.Message}");
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(releaseUid))
+                {
+                    try { await _stack.Release(releaseUid).DeleteAsync(); } catch { }
+                }
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test039_Should_Fail_When_Delete_Non_Existent_Release()
+        {
+            try
+            {
+                ExpectReleaseNotFoundFailure(() => _stack.Release(NonExistentReleaseUid).Delete(), "Delete non-existent release");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Delete non-existent release negative test failed: {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test040_Should_Fail_When_Delete_Non_Existent_Release_Async()
+        {
+            try
+            {
+                await ExpectReleaseNotFoundFailureAsync(() => _stack.Release(NonExistentReleaseUid).DeleteAsync(), "DeleteAsync non-existent release");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Delete non-existent release async negative test failed: {e.Message}");
+            }
+        }
+
+        private static void AssertItemCreateOrReferenceApiError(Exception ex, string assertContext)
+        {
+            if (ex is ContentstackErrorException csException)
+            {
+                string combined = $"{csException.ErrorMessage} {csException.Message}".ToLowerInvariant();
+                Assert.IsTrue(
+                    combined.Contains("item") ||
+                    combined.Contains("entry") ||
+                    combined.Contains("asset") ||
+                    combined.Contains("uid") ||
+                    combined.Contains("invalid") ||
+                    combined.Contains("not found") ||
+                    (int)csException.StatusCode == 400 ||
+                    (int)csException.StatusCode == 422,
+                    $"{assertContext}: Unexpected item create error ErrorCode={csException.ErrorCode}, StatusCode={csException.StatusCode}, Message='{csException.Message}', ErrorMessage='{csException.ErrorMessage}'"
+                );
+            }
+            else
+            {
+                string msg = ex.Message?.ToLowerInvariant() ?? string.Empty;
+                Assert.IsTrue(
+                    msg.Contains("item") ||
+                    msg.Contains("entry") ||
+                    msg.Contains("invalid") ||
+                    msg.Contains("400") ||
+                    msg.Contains("422"),
+                    $"{assertContext}: Unexpected item create error: {ex.Message}"
+                );
+            }
+        }
+
+        private void ExpectItemCreateFailure(Func<ContentstackResponse> invoke, string context)
+        {
+            try
+            {
+                ContentstackResponse response = invoke();
+                Assert.IsFalse(response.IsSuccessStatusCode, context);
+            }
+            catch (Exception ex)
+            {
+                AssertItemCreateOrReferenceApiError(ex, context);
+            }
+        }
+
+        private async Task ExpectItemCreateFailureAsync(Func<Task<ContentstackResponse>> invokeAsync, string context)
+        {
+            try
+            {
+                ContentstackResponse response = await invokeAsync();
+                Assert.IsFalse(response.IsSuccessStatusCode, context);
+            }
+            catch (Exception ex)
+            {
+                AssertItemCreateOrReferenceApiError(ex, context);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test041_Should_Fail_When_Add_Invalid_Item_To_Release()
+        {
+            string releaseUid = null;
+            try
+            {
+                releaseUid = CreateTestRelease();
+                var bogusItem = new ReleaseItemModel
+                {
+                    Uid = "bogus_entry_uid_nonexistent_12345",
+                    ContentTypeUID = "bogus_content_type_uid",
+                    Locale = "en-us",
+                    Version = 1,
+                    Action = "publish"
+                };
+                ExpectItemCreateFailure(() => _stack.Release(releaseUid).Item().Create(bogusItem), "Item Create with garbage UIDs");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Item create garbage negative test failed: {e.Message}");
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(releaseUid))
+                {
+                    try { _stack.Release(releaseUid).Delete(); } catch { }
+                }
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test042_Should_Fail_When_Add_Invalid_Item_To_Release_Async()
+        {
+            string releaseUid = null;
+            try
+            {
+                releaseUid = await CreateTestReleaseAsync();
+                var bogusItem = new ReleaseItemModel
+                {
+                    Uid = "bogus_entry_uid_nonexistent_67890",
+                    ContentTypeUID = "bogus_content_type_uid",
+                    Locale = "en-us",
+                    Version = 1,
+                    Action = "publish"
+                };
+                await ExpectItemCreateFailureAsync(() => _stack.Release(releaseUid).Item().CreateAsync(bogusItem), "Item CreateAsync with garbage UIDs");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Item create garbage async negative test failed: {e.Message}");
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(releaseUid))
+                {
+                    try { await _stack.Release(releaseUid).DeleteAsync(); } catch { }
+                }
             }
         }
     }

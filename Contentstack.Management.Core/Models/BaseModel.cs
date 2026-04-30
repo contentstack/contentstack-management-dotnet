@@ -114,7 +114,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(this.Uid))
             {
-                throw new InvalidOperationException(CSConstants.MissingUID);
+                throw new ArgumentException(CSConstants.MissingUID, "uid");
             }
         }
         #endregion
