@@ -88,7 +88,42 @@ namespace Contentstack.Management.Core.Exceptions
             ContentstackErrorException exception = null;
             if (!string.IsNullOrEmpty(stringResponse))
             {
-                exception = JObject.Parse(stringResponse).ToObject<ContentstackErrorException>();
+                try
+                {
+                    exception = JObject.Parse(stringResponse).ToObject<ContentstackErrorException>();
+                }
+                catch (JsonReaderException)
+                {
+                    // Handle HTML error responses or other non-JSON content
+                    exception = new ContentstackErrorException();
+                    
+                    // Extract meaningful error message from HTML if possible
+                    if (stringResponse.Contains("Cannot GET") || stringResponse.Contains("Cannot POST") || stringResponse.Contains("Cannot PUT") || stringResponse.Contains("Cannot DELETE"))
+                    {
+                        // Extract the endpoint path from HTML error message
+                        var startIndex = stringResponse.IndexOf("Cannot");
+                        var endIndex = stringResponse.IndexOf("</pre>", startIndex);
+                        if (startIndex >= 0 && endIndex > startIndex)
+                        {
+                            var errorMessage = stringResponse.Substring(startIndex, endIndex - startIndex).Trim();
+                            exception.ErrorMessage = $"API endpoint error: {errorMessage}";
+                        }
+                        else
+                        {
+                            exception.ErrorMessage = "API endpoint not found or not supported";
+                        }
+                    }
+                    else
+                    {
+                        exception.ErrorMessage = "Invalid response format received from server";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle any other JSON parsing issues
+                    exception = new ContentstackErrorException();
+                    exception.ErrorMessage = $"Failed to parse server response: {ex.Message}";
+                }
             }
             else
             {

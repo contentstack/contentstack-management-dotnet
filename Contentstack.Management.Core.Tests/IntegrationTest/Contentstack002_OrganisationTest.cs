@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using System.Net.Mail;
 using AutoFixture;
+using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Tests.Helpers;
@@ -451,6 +453,128 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.Fail(e.Message);
             }
 
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test018_Should_Fail_To_Fetch_NonExistent_Organization()
+        {
+            TestOutputLogger.LogContext("TestScenario", "NonExistentOrganization");
+            try
+            {
+                Organization organization = _client.Organization("nonexistent_org_12345");
+                ContentstackResponse contentstackResponse = organization.GetOrganizations();
+                
+                AssertLogger.Fail("Expected exception for non-existent organization");
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                AssertLogger.IsTrue(
+                    errorException.StatusCode == HttpStatusCode.Unauthorized ||
+                    errorException.StatusCode == HttpStatusCode.Forbidden ||
+                    errorException.StatusCode == HttpStatusCode.NotFound ||
+                    errorException.StatusCode == HttpStatusCode.UnprocessableEntity,
+                    $"Expected 401/403/404/422, got {errorException.StatusCode}"
+                );
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test019_Should_Handle_Unauthorized_Access_To_Organizations()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UnauthorizedAccess");
+            try
+            {
+                // Create a client without authentication
+                var unauthClient = new ContentstackClient();
+                Organization organization = unauthClient.Organization();
+                
+                ContentstackResponse contentstackResponse = organization.GetOrganizations();
+                AssertLogger.Fail("Expected exception for unauthorized access");
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                AssertLogger.IsTrue(
+                    errorException.StatusCode == HttpStatusCode.Unauthorized ||
+                    errorException.StatusCode == HttpStatusCode.Forbidden ||
+                    errorException.StatusCode == HttpStatusCode.UnprocessableEntity,
+                    $"Expected auth error, got {errorException.StatusCode}"
+                );
+            }
+            catch (InvalidOperationException)
+            {
+                // This might be thrown by ThrowIfNotLoggedIn()
+                AssertLogger.IsTrue(true, "InvalidOperationException acceptable for unauthenticated client");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test020_Should_Validate_Organization_UID_Required()
+        {
+            TestOutputLogger.LogContext("TestScenario", "OrganizationUIDRequired");
+            try
+            {
+                Organization organization = _client.Organization(); // No UID provided
+                ContentstackResponse contentstackResponse = organization.Roles(); // Requires UID
+                
+                AssertLogger.Fail("Expected exception for missing organization UID");
+            }
+            catch (InvalidOperationException ex)
+            {
+                AssertLogger.IsTrue(ex.Message.Contains("Organization"), "Exception should mention Organization UID requirement");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test021_Should_Handle_Invalid_Role_UID_In_User_Invitation()
+        {
+            TestOutputLogger.LogContext("TestScenario", "InvalidRoleUID");
+            try
+            {
+                var org = Contentstack.Organization;
+                Organization organization = _client.Organization(org.Uid);
+                
+                UserInvitation invitation = new UserInvitation()
+                {
+                    Email = "test@example.com",
+                    Roles = new System.Collections.Generic.List<string>() { "invalid_role_uid_12345" }
+                };
+                
+                ContentstackResponse contentstackResponse = organization.AddUser(
+                    new System.Collections.Generic.List<UserInvitation>() { invitation }, 
+                    null
+                );
+                
+                AssertLogger.Fail("Expected exception for invalid role UID");
+            }
+            catch (ContentstackErrorException errorException)
+            {
+                AssertLogger.IsTrue(
+                    errorException.StatusCode == HttpStatusCode.BadRequest ||
+                    errorException.StatusCode == HttpStatusCode.UnprocessableEntity ||
+                    errorException.StatusCode == HttpStatusCode.NotFound,
+                    $"Expected error for invalid role, got {errorException.StatusCode}"
+                );
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail($"Unexpected exception type: {e.GetType().Name} - {e.Message}");
+            }
         }
     }
 }

@@ -1,5 +1,16 @@
 # Changelog
 
+
+## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
+ - Feat
+   - **Enhanced Error Handling and Test Coverage (DX-5436)**
+     - Added comprehensive error handling across all models with enhanced `ContentstackErrorException`
+     - Implemented negative test cases for all integration tests to validate error scenarios
+     - Added testing infrastructure: `MockHttpStatusHandler`, `MockNetworkErrorHandler`, and `AssertLogger` helpers
+     - Enhanced test coverage with error validation across Login, Organization, Stack, Release, Global Field, Content Type, Nested Global Field, Asset, Entry, Bulk Operation, Delivery Token, Taxonomy, Environment, Role, Workflow, Entry Variant, and Variant Group operations
+     - Improved exception handling in `BaseModel` and service layers
+
+
 ## [v0.9.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
  - Fix
    - **Variant Group HTTP method correction**: Updated variant group link/unlink operations to use PUT method instead of POST for API compliance
