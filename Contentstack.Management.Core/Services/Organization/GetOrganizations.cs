@@ -1,13 +1,13 @@
 ﻿
 using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
+using System.Text.Json;
 namespace Contentstack.Management.Core.Services.Organization
 {
     internal class GetOrganizations: ContentstackService
     {
         #region Internal
 
-        internal GetOrganizations(JsonSerializer serializer, ParameterCollection collection, string uid = null) : base(serializer, collection: collection)
+        internal GetOrganizations(JsonSerializerOptions serializerOptions, ParameterCollection collection, string uid = null) : base(serializerOptions, collection: collection)
         {
             this.ResourcePath = "organizations";
 

@@ -15,9 +15,6 @@ using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
@@ -54,7 +51,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void Initialize()
         {
-            StackResponse response = StackResponse.getStack(_client.serializer);
+            StackResponse response = StackResponse.getStack(_client.SerializerOptions);
             _stack = _client.Stack(response.Stack.APIKey);
         }
 
@@ -373,7 +370,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             
             try
             {
-                var stack = _client.Stack(StackResponse.getStack(_client.serializer).Stack.APIKey);
+                var stack = _client.Stack(StackResponse.getStack(_client.SerializerOptions).Stack.APIKey);
                 foreach (var uid in entryUIDs.ToList())
                 {
                     try
@@ -529,10 +526,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     AssertLogger.IsNotNull(responseObject["entry"], "responseObject_entry");
 
-                    var entryData = responseObject["entry"] as Newtonsoft.Json.Linq.JObject;
+                    var entryData = responseObject["entry"] as JsonObject;
                     AssertLogger.IsNotNull(entryData["uid"], "entry_uid");
                     AssertLogger.AreEqual(singlePageEntry.Title, entryData["title"]?.ToString(), "Entry title should match", "entry_title");
                     AssertLogger.AreEqual(singlePageEntry.Url, entryData["url"]?.ToString(), "Entry URL should match", "entry_url");
@@ -616,10 +613,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     AssertLogger.IsNotNull(responseObject["entry"], "responseObject_entry");
 
-                    var entryData = responseObject["entry"] as Newtonsoft.Json.Linq.JObject;
+                    var entryData = responseObject["entry"] as JsonObject;
                     AssertLogger.IsNotNull(entryData["uid"], "entry_uid");
                     AssertLogger.AreEqual(multiPageEntry.Title, entryData["title"]?.ToString(), "Entry title should match", "entry_title");
                     AssertLogger.AreEqual(multiPageEntry.Url, entryData["url"]?.ToString(), "Entry URL should match", "entry_url");
@@ -657,7 +654,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var createObject = createResponse.OpenJObjectResponse();
+                    var createObject = createResponse.OpenJsonObjectResponse();
                     var entryUid = createObject["entry"]["uid"]?.ToString();
                     AssertLogger.IsNotNull(entryUid, "created_entry_uid");
                     TestOutputLogger.LogContext("Entry", entryUid);
@@ -666,10 +663,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                     if (fetchResponse.IsSuccessStatusCode)
                     {
-                        var fetchObject = fetchResponse.OpenJObjectResponse();
+                        var fetchObject = fetchResponse.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(fetchObject["entry"], "fetchObject_entry");
 
-                        var entryData = fetchObject["entry"] as Newtonsoft.Json.Linq.JObject;
+                        var entryData = fetchObject["entry"] as JsonObject;
                         AssertLogger.AreEqual(entryUid, entryData["uid"]?.ToString(), "Fetched entry UID should match", "fetched_entry_uid");
                         AssertLogger.AreEqual(singlePageEntry.Title, entryData["title"]?.ToString(), "Fetched entry title should match", "fetched_entry_title");
 
@@ -711,7 +708,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var createObject = createResponse.OpenJObjectResponse();
+                    var createObject = createResponse.OpenJsonObjectResponse();
                     var entryUid = createObject["entry"]["uid"]?.ToString();
                     AssertLogger.IsNotNull(entryUid, "created_entry_uid");
                     TestOutputLogger.LogContext("Entry", entryUid);
@@ -728,10 +725,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                     if (updateResponse.IsSuccessStatusCode)
                     {
-                        var updateObject = updateResponse.OpenJObjectResponse();
+                        var updateObject = updateResponse.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(updateObject["entry"], "updateObject_entry");
 
-                        var entryData = updateObject["entry"] as Newtonsoft.Json.Linq.JObject;
+                        var entryData = updateObject["entry"] as JsonObject;
                         AssertLogger.AreEqual(entryUid, entryData["uid"]?.ToString(), "Updated entry UID should match", "updated_entry_uid");
                         AssertLogger.AreEqual(updatedEntry.Title, entryData["title"]?.ToString(), "Updated entry title should match", "updated_entry_title");
                         AssertLogger.AreEqual(updatedEntry.Url, entryData["url"]?.ToString(), "Updated entry URL should match", "updated_entry_url");
@@ -766,10 +763,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     AssertLogger.IsNotNull(responseObject["entries"], "responseObject_entries");
 
-                    var entries = responseObject["entries"] as Newtonsoft.Json.Linq.JArray;
+                    var entries = responseObject["entries"] as System.Text.Json.Nodes.JsonArray;
                     AssertLogger.IsNotNull(entries, "entries_array");
 
                     Console.WriteLine($"Successfully queried {entries.Count} entries for single_page content type");
@@ -804,7 +801,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var createObject = createResponse.OpenJObjectResponse();
+                    var createObject = createResponse.OpenJsonObjectResponse();
                     var entryUid = createObject["entry"]["uid"]?.ToString();
                     AssertLogger.IsNotNull(entryUid, "created_entry_uid");
                     TestOutputLogger.LogContext("Entry", entryUid);
@@ -851,7 +848,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 else
                 {
                     Console.WriteLine("⚠️ Null title was accepted - validation may be insufficient");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -924,7 +921,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     Console.WriteLine($"✅ SDK validation caught malformed UID: {ex.Message}");
                 }
-                catch (JsonReaderException ex)
+                catch (JsonException ex)
                 {
                     // API returned HTML error page instead of JSON for path traversal/malicious UIDs
                     Console.WriteLine($"✅ API blocked malicious entry UID with HTML response: {invalidUID}");
@@ -1010,7 +1007,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ XSS attempt in entry title was not rejected");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1047,7 +1044,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ Extremely long title was accepted - no length validation");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1101,7 +1098,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     else
                     {
                         Console.WriteLine($"⚠️ Invalid content type was accepted: '{invalidContentType}'");
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var entryUID = responseObj["entry"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(entryUID))
                         {
@@ -1118,7 +1115,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     Console.WriteLine($"✅ SDK caught invalid content type: {ex.Message}");
                 }
-                catch (JsonReaderException ex)
+                catch (JsonException ex)
                 {
                     // API returned HTML error page instead of JSON for special characters/malicious content types
                     Console.WriteLine($"✅ API blocked malicious content type UID with HTML response: {invalidContentType}");
@@ -1159,7 +1156,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"ℹ️ Special character title accepted: '{title.Replace("\0", "\\0").Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t")}'");
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var entryUID = responseObj["entry"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(entryUID))
                         {
@@ -1213,7 +1210,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 else
                 {
                     Console.WriteLine("⚠️ Entry created without required field - validation may be insufficient");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1252,7 +1249,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("✅ Unicode and emoji characters were properly handled");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1296,7 +1293,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ Script injection attempt was not blocked");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1334,7 +1331,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("ℹ️ Entry with control characters was accepted");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1383,7 +1380,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("✅ SDK properly handled entry serialization");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1433,7 +1430,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"⚠️ HTML injection not blocked: '{htmlPayload}'");
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var entryUID = responseObj["entry"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(entryUID))
                         {
@@ -1483,7 +1480,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("✅ Entry schema validation passed");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1523,7 +1520,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("✅ Base entry created for reference testing");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1591,7 +1588,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"⚠️ Malicious file reference not blocked: '{maliciousPath}'");
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var entryUID = responseObj["entry"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(entryUID))
                         {
@@ -1647,7 +1644,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         if (response.IsSuccessStatusCode)
                         {
                             Console.WriteLine($"ℹ️ URL format accepted: '{invalidUrl}'");
-                            var responseObj = response.OpenJObjectResponse();
+                            var responseObj = response.OpenJsonObjectResponse();
                             var entryUID = responseObj["entry"]?["uid"]?.ToString();
                             if (!string.IsNullOrEmpty(entryUID))
                             {
@@ -1693,7 +1690,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response1.IsSuccessStatusCode)
                 {
-                    var responseObj1 = response1.OpenJObjectResponse();
+                    var responseObj1 = response1.OpenJsonObjectResponse();
                     var entryUID1 = responseObj1["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID1))
                     {
@@ -1710,7 +1707,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         
                         if (response2.IsSuccessStatusCode)
                         {
-                            var responseObj2 = response2.OpenJObjectResponse();
+                            var responseObj2 = response2.OpenJsonObjectResponse();
                             var entryUID2 = responseObj2["entry"]?["uid"]?.ToString();
                             if (!string.IsNullOrEmpty(entryUID2))
                             {
@@ -1748,7 +1745,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1856,7 +1853,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -1988,7 +1985,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 else
                 {
                     Console.WriteLine("⚠️ Restricted content type access was allowed");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2023,7 +2020,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2084,7 +2081,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2141,7 +2138,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2211,7 +2208,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             
                             if (response.IsSuccessStatusCode)
                             {
-                                var responseObj = response.OpenJObjectResponse();
+                                var responseObj = response.OpenJsonObjectResponse();
                                 var entryUID = responseObj["entry"]?["uid"]?.ToString();
                                 if (!string.IsNullOrEmpty(entryUID))
                                 {
@@ -2298,7 +2295,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     Console.WriteLine($"✅ SDK caught malformed token: {ex.Message}");
                 }
-                catch (JsonReaderException ex)
+                catch (JsonException ex)
                 {
                     // API returned HTML error page instead of JSON for malformed tokens
                     Console.WriteLine($"✅ API blocked malformed token with HTML response: {malformedToken.Substring(0, Math.Min(20, malformedToken.Length))}...");
@@ -2332,7 +2329,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2406,7 +2403,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2475,7 +2472,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2536,7 +2533,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2597,7 +2594,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2658,7 +2655,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2730,7 +2727,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2802,7 +2799,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     
                     if (createResponse.IsSuccessStatusCode)
                     {
-                        var responseObj = createResponse.OpenJObjectResponse();
+                        var responseObj = createResponse.OpenJsonObjectResponse();
                         var entryUID = responseObj["entry"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(entryUID))
                         {
@@ -2867,7 +2864,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -2941,7 +2938,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -3007,7 +3004,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -3079,7 +3076,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -3167,7 +3164,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -3250,7 +3247,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             // Test if the content would be valid for import
                             try
                             {
-                                var testJson = JObject.Parse(fileContent);
+                                var testJson = JsonNode.Parse(fileContent);
                                 Console.WriteLine($"ℹ️ JSON structure validation passed for {Path.GetFileName(filePath)}");
                             }
                             catch (JsonException ex)
@@ -3348,7 +3345,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -3415,14 +3412,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         // Validate schema compatibility
                         try
                         {
-                            var testJson = JObject.Parse(incompatibleSchema);
+                            var testJson = JsonNode.Parse(incompatibleSchema);
                             
                             // Check for unknown fields
                             var knownFields = new[] { "title", "url", "content_type_uid" };
-                            var unknownFields = testJson.Properties()
-                                .Where(p => !knownFields.Contains(p.Name))
-                                .Select(p => p.Name)
-                                .ToList();
+                            var testObj = testJson as JsonObject;
+                            var unknownFields = testObj == null
+                                ? new List<string>()
+                                : testObj.Where(kvp => !knownFields.Contains(kvp.Key)).Select(kvp => kvp.Key).ToList();
                             
                             if (unknownFields.Any())
                             {
@@ -3430,7 +3427,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             }
                             
                             // Check for wrong data types
-                            if (testJson["title"]?.Type != JTokenType.String && testJson["title"] != null)
+                            var titleNode = testJson["title"];
+                            if (titleNode != null && titleNode.GetValueKind() != JsonValueKind.String)
                             {
                                 Console.WriteLine("✅ Invalid data type detected for title field");
                             }
@@ -3474,7 +3472,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -3539,7 +3537,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -3676,7 +3674,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -3754,7 +3752,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -3838,7 +3836,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     
                     if (createResponse.IsSuccessStatusCode)
                     {
-                        var responseObj = createResponse.OpenJObjectResponse();
+                        var responseObj = createResponse.OpenJsonObjectResponse();
                         var entryUID = responseObj["entry"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(entryUID))
                         {
@@ -3862,7 +3860,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     
                     if (mainCreateResponse.IsSuccessStatusCode)
                     {
-                        var responseObj = mainCreateResponse.OpenJObjectResponse();
+                        var responseObj = mainCreateResponse.OpenJsonObjectResponse();
                         var mainEntryUID = responseObj["entry"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(mainEntryUID))
                         {
@@ -3921,7 +3919,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -4002,7 +4000,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (parentCreateResponse.IsSuccessStatusCode)
                 {
-                    var parentResponseObj = parentCreateResponse.OpenJObjectResponse();
+                    var parentResponseObj = parentCreateResponse.OpenJsonObjectResponse();
                     var parentEntryUID = parentResponseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(parentEntryUID))
                     {
@@ -4019,7 +4017,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         
                         if (childCreateResponse.IsSuccessStatusCode)
                         {
-                            var childResponseObj = childCreateResponse.OpenJObjectResponse();
+                            var childResponseObj = childCreateResponse.OpenJsonObjectResponse();
                             var childEntryUID = childResponseObj["entry"]?["uid"]?.ToString();
                             if (!string.IsNullOrEmpty(childEntryUID))
                             {
@@ -4085,7 +4083,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (createResponse.IsSuccessStatusCode)
                 {
                     Console.WriteLine("ℹ️ Schema mismatch was allowed (may have compatible fields)");
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -4128,7 +4126,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -4199,7 +4197,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (parentCreateResponse.IsSuccessStatusCode)
                 {
-                    var parentResponseObj = parentCreateResponse.OpenJObjectResponse();
+                    var parentResponseObj = parentCreateResponse.OpenJsonObjectResponse();
                     var parentEntryUID = parentResponseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(parentEntryUID))
                     {
@@ -4221,7 +4219,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             
                             if (childCreateResponse.IsSuccessStatusCode)
                             {
-                                var childResponseObj = childCreateResponse.OpenJObjectResponse();
+                                var childResponseObj = childCreateResponse.OpenJsonObjectResponse();
                                 var childEntryUID = childResponseObj["entry"]?["uid"]?.ToString();
                                 if (!string.IsNullOrEmpty(childEntryUID))
                                 {
@@ -4298,7 +4296,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (results[i].IsSuccessStatusCode)
                     {
                         successCount++;
-                        var responseObj = results[i].OpenJObjectResponse();
+                        var responseObj = results[i].OpenJsonObjectResponse();
                         var entryUID = responseObj["entry"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(entryUID))
                         {
@@ -4339,7 +4337,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -4430,7 +4428,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         
                         if (createResponse.IsSuccessStatusCode)
                         {
-                            var responseObj = createResponse.OpenJObjectResponse();
+                            var responseObj = createResponse.OpenJsonObjectResponse();
                             var entryUID = responseObj["entry"]?["uid"]?.ToString();
                             if (!string.IsNullOrEmpty(entryUID))
                             {
@@ -4512,7 +4510,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -4605,7 +4603,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (results[i].IsSuccessStatusCode)
                     {
                         successCount++;
-                        var responseObj = results[i].OpenJObjectResponse();
+                        var responseObj = results[i].OpenJsonObjectResponse();
                         var entryUID = responseObj["entry"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(entryUID))
                         {
@@ -4656,7 +4654,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -4753,7 +4751,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -4844,7 +4842,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         
                         if (createResponse.IsSuccessStatusCode)
                         {
-                            var responseObj = createResponse.OpenJObjectResponse();
+                            var responseObj = createResponse.OpenJsonObjectResponse();
                             var entryUID = responseObj["entry"]?["uid"]?.ToString();
                             if (!string.IsNullOrEmpty(entryUID))
                             {
@@ -4976,7 +4974,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -5046,7 +5044,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var entryUID = responseObj["entry"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(entryUID))
                     {
@@ -5144,7 +5142,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             
                             if (response.IsSuccessStatusCode)
                             {
-                                var responseObj = response.OpenJObjectResponse();
+                                var responseObj = response.OpenJsonObjectResponse();
                                 var entryUID = responseObj["entry"]?["uid"]?.ToString();
                                 if (!string.IsNullOrEmpty(entryUID))
                                 {
@@ -5221,7 +5219,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         if (response.IsSuccessStatusCode)
                         {
                             Console.WriteLine($"ℹ️ {test.Name} ({test.Size} chars) was accepted");
-                            var responseObj = response.OpenJObjectResponse();
+                            var responseObj = response.OpenJsonObjectResponse();
                             var entryUID = responseObj["entry"]?["uid"]?.ToString();
                             if (!string.IsNullOrEmpty(entryUID))
                             {
@@ -5289,7 +5287,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (results[i].IsSuccessStatusCode)
                     {
                         successCount++;
-                        var responseObj = results[i].OpenJObjectResponse();
+                        var responseObj = results[i].OpenJsonObjectResponse();
                         var entryUID = responseObj["entry"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(entryUID))
                         {
@@ -5347,7 +5345,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         if (response.IsSuccessStatusCode)
                         {
                             Console.WriteLine($"✅ Field depth {depthUrl.Split('/').Length} levels accepted");
-                            var responseObj = response.OpenJObjectResponse();
+                            var responseObj = response.OpenJsonObjectResponse();
                             var entryUID = responseObj["entry"]?["uid"]?.ToString();
                             if (!string.IsNullOrEmpty(entryUID))
                             {
@@ -5405,7 +5403,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             
                             if (response.IsSuccessStatusCode)
                             {
-                                var responseObj = response.OpenJObjectResponse();
+                                var responseObj = response.OpenJsonObjectResponse();
                                 var entryUID = responseObj["entry"]?["uid"]?.ToString();
                                 if (!string.IsNullOrEmpty(entryUID))
                                 {
@@ -5475,7 +5473,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             
                             if (response.IsSuccessStatusCode)
                             {
-                                var responseObj = response.OpenJObjectResponse();
+                                var responseObj = response.OpenJsonObjectResponse();
                                 var entryUID = responseObj["entry"]?["uid"]?.ToString();
                                 if (!string.IsNullOrEmpty(entryUID))
                                 {
@@ -5544,7 +5542,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             
                             if (response.IsSuccessStatusCode)
                             {
-                                var responseObj = response.OpenJObjectResponse();
+                                var responseObj = response.OpenJsonObjectResponse();
                                 var entryUID = responseObj["entry"]?["uid"]?.ToString();
                                 if (!string.IsNullOrEmpty(entryUID))
                                 {
@@ -5609,7 +5607,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             
                             if (response.IsSuccessStatusCode)
                             {
-                                var responseObj = response.OpenJObjectResponse();
+                                var responseObj = response.OpenJsonObjectResponse();
                                 var entryUID = responseObj["entry"]?["uid"]?.ToString();
                                 if (!string.IsNullOrEmpty(entryUID))
                                 {
@@ -5683,7 +5681,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             
                             if (response.IsSuccessStatusCode)
                             {
-                                var responseObj = response.OpenJObjectResponse();
+                                var responseObj = response.OpenJsonObjectResponse();
                                 var entryUID = responseObj["entry"]?["uid"]?.ToString();
                                 if (!string.IsNullOrEmpty(entryUID))
                                 {
@@ -5760,7 +5758,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             
                             if (response.IsSuccessStatusCode)
                             {
-                                var responseObj = response.OpenJObjectResponse();
+                                var responseObj = response.OpenJsonObjectResponse();
                                 var entryUID = responseObj["entry"]?["uid"]?.ToString();
                                 if (!string.IsNullOrEmpty(entryUID))
                                 {
@@ -5836,7 +5834,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             
                             if (response.IsSuccessStatusCode)
                             {
-                                var responseObj = response.OpenJObjectResponse();
+                                var responseObj = response.OpenJsonObjectResponse();
                                 var entryUID = responseObj["entry"]?["uid"]?.ToString();
                                 if (!string.IsNullOrEmpty(entryUID))
                                 {

@@ -1,12 +1,11 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Abstractions
 {
-    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
-    public interface IEntry
+        public interface IEntry
     {
-        [JsonProperty(propertyName: "title")]
+        [JsonPropertyName("title")]
         string Title { get; set; }
     }
 }

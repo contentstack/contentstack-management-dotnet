@@ -8,7 +8,7 @@
       <TargetFrameworks>netstandard2.0</TargetFrameworks>
     </PropertyGroup>
     <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <Title>Contentstack Management</Title>
     <Authors>Contentstack</Authors>
@@ -73,6 +73,6 @@
     <PackageReference Include="Otp.NET" Version="1.4.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 </Project>

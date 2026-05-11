@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Models;
 
 namespace Contentstack.Management.Core.Services.Stack.BulkOperation
@@ -18,8 +18,8 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="stack">The stack instance.</param>
         /// <param name="updateBody">The workflow update body.</param>
-        public BulkWorkflowUpdateService(JsonSerializer serializer, Contentstack.Management.Core.Models.Stack stack, BulkWorkflowUpdateBody updateBody)
-            : base(serializer, stack)
+        public BulkWorkflowUpdateService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack stack, BulkWorkflowUpdateBody updateBody)
+            : base(serializerOptions, stack)
         {
             _updateBody = updateBody ?? throw new ArgumentNullException(nameof(updateBody));
 
@@ -34,7 +34,7 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
         {
             if (_updateBody != null)
             {
-                var json = JsonConvert.SerializeObject(_updateBody);
+                var json = JsonSerializer.Serialize(_updateBody, SerializerOptions);
                 ByteContent = Encoding.UTF8.GetBytes(json);
             }
         }

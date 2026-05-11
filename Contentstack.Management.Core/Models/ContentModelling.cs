@@ -1,55 +1,51 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Text.Json.Serialization;
 using Contentstack.Management.Core.Models.Fields;
-using Newtonsoft.Json;
-
 namespace Contentstack.Management.Core.Models
 {
-    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class ContentModelling
     {
-        [JsonProperty(propertyName: "title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
-        [JsonProperty(propertyName: "description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [JsonProperty(propertyName: "field_rules")]
+        [JsonPropertyName("field_rules")]
         public List<FieldRules> FieldRules { get; set; }
 
-        [JsonProperty(propertyName: "schema")]
+        [JsonPropertyName("schema")]
         public List<Field> Schema { get; set; }
 
-        [JsonProperty(propertyName: "global_field_refs")]
+        [JsonPropertyName("global_field_refs")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<GlobalFieldRefs> GlobalFieldRefs { get; set; }
 
-        [JsonProperty(propertyName: "options")]
+        [JsonPropertyName("options")]
         public Option Options { get; set; }
     }
 
-    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Option
     {
-        [JsonProperty(propertyName: "title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonProperty(propertyName: "sub_title")]
+        [JsonPropertyName("sub_title")]
         public List<string> SubTitle { get; set; }
 
-        [JsonProperty(propertyName: "singleton")]
+        [JsonPropertyName("singleton")]
         public bool Singleton { get; set; }
 
-        [JsonProperty(propertyName: "is_page")]
+        [JsonPropertyName("is_page")]
         public bool IsPage { get; set; }
 
-        [JsonProperty(propertyName: "url_pattern")]
+        [JsonPropertyName("url_pattern")]
         public string UrlPattern { get; set; }
 
-        [JsonProperty(propertyName: "url_prefix")]
+        [JsonPropertyName("url_prefix")]
         public string UrlPrefix { get; set; }
-
-    }    
+    }
 }

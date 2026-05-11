@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Queryable
 {
@@ -112,20 +112,20 @@ namespace Contentstack.Management.Core.Queryable
     }
 
     /// <summary>
-    /// Double list parameter value.
+    /// JSON object parameter value (query body serialized as JSON string).
     /// </summary>
-    public class JObjectParameterValue : QueryParamValue
+    public class JsonObjectParameterValue : QueryParamValue
     {
         /// <summary>
-        /// List of doubles value of the parameter.
+        /// JSON object value of the parameter.
         /// </summary>
-        public JObject Value { get; set; }
+        public JsonObject Value { get; set; }
 
         /// <summary>
-        /// Constructs ParameterValue for a list of doubles.
+        /// Constructs ParameterValue for a JSON object.
         /// </summary>
         /// <param name="values"></param>
-        public JObjectParameterValue(JObject values)
+        public JsonObjectParameterValue(JsonObject values)
         {
             Value = values;
         }

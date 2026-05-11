@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -12,8 +12,8 @@ namespace Contentstack.Management.Core.Services.Models
         internal string fieldName;
         internal T model;
 
-        internal DeleteService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, string fieldName, T model, ParameterCollection collection = null)
-            : base(serializer, stack: stack, collection: collection)
+        internal DeleteService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, string fieldName, T model, ParameterCollection collection = null)
+            : base(serializerOptions, stack: stack, collection: collection)
         {
             if (stack.APIKey == null)
             {
@@ -40,14 +40,9 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
-            {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-
-                Serializer.Serialize(writer, model);
-                string snippet = $"{{\"{fieldName}\": {stringWriter.ToString()}}}";
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
-            }
+            var inner = JsonSerializer.Serialize(model, SerializerOptions);
+            var snippet = $"{{\"{fieldName}\": {inner}}}";
+            this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
         }
     }
 }

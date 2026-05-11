@@ -1,22 +1,20 @@
-using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text.Json;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Utils;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Contentstack.Management.Core.Unit.Tests.Utils
 {
     [TestClass]
     public class NodeJsonConverterTest
     {
-        private JsonSerializer _serializer;
-
-        [TestInitialize]
-        public void Setup()
+        private static JsonSerializerOptions CreateOptions()
         {
-            _serializer = new JsonSerializer();
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new NodeJsonConverter());
+            options.Converters.Add(new TextNodeJsonConverter());
+            return options;
         }
 
         [TestMethod]
@@ -27,16 +25,15 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 ""attrs"": { ""class"": ""test-class"" },
                 ""children"": []
             }";
-            var reader = new JsonTextReader(new System.IO.StringReader(json));
-            var converter = new NodeJsonConverter();
-
-            var result = converter.ReadJson(reader, typeof(Node), null, false, _serializer);
+            var result = JsonSerializer.Deserialize<Node>(json, CreateOptions());
 
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(Node));
             Assert.AreEqual("paragraph", result.type);
             Assert.IsNotNull(result.attrs);
-            Assert.AreEqual("test-class", result.attrs["class"]);
+            var classVal = result.attrs["class"];
+            var classStr = classVal is JsonElement je ? je.GetString() : classVal?.ToString();
+            Assert.AreEqual("test-class", classStr);
             Assert.IsNotNull(result.children);
         }
 
@@ -47,10 +44,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 ""text"": ""Hello World"",
                 ""bold"": true
             }";
-            var reader = new JsonTextReader(new System.IO.StringReader(json));
-            var converter = new NodeJsonConverter();
-
-            var result = converter.ReadJson(reader, typeof(Node), null, false, _serializer);
+            var result = JsonSerializer.Deserialize<Node>(json, CreateOptions());
 
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(TextNode));
@@ -66,16 +60,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 attrs = new Dictionary<string, object> { { "class", "test-class" } },
                 children = new List<Node>()
             };
-            var stringWriter = new System.IO.StringWriter();
-            var writer = new JsonTextWriter(stringWriter);
-            var converter = new NodeJsonConverter();
+            var json = JsonSerializer.Serialize(node, CreateOptions());
 
-            converter.WriteJson(writer, node, _serializer);
-
-            var result = stringWriter.ToString();
-            Assert.IsTrue(result.Contains("\"type\":\"paragraph\""));
-            Assert.IsTrue(result.Contains("\"attrs\""));
-            Assert.IsTrue(result.Contains("\"children\""));
+            Assert.IsTrue(json.Contains("\"type\":\"paragraph\""));
+            Assert.IsTrue(json.Contains("\"attrs\""));
+            Assert.IsTrue(json.Contains("\"children\""));
         }
 
         [TestMethod]
@@ -87,15 +76,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 attrs = null,
                 children = new List<Node>()
             };
-            var stringWriter = new System.IO.StringWriter();
-            var writer = new JsonTextWriter(stringWriter);
-            var converter = new NodeJsonConverter();
+            var json = JsonSerializer.Serialize(node, CreateOptions());
 
-            converter.WriteJson(writer, node, _serializer);
-
-            var result = stringWriter.ToString();
-            Assert.IsTrue(result.Contains("\"type\":\"paragraph\""));
-            Assert.IsFalse(result.Contains("\"attrs\""));
+            Assert.IsTrue(json.Contains("\"type\":\"paragraph\""));
+            Assert.IsFalse(json.Contains("\"attrs\""));
         }
 
         [TestMethod]
@@ -107,15 +91,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 attrs = new Dictionary<string, object>(),
                 children = null
             };
-            var stringWriter = new System.IO.StringWriter();
-            var writer = new JsonTextWriter(stringWriter);
-            var converter = new NodeJsonConverter();
+            var json = JsonSerializer.Serialize(node, CreateOptions());
 
-            converter.WriteJson(writer, node, _serializer);
-
-            var result = stringWriter.ToString();
-            Assert.IsTrue(result.Contains("\"type\":\"paragraph\""));
-            Assert.IsFalse(result.Contains("\"children\""));
+            Assert.IsTrue(json.Contains("\"type\":\"paragraph\""));
+            Assert.IsFalse(json.Contains("\"children\""));
         }
 
         [TestMethod]
@@ -128,16 +107,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 attrs = new Dictionary<string, object>(),
                 children = new List<Node> { childNode }
             };
-            var stringWriter = new System.IO.StringWriter();
-            var writer = new JsonTextWriter(stringWriter);
-            var converter = new NodeJsonConverter();
+            var json = JsonSerializer.Serialize(node, CreateOptions());
 
-            converter.WriteJson(writer, node, _serializer);
-
-            var result = stringWriter.ToString();
-            Assert.IsTrue(result.Contains("\"children\""));
-            Assert.IsTrue(result.Contains("["));
-            Assert.IsTrue(result.Contains("]"));
+            Assert.IsTrue(json.Contains("\"children\""));
+            Assert.IsTrue(json.Contains("["));
+            Assert.IsTrue(json.Contains("]"));
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core
             var contentstackClient = new ContentstackClient();
 
             Assert.IsNotNull(contentstackClient.LogManager);
-            Assert.IsNotNull(contentstackClient.SerializerSettings);
+            Assert.IsNotNull(contentstackClient.SerializerOptions);
             Assert.AreEqual(contentstackClient.User().GetType(), typeof(User));
             Assert.AreEqual(contentstackClient.Organization().GetType(), typeof(Organization));
             Assert.AreEqual(contentstackClient.Stack().GetType(), typeof(Stack));

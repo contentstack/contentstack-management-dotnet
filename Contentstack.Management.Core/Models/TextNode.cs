@@ -1,10 +1,7 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Models
 {
-    [JsonConverter(typeof(TextNodeJsonConverter))]
     public class TextNode: Node
     {
         public bool bold { get; set; }

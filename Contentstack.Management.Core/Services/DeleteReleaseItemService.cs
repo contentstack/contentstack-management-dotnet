@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Utils;
 namespace Contentstack.Management.Core.Services
 {
@@ -12,8 +12,8 @@ namespace Contentstack.Management.Core.Services
         #region Internal
         internal List<string> _items;
 
-        internal DeleteReleaseItemService(JsonSerializer serializer, Core.Models.Stack stack, string releaseUID, List<string> items)
-            : base(serializer, stack: stack)
+        internal DeleteReleaseItemService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string releaseUID, List<string> items)
+            : base(serializerOptions, stack: stack)
         {
             if (stack.APIKey == null)
             {
@@ -35,14 +35,9 @@ namespace Contentstack.Management.Core.Services
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
-            {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-
-                Serializer.Serialize(writer, _items);
-                string snippet = $"{{\"items\": {stringWriter.ToString()}}}";
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
-            }
+            var inner = JsonSerializer.Serialize(_items, SerializerOptions);
+            var snippet = $"{{\"items\": {inner}}}";
+            this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
         }
     }
 }

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Http;
@@ -14,14 +14,13 @@ using Contentstack.Management.Core.Services;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Contentstack.Management.Core.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services
 {
     [TestClass]
     public class ContentstackServiceTest
     {
-        JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        JsonSerializerOptions serializer = TestJsonSerializerOptions.CreateDefault();
         private readonly IFixture _fixture = new Fixture()
             .Customize(new AutoMoqCustomization());
         [TestMethod]
@@ -51,7 +50,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
 
             Assert.IsNotNull(contentstackService);
             Assert.IsNull(contentstackService.Content);
-            Assert.IsNotNull(contentstackService.Serializer);
+            Assert.IsNotNull(contentstackService.SerializerOptions);
         }
 
         [TestMethod]
@@ -59,17 +58,15 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         {
             var contentstackService = new ContentstackService(serializer);
 
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            using var ms = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(ms))
             {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
-                writer.WritePropertyName("user");
-                writer.WriteValue("test_Mock_user");
+                writer.WriteString("user", "test_Mock_user");
                 writer.WriteEndObject();
-
-                string snippet = stringWriter.ToString();
-                contentstackService.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
             }
+
+            contentstackService.ByteContent = ms.ToArray();
             contentstackService.WriteContentByte();
             Assert.IsNotNull(contentstackService.Content);
 

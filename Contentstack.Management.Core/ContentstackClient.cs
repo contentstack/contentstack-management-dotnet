@@ -1,7 +1,8 @@
 using System;
 using System.Net;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
@@ -29,7 +30,6 @@ namespace Contentstack.Management.Core
     {
         internal ContentstackRuntimePipeline ContentstackPipeline { get; set; }
         internal ContentstackClientOptions contentstackOptions;
-        internal JsonSerializer serializer => JsonSerializer.Create(SerializerSettings);
 
         #region Private
         private HttpClient _httpClient;
@@ -51,7 +51,7 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// Get and Set method for deserialization.
         /// </summary>
-        public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings();
+        public JsonSerializerOptions SerializerOptions { get; set; } = new JsonSerializerOptions();
 
         #endregion
 
@@ -190,18 +190,13 @@ namespace Contentstack.Management.Core
                 }
             }
 
-            SerializerSettings.DateParseHandling = DateParseHandling.None;
-            SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-            SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            // Configure System.Text.Json options
+            SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            SerializerOptions.PropertyNameCaseInsensitive = true;
 
-            foreach (Type t in CsmJsonConverterAttribute.GetCustomAttribute(typeof(CsmJsonConverterAttribute)))
-            {
-                SerializerSettings.Converters.Add((JsonConverter)Activator.CreateInstance(t));
-            }
-            SerializerSettings.Converters.Add(new NodeJsonConverter());
-            SerializerSettings.Converters.Add(new TextNodeJsonConverter());
-            SerializerSettings.Converters.Add(new FieldJsonConverter());
+            SerializerOptions.Converters.Add(new FieldJsonConverter());
+            SerializerOptions.Converters.Add(new NodeJsonConverter());
+            SerializerOptions.Converters.Add(new TextNodeJsonConverter());
         }
 
         protected void BuildPipeline()
@@ -372,7 +367,7 @@ namespace Contentstack.Management.Core
         public ContentstackResponse Login(ICredentials credentials, string token = null, string mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
-            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret);
+            LoginService Login = new LoginService(SerializerOptions, credentials, token, mfaSecret);
 
             return InvokeSync(Login);
         }
@@ -394,7 +389,7 @@ namespace Contentstack.Management.Core
         public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string token = null, string mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
-            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret);
+            LoginService Login = new LoginService(SerializerOptions, credentials, token, mfaSecret);
 
             return InvokeAsync<LoginService, ContentstackResponse>(Login);
         }
@@ -434,7 +429,7 @@ namespace Contentstack.Management.Core
         public ContentstackResponse Logout(string authtoken = null)
         {
             string token = authtoken ?? contentstackOptions.Authtoken;
-            LogoutService logout = new LogoutService(serializer, token);
+            LogoutService logout = new LogoutService(SerializerOptions, token);
 
             return InvokeSync(logout);
         }
@@ -452,7 +447,7 @@ namespace Contentstack.Management.Core
         public Task<ContentstackResponse> LogoutAsync(string authtoken = null)
         {
             string token = authtoken ?? contentstackOptions.Authtoken;
-            LogoutService logout = new LogoutService(serializer, token);
+            LogoutService logout = new LogoutService(SerializerOptions, token);
 
             return InvokeAsync<LogoutService, ContentstackResponse>(logout);
         }
@@ -677,7 +672,7 @@ namespace Contentstack.Management.Core
         {
             ThrowIfNotLoggedIn();
 
-            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection);
+            GetLoggedInUserService getUser = new GetLoggedInUserService(SerializerOptions, collection);
 
             return InvokeSync(getUser);
         }
@@ -696,7 +691,7 @@ namespace Contentstack.Management.Core
         {
             ThrowIfNotLoggedIn();
 
-            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection);
+            GetLoggedInUserService getUser = new GetLoggedInUserService(SerializerOptions, collection);
 
             return InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
         }

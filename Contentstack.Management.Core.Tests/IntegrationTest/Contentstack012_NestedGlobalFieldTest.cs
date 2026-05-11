@@ -69,7 +69,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void Initialize()
         {
-            StackResponse response = StackResponse.getStack(_client.serializer);
+            StackResponse response = StackResponse.getStack(_client.SerializerOptions);
             _stack = _client.Stack(response.Stack.APIKey);
         }
 
@@ -2403,7 +2403,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var jsonResponse = response.OpenJObjectResponse();
+                    var jsonResponse = response.OpenJsonObjectResponse();
                     
                     // Check if essential fields are present
                     var uid = jsonResponse?["global_field"]?["uid"]?.ToString();
@@ -2545,7 +2545,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var jsonResponse = response.OpenJObjectResponse();
+                    var jsonResponse = response.OpenJsonObjectResponse();
                     
                     // Check timestamp consistency
                     var createdAt = jsonResponse?["global_field"]?["created_at"]?.ToString();

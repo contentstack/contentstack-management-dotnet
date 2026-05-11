@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using Contentstack.Management.Core.Abstractions;
 using Contentstack.Management.Core.Utils;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.CustomExtension
 {
@@ -74,18 +73,12 @@ namespace Contentstack.Management.Core.Models.CustomExtension
             }
             if (Scope != null)
             {
-                using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
-                {
-                    JsonWriter writer = new JsonTextWriter(stringWriter);
+                var snippet = JsonSerializer.Serialize(Scope);
+                StringContent jsonPart = new StringContent(snippet);
+                jsonPart.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                jsonPart.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-                    JsonSerializer.Create().Serialize(writer, Scope);
-                    string snippet = stringWriter.ToString();
-                    StringContent jsonPart = new StringContent(snippet);
-                    jsonPart.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                    jsonPart.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-                    content.Add(jsonPart, "extension[scope]", snippet);
-                }
+                content.Add(jsonPart, "extension[scope]", snippet);
             }
             content.Add(new StringContent("widget"), "extension[type]");
             return content;

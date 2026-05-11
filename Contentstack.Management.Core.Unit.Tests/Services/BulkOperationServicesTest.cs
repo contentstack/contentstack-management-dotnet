@@ -3,7 +3,6 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Stack.BulkOperation;
 using Contentstack.Management.Core;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using System.Text;
 
 namespace Contentstack.Management.Core.Unit.Tests.Services
@@ -11,13 +10,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
     [TestClass]
     public class BulkOperationServicesTest
     {
-        private JsonSerializer _serializer;
+        private JsonSerializerOptions _serializerOptions;
         private Stack _stack;
 
         [TestInitialize]
         public void Setup()
         {
-            _serializer = new JsonSerializer();
+            _serializerOptions = TestJsonSerializerOptions.CreateDefault();
             var client = new ContentstackClient("test_token", "test_host");
             _stack = client.Stack("test_api_key");
         }
@@ -46,7 +45,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             };
 
             
-            var service = new BulkReleaseItemsService(_serializer, _stack, releaseData, "1.0");
+            var service = new BulkReleaseItemsService(_serializerOptions, _stack, releaseData, "1.0");
 
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/release/items", service.ResourcePath);
@@ -78,7 +77,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 }
             };
 
-            var service = new BulkReleaseItemsService(_serializer, _stack, releaseData);
+            var service = new BulkReleaseItemsService(_serializerOptions, _stack, releaseData);
 
             
             service.ContentBody();
@@ -108,7 +107,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             };
 
             
-            var service = new BulkReleaseItemsService(_serializer, _stack, releaseData);
+            var service = new BulkReleaseItemsService(_serializerOptions, _stack, releaseData);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/release/items", service.ResourcePath);
@@ -137,7 +136,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             };
 
             
-            var service = new BulkPublishService(_serializer, _stack, publishDetails, true, true, true);
+            var service = new BulkPublishService(_serializerOptions, _stack, publishDetails, true, true, true);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/publish", service.ResourcePath);
@@ -168,7 +167,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 Environments = new List<string> { "env1" }
             };
 
-            var service = new BulkPublishService(_serializer, _stack, publishDetails);
+            var service = new BulkPublishService(_serializerOptions, _stack, publishDetails);
 
             
             service.ContentBody();
@@ -194,7 +193,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             };
 
             
-            var service = new BulkPublishService(_serializer, _stack, publishDetails, true, true, true);
+            var service = new BulkPublishService(_serializerOptions, _stack, publishDetails, true, true, true);
 
             Assert.IsNotNull(service);
             Assert.IsTrue(service.QueryResources.ContainsKey("skip_workflow_stage_check"));
@@ -215,7 +214,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             };
 
             
-            var service = new BulkPublishService(_serializer, _stack, publishDetails, false, false, false);
+            var service = new BulkPublishService(_serializerOptions, _stack, publishDetails, false, false, false);
 
             Assert.IsNotNull(service);
             Assert.IsFalse(service.QueryResources.ContainsKey("skip_workflow_stage_check"));
@@ -243,7 +242,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             };
 
             
-            var service = new BulkUnpublishService(_serializer, _stack, unpublishDetails, true, true, true);
+            var service = new BulkUnpublishService(_serializerOptions, _stack, unpublishDetails, true, true, true);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/unpublish", service.ResourcePath);
@@ -272,7 +271,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 Environments = new List<string> { "env1" }
             };
 
-            var service = new BulkUnpublishService(_serializer, _stack, unpublishDetails);
+            var service = new BulkUnpublishService(_serializerOptions, _stack, unpublishDetails);
 
             
             service.ContentBody();
@@ -308,7 +307,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             };
 
             
-            var service = new BulkDeleteService(_serializer, _stack, deleteDetails);
+            var service = new BulkDeleteService(_serializerOptions, _stack, deleteDetails);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/delete", service.ResourcePath);
@@ -336,7 +335,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 }
             };
 
-            var service = new BulkDeleteService(_serializer, _stack, deleteDetails);
+            var service = new BulkDeleteService(_serializerOptions, _stack, deleteDetails);
 
             
             service.ContentBody();
@@ -374,7 +373,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             };
 
             
-            var service = new BulkWorkflowUpdateService(_serializer, _stack, updateBody);
+            var service = new BulkWorkflowUpdateService(_serializerOptions, _stack, updateBody);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/workflow", service.ResourcePath);
@@ -405,7 +404,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
                 }
             };
 
-            var service = new BulkWorkflowUpdateService(_serializer, _stack, updateBody);
+            var service = new BulkWorkflowUpdateService(_serializerOptions, _stack, updateBody);
 
             
             service.ContentBody();
@@ -426,7 +425,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             string bulkVersion = "1.0";
 
             
-            var service = new BulkJobStatusService(_serializer, _stack, jobId, bulkVersion);
+            var service = new BulkJobStatusService(_serializerOptions, _stack, jobId, bulkVersion);
 
             Assert.IsNotNull(service);
             Assert.AreEqual($"/bulk/jobs/{jobId}", service.ResourcePath);
@@ -442,7 +441,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             string jobId = "test_job_id";
 
             
-            var service = new BulkJobStatusService(_serializer, _stack, jobId);
+            var service = new BulkJobStatusService(_serializerOptions, _stack, jobId);
 
             Assert.IsNotNull(service);
             Assert.AreEqual($"/bulk/jobs/{jobId}", service.ResourcePath);
@@ -467,7 +466,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             };
 
             
-            var service = new BulkAddItemsService(_serializer, _stack, addItemsData, "1.0");
+            var service = new BulkAddItemsService(_serializerOptions, _stack, addItemsData, "1.0");
 
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/release/items", service.ResourcePath);
@@ -493,7 +492,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
             };
 
             
-            var service = new BulkUpdateItemsService(_serializer, _stack, updateItemsData, "1.0");
+            var service = new BulkUpdateItemsService(_serializerOptions, _stack, updateItemsData, "1.0");
 
             Assert.IsNotNull(service);
             Assert.AreEqual("/bulk/release/update_items", service.ResourcePath);
@@ -508,7 +507,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
               
             Assert.ThrowsException<System.ArgumentNullException>(() =>
             {
-                new BulkReleaseItemsService(_serializer, _stack, null);
+                new BulkReleaseItemsService(_serializerOptions, _stack, null);
             });
         }
 
@@ -518,7 +517,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
               
             Assert.ThrowsException<System.ArgumentNullException>(() =>
             {
-                new BulkPublishService(_serializer, _stack, null);
+                new BulkPublishService(_serializerOptions, _stack, null);
             });
         }
 
@@ -528,7 +527,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
               
             Assert.ThrowsException<System.ArgumentNullException>(() =>
             {
-                new BulkDeleteService(_serializer, _stack, null);
+                new BulkDeleteService(_serializerOptions, _stack, null);
             });
         }
     }

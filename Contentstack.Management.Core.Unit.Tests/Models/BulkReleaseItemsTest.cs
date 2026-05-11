@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Contentstack.Management.Core.Models;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models
 {
@@ -32,7 +31,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonConvert.SerializeObject(releaseData);
+            var json = JsonSerializer.Serialize(releaseData);
 
             Assert.IsNotNull(json);
             Assert.IsTrue(json.Contains("release"));
@@ -60,7 +59,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonConvert.SerializeObject(item);
+            var json = JsonSerializer.Serialize(item);
 
             Assert.IsNotNull(json);
             Assert.IsTrue(json.Contains("content_type_uid"));
@@ -91,7 +90,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             }";
 
             
-            var releaseData = JsonConvert.DeserializeObject<BulkReleaseItemsData>(json);
+            var releaseData = JsonSerializer.Deserialize<BulkReleaseItemsData>(json);
 
             Assert.IsNotNull(releaseData);
             Assert.AreEqual("release_uid", releaseData.Release);
@@ -120,7 +119,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             }";
 
             
-            var item = JsonConvert.DeserializeObject<BulkReleaseItem>(json);
+            var item = JsonSerializer.Deserialize<BulkReleaseItem>(json);
 
             Assert.IsNotNull(item);
             Assert.AreEqual("ct_1", item.ContentTypeUid);
@@ -141,7 +140,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonConvert.SerializeObject(releaseData);
+            var json = JsonSerializer.Serialize(releaseData);
 
             Assert.IsNotNull(json);
             Assert.IsNotNull(releaseData.Locale);

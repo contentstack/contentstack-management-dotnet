@@ -4,14 +4,13 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Stack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
 {
     [TestClass]
     public class StackOwnershipServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializer = TestJsonSerializerOptions.CreateDefault();
         private readonly IFixture _fixture = new Fixture()
         .Customize(new AutoMoqCustomization());
 

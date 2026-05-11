@@ -47,7 +47,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = stack.GetAll();
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
             }
             catch (Exception e)
@@ -67,7 +67,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = await stack.GetAllAsync();
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
             }
             catch (Exception e)
@@ -87,7 +87,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Stack stack = _client.Stack();
                 ContentstackResponse contentstackResponse = stack.Create(_stackName, _locale, _org.Uid);
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 StackResponse model = contentstackResponse.OpenTResponse<StackResponse>();
                 Contentstack.Stack = model.Stack;
                 TestOutputLogger.LogContext("StackApiKey", model.Stack.APIKey);
@@ -115,7 +115,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Stack stack = _client.Stack(Contentstack.Stack.APIKey);
                 ContentstackResponse contentstackResponse = stack.Update(_updatestackName);
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 File.WriteAllText("./stackApiKey.txt", contentstackResponse.OpenResponse());
 
                 StackResponse model = contentstackResponse.OpenTResponse<StackResponse>();
@@ -145,7 +145,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Stack stack = _client.Stack(Contentstack.Stack.APIKey);
                 ContentstackResponse contentstackResponse = await stack.UpdateAsync(_updatestackName, _description);
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 StackResponse model = contentstackResponse.OpenTResponse<StackResponse>();
                 Contentstack.Stack = model.Stack;
 
@@ -173,7 +173,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Stack stack = _client.Stack(Contentstack.Stack.APIKey);
                 ContentstackResponse contentstackResponse = stack.Fetch();
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 StackResponse model = contentstackResponse.OpenTResponse<StackResponse>();
 
                 AssertLogger.IsNotNull(response, "response");
@@ -200,7 +200,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Stack stack = _client.Stack(Contentstack.Stack.APIKey);
                 ContentstackResponse contentstackResponse = await stack.FetchAsync();
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 StackResponse model = contentstackResponse.OpenTResponse<StackResponse>();
 
                 AssertLogger.IsNotNull(response, "response");
@@ -236,7 +236,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = stack.AddSettings(settings);
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
 
                 AssertLogger.IsNotNull(response, "response");
@@ -262,7 +262,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = stack.Settings();
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
 
                 AssertLogger.IsNotNull(response, "response");
@@ -288,7 +288,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = stack.ResetSettings();
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
 
                 AssertLogger.IsNotNull(response, "response");
@@ -321,7 +321,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = await stack.AddSettingsAsync(settings);
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
 
                 AssertLogger.IsNotNull(response, "response");
@@ -346,7 +346,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = await stack.ResetSettingsAsync();
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
 
                 AssertLogger.IsNotNull(response, "response");
@@ -372,7 +372,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = await stack.SettingsAsync();
 
-                var response = contentstackResponse.OpenJObjectResponse();
+                var response = contentstackResponse.OpenJsonObjectResponse();
                 StackSettingsModel model = contentstackResponse.OpenTResponse<StackSettingsModel>();
 
                 AssertLogger.IsNotNull(response, "response");

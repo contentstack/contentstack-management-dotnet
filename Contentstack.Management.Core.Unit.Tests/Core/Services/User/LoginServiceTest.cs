@@ -6,7 +6,6 @@ using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Services.User;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
 {
@@ -14,7 +13,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
     public class LoginServiceTest
     {
         ICredentials credentials = new NetworkCredential("name", "password");
-        JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        JsonSerializerOptions serializer = TestJsonSerializerOptions.CreateDefault();
 
         [TestMethod]
         public void Should_Not_Allow_Null_serializer()

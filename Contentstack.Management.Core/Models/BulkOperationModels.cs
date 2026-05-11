@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -11,43 +12,43 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the list of entries to publish/unpublish.
         /// </summary>
-        [JsonProperty(propertyName: "entries")]
+        [JsonPropertyName("entries")]
         public List<BulkPublishEntry> Entries { get; set; }
 
         /// <summary>
         /// Gets or sets the list of assets to publish/unpublish.
         /// </summary>
-        [JsonProperty(propertyName: "assets")]
+        [JsonPropertyName("assets")]
         public List<BulkPublishAsset> Assets { get; set; }
 
         /// <summary>
         /// Gets or sets the list of locales.
         /// </summary>
-        [JsonProperty(propertyName: "locales")]
+        [JsonPropertyName("locales")]
         public List<string> Locales { get; set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the list of environments.
         /// </summary>
-        [JsonProperty(propertyName: "environments")]
+        [JsonPropertyName("environments")]
         public List<string> Environments { get; set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the rules for the bulk operation.
         /// </summary>
-        [JsonProperty(propertyName: "rules")]
+        [JsonPropertyName("rules")]
         public BulkPublishRules Rules { get; set; }
 
         /// <summary>
         /// Gets or sets the scheduled time for the operation.
         /// </summary>
-        [JsonProperty(propertyName: "scheduled_at")]
+        [JsonPropertyName("scheduled_at")]
         public string ScheduledAt { get; set; }
 
         /// <summary>
         /// Gets or sets whether to publish with reference.
         /// </summary>
-        [JsonProperty(propertyName: "publish_with_reference")]
+        [JsonPropertyName("publish_with_reference")]
         public bool PublishWithReference { get; set; }
 
         /// <summary>
@@ -77,25 +78,25 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the entry UID.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the content type.
         /// </summary>
-        [JsonProperty(propertyName: "content_type")]
+        [JsonPropertyName("content_type")]
         public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the version number.
         /// </summary>
-        [JsonProperty(propertyName: "version")]
+        [JsonPropertyName("version")]
         public int Version { get; set; }
 
         /// <summary>
         /// Gets or sets the locale.
         /// </summary>
-        [JsonProperty(propertyName: "locale")]
+        [JsonPropertyName("locale")]
         public string Locale { get; set; }
     }
 
@@ -107,7 +108,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the approvals setting.
         /// </summary>
-        [JsonProperty(propertyName: "approvals")]
+        [JsonPropertyName("approvals")]
         public string Approvals { get; set; }
     }
 
@@ -119,44 +120,27 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the asset UID.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
-        public string Uid { get; set; }
+        [JsonPropertyName("uid")]
+        public string Uid { get; set; } = "";
     }
 
     /// <summary>
     /// Represents details for bulk delete operations.
     /// </summary>
+    [JsonConverter(typeof(BulkDeleteDetailsJsonConverter))]
     public class BulkDeleteDetails
     {
         /// <summary>
         /// Gets or sets the list of entries to delete.
         /// </summary>
-        [JsonProperty(propertyName: "entries")]
+        [JsonPropertyName("entries")]
         public List<BulkDeleteEntry> Entries { get; set; }
 
         /// <summary>
         /// Gets or sets the list of assets to delete.
         /// </summary>
-        [JsonProperty(propertyName: "assets")]
+        [JsonPropertyName("assets")]
         public List<BulkDeleteAsset> Assets { get; set; }
-
-        /// <summary>
-        /// Determines whether to serialize the Entries property.
-        /// </summary>
-        /// <returns>True if Entries should be serialized, false otherwise.</returns>
-        public bool ShouldSerializeEntries()
-        {
-            return Entries != null && Entries.Count > 0;
-        }
-
-        /// <summary>
-        /// Determines whether to serialize the Assets property.
-        /// </summary>
-        /// <returns>True if Assets should be serialized, false otherwise.</returns>
-        public bool ShouldSerializeAssets()
-        {
-            return Assets != null && Assets.Count > 0;
-        }
     }
 
     /// <summary>
@@ -167,19 +151,19 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the entry UID.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the content type.
         /// </summary>
-        [JsonProperty(propertyName: "content_type")]
+        [JsonPropertyName("content_type")]
         public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the locale.
         /// </summary>
-        [JsonProperty(propertyName: "locale")]
+        [JsonPropertyName("locale")]
         public string Locale { get; set; }
     }
 
@@ -191,7 +175,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the asset UID.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
     }
 
@@ -203,13 +187,13 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the list of entries to update.
         /// </summary>
-        [JsonProperty(propertyName: "entries")]
+        [JsonPropertyName("entries")]
         public List<BulkWorkflowEntry> Entries { get; set; }
 
         /// <summary>
         /// Gets or sets the workflow stage information.
         /// </summary>
-        [JsonProperty(propertyName: "workflow")]
+        [JsonPropertyName("workflow")]
         public BulkWorkflowStage Workflow { get; set; }
 
         /// <summary>
@@ -230,19 +214,19 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the entry UID.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the content type.
         /// </summary>
-        [JsonProperty(propertyName: "content_type")]
+        [JsonPropertyName("content_type")]
         public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the locale.
         /// </summary>
-        [JsonProperty(propertyName: "locale")]
+        [JsonPropertyName("locale")]
         public string Locale { get; set; }
     }
 
@@ -254,37 +238,37 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the workflow stage UID.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the comment.
         /// </summary>
-        [JsonProperty(propertyName: "comment")]
+        [JsonPropertyName("comment")]
         public string Comment { get; set; }
 
         /// <summary>
         /// Gets or sets the due date.
         /// </summary>
-        [JsonProperty(propertyName: "due_date")]
+        [JsonPropertyName("due_date")]
         public string DueDate { get; set; }
 
         /// <summary>
         /// Gets or sets whether to notify.
         /// </summary>
-        [JsonProperty(propertyName: "notify")]
+        [JsonPropertyName("notify")]
         public bool Notify { get; set; }
 
         /// <summary>
         /// Gets or sets the list of assigned users.
         /// </summary>
-        [JsonProperty(propertyName: "assigned_to")]
+        [JsonPropertyName("assigned_to")]
         public List<BulkWorkflowUser> AssignedTo { get; set; }
 
         /// <summary>
         /// Gets or sets the list of assigned roles.
         /// </summary>
-        [JsonProperty(propertyName: "assigned_by_roles")]
+        [JsonPropertyName("assigned_by_roles")]
         public List<BulkWorkflowRole> AssignedByRoles { get; set; }
 
         /// <summary>
@@ -314,19 +298,19 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the user UID.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the user name.
         /// </summary>
-        [JsonProperty(propertyName: "name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the user email.
         /// </summary>
-        [JsonProperty(propertyName: "email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
     }
 
@@ -338,13 +322,13 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the role UID.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the role name.
         /// </summary>
-        [JsonProperty(propertyName: "name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
     }
 
@@ -357,35 +341,35 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the list of items to add/update.
         /// </summary>
-        [JsonProperty(propertyName: "items")]
+        [JsonPropertyName("items")]
         public List<BulkAddItem> Items { get; set; }
 
         /// <summary>
         /// Gets or sets the release UID for deployment operations.
         /// When specified, this enables release deployment mode (like JavaScript SDK).
         /// </summary>
-        [JsonProperty(propertyName: "release")]
+        [JsonPropertyName("release")]
         public string Release { get; set; }
 
         /// <summary>
         /// Gets or sets the action to perform during deployment (publish, unpublish, etc.).
         /// Only used when Release is specified.
         /// </summary>
-        [JsonProperty(propertyName: "action")]
+        [JsonPropertyName("action")]
         public string Action { get; set; }
 
         /// <summary>
         /// Gets or sets the list of locales for deployment.
         /// Only used when Release is specified.
         /// </summary>
-        [JsonProperty(propertyName: "locale")]
+        [JsonPropertyName("locale")]
         public List<string> Locale { get; set; }
 
         /// <summary>
         /// Gets or sets the reference flag for deployment.
         /// Only used when Release is specified.
         /// </summary>
-        [JsonProperty(propertyName: "reference")]
+        [JsonPropertyName("reference")]
         public bool? Reference { get; set; }
 
         /// <summary>
@@ -452,41 +436,41 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the item UID.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the content type.
         /// </summary>
-        [JsonProperty(propertyName: "content_type")]
+        [JsonPropertyName("content_type")]
         public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the content type UID for release deployment mode.
         /// This is an alias for ContentType with a different JSON property name.
         /// </summary>
-        [JsonProperty(propertyName: "content_type_uid")]
+        [JsonPropertyName("content_type_uid")]
         public string ContentTypeUid { get; set; }
 
         /// <summary>
         /// Gets or sets the version number for release deployment mode.
         /// Only used in enhanced release deployment operations.
         /// </summary>
-        [JsonProperty(propertyName: "version")]
+        [JsonPropertyName("version")]
         public int? Version { get; set; }
 
         /// <summary>
         /// Gets or sets the locale for release deployment mode.
         /// Only used in enhanced release deployment operations.
         /// </summary>
-        [JsonProperty(propertyName: "locale")]
+        [JsonPropertyName("locale")]
         public string Locale { get; set; }
 
         /// <summary>
         /// Gets or sets the title for release deployment mode.
         /// Only used in enhanced release deployment operations.
         /// </summary>
-        [JsonProperty(propertyName: "title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
         /// <summary>
@@ -534,31 +518,31 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the release UID.
         /// </summary>
-        [JsonProperty(propertyName: "release")]
+        [JsonPropertyName("release")]
         public string Release { get; set; }
 
         /// <summary>
         /// Gets or sets the action to perform (publish, unpublish, etc.).
         /// </summary>
-        [JsonProperty(propertyName: "action")]
+        [JsonPropertyName("action")]
         public string Action { get; set; }
 
         /// <summary>
         /// Gets or sets the list of locales.
         /// </summary>
-        [JsonProperty(propertyName: "locale")]
+        [JsonPropertyName("locale")]
         public List<string> Locale { get; set; }
 
         /// <summary>
         /// Gets or sets the reference flag.
         /// </summary>
-        [JsonProperty(propertyName: "reference")]
+        [JsonPropertyName("reference")]
         public bool Reference { get; set; }
 
         /// <summary>
         /// Gets or sets the list of items to process.
         /// </summary>
-        [JsonProperty(propertyName: "items")]
+        [JsonPropertyName("items")]
         public List<BulkReleaseItem> Items { get; set; }
 
         /// <summary>
@@ -588,31 +572,31 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Gets or sets the content type UID.
         /// </summary>
-        [JsonProperty(propertyName: "content_type_uid")]
+        [JsonPropertyName("content_type_uid")]
         public string ContentTypeUid { get; set; }
 
         /// <summary>
         /// Gets or sets the item UID.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the version number.
         /// </summary>
-        [JsonProperty(propertyName: "version")]
+        [JsonPropertyName("version")]
         public int Version { get; set; }
 
         /// <summary>
         /// Gets or sets the locale.
         /// </summary>
-        [JsonProperty(propertyName: "locale")]
+        [JsonPropertyName("locale")]
         public string Locale { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
-        [JsonProperty(propertyName: "title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
     }
 } 

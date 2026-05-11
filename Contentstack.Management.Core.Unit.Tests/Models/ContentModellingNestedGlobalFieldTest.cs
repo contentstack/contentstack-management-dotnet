@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Models.Fields;
+using Contentstack.Management.Core.Unit.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models
 {
@@ -12,6 +13,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
     public class ContentModellingNestedGlobalFieldTest
     {
         private readonly IFixture _fixture = new Fixture();
+        private static readonly JsonSerializerOptions JsonOptions = TestJsonSerializerOptions.CreateDefault();
 
         [TestMethod]
         public void Should_Create_ContentModelling_With_Nested_Global_Fields()
@@ -119,7 +121,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
                 }
             };
 
-            var json = JsonConvert.SerializeObject(contentModelling);
+            var json = JsonSerializer.Serialize(contentModelling, JsonOptions);
 
             Assert.IsTrue(json.Contains("\"title\":\"nested_global_field_test\""));
             Assert.IsTrue(json.Contains("\"uid\":\"nested_global_field_test\""));
@@ -261,7 +263,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
                 GlobalFieldRefs = null
             };
 
-            var json = JsonConvert.SerializeObject(contentModelling);
+            var json = JsonSerializer.Serialize(contentModelling, JsonOptions);
             Assert.IsTrue(json.Contains("\"title\":\"Simple Global Field\""));
             Assert.IsFalse(json.Contains("\"global_field_refs\""));
         }
@@ -287,7 +289,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
                 GlobalFieldRefs = new List<GlobalFieldRefs>()
             };
 
-            var json = JsonConvert.SerializeObject(contentModelling);
+            var json = JsonSerializer.Serialize(contentModelling, JsonOptions);
 
             Assert.IsTrue(json.Contains("\"title\":\"Empty Global Field\""));
             Assert.IsTrue(json.Contains("\"global_field_refs\":[]"));
@@ -348,7 +350,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
                 }
             };
 
-            var json = JsonConvert.SerializeObject(contentModelling);
+            var json = JsonSerializer.Serialize(contentModelling, JsonOptions);
 
             Assert.IsTrue(json.Contains("\"title\":\"Complex Nested Global Field\""));
             Assert.IsTrue(json.Contains("\"global_field_refs\""));

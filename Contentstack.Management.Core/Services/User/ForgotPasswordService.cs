@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.User
@@ -10,7 +9,7 @@ namespace Contentstack.Management.Core.Services.User
     {
         private readonly string _email;
 
-        internal ForgotPasswordService(JsonSerializer serializer, string email): base (serializer)
+        internal ForgotPasswordService(JsonSerializerOptions serializerOptions, string email): base (serializerOptions)
         {
             if (string.IsNullOrEmpty(email))
             {
@@ -24,20 +23,18 @@ namespace Contentstack.Management.Core.Services.User
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            using var ms = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(ms))
             {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
                 writer.WritePropertyName("user");
-                    writer.WriteStartObject();
-                    writer.WritePropertyName("email");
-                    writer.WriteValue(_email);
-                    writer.WriteEndObject();
+                writer.WriteStartObject();
+                writer.WriteString("email", _email);
                 writer.WriteEndObject();
-
-                string snippet = stringWriter.ToString();
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+                writer.WriteEndObject();
             }
+
+            this.ByteContent = ms.ToArray();
         }
     }
 }

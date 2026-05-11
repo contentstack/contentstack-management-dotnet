@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
@@ -7,7 +7,7 @@ namespace Contentstack.Management.Core.Models.Fields
     /// </summary>
     public class JsonField : TextboxField
     {
-        [JsonProperty(propertyName: "reference_to")]
+        [JsonPropertyName("reference_to")]
         public object ReferenceTo { get; set; }
     }
 }

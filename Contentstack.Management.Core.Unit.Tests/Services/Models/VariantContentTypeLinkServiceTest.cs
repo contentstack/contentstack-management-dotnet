@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
+using System.Text.Json.Nodes;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Services.Models
 {
@@ -17,7 +16,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
     {
         private Stack _stack;
         private readonly IFixture _fixture = new Fixture();
-        private JsonSerializer _serializer;
+        private JsonSerializerOptions _serializerOptions;
 
         [TestInitialize]
         public void initialize()
@@ -25,7 +24,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var client = new ContentstackClient();
             client.contentstackOptions.Authtoken = _fixture.Create<string>();
             _stack = new Stack(client, _fixture.Create<string>());
-            _serializer = client.serializer;
+            _serializerOptions = client.SerializerOptions;
         }
 
         [TestMethod]
@@ -37,7 +36,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             bool isLink = true;
 
             var service = new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 _stack,
                 resourcePath,
                 contentTypeUids,
@@ -59,7 +58,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             bool isLink = false;
 
             var service = new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 _stack,
                 resourcePath,
                 contentTypeUids,
@@ -76,7 +75,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         public void Should_Throw_Exception_When_Stack_Is_Null()
         {
             Assert.ThrowsException<NullReferenceException>(() => new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 null,
                 "/variant_groups/test_uid/content_types",
                 new List<string> { "ct_uid" },
@@ -89,7 +88,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         public void Should_Throw_Exception_When_ResourcePath_Is_Null()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 _stack,
                 null,
                 new List<string> { "ct_uid" },
@@ -102,7 +101,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         public void Should_Throw_Exception_When_ContentTypeUids_Is_Null()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 _stack,
                 "/variant_groups/test_uid/content_types",
                 null,
@@ -115,7 +114,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         public void Should_Throw_Exception_When_ContentTypeUids_Is_Empty()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 _stack,
                 "/variant_groups/test_uid/content_types",
                 new List<string>(),
@@ -132,7 +131,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var stackWithoutApiKey = new Stack(client);
 
             Assert.ThrowsException<ArgumentNullException>(() => new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 stackWithoutApiKey,
                 "/variant_groups/test_uid/content_types",
                 new List<string> { "ct_uid" },
@@ -150,7 +149,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             bool isLink = true;
 
             var service = new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 _stack,
                 resourcePath,
                 contentTypeUids,
@@ -162,19 +161,17 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
 
             Assert.IsNotNull(service.ByteContent);
             string requestBody = Encoding.UTF8.GetString(service.ByteContent);
-            
-            // Parse the JSON to verify structure
-            var jsonObject = JsonConvert.DeserializeObject<dynamic>(requestBody);
-            Assert.IsNotNull(jsonObject.content_types);
-            
-            var contentTypes = jsonObject.content_types;
+
+            var root = JsonNode.Parse(requestBody)!.AsObject();
+            var contentTypes = root["content_types"] as JsonArray;
+            Assert.IsNotNull(contentTypes);
             Assert.AreEqual(2, contentTypes.Count);
-            
-            Assert.AreEqual("ct_uid_1", (string)contentTypes[0].uid);
-            Assert.AreEqual("linked", (string)contentTypes[0].status);
-            
-            Assert.AreEqual("ct_uid_2", (string)contentTypes[1].uid);
-            Assert.AreEqual("linked", (string)contentTypes[1].status);
+
+            Assert.AreEqual("ct_uid_1", contentTypes[0]!["uid"]!.GetValue<string>());
+            Assert.AreEqual("linked", contentTypes[0]!["status"]!.GetValue<string>());
+
+            Assert.AreEqual("ct_uid_2", contentTypes[1]!["uid"]!.GetValue<string>());
+            Assert.AreEqual("linked", contentTypes[1]!["status"]!.GetValue<string>());
         }
 
         [TestMethod]
@@ -186,7 +183,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             bool isLink = false;
 
             var service = new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 _stack,
                 resourcePath,
                 contentTypeUids,
@@ -198,24 +195,19 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
 
             Assert.IsNotNull(service.ByteContent);
             string requestBody = Encoding.UTF8.GetString(service.ByteContent);
-            
-            // Parse the JSON to verify structure
-            var jsonObject = JsonConvert.DeserializeObject<dynamic>(requestBody);
-            
-            // Check root properties
-            Assert.AreEqual("test_variant_uid", (string)jsonObject.uid);
-            Assert.IsNotNull(jsonObject.branches);
-            
-            Assert.IsNotNull(jsonObject.content_types);
-            
-            var contentTypes = jsonObject.content_types;
+
+            var root = JsonNode.Parse(requestBody)!.AsObject();
+            Assert.AreEqual("test_variant_uid", root["uid"]!.GetValue<string>());
+            Assert.IsNotNull(root["branches"]);
+            var contentTypes = root["content_types"] as JsonArray;
+            Assert.IsNotNull(contentTypes);
             Assert.AreEqual(2, contentTypes.Count);
-            
-            Assert.AreEqual("ct_uid_1", (string)contentTypes[0].uid);
-            Assert.AreEqual("unlinked", (string)contentTypes[0].status);
-            
-            Assert.AreEqual("ct_uid_2", (string)contentTypes[1].uid);
-            Assert.AreEqual("unlinked", (string)contentTypes[1].status);
+
+            Assert.AreEqual("ct_uid_1", contentTypes[0]!["uid"]!.GetValue<string>());
+            Assert.AreEqual("unlinked", contentTypes[0]!["status"]!.GetValue<string>());
+
+            Assert.AreEqual("ct_uid_2", contentTypes[1]!["uid"]!.GetValue<string>());
+            Assert.AreEqual("unlinked", contentTypes[1]!["status"]!.GetValue<string>());
         }
 
         [TestMethod]
@@ -227,7 +219,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             bool isLink = true;
 
             var service = new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 _stack,
                 resourcePath,
                 contentTypeUids,
@@ -239,21 +231,17 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
 
             Assert.IsNotNull(service.ByteContent);
             string requestBody = Encoding.UTF8.GetString(service.ByteContent);
-            
-            // Parse the JSON to verify structure
-            var jsonObject = JsonConvert.DeserializeObject<dynamic>(requestBody);
-            
-            // Check root properties
-            Assert.AreEqual("test_variant_uid", (string)jsonObject.uid);
-            Assert.IsNotNull(jsonObject.branches);
-            
-            Assert.IsNotNull(jsonObject.content_types);
-            
-            var contentTypes = jsonObject.content_types;
+
+            var root = JsonNode.Parse(requestBody)!.AsObject();
+            Assert.AreEqual("test_variant_uid", root["uid"]!.GetValue<string>());
+            Assert.IsNotNull(root["branches"]);
+
+            var contentTypes = root["content_types"] as JsonArray;
+            Assert.IsNotNull(contentTypes);
             Assert.AreEqual(1, contentTypes.Count);
-            
-            Assert.AreEqual("single_ct_uid", (string)contentTypes[0].uid);
-            Assert.AreEqual("linked", (string)contentTypes[0].status);
+
+            Assert.AreEqual("single_ct_uid", contentTypes[0]!["uid"]!.GetValue<string>());
+            Assert.AreEqual("linked", contentTypes[0]!["status"]!.GetValue<string>());
         }
 
         [TestMethod]
@@ -267,7 +255,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             parameters.Add("include_count", "true");
 
             var service = new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 _stack,
                 resourcePath,
                 contentTypeUids,
@@ -278,7 +266,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
 
             Assert.AreEqual(resourcePath, service.ResourcePath);
             Assert.AreEqual("PUT", service.HttpMethod);
-            // UseQueryString should be true when parameters are provided
             Assert.IsTrue(service.UseQueryString);
         }
 
@@ -291,7 +278,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             bool isLink = true;
 
             var service = new VariantContentTypeLinkService(
-                _serializer,
+                _serializerOptions,
                 _stack,
                 resourcePath,
                 contentTypeUids,

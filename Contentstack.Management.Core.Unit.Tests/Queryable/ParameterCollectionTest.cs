@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Contentstack.Management.Core.Queryable;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Unit.Tests.Queryable
 {
@@ -87,16 +87,16 @@ namespace Contentstack.Management.Core.Unit.Tests.Queryable
         }
 
         [TestMethod]
-        public void Should_Add_Query_JObject_In_Parameter_Collection()
+        public void Should_Add_Query_JsonObject_In_Parameter_Collection()
         {
             ParameterCollection collection = new ParameterCollection();
-            JObject queryObject = JObject.Parse("{ \"price_in_usd\": { \"$lt\": 600 } }");
+            JsonObject queryObject = JsonNode.Parse("{ \"price_in_usd\": { \"$lt\": 600 } }").AsObject();
 
             collection.AddQuery(queryObject);
 
             Assert.IsTrue(collection.ContainsKey("query"));
             Assert.IsInstanceOfType(collection["query"], typeof(StringParameterValue));
-            Assert.AreEqual(Uri.EscapeDataString(queryObject.ToString()), (collection["query"] as StringParameterValue).Value);
+            Assert.AreEqual(Uri.EscapeDataString(queryObject.ToJsonString()), (collection["query"] as StringParameterValue).Value);
         }
     }
 }

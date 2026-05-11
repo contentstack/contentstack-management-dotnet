@@ -101,7 +101,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath + "/export", "GET", collection);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath + "/export", "GET", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -112,7 +112,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath + "/export", "GET", collection);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath + "/export", "GET", collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -123,7 +123,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath + "/locales", "GET", collection);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath + "/locales", "GET", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -134,7 +134,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath + "/locales", "GET", collection);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath + "/locales", "GET", collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -145,7 +145,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new CreateUpdateService<TaxonomyModel>(stack.client.serializer, stack, resourcePath, model, "taxonomy", "POST", collection);
+            var service = new CreateUpdateService<TaxonomyModel>(stack.client.SerializerOptions, stack, resourcePath, model, "taxonomy", "POST", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -156,7 +156,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new CreateUpdateService<TaxonomyModel>(stack.client.serializer, stack, resourcePath, model, "taxonomy", "POST", collection);
+            var service = new CreateUpdateService<TaxonomyModel>(stack.client.SerializerOptions, stack, resourcePath, model, "taxonomy", "POST", collection);
             return stack.client.InvokeAsync<CreateUpdateService<TaxonomyModel>, ContentstackResponse>(service);
         }
 
@@ -168,7 +168,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
             var path = resourcePath + "/import";
-            var service = new UploadService(stack.client.serializer, stack, path, model, "POST", collection);
+            var service = new UploadService(stack.client.SerializerOptions, stack, path, model, "POST", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -180,7 +180,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
             var path = resourcePath + "/import";
-            var service = new UploadService(stack.client.serializer, stack, path, model, "POST", collection);
+            var service = new UploadService(stack.client.SerializerOptions, stack, path, model, "POST", collection);
             return stack.client.InvokeAsync<UploadService, ContentstackResponse>(service);
         }
 

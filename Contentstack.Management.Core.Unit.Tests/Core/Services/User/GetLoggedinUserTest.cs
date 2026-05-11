@@ -1,14 +1,13 @@
 ﻿using System;
 using Contentstack.Management.Core.Services.User;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
 {
     [TestClass]
     public class GetLoggedinUserTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializer = TestJsonSerializerOptions.CreateDefault();
 
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()

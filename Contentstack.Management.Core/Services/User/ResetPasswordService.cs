@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.User
@@ -12,7 +11,7 @@ namespace Contentstack.Management.Core.Services.User
         private readonly string _password;
         private readonly string _confirmPassword;
 
-        internal ResetPasswordService(JsonSerializer serializer, string resetPasswordToken, string password, string confirmPassword) : base(serializer)
+        internal ResetPasswordService(JsonSerializerOptions serializerOptions, string resetPasswordToken, string password, string confirmPassword) : base(serializerOptions)
         {
             if (string.IsNullOrEmpty(resetPasswordToken))
             {
@@ -36,24 +35,20 @@ namespace Contentstack.Management.Core.Services.User
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            using var ms = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(ms))
             {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
                 writer.WritePropertyName("user");
-                    writer.WriteStartObject();
-                    writer.WritePropertyName("reset_password_token");
-                    writer.WriteValue(_resetPasswordToken);
-                    writer.WritePropertyName("password");
-                    writer.WriteValue(_password);
-                    writer.WritePropertyName("password_confirmation");
-                    writer.WriteValue(_confirmPassword);
-                    writer.WriteEndObject();
+                writer.WriteStartObject();
+                writer.WriteString("reset_password_token", _resetPasswordToken);
+                writer.WriteString("password", _password);
+                writer.WriteString("password_confirmation", _confirmPassword);
                 writer.WriteEndObject();
-
-                string snippet = stringWriter.ToString();
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+                writer.WriteEndObject();
             }
+
+            this.ByteContent = ms.ToArray();
         }
     }
 }

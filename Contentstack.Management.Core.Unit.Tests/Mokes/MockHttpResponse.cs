@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Contentstack.Management.Core;
-using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
@@ -49,19 +50,19 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             return _headers.ContainsKey(headerName);
         }
 
-        public JObject OpenJObjectResponse()
+        public JsonObject OpenJsonObjectResponse()
         {
             if (string.IsNullOrEmpty(_responseContent))
-                return new JObject();
-            
+                return new JsonObject();
+
             try
             {
-                return JObject.Parse(_responseContent);
+                var node = JsonNode.Parse(_responseContent);
+                return node as JsonObject ?? new JsonObject();
             }
             catch
             {
-                // Return empty JObject if parsing fails
-                return new JObject();
+                return new JsonObject();
             }
         }
 
@@ -73,17 +74,16 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         public TResponse OpenTResponse<TResponse>()
         {
             if (string.IsNullOrEmpty(_responseContent))
-                return default(TResponse);
+                return default;
 
             try
             {
-                var jObject = OpenJObjectResponse();
-                return jObject.ToObject<TResponse>();
+                return JsonSerializer.Deserialize<TResponse>(_responseContent);
             }
             catch
             {
-                return default(TResponse);
+                return default;
             }
         }
     }
-} 
+}

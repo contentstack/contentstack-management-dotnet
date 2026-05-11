@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Http;
 using Contentstack.Management.Core.Abstractions;
 using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -12,8 +12,8 @@ namespace Contentstack.Management.Core.Services.Models
     {
         private readonly IUploadInterface _uploadInterface;
         
-        internal UploadService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, IUploadInterface uploadInterface, string httpMethod = "POST", ParameterCollection collection = null)
-            : base(serializer, stack: stack, collection)
+        internal UploadService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, IUploadInterface uploadInterface, string httpMethod = "POST", ParameterCollection collection = null)
+            : base(serializerOptions, stack: stack, collection)
         {
             if (stack.APIKey == null)
             {

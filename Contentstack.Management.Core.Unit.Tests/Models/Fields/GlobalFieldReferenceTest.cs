@@ -2,7 +2,6 @@ using System;
 using AutoFixture;
 using Contentstack.Management.Core.Models.Fields;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
 {
@@ -69,7 +68,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             };
 
             
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+            var json = JsonSerializer.Serialize(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"display_name\":\"Test Global Field Reference\""));
             Assert.IsTrue(json.Contains("\"uid\":\"test_global_field_ref\""));
@@ -100,7 +99,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             }";
 
             
-            var globalFieldRef = JsonConvert.DeserializeObject<GlobalFieldReference>(json);
+            var globalFieldRef = JsonSerializer.Deserialize<GlobalFieldReference>(json);
 
             Assert.AreEqual("Test Global Field Reference", globalFieldRef.DisplayName);
             Assert.AreEqual("test_global_field_ref", globalFieldRef.Uid);

@@ -1,5 +1,5 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Models;
 
 namespace Contentstack.Management.Core.Services.Stack.BulkOperation
@@ -19,8 +19,8 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
         /// <param name="stack">The stack instance.</param>
         /// <param name="jobId">The job ID.</param>
         /// <param name="bulkVersion">The bulk version.</param>
-        public BulkJobStatusService(JsonSerializer serializer, Contentstack.Management.Core.Models.Stack stack, string jobId, string bulkVersion = null)
-            : base(serializer, stack)
+        public BulkJobStatusService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack stack, string jobId, string bulkVersion = null)
+            : base(serializerOptions, stack)
         {
             _jobId = jobId ?? throw new ArgumentNullException(nameof(jobId));
             _bulkVersion = bulkVersion;

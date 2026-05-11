@@ -5,14 +5,13 @@ using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Models;
 using Contentstack.Management.Core.Unit.Tests.Models.ContentModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
 {
     [TestClass]
     public class DeleteServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializer = TestJsonSerializerOptions.CreateDefault();
         private readonly IFixture _fixture = new Fixture()
        .Customize(new AutoMoqCustomization());
 

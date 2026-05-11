@@ -1,12 +1,11 @@
-using System;
+using System.Text.Json.Serialization;
 using Contentstack.Management.Core.Abstractions;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models.ContentModel
 {
     public class EntryModel : IEntry
     {
-        [JsonProperty(propertyName: "title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
     }
 }

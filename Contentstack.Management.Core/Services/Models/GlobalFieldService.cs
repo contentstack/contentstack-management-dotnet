@@ -1,9 +1,8 @@
 using System;
-using System.Globalization;
-using System.IO;
+using System.Text;
+using System.Text.Json;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -20,8 +19,8 @@ namespace Contentstack.Management.Core.Services.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalFieldService"/> class.
         /// </summary>
-        internal GlobalFieldService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, ContentModelling dataModel, string fieldName, string apiVersion, string httpMethod = "POST", ParameterCollection collection = null)
-            : base(serializer, stack: stack, collection)
+        internal GlobalFieldService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, ContentModelling dataModel, string fieldName, string apiVersion, string httpMethod = "POST", ParameterCollection collection = null)
+            : base(serializerOptions, stack: stack, collection: collection)
         {
             if (stack.APIKey == null)
             {
@@ -45,7 +44,6 @@ namespace Contentstack.Management.Core.Services.Models
             this.fieldName = fieldName;
             this._apiVersion = apiVersion;
             
-            // Set api_version header if provided
             if (!string.IsNullOrEmpty(apiVersion))
             {
                 this.Headers["api_version"] = apiVersion;
@@ -60,26 +58,15 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
-            {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-
-                Serializer.Serialize(writer, _typedModel);
-                string snippet = $"{{\"{fieldName}\": {stringWriter.ToString()}}}";
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet); 
-            }
+            var inner = JsonSerializer.Serialize(_typedModel, SerializerOptions);
+            var snippet = $"{{\"{fieldName}\": {inner}}}";
+            this.ByteContent = Encoding.UTF8.GetBytes(snippet);
         }
 
-        /// <summary>
-        /// Handles response processing with api_version header cleanup for GlobalField operations.
-        /// This matches the JavaScript SDK parseData function where api_version is removed from stackHeaders.
-        /// </summary>
         public override void OnResponse(IResponse httpResponse, ContentstackClientOptions config)
         {
             base.OnResponse(httpResponse, config);
             
-            // Clean up api_version header after successful GlobalField operation 
-            // (matching JavaScript SDK parseData function behavior)
             if (httpResponse != null && httpResponse.IsSuccessStatusCode && !string.IsNullOrEmpty(_apiVersion))
             {
                 if (Headers.ContainsKey("api_version"))
@@ -89,4 +76,4 @@ namespace Contentstack.Management.Core.Services.Models
             }
         }
     }
-} 
+}

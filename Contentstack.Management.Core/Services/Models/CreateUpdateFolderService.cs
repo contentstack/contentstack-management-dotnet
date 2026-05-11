@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -13,12 +12,12 @@ namespace Contentstack.Management.Core.Services.Models
 
         #region Internal
         internal CreateUpdateFolderService(
-            JsonSerializer serializer,
+            JsonSerializerOptions serializerOptions,
             Core.Models.Stack stack,
             string name,
             string folderUid = null,
             string parentUId = null)
-            : base(serializer, stack)
+            : base(serializerOptions, stack)
         {
             if (stack.APIKey == null)
             {
@@ -47,28 +46,21 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            using var ms = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(ms))
             {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
                 writer.WritePropertyName("asset");
                 writer.WriteStartObject();
                 if (!string.IsNullOrEmpty(_name))
-                {
-                    writer.WritePropertyName("name");
-                    writer.WriteValue(_name);
-                }
+                    writer.WriteString("name", _name);
                 if (!string.IsNullOrEmpty(_parentUId))
-                {
-                    writer.WritePropertyName("parent_uid");
-                    writer.WriteValue(_parentUId);
-                }
+                    writer.WriteString("parent_uid", _parentUId);
                 writer.WriteEndObject();
                 writer.WriteEndObject();
-
-                string snippet = stringWriter.ToString();
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
             }
+
+            this.ByteContent = ms.ToArray();
         }
         #endregion
     }

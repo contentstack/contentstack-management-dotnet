@@ -6,14 +6,13 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Stack.BulkOperation;
 using Contentstack.Management.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
 {
     [TestClass]
     public class BulkPublishServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializer = TestJsonSerializerOptions.CreateDefault();
         private readonly IFixture _fixture = new Fixture()
             .Customize(new AutoMoqCustomization());
 
@@ -257,10 +256,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Verify_Service_Can_Be_Instantiated_With_Different_Serializers()
         {
             var details = new BulkPublishDetails();
-            var customSerializer = JsonSerializer.Create(new JsonSerializerSettings 
-            { 
-                NullValueHandling = NullValueHandling.Ignore 
-            });
+            var customSerializer = new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull };
             
             var service = new BulkPublishService(customSerializer, new Management.Core.Models.Stack(null), details);
             

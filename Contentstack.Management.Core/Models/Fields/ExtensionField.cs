@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
     public class ExtensionField : Field
     {
-        [JsonProperty(propertyName: "extension_uid")]
+        [JsonPropertyName("extension_uid")]
         public string extension_uid { get; set; }
-        [JsonProperty(propertyName: "config")]
+        [JsonPropertyName("config")]
         public Dictionary<string, object> config { get; set; }
     }
 }

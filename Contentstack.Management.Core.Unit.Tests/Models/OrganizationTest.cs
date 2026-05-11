@@ -121,7 +121,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = organization.GetOrganizations();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -136,7 +136,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await organization.GetOrganizationsAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
             Assert.IsNotNull(client.contentstackOptions.Authtoken);
         }
 
@@ -157,7 +157,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
                 {
                     var result = t.Result as ContentstackResponse;
                     Assert.AreEqual(contentstackResponse.OpenResponse(), result.OpenResponse());
-                    Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), result.OpenJObjectResponse().ToString());
+                    Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), result.OpenJsonObjectResponse().ToString());
                 }
             });
             Assert.IsNotNull(client.contentstackOptions.Authtoken);
@@ -175,7 +175,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = organization.GetOrganizations();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -190,7 +190,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await organization.GetOrganizationsAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
             Assert.IsNotNull(client.contentstackOptions.Authtoken);
         }
 
@@ -206,7 +206,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = organization.Roles();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -221,7 +221,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await organization.RolesAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
             Assert.IsNotNull(client.contentstackOptions.Authtoken);
         }
 
@@ -245,7 +245,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = organization.AddUser(new List<UserInvitation>() { userInvitation }, stackInvite);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -270,7 +270,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
             Assert.IsNotNull(client.contentstackOptions.Authtoken);
         }
 
@@ -286,7 +286,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = organization.RemoveUser(_fixture.Create<List<string>>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -301,7 +301,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await organization.RemoveUserAsync(_fixture.Create<List<string>>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
             Assert.IsNotNull(client.contentstackOptions.Authtoken);
         }
 
@@ -318,7 +318,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = organization.GetInvitations();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -333,7 +333,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await organization.GetInvitationsAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
             Assert.IsNotNull(client.contentstackOptions.Authtoken);
         }
 
@@ -349,7 +349,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = organization.ResendInvitation(_fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -364,7 +364,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await organization.ResendInvitationAsync(_fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
             Assert.IsNotNull(client.contentstackOptions.Authtoken);
         }
 
@@ -380,7 +380,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = organization.TransferOwnership(_fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -395,7 +395,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await organization.TransferOwnershipAsync(_fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
             Assert.IsNotNull(client.contentstackOptions.Authtoken);
         }
 
@@ -412,7 +412,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = organization.GetStacks();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -427,7 +427,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await organization.GetStacksAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
             Assert.IsNotNull(client.contentstackOptions.Authtoken);
         }
     }

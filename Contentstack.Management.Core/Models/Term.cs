@@ -101,7 +101,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath + "/ancestors", "GET", collection);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath + "/ancestors", "GET", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -112,7 +112,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath + "/ancestors", "GET", collection);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath + "/ancestors", "GET", collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -123,7 +123,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath + "/descendants", "GET", collection);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath + "/descendants", "GET", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -134,7 +134,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath + "/descendants", "GET", collection);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath + "/descendants", "GET", collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -145,7 +145,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new CreateUpdateService<TermMoveModel>(stack.client.serializer, stack, resourcePath + "/move", moveModel, "term", "PUT", collection);
+            var service = new CreateUpdateService<TermMoveModel>(stack.client.SerializerOptions, stack, resourcePath + "/move", moveModel, "term", "PUT", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -156,7 +156,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new CreateUpdateService<TermMoveModel>(stack.client.serializer, stack, resourcePath + "/move", moveModel, "term", "PUT", collection);
+            var service = new CreateUpdateService<TermMoveModel>(stack.client.SerializerOptions, stack, resourcePath + "/move", moveModel, "term", "PUT", collection);
             return stack.client.InvokeAsync<CreateUpdateService<TermMoveModel>, ContentstackResponse>(service);
         }
 
@@ -167,7 +167,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath + "/locales", "GET", collection);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath + "/locales", "GET", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -178,7 +178,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath + "/locales", "GET", collection);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath + "/locales", "GET", collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -189,7 +189,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new CreateUpdateService<TermModel>(stack.client.serializer, stack, resourcePath, model, "term", "POST", collection);
+            var service = new CreateUpdateService<TermModel>(stack.client.SerializerOptions, stack, resourcePath, model, "term", "POST", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -200,7 +200,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new CreateUpdateService<TermModel>(stack.client.serializer, stack, resourcePath, model, "term", "POST", collection);
+            var service = new CreateUpdateService<TermModel>(stack.client.SerializerOptions, stack, resourcePath, model, "term", "POST", collection);
             return stack.client.InvokeAsync<CreateUpdateService<TermModel>, ContentstackResponse>(service);
         }
 
@@ -215,7 +215,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidNotEmpty();
             var coll = collection ?? new ParameterCollection();
             coll.Add("typeahead", typeahead ?? string.Empty);
-            var service = new FetchDeleteService(stack.client.serializer, stack, "/taxonomies/$all/terms", "GET", coll);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, "/taxonomies/$all/terms", "GET", coll);
             return stack.client.InvokeSync(service);
         }
 
@@ -228,7 +228,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidNotEmpty();
             var coll = collection ?? new ParameterCollection();
             coll.Add("typeahead", typeahead ?? string.Empty);
-            var service = new FetchDeleteService(stack.client.serializer, stack, "/taxonomies/$all/terms", "GET", coll);
+            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, "/taxonomies/$all/terms", "GET", coll);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
     }

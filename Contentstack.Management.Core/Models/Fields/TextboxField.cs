@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
     public class TextboxField : Field
     {
 
-        [JsonProperty(propertyName: "format")]
+        [JsonPropertyName("format")]
         public string Format { get; set; }
 
-        [JsonProperty(propertyName: "error_messages")]
+        [JsonPropertyName("error_messages")]
         public Dictionary<string, string> ErrorMessages { get; set; }
     }
 }

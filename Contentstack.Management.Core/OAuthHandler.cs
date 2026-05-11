@@ -330,7 +330,7 @@ namespace Contentstack.Management.Core
                 if (_options.UsePkce && !string.IsNullOrEmpty(this.codeVerifier))
                 {
                     tokenService = OAuthTokenService.CreateForAuthorizationCode(
-                        serializer: GetClient().serializer,
+                        serializerOptions: GetClient().SerializerOptions,
                         authorizationCode: authorizationCode,
                         clientId: _options.ClientId,
                         redirectUri: _options.RedirectUri,
@@ -346,7 +346,7 @@ namespace Contentstack.Management.Core
                     }
 
                     tokenService = OAuthTokenService.CreateForAuthorizationCode(
-                        serializer: GetClient().serializer,
+                        serializerOptions: GetClient().SerializerOptions,
                         authorizationCode: authorizationCode,
                         clientId: _options.ClientId,
                         redirectUri: _options.RedirectUri,
@@ -415,7 +415,7 @@ namespace Contentstack.Management.Core
                 {
                     // PKCE flow - no client secret needed
                     tokenService = OAuthTokenService.CreateForRefreshToken(
-                        serializer: GetClient().serializer,
+                        serializerOptions: GetClient().SerializerOptions,
                         refreshToken: tokenToUse,
                         clientId: _options.ClientId
                     );
@@ -430,7 +430,7 @@ namespace Contentstack.Management.Core
                     }
 
                     tokenService = OAuthTokenService.CreateForRefreshToken(
-                        serializer: GetClient().serializer,
+                        serializerOptions: GetClient().SerializerOptions,
                         refreshToken: tokenToUse,
                         clientId: _options.ClientId,
                         clientSecret: _options.ClientSecret
@@ -606,7 +606,7 @@ namespace Contentstack.Management.Core
             {
                 // Create a service to get OAuth app authorizations
                 var service = new OAuthAppAuthorizationService(
-                    GetClient().serializer,
+                    GetClient().SerializerOptions,
                     _options.AppId,
                     tokens.OrganizationUid
                 );
@@ -663,7 +663,7 @@ namespace Contentstack.Management.Core
 
                 // Create a service to revoke OAuth app authorization
                 var service = new Services.OAuth.OAuthAppRevocationService(
-                    GetClient().serializer,
+                    GetClient().SerializerOptions,
                     _options.AppId,
                     authorizationId,
                     organizationUid

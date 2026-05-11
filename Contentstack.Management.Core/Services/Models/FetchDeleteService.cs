@@ -1,6 +1,6 @@
 using System;
 using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -9,8 +9,8 @@ namespace Contentstack.Management.Core.Services.Models
     {
         #region Internal
 
-        internal FetchDeleteService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, string httpMethod = "GET", ParameterCollection collection = null)
-            : base(serializer, stack: stack, collection)
+        internal FetchDeleteService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, string httpMethod = "GET", ParameterCollection collection = null)
+            : base(serializerOptions, stack: stack, collection)
         {
             if (stack.APIKey == null)
             {

@@ -34,9 +34,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void Initialize ()
         {
-            StackResponse response = StackResponse.getStack(_client.serializer);
+            StackResponse response = StackResponse.getStack(_client.SerializerOptions);
             _stack = _client.Stack(response.Stack.APIKey);
-            _modelling = Contentstack.serialize<ContentModelling>(_client.serializer, "globalfield.json");
+            _modelling = Contentstack.serialize<ContentModelling>(_client.SerializerOptions, "globalfield.json");
         }
 
         [TestMethod]
@@ -190,7 +190,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "DeleteAsyncGlobalField");
             
             // Create a new global field for async delete test
-            ContentModelling deleteModel = Contentstack.serialize<ContentModelling>(_client.serializer, "globalfield.json");
+            ContentModelling deleteModel = Contentstack.serialize<ContentModelling>(_client.SerializerOptions, "globalfield.json");
             deleteModel.Uid = "test_delete_async";
             deleteModel.Title = "Test Delete Async";
             ContentstackResponse createResponse = _stack.GlobalField().Create(deleteModel);
@@ -280,7 +280,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         private ContentModelling CreateInvalidGlobalFieldModel(string scenario)
         {
-            var model = Contentstack.serialize<ContentModelling>(_client.serializer, "globalfield.json");
+            var model = Contentstack.serialize<ContentModelling>(_client.SerializerOptions, "globalfield.json");
             
             switch (scenario)
             {
@@ -764,7 +764,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test035_Should_Fail_Create_With_Special_Characters_In_UID()
         {
             TestOutputLogger.LogContext("TestScenario", "CreateGlobalField_SpecialCharactersUID");
-            var invalidModel = Contentstack.serialize<ContentModelling>(_client.serializer, "globalfield.json");
+            var invalidModel = Contentstack.serialize<ContentModelling>(_client.SerializerOptions, "globalfield.json");
             invalidModel.Uid = "invalid@uid#with$special%characters";
             
             try

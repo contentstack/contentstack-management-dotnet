@@ -9,7 +9,6 @@ using Contentstack.Management.Core.Models.Fields;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
 
 // Resolve ambiguous reference between System.Action and Contentstack.Management.Core.Models.Fields.Action
 using SystemAction = System.Action;
@@ -40,10 +39,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void Initialize ()
         {
-            StackResponse response = StackResponse.getStack(_client.serializer);
+            StackResponse response = StackResponse.getStack(_client.SerializerOptions);
             _stack = _client.Stack(response.Stack.APIKey);
-            _singlePage = Contentstack.serialize<ContentModelling>(_client.serializer, "singlepageCT.json");
-            _multiPage = Contentstack.serialize<ContentModelling>(_client.serializer, "multiPageCT.json");
+            _singlePage = Contentstack.serialize<ContentModelling>(_client.SerializerOptions, "singlepageCT.json");
+            _multiPage = Contentstack.serialize<ContentModelling>(_client.SerializerOptions, "multiPageCT.json");
         }
 
         [TestMethod]
@@ -112,7 +111,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "UpdateContentType");
             TestOutputLogger.LogContext("ContentType", _multiPage.Uid);
-            _multiPage.Schema = Contentstack.serializeArray<List<Models.Fields.Field>>(_client.serializer, "contentTypeSchema.json"); ;
+            _multiPage.Schema = Contentstack.serializeArray<List<Models.Fields.Field>>(_client.SerializerOptions, "contentTypeSchema.json"); ;
             ContentstackResponse response = _stack.ContentType(_multiPage.Uid).Update(_multiPage);
             ContentTypeModel ContentType = response.OpenTResponse<ContentTypeModel>();
             AssertLogger.IsNotNull(response, "response");
@@ -132,7 +131,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 // Load the existing schema
-                _multiPage.Schema = Contentstack.serializeArray<List<Models.Fields.Field>>(_client.serializer, "contentTypeSchema.json");
+                _multiPage.Schema = Contentstack.serializeArray<List<Models.Fields.Field>>(_client.SerializerOptions, "contentTypeSchema.json");
                 
                 // Add a new text field to the schema
                 var newTextField = new Models.Fields.TextboxField

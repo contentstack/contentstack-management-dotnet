@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System.Collections.Generic;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using Contentstack.Management.Core;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Models.Fields;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models.ContentModel
 {
     [TestClass]
     public class ContentModellingTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
-       .Customize(new AutoMoqCustomization());
+            .Customize(new AutoMoqCustomization());
 
         [TestMethod]
         public void Initialize_ContentModel()
@@ -30,14 +26,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.ContentModel
                 Options = _fixture.Create<Option>(),
             };
 
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
-            {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-
-                serializer.Serialize(writer, contentModelling);
-                string snippet = stringWriter.ToString();
-                Assert.IsNotNull(snippet);
-            }
+            var options = new ContentstackClient().SerializerOptions;
+            string snippet = JsonSerializer.Serialize(contentModelling, options);
+            Assert.IsNotNull(snippet);
         }
 
         [TestMethod]
@@ -59,14 +50,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.ContentModel
                 Schema = fields,
             };
 
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
-            {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-
-                serializer.Serialize(writer, contentModelling);
-                string snippet = stringWriter.ToString();
-                Assert.IsNotNull(snippet);
-            }
+            var options = new ContentstackClient().SerializerOptions;
+            string snippet = JsonSerializer.Serialize(contentModelling, options);
+            Assert.IsNotNull(snippet);
         }
     }
 }

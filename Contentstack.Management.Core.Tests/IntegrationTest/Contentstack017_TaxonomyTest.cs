@@ -16,8 +16,6 @@ using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
-
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
     [TestClass]
@@ -46,7 +44,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void Initialize()
         {
-            StackResponse response = StackResponse.getStack(_client.serializer);
+            StackResponse response = StackResponse.getStack(_client.SerializerOptions);
             _stack = _client.Stack(response.Stack.APIKey);
             if (_taxonomyUid == null)
                 _taxonomyUid = "taxonomy_integration_test_" + Guid.NewGuid().ToString("N").Substring(0, 8);
@@ -195,7 +193,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Locales();
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Locales failed: {response.OpenResponse()}", "LocalesSuccess");
-            var jobj = response.OpenJObjectResponse();
+            var jobj = response.OpenJsonObjectResponse();
             AssertLogger.IsNotNull(jobj["taxonomies"], "Taxonomies in locales response");
         }
 
@@ -207,7 +205,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).LocalesAsync();
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"LocalesAsync failed: {response.OpenResponse()}", "LocalesAsyncSuccess");
-            var jobj = response.OpenJObjectResponse();
+            var jobj = response.OpenJsonObjectResponse();
             AssertLogger.IsNotNull(jobj["taxonomies"], "Taxonomies in locales response");
         }
 
@@ -219,8 +217,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             _weCreatedTestLocale = false;
             ContentstackResponse localesResponse = _stack.Locale().Query().Find();
             AssertLogger.IsTrue(localesResponse.IsSuccessStatusCode, $"Query locales failed: {localesResponse.OpenResponse()}", "QueryLocalesSuccess");
-            var jobj = localesResponse.OpenJObjectResponse();
-            var localesArray = jobj["locales"] as JArray ?? jobj["items"] as JArray;
+            var jobj = localesResponse.OpenJsonObjectResponse();
+            var localesArray = jobj["locales"] as JsonArray ?? jobj["items"] as JsonArray;
             if (localesArray == null || localesArray.Count == 0)
             {
                 AssertLogger.Inconclusive("Stack has no locales; skipping taxonomy localize tests.");
@@ -537,7 +535,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("ChildTermUid", _childTermUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_childTermUid).Ancestors();
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Ancestors failed: {response.OpenResponse()}", "AncestorsSuccess");
-            var jobj = response.OpenJObjectResponse();
+            var jobj = response.OpenJsonObjectResponse();
             AssertLogger.IsNotNull(jobj, "Ancestors response");
         }
 
@@ -550,7 +548,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("ChildTermUid", _childTermUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_childTermUid).AncestorsAsync();
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"AncestorsAsync failed: {response.OpenResponse()}", "AncestorsAsyncSuccess");
-            var jobj = response.OpenJObjectResponse();
+            var jobj = response.OpenJsonObjectResponse();
             AssertLogger.IsNotNull(jobj, "Ancestors async response");
         }
 
@@ -563,7 +561,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).Descendants();
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Descendants failed: {response.OpenResponse()}", "DescendantsSuccess");
-            var jobj = response.OpenJObjectResponse();
+            var jobj = response.OpenJsonObjectResponse();
             AssertLogger.IsNotNull(jobj, "Descendants response");
         }
 
@@ -576,7 +574,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).DescendantsAsync();
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"DescendantsAsync failed: {response.OpenResponse()}", "DescendantsAsyncSuccess");
-            var jobj = response.OpenJObjectResponse();
+            var jobj = response.OpenJsonObjectResponse();
             AssertLogger.IsNotNull(jobj, "Descendants async response");
         }
 
@@ -589,7 +587,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).Locales();
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Term Locales failed: {response.OpenResponse()}", "TermLocalesSuccess");
-            var jobj = response.OpenJObjectResponse();
+            var jobj = response.OpenJsonObjectResponse();
             AssertLogger.IsNotNull(jobj["terms"], "Terms in locales response");
         }
 
@@ -602,7 +600,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("RootTermUid", _rootTermUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).LocalesAsync();
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Term LocalesAsync failed: {response.OpenResponse()}", "TermLocalesAsyncSuccess");
-            var jobj = response.OpenJObjectResponse();
+            var jobj = response.OpenJsonObjectResponse();
             AssertLogger.IsNotNull(jobj["terms"], "Terms in locales async response");
         }
 
@@ -710,7 +708,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms().Search("Root");
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Search terms failed: {response.OpenResponse()}", "SearchTermsSuccess");
-            var jobj = response.OpenJObjectResponse();
+            var jobj = response.OpenJsonObjectResponse();
             AssertLogger.IsNotNull(jobj["terms"] ?? jobj["items"], "Terms or items in search response");
         }
 
@@ -722,7 +720,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TaxonomyUid", _taxonomyUid ?? "");
             ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms().SearchAsync("Root");
             AssertLogger.IsTrue(response.IsSuccessStatusCode, $"SearchAsync terms failed: {response.OpenResponse()}", "SearchAsyncTermsSuccess");
-            var jobj = response.OpenJObjectResponse();
+            var jobj = response.OpenJsonObjectResponse();
             AssertLogger.IsNotNull(jobj["terms"] ?? jobj["items"], "Terms or items in search async response");
         }
 
@@ -6465,7 +6463,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         private static Stack GetStack()
         {
-            StackResponse response = StackResponse.getStack(_client.serializer);
+            StackResponse response = StackResponse.getStack(_client.SerializerOptions);
             return _client.Stack(response.Stack.APIKey);
         }
 

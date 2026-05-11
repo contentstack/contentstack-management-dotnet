@@ -5,14 +5,13 @@ using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Stack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
 {
     [TestClass]
     public class StackSettingsServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializer = TestJsonSerializerOptions.CreateDefault();
         private readonly IFixture _fixture = new Fixture()
         .Customize(new AutoMoqCustomization());
 
@@ -55,7 +54,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual("stacks/settings", service.ResourcePath);
             Assert.AreEqual(apiKey, service.Headers["api_key"]);
-            var json = JsonConvert.SerializeObject(settings);
+            var json = JsonSerializer.Serialize(settings);
 
             Assert.AreEqual($"{{\"stack_settings\":{json.ToString()}}}", Encoding.Default.GetString(service.ByteContent));
         }
