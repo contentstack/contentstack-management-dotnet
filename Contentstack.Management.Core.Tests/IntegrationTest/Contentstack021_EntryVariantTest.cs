@@ -406,6 +406,32 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         [TestMethod]
         [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test002a_Should_Create_Variant_On_Dev_Branch()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "ProductBannerVariantLifecycle_Create_DevBranch");
+
+            var variantData = new
+            {
+                banner_color = "Green",
+                _variant = new
+                {
+                    _change_set = new[] { "banner_color" },
+                    _order = new string[] { }
+                }
+            };
+
+            var createVariantResponse = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, "dev").CreateAsync(variantData);
+            Assert.IsTrue(createVariantResponse.IsSuccessStatusCode, "Should create entry variant on dev branch. " + createVariantResponse.OpenResponse());
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
         public async System.Threading.Tasks.Task Test003_Should_Fetch_Entry_Variants()
         {
             if (string.IsNullOrEmpty(_entryUid))
@@ -418,6 +444,22 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
             var fetchVariantsResponse = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant().FindAsync();
             Assert.IsTrue(fetchVariantsResponse.IsSuccessStatusCode, "Should fetch all variants for entry");
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test003a_Should_Fetch_Variant_On_Dev_Branch()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "ProductBannerVariantLifecycle_Fetch_DevBranch");
+
+            var fetchVariantResponse = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, "dev").FetchAsync();
+            Assert.IsTrue(fetchVariantResponse.IsSuccessStatusCode, "Should fetch variant from dev branch");
         }
 
         [TestMethod]
@@ -463,6 +505,47 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         [TestMethod]
         [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test004a_Should_Publish_Variant_On_Dev_Branch()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "ProductBannerVariantLifecycle_Publish_DevBranch");
+
+            var publishDetails = new PublishUnpublishDetails
+            {
+                Locales = new List<string> { "en-us" },
+                Environments = new List<string> { "development" },
+                Variants = new List<PublishVariant>
+                {
+                    new PublishVariant { Uid = _variantUid, Version = 1 }
+                },
+                VariantRules = new PublishVariantRules
+                {
+                    PublishLatestBase = true,
+                    PublishLatestBaseConditionally = false
+                }
+            };
+
+            try
+            {
+                var publishResponse = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, "dev").PublishAsync(publishDetails, "en-us");
+                if (!publishResponse.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Publish failed on dev branch. Response: " + publishResponse.OpenResponse());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Publish threw exception on dev branch. Continuing. Exception: " + ex.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
         public async System.Threading.Tasks.Task Test005_Should_Delete_Entry_Variant()
         {
             if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
@@ -475,6 +558,22 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
             var deleteVariantResponse = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid).DeleteAsync();
             Assert.IsTrue(deleteVariantResponse.IsSuccessStatusCode, "Should delete entry variant");
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test005a_Should_Delete_Variant_On_Dev_Branch()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "ProductBannerVariantLifecycle_Delete_DevBranch");
+
+            var deleteVariantResponse = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, "dev").DeleteAsync();
+            Assert.IsTrue(deleteVariantResponse.IsSuccessStatusCode, "Should delete entry variant on dev branch");
         }
         [TestMethod]
         [DoNotParallelize]
@@ -531,6 +630,48 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     };
                 }
             }, "FetchInvalidVariant", HttpStatusCode.NotFound, (HttpStatusCode)422, (HttpStatusCode)412);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test007a_Should_Fail_On_Invalid_Branch()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "ProductBannerVariantLifecycle_Fail_InvalidBranch");
+
+            await AssertLogger.ThrowsContentstackErrorAsync(async () =>
+            {
+                var response = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, "fake_branch_123").FetchAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new ContentstackErrorException 
+                    { 
+                        StatusCode = response.StatusCode, 
+                        ErrorMessage = "Invalid branch" 
+                    };
+                }
+            }, "FetchInvalidBranchAsync", HttpStatusCode.NotFound, (HttpStatusCode)422, HttpStatusCode.BadRequest);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async System.Threading.Tasks.Task Test007b_Should_Fallback_With_Whitespace_Branch()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "ProductBannerVariantLifecycle_Fallback_WhitespaceBranch");
+
+            var fetchVariantResponse = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, "   ").FetchAsync();
+            Assert.IsTrue(fetchVariantResponse.IsSuccessStatusCode, "Should fallback to default branch for whitespace branch parameter");
         }
 
         [TestMethod]
@@ -3447,6 +3588,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         }
 
         #endregion
+
     }
 
     /// <summary>

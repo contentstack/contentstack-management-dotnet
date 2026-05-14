@@ -13,13 +13,15 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         private Stack _stack;
         private readonly IFixture _fixture = new Fixture();
         private ContentstackResponse _contentstackResponse;
+        private MockHttpHandler _mockHandler;
 
         [TestInitialize]
         public void initialize()
         {
             var client = new ContentstackClient();
             _contentstackResponse = MockResponse.CreateContentstackResponse("MockResponse.txt");
-            client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(_contentstackResponse));
+            _mockHandler = new MockHttpHandler(_contentstackResponse);
+            client.ContentstackPipeline.ReplaceHandler(_mockHandler);
             client.contentstackOptions.Authtoken = _fixture.Create<string>();
             _stack = new Stack(client, _fixture.Create<string>());
         }
@@ -146,6 +148,133 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = variant.Delete();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+        }
+
+        [TestMethod]
+        public void Initialize_EntryVariant_With_Branch()
+        {
+            var ctUid = _fixture.Create<string>();
+            var entryUid = _fixture.Create<string>();
+            var uid = _fixture.Create<string>();
+            var branchUid = "dev";
+
+            EntryVariant variant = new EntryVariant(_stack, ctUid, entryUid, uid, branchUid);
+
+            Assert.AreEqual(branchUid, variant.branchUid);
+            Assert.AreEqual(uid, variant.Uid);
+        }
+
+        [TestMethod]
+        public void Should_Inject_Branch_Header_On_Find()
+        {
+            var ctUid = _fixture.Create<string>();
+            var entryUid = _fixture.Create<string>();
+            EntryVariant variant = new EntryVariant(_stack, ctUid, entryUid, null, "dev");
+
+            variant.Find();
+
+            Assert.AreEqual("dev", _mockHandler.LastRequestService.Headers["branch"]);
+        }
+
+        [TestMethod]
+        public void Should_Inject_Branch_Header_On_Create()
+        {
+            var ctUid = _fixture.Create<string>();
+            var entryUid = _fixture.Create<string>();
+            var uid = _fixture.Create<string>();
+            EntryVariant variant = new EntryVariant(_stack, ctUid, entryUid, uid, "dev");
+
+            var model = new { entry = new { banner_color = "Navy Blue" } };
+
+            variant.Create(model);
+
+            Assert.AreEqual("dev", _mockHandler.LastRequestService.Headers["branch"]);
+        }
+
+        [TestMethod]
+        public void Should_Inject_Branch_Header_On_Fetch()
+        {
+            var ctUid = _fixture.Create<string>();
+            var entryUid = _fixture.Create<string>();
+            var uid = _fixture.Create<string>();
+            EntryVariant variant = new EntryVariant(_stack, ctUid, entryUid, uid, "dev");
+
+            variant.Fetch();
+
+            Assert.AreEqual("dev", _mockHandler.LastRequestService.Headers["branch"]);
+        }
+
+        [TestMethod]
+        public void Should_Inject_Branch_Header_On_Update()
+        {
+            var ctUid = _fixture.Create<string>();
+            var entryUid = _fixture.Create<string>();
+            var uid = _fixture.Create<string>();
+            EntryVariant variant = new EntryVariant(_stack, ctUid, entryUid, uid, "dev");
+
+            var model = new { entry = new { banner_color = "Red" } };
+
+            variant.Update(model);
+
+            Assert.AreEqual("dev", _mockHandler.LastRequestService.Headers["branch"]);
+        }
+
+        [TestMethod]
+        public void Should_Inject_Branch_Header_On_Delete()
+        {
+            var ctUid = _fixture.Create<string>();
+            var entryUid = _fixture.Create<string>();
+            var uid = _fixture.Create<string>();
+            EntryVariant variant = new EntryVariant(_stack, ctUid, entryUid, uid, "dev");
+
+            variant.Delete();
+
+            Assert.AreEqual("dev", _mockHandler.LastRequestService.Headers["branch"]);
+        }
+
+        [TestMethod]
+        public void Should_Inject_Branch_Header_On_Publish()
+        {
+            var ctUid = _fixture.Create<string>();
+            var entryUid = _fixture.Create<string>();
+            var uid = _fixture.Create<string>();
+            EntryVariant variant = new EntryVariant(_stack, ctUid, entryUid, uid, "dev");
+
+            var details = new Contentstack.Management.Core.Models.PublishUnpublishDetails();
+
+            variant.Publish(details);
+
+            Assert.AreEqual("dev", _mockHandler.LastRequestService.Headers["branch"]);
+        }
+
+        [TestMethod]
+        public void Should_Inject_Branch_Header_On_Unpublish()
+        {
+            var ctUid = _fixture.Create<string>();
+            var entryUid = _fixture.Create<string>();
+            var uid = _fixture.Create<string>();
+            EntryVariant variant = new EntryVariant(_stack, ctUid, entryUid, uid, "dev");
+
+            var details = new Contentstack.Management.Core.Models.PublishUnpublishDetails();
+
+            variant.Unpublish(details);
+
+            Assert.AreEqual("dev", _mockHandler.LastRequestService.Headers["branch"]);
+        }
+
+        [TestMethod]
+        public void Should_Fallback_To_Global_Branch_On_Empty_Branch_String()
+        {
+            var ctUid = _fixture.Create<string>();
+            var entryUid = _fixture.Create<string>();
+            var uid = _fixture.Create<string>();
+            
+            // "   " is whitespace
+            EntryVariant variant = new EntryVariant(_stack, ctUid, entryUid, uid, "   ");
+
+            variant.Fetch();
+
+            Assert.IsFalse(_mockHandler.LastRequestService.Headers.ContainsKey("branch") && _mockHandler.LastRequestService.Headers["branch"] == "   ");
         }
     }
 }

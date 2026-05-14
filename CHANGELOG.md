@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.0]
+ - Feat
+   - **Entry Variants Branch Scope**: Added explicit branch scope support for Entry Variants.
+     - You can now optionally pass a `branchUid` when initializing an Entry Variant (e.g., `stack.ContentType(ctUid).Entry(entryUid).Variant(variantUid, "<branch_name>")`).
+     - This explicitly scopes requests to a specific branch, rather than implicitly relying on the global stack branch.
+     - Includes graceful fallback behavior if null or whitespace is passed.
 
 ## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
  - Feat

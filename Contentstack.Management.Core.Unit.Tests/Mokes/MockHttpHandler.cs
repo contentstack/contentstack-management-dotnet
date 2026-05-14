@@ -40,6 +40,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         public ILogManager LogManager { get; set; }
         public IPipelineHandler InnerHandler { get; set; }
         public Uri LastRequestUri { get; private set; }
+        public Contentstack.Management.Core.Services.IContentstackService LastRequestService { get; private set; }
 
         public async Task<T> InvokeAsync<T>(
             IExecutionContext executionContext,
@@ -47,9 +48,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             string apiVersion = null
         )
         {
-            // Capture the request URI
+            // Capture the request URI and Service
             if (executionContext.RequestContext.service != null)
             {
+                LastRequestService = executionContext.RequestContext.service;
                 var httpRequest = executionContext.RequestContext.service.CreateHttpRequest(
                     null,
                     executionContext.RequestContext.config
@@ -75,9 +77,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             string apiVersion = null
         )
         {
-            // Capture the request URI
+            // Capture the request URI and Service
             if (executionContext.RequestContext.service != null)
             {
+                LastRequestService = executionContext.RequestContext.service;
                 var httpRequest = executionContext.RequestContext.service.CreateHttpRequest(
                     null,
                     executionContext.RequestContext.config
