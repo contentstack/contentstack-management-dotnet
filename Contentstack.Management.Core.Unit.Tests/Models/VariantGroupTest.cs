@@ -142,8 +142,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(
-                _contentstackResponse.OpenJsonObjectResponse().ToString(),
-                response.OpenJsonObjectResponse().ToString()
+                _contentstackResponse.OpenJObjectResponse().ToString(),
+                response.OpenJObjectResponse().ToString()
             );
         }
 
@@ -154,8 +154,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(
-                _contentstackResponse.OpenJsonObjectResponse().ToString(),
-                response.OpenJsonObjectResponse().ToString()
+                _contentstackResponse.OpenJObjectResponse().ToString(),
+                response.OpenJObjectResponse().ToString()
             );
         }
 
@@ -171,8 +171,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(
-                _contentstackResponse.OpenJsonObjectResponse().ToString(),
-                response.OpenJsonObjectResponse().ToString()
+                _contentstackResponse.OpenJObjectResponse().ToString(),
+                response.OpenJObjectResponse().ToString()
             );
         }
 
@@ -188,8 +188,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(
-                _contentstackResponse.OpenJsonObjectResponse().ToString(),
-                response.OpenJsonObjectResponse().ToString()
+                _contentstackResponse.OpenJObjectResponse().ToString(),
+                response.OpenJObjectResponse().ToString()
             );
         }
 
@@ -205,8 +205,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(
-                _contentstackResponse.OpenJsonObjectResponse().ToString(),
-                response.OpenJsonObjectResponse().ToString()
+                _contentstackResponse.OpenJObjectResponse().ToString(),
+                response.OpenJObjectResponse().ToString()
             );
         }
 
@@ -222,8 +222,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(
-                _contentstackResponse.OpenJsonObjectResponse().ToString(),
-                response.OpenJsonObjectResponse().ToString()
+                _contentstackResponse.OpenJObjectResponse().ToString(),
+                response.OpenJObjectResponse().ToString()
             );
         }
 
@@ -296,8 +296,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(
-                _contentstackResponse.OpenJsonObjectResponse().ToString(),
-                response.OpenJsonObjectResponse().ToString()
+                _contentstackResponse.OpenJObjectResponse().ToString(),
+                response.OpenJObjectResponse().ToString()
             );
         }
 
@@ -312,8 +312,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(
-                _contentstackResponse.OpenJsonObjectResponse().ToString(),
-                response.OpenJsonObjectResponse().ToString()
+                _contentstackResponse.OpenJObjectResponse().ToString(),
+                response.OpenJObjectResponse().ToString()
             );
         }
 
@@ -331,8 +331,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(
-                _contentstackResponse.OpenJsonObjectResponse().ToString(),
-                response.OpenJsonObjectResponse().ToString()
+                _contentstackResponse.OpenJObjectResponse().ToString(),
+                response.OpenJObjectResponse().ToString()
             );
         }
 
@@ -350,8 +350,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(
-                _contentstackResponse.OpenJsonObjectResponse().ToString(),
-                response.OpenJsonObjectResponse().ToString()
+                _contentstackResponse.OpenJObjectResponse().ToString(),
+                response.OpenJObjectResponse().ToString()
             );
         }
 

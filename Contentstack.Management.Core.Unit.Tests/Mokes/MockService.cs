@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services;
+using Contentstack.Management.Core.Unit.Tests.Utils;
+using Newtonsoft.Json;
+
 namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
     internal class MockService : IContentstackService
@@ -14,9 +16,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         public MockService(ParameterCollection pairs = null)
         {
             parameters = pairs;
-            _serializerOptions = TestJsonSerializerOptions.CreateDefault();
+            _serializer = JsonSerializer.Create(new JsonSerializerSettings());
         }
-
         #region
         readonly ParameterCollection parameters = new ParameterCollection();
         readonly IDictionary<string, string> headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -30,13 +31,16 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         string managementToken = null;
         bool useQueryString = false;
 
-        private JsonSerializerOptions _serializerOptions { get; set; }
+        private JsonSerializer _serializer { get; set; }
 
         #endregion
 
-        public JsonSerializerOptions SerializerOptions
+        public JsonSerializer Serializer
         {
-            get => _serializerOptions;
+            get
+            {
+                return _serializer;
+            }
         }
 
         public bool UseQueryString
@@ -158,8 +162,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
 
         public string GetHeaderValue(string headerName)
         {
-            headers.TryGetValue(headerName, out string headerValue);
-            return headerValue ?? string.Empty;
+            string headerValue;
+            if (headers.TryGetValue(headerName, out headerValue))
+                return headerValue;
+
+            return string.Empty;
         }
 
         public bool HasRequestBody()
@@ -169,7 +176,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
 
         public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null)
         {
-            var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializerOptions);
+            var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializer);
             contentstackHttpRequest.Method = new HttpMethod(HttpMethod);
             contentstackHttpRequest.RequestUri = new Uri("https://localhost.com");
             ContentBody();
@@ -179,17 +186,18 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
 
         internal virtual void ContentBody()
         {
-            using var ms = new MemoryStream();
-            using (var writer = new Utf8JsonWriter(ms))
+            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
             {
+                JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
-                writer.WriteString("user", "test_Mock_user");
+                writer.WritePropertyName("user");
+                writer.WriteValue("test_Mock_user");
                 writer.WriteEndObject();
+
+                string snippet = stringWriter.ToString();
+                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
             }
-
-            ByteContent = ms.ToArray();
         }
-
         internal void WriteContentByte()
         {
             if (ByteContent != null && ByteContent.Length > 0)

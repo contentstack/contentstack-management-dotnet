@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
     public class SelectField : Field
     {
-        [JsonPropertyName("enum")]
+        [JsonProperty(propertyName: "enum")]
         public SelectEnum Enum { get; set; }
 
     }
 
     public class SelectEnum
     {
-        [JsonPropertyName("advanced")]
+        [JsonProperty(propertyName: "advanced")]
         public bool Advanced { get; set; }
 
-        [JsonPropertyName("choices")]
+        [JsonProperty(propertyName: "choices")]
         public List<Dictionary<string, object>> Choices { get; set; }
 
     }

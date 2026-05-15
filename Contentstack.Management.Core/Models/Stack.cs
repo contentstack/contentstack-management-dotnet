@@ -44,7 +44,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
 
-            var service = new FetchStackService(client.SerializerOptions, this, parameters);
+            var service = new FetchStackService(client.serializer, this, parameters);
 
             return client.InvokeSync(service);
         }
@@ -66,7 +66,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
 
-            var service = new FetchStackService(client.SerializerOptions, this, parameters);
+            var service = new FetchStackService(client.serializer, this, parameters);
 
             return client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
         }
@@ -88,7 +88,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new FetchStackService(client.SerializerOptions, this, parameters);
+            var service = new FetchStackService(client.serializer, this, parameters);
             return client.InvokeSync(service);
         }
 
@@ -109,7 +109,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new FetchStackService(client.SerializerOptions, this, parameters);
+            var service = new FetchStackService(client.serializer, this, parameters);
 
             return client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
         }
@@ -131,7 +131,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackOwnershipService(client.SerializerOptions, this, email);
+            var service = new StackOwnershipService(client.serializer, this, email);
 
             return client.InvokeSync(service);
         }
@@ -153,7 +153,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackOwnershipService(client.SerializerOptions, this, email);
+            var service = new StackOwnershipService(client.serializer, this, email);
 
             return client.InvokeAsync<StackOwnershipService, ContentstackResponse>(service);
         }
@@ -181,7 +181,7 @@ namespace Contentstack.Management.Core.Models
             ThrowInvalideLocale(masterLocale);
             ThrowInvalideOrganizationUid(organisationUid);
 
-            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, masterLocale, description, organizationUid: organisationUid);
+            var service = new StackCreateUpdateService(client.serializer, this, name, masterLocale, description, organizationUid: organisationUid);
 
             return client.InvokeSync(service);
         }
@@ -209,7 +209,7 @@ namespace Contentstack.Management.Core.Models
             ThrowInvalideLocale(masterLocale);
             ThrowInvalideOrganizationUid(organisationUid);
 
-            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, masterLocale, description, organizationUid: organisationUid);
+            var service = new StackCreateUpdateService(client.serializer, this, name, masterLocale, description, organizationUid: organisationUid);
 
             return client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
         }
@@ -235,7 +235,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
             ThrowInvalideName(name);
 
-            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, description: description);
+            var service = new StackCreateUpdateService(client.serializer, this, name, description: description);
 
             return client.InvokeSync(service);
         }
@@ -261,7 +261,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
             ThrowInvalideName(name);
 
-            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, description: description);
+            var service = new StackCreateUpdateService(client.serializer, this, name, description: description);
 
             return client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
         }
@@ -290,7 +290,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new UpdateUserRoleService(client.SerializerOptions, this, usersRole);
+            var service = new UpdateUserRoleService(client.serializer, this, usersRole);
 
             return client.InvokeSync(service);
         }
@@ -319,7 +319,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new UpdateUserRoleService(client.SerializerOptions, this, usersRole);
+            var service = new UpdateUserRoleService(client.serializer, this, usersRole);
 
             return client.InvokeAsync<UpdateUserRoleService, ContentstackResponse>(service);
         }
@@ -340,7 +340,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.SerializerOptions, this);
+            var service = new StackSettingsService(client.serializer, this);
 
             return client.InvokeSync(service);
         }
@@ -361,7 +361,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.SerializerOptions, this);
+            var service = new StackSettingsService(client.serializer, this);
 
             return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
@@ -382,7 +382,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.SerializerOptions, this, "POST", new StackSettings()
+            var service = new StackSettingsService(client.serializer, this, "POST", new StackSettings()
             {
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
@@ -408,7 +408,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.SerializerOptions, this, "POST", new StackSettings()
+            var service = new StackSettingsService(client.serializer, this, "POST", new StackSettings()
             {
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
@@ -438,7 +438,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("settings", CSConstants.StackSettingsRequired);
             }
 
-            var service = new StackSettingsService(client.SerializerOptions, this, "POST", settings);
+            var service = new StackSettingsService(client.serializer, this, "POST", settings);
 
             return client.InvokeSync(service);
         }
@@ -462,7 +462,7 @@ namespace Contentstack.Management.Core.Models
             {
                 throw new ArgumentNullException("settings", CSConstants.StackSettingsRequired);
             }
-            var service = new StackSettingsService(client.SerializerOptions, this, "POST", settings);
+            var service = new StackSettingsService(client.serializer, this, "POST", settings);
 
             return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
@@ -492,7 +492,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("invitations", CSConstants.InvitationsRequired);
             }
 
-            var service = new StackShareService(client.SerializerOptions, this);
+            var service = new StackShareService(client.serializer, this);
             service.AddUsers(invitations);
 
             return client.InvokeSync(service);
@@ -523,7 +523,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("invitations", CSConstants.InvitationsRequired);
             }
 
-            var service = new StackShareService(client.SerializerOptions, this);
+            var service = new StackShareService(client.serializer, this);
             service.AddUsers(invitations);
 
             return client.InvokeAsync<StackShareService, ContentstackResponse>(service);
@@ -549,7 +549,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
 
-            var service = new StackShareService(client.SerializerOptions, this);
+            var service = new StackShareService(client.serializer, this);
             service.RemoveUsers(email);
 
             return client.InvokeSync(service);
@@ -576,7 +576,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
 
-            var service = new StackShareService(client.SerializerOptions, this);
+            var service = new StackShareService(client.serializer, this);
             service.RemoveUsers(email);
 
             return client.InvokeAsync<StackShareService, ContentstackResponse>(service);

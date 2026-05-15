@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Http;
 
@@ -20,8 +20,8 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="appId">The OAuth app ID.</param>
         /// <param name="organizationUid">The organization UID for OAuth operations.</param>
-        internal OAuthAppAuthorizationService(JsonSerializerOptions serializerOptions, string appId, string organizationUid = null)
-            : base(serializerOptions)
+        internal OAuthAppAuthorizationService(JsonSerializer serializer, string appId, string organizationUid = null)
+            : base(serializer)
         {
             if (string.IsNullOrEmpty(appId))
                 throw new ArgumentException("App ID cannot be null or empty.", nameof(appId));

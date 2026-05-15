@@ -1,60 +1,40 @@
 ﻿using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Contentstack.Management.Core.Models;
 
 namespace Contentstack.Management.Core.Utils
 {
-    public class NodeJsonConverter : JsonConverter<Node>
+	public class NodeJsonConverter : JsonConverter<Node>
     {
-        public override Node Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Node ReadJson(JsonReader reader, Type objectType, Node existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            using var doc = JsonDocument.ParseValue(ref reader);
-            var root = doc.RootElement;
-            var raw = root.GetRawText();
-
-            var missingOrNullType =
-                !root.TryGetProperty("type", out var typeProp) ||
-                typeProp.ValueKind == JsonValueKind.Null;
-
-            if (missingOrNullType)
+            Node node = null;
+            JObject jObject = JObject.Load(reader);
+            if (jObject["type"] == null)
             {
-                var innerOpts = options.WithoutConverter<TextNodeJsonConverter>();
-                var textNode = JsonSerializer.Deserialize<TextNode>(raw, innerOpts) ?? new TextNode();
-                if (string.IsNullOrEmpty(textNode.type))
-                    textNode.type = "text";
-                return textNode;
+                node = new TextNode();
+                node.type = "text";
             }
-
-            var nodeOpts = options.WithoutConverter<NodeJsonConverter>();
-            return JsonSerializer.Deserialize<Node>(raw, nodeOpts) ?? new Node();
+            else
+            {
+                node = new Node();
+            }
+            serializer.Populate(jObject.CreateReader(), node);
+            return node;
         }
 
-        public override void Write(Utf8JsonWriter writer, Node value, JsonSerializerOptions options)
+        public override void WriteJson(JsonWriter writer, Node value, JsonSerializer serializer)
         {
-            if (value == null)
-            {
-                writer.WriteNullValue();
-                return;
-            }
+            writer.WriteStartObject(); 
 
-            if (value is TextNode textNode)
-            {
-                new TextNodeJsonConverter().Write(writer, textNode, options);
-                return;
-            }
-
-            writer.WriteStartObject();
-
-            if (!string.IsNullOrEmpty(value.type))
-            {
-                writer.WriteString("type", value.type);
-            }
+            writer.WritePropertyName("type");
+            writer.WriteValue(value.type);
 
             if (value.attrs != null)
             {
                 writer.WritePropertyName("attrs");
-                JsonSerializer.Serialize(writer, value.attrs, options);
+                serializer.Serialize(writer, value.attrs);
             }
 
             if (value.children != null)
@@ -63,7 +43,7 @@ namespace Contentstack.Management.Core.Utils
                 writer.WriteStartArray();
                 foreach (var child in value.children)
                 {
-                    JsonSerializer.Serialize(writer, child, options);
+                    serializer.Serialize(writer, child);
                 }
                 writer.WriteEndArray();
             }

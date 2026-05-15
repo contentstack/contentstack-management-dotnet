@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Queryable;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models.Versioning
@@ -15,8 +16,8 @@ namespace Contentstack.Management.Core.Services.Models.Versioning
         internal string locale;
         internal bool force;
 
-        internal VersionService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, string httpMethod, string fieldName, ParameterCollection collection = null)
-            : base(serializerOptions, stack: stack, collection: collection)
+        internal VersionService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, string httpMethod, string fieldName, ParameterCollection collection = null)
+            : base(serializer, stack: stack, collection)
         {
             if (stack.APIKey == null)
             {
@@ -45,24 +46,36 @@ namespace Contentstack.Management.Core.Services.Models.Versioning
         {
             if (HttpMethod != "GET")
             {
-                using var ms = new MemoryStream();
-                using (var writer = new Utf8JsonWriter(ms))
+                using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
                 {
+                    JsonWriter writer = new JsonTextWriter(stringWriter);
                     writer.WriteStartObject();
                     writer.WritePropertyName(fieldName);
                     writer.WriteStartObject();
                     if (name != null)
-                        writer.WriteString("_version_name", name);
-                    if (locale != null)
-                        writer.WriteString("locale", locale);
-                    if (force)
-                        writer.WriteBoolean("force", force);
-                    writer.WriteEndObject();
-                    writer.WriteEndObject();
-                }
+                    {
+                        writer.WritePropertyName("_version_name");
+                        writer.WriteValue(name);
+                    }
 
-                this.ByteContent = ms.ToArray();
+                    if (locale != null)
+                    {
+                        writer.WritePropertyName("locale");
+                        writer.WriteValue(locale);
+                    }
+
+                    if (force)
+                    {
+                        writer.WritePropertyName("force");
+                        writer.WriteValue(force);
+                    }
+                    writer.WriteEndObject();
+                    writer.WriteEndObject();
+                    string snippet = stringWriter.ToString();
+                    this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+                }
             }
+            
         }
     }
 }

@@ -1,52 +1,56 @@
-using System.Text.Json.Serialization;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 namespace Contentstack.Management.Core.Models
 {
-        public class EntryWorkflowStage
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class EntryWorkflowStage
     {
-        [JsonPropertyName("uid")]
+        [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
-        [JsonPropertyName("comment")]
+        [JsonProperty(propertyName: "comment")]
         public string Comment { get; set; }
-        [JsonPropertyName("due_date")]
+        [JsonProperty(propertyName: "due_date")]
         public string DueDate { get; set; }
-        [JsonPropertyName("notify")]
+        [JsonProperty(propertyName: "notify")]
         public bool Notify { get; set; } = true;
-        [JsonPropertyName("assigned_to")]
+        [JsonProperty(propertyName: "assigned_to")]
         public List<AssignToUser> AssignedTo;
-        [JsonPropertyName("assigned_by_roles")]
+        [JsonProperty(propertyName: "assigned_by_roles")]
         public List<AssignByRole> AssignedByRoles;
     }
 
-        public class AssignToUser
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class AssignToUser
     {
-        [JsonPropertyName("uid")]
+        [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
-        [JsonPropertyName("email")]
+        [JsonProperty(propertyName: "email")]
         public string Email { get; set; }
     }
 
-        public class AssignByRole
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class AssignByRole
     {
-        [JsonPropertyName("uid")]
+        [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
     }
 
-        public class EntryPublishAction
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class EntryPublishAction
     {
-        [JsonPropertyName("uid")]
+        [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
-        [JsonPropertyName("action")]
+        [JsonProperty(propertyName: "action")]
         public string Action { get; set; }
-        [JsonPropertyName("comment")]
+        [JsonProperty(propertyName: "comment")]
         public string Comment { get; set; }
-        [JsonPropertyName("notify")]
+        [JsonProperty(propertyName: "notify")]
         public bool Notify { get; set; } = true;
-        [JsonPropertyName("status")]
+        [JsonProperty(propertyName: "status")]
         public int Status { get; set; }
 
     }

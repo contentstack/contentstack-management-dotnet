@@ -56,7 +56,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkPublishService(_stack.client.SerializerOptions, _stack, details, skipWorkflowStage, approvals, isNested);
+            var service = new BulkPublishService(_stack.client.serializer, _stack, details, skipWorkflowStage, approvals, isNested);
             return _stack.client.InvokeSync(service, false, apiVersion);
         }
 
@@ -74,7 +74,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkPublishService(_stack.client.SerializerOptions, _stack, details, skipWorkflowStage, approvals, isNested);
+            var service = new BulkPublishService(_stack.client.serializer, _stack, details, skipWorkflowStage, approvals, isNested);
             return _stack.client.InvokeAsync<BulkPublishService, ContentstackResponse>(service, false, apiVersion);
         }
 
@@ -114,7 +114,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkUnpublishService(_stack.client.SerializerOptions, _stack, details, skipWorkflowStage, approvals, isNested);
+            var service = new BulkUnpublishService(_stack.client.serializer, _stack, details, skipWorkflowStage, approvals, isNested);
             return _stack.client.InvokeSync(service, false, apiVersion);
         }
 
@@ -132,7 +132,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkUnpublishService(_stack.client.SerializerOptions, _stack, details, skipWorkflowStage, approvals, isNested);
+            var service = new BulkUnpublishService(_stack.client.serializer, _stack, details, skipWorkflowStage, approvals, isNested);
             return _stack.client.InvokeAsync<BulkUnpublishService, ContentstackResponse>(service, false, apiVersion);
         }
 
@@ -166,7 +166,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkDeleteService(_stack.client.SerializerOptions, _stack, details);
+            var service = new BulkDeleteService(_stack.client.serializer, _stack, details);
             return _stack.client.InvokeSync(service);
         }
 
@@ -180,7 +180,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkDeleteService(_stack.client.SerializerOptions, _stack, details);
+            var service = new BulkDeleteService(_stack.client.serializer, _stack, details);
             return _stack.client.InvokeAsync<BulkDeleteService, ContentstackResponse>(service);
         }
 
@@ -219,7 +219,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkWorkflowUpdateService(_stack.client.SerializerOptions, _stack, updateBody);
+            var service = new BulkWorkflowUpdateService(_stack.client.serializer, _stack, updateBody);
             return _stack.client.InvokeSync(service);
         }
 
@@ -235,7 +235,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkWorkflowUpdateService(_stack.client.SerializerOptions, _stack, updateBody);
+            var service = new BulkWorkflowUpdateService(_stack.client.serializer, _stack, updateBody);
             return _stack.client.InvokeAsync<BulkWorkflowUpdateService, ContentstackResponse>(service);
         }
 
@@ -289,7 +289,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkAddItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
+            var service = new BulkAddItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -338,7 +338,7 @@ namespace Contentstack.Management.Core.Models
             data.Locale = locales;
             data.Reference = reference;
 
-            var service = new BulkAddItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
+            var service = new BulkAddItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -355,7 +355,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkAddItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
+            var service = new BulkAddItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkAddItemsService, ContentstackResponse>(service);
         }
 
@@ -381,7 +381,7 @@ namespace Contentstack.Management.Core.Models
             data.Locale = locales;
             data.Reference = reference;
 
-            var service = new BulkAddItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
+            var service = new BulkAddItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkAddItemsService, ContentstackResponse>(service);
         }
 
@@ -437,7 +437,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkUpdateItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
+            var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -486,7 +486,7 @@ namespace Contentstack.Management.Core.Models
             data.Locale = locales;
             data.Reference = reference;
 
-            var service = new BulkUpdateItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
+            var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -503,7 +503,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkUpdateItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
+            var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkUpdateItemsService, ContentstackResponse>(service);
         }
 
@@ -529,7 +529,7 @@ namespace Contentstack.Management.Core.Models
             data.Locale = locales;
             data.Reference = reference;
 
-            var service = new BulkUpdateItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
+            var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkUpdateItemsService, ContentstackResponse>(service);
         }
 
@@ -554,7 +554,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkJobStatusService(_stack.client.SerializerOptions, _stack, jobId, bulkVersion);
+            var service = new BulkJobStatusService(_stack.client.serializer, _stack, jobId, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -571,7 +571,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkJobStatusService(_stack.client.SerializerOptions, _stack, jobId, bulkVersion);
+            var service = new BulkJobStatusService(_stack.client.serializer, _stack, jobId, bulkVersion);
             return _stack.client.InvokeAsync<BulkJobStatusService, ContentstackResponse>(service);
         }
 
@@ -613,7 +613,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkReleaseItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
+            var service = new BulkReleaseItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -628,7 +628,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkReleaseItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
+            var service = new BulkReleaseItemsService(_stack.client.serializer, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkReleaseItemsService, ContentstackResponse>(service);
         }
     }

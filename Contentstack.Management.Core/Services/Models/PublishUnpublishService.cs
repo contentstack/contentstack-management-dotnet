@@ -1,7 +1,8 @@
 using System;
+using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Models;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -11,8 +12,8 @@ namespace Contentstack.Management.Core.Services.Models
         internal string locale;
         internal string fieldName;
         internal PublishUnpublishDetails details;
-        internal PublishUnpublishService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, PublishUnpublishDetails details, string resourcePath, string fieldName, string locale = null)
-           : base(serializerOptions, stack: stack)
+        internal PublishUnpublishService(JsonSerializer serializer, Core.Models.Stack stack, PublishUnpublishDetails details, string resourcePath, string fieldName, string locale = null)
+           : base(serializer, stack: stack)
         {
             if (stack.APIKey == null)
             {
@@ -43,28 +44,29 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            using var ms = new MemoryStream();
-            using (var writer = new Utf8JsonWriter(ms))
+            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
             {
+                JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
                 writer.WritePropertyName(fieldName);
                 writer.WriteStartObject();
-
+                
                 if (details.Locales != null && details.Locales.Count > 0)
                 {
                     writer.WritePropertyName("locales");
                     writer.WriteStartArray();
                     foreach (string code in details.Locales)
-                        writer.WriteStringValue(code);
+                        writer.WriteValue(code);
+
                     writer.WriteEndArray();
                 }
-
                 if (details.Environments != null && details.Environments.Count > 0)
                 {
                     writer.WritePropertyName("environments");
                     writer.WriteStartArray();
                     foreach (string environment in details.Environments)
-                        writer.WriteStringValue(environment);
+                        writer.WriteValue(environment);
+
                     writer.WriteEndArray();
                 }
 
@@ -76,9 +78,15 @@ namespace Contentstack.Management.Core.Services.Models
                     {
                         writer.WriteStartObject();
                         if (variant.Uid != null)
-                            writer.WriteString("uid", variant.Uid);
+                        {
+                            writer.WritePropertyName("uid");
+                            writer.WriteValue(variant.Uid);
+                        }
                         if (variant.Version.HasValue)
-                            writer.WriteNumber("version", variant.Version.Value);
+                        {
+                            writer.WritePropertyName("version");
+                            writer.WriteValue(variant.Version.Value);
+                        }
                         writer.WriteEndObject();
                     }
                     writer.WriteEndArray();
@@ -89,27 +97,42 @@ namespace Contentstack.Management.Core.Services.Models
                     writer.WritePropertyName("variant_rules");
                     writer.WriteStartObject();
                     if (details.VariantRules.PublishLatestBase.HasValue)
-                        writer.WriteBoolean("publish_latest_base", details.VariantRules.PublishLatestBase.Value);
+                    {
+                        writer.WritePropertyName("publish_latest_base");
+                        writer.WriteValue(details.VariantRules.PublishLatestBase.Value);
+                    }
                     if (details.VariantRules.PublishLatestBaseConditionally.HasValue)
-                        writer.WriteBoolean("publish_latest_base_conditionally", details.VariantRules.PublishLatestBaseConditionally.Value);
+                    {
+                        writer.WritePropertyName("publish_latest_base_conditionally");
+                        writer.WriteValue(details.VariantRules.PublishLatestBaseConditionally.Value);
+                    }
                     writer.WriteEndObject();
                 }
 
                 writer.WriteEndObject();
 
-                if (details.Version != null)
-                    writer.WriteNumber("version", details.Version.Value);
+                if (details.Version!=null)
+                {
+                    writer.WritePropertyName("version");
+                    writer.WriteValue(details.Version);
+
+                }
 
                 if (!string.IsNullOrEmpty(locale))
-                    writer.WriteString("locale", locale);
+                {
+                    writer.WritePropertyName("locale");
+                    writer.WriteValue(locale);
 
+                }
                 if (!string.IsNullOrEmpty(details.ScheduledAt))
-                    writer.WriteString("scheduled_at", details.ScheduledAt);
-
+                {
+                    writer.WritePropertyName("scheduled_at");
+                    writer.WriteValue(details.ScheduledAt);
+                }
                 writer.WriteEndObject();
+                string snippet = stringWriter.ToString();
+                ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
             }
-
-            ByteContent = ms.ToArray();
         }
     }
 }

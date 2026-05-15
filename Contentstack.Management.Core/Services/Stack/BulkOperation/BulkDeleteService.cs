@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Models;
 
 namespace Contentstack.Management.Core.Services.Stack.BulkOperation
@@ -18,8 +18,8 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="stack">The stack instance.</param>
         /// <param name="details">The delete details.</param>
-        public BulkDeleteService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack stack, BulkDeleteDetails details)
-            : base(serializerOptions, stack)
+        public BulkDeleteService(JsonSerializer serializer, Contentstack.Management.Core.Models.Stack stack, BulkDeleteDetails details)
+            : base(serializer, stack)
         {
             _details = details ?? throw new ArgumentNullException(nameof(details));
 
@@ -34,7 +34,7 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
         {
             if (_details != null)
             {
-                var json = JsonSerializer.Serialize(_details, SerializerOptions);
+                var json = JsonConvert.SerializeObject(_details);
                 ByteContent = Encoding.UTF8.GetBytes(json);
             }
         }

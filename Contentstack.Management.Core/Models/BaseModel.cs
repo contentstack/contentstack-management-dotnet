@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidNotEmpty();
 
-            var service = new CreateUpdateService<T>(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, collection: collection);
+            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -40,7 +40,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
 
-            var service = new CreateUpdateService<T>(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, collection: collection);
+            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName, collection: collection);
 
             return stack.client.InvokeAsync<CreateUpdateService<T>, ContentstackResponse>(service);
         }
@@ -49,7 +49,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<T>(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, "PUT", collection: collection);
+            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName, "PUT", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -58,7 +58,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<T>(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, "PUT", collection: collection);
+            var service = new CreateUpdateService<T>(stack.client.serializer, stack, resourcePath, model, this.fieldName, "PUT", collection: collection);
 
             return stack.client.InvokeAsync<CreateUpdateService<T>, ContentstackResponse>(service);
         }
@@ -68,7 +68,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -77,7 +77,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -86,7 +86,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, "DELETE", collection: collection);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -95,7 +95,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, "DELETE", collection: collection);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE", collection: collection);
 
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
@@ -114,7 +114,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (string.IsNullOrEmpty(this.Uid))
             {
-                throw new InvalidOperationException(CSConstants.MissingUID);
+                throw new ArgumentException(CSConstants.MissingUID, "uid");
             }
         }
         #endregion

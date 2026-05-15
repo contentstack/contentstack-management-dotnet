@@ -11,6 +11,8 @@ using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
+
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
     [TestClass]
@@ -203,7 +205,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             // Optional: Fallback to stackApiKey.txt if it's missing in appSettings.json
             if (string.IsNullOrEmpty(apiKey))
             {
-                StackResponse response = StackResponse.getStack(_client.SerializerOptions);
+                StackResponse response = StackResponse.getStack(_client.serializer);
                 apiKey = response.Stack.APIKey;
             }
             
@@ -227,8 +229,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             Assert.IsTrue(response.IsSuccessStatusCode, 
                 $"Should successfully fetch variant groups: {response.OpenResponse()}");
             
-            var jObject = response.OpenJsonObjectResponse();
-            var variantGroups = jObject["variant_groups"] as JsonArray;
+            var jObject = response.OpenJObjectResponse();
+            var variantGroups = jObject["variant_groups"] as JArray;
             
             Assert.IsNotNull(variantGroups, "Variant groups array should not be null");
             Console.WriteLine($"Found {variantGroups.Count} variant groups");
@@ -262,7 +264,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             Assert.IsTrue(response.IsSuccessStatusCode, 
                 $"Should successfully fetch variant groups with pagination: {response.OpenResponse()}");
             
-            var jObject = response.OpenJsonObjectResponse();
+            var jObject = response.OpenJObjectResponse();
             Assert.IsNotNull(jObject["variant_groups"], "Should have variant_groups array");
             
             // Check if count is included when requested
@@ -271,7 +273,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Console.WriteLine($"Total count: {jObject["count"]}");
             }
             
-            var variantGroups = jObject["variant_groups"] as JsonArray;
+            var variantGroups = jObject["variant_groups"] as JArray;
             Console.WriteLine($"Returned {variantGroups.Count} variant groups with pagination");
             
             // Verify pagination worked - should return at most 5 items
@@ -296,8 +298,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 return;
             }
             
-            var jObject = contentTypesResponse.OpenJsonObjectResponse();
-            var contentTypesArray = jObject["content_types"] as JsonArray;
+            var jObject = contentTypesResponse.OpenJObjectResponse();
+            var contentTypesArray = jObject["content_types"] as JArray;
             
             if (contentTypesArray == null || contentTypesArray.Count == 0)
             {
@@ -357,7 +359,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     Console.WriteLine($"✅ Successfully linked content type {_testContentTypeUid} to variant group {_testVariantGroupUid}");
                     
                     // Verify the response structure
-                    var responseObj = linkResponse.OpenJsonObjectResponse();
+                    var responseObj = linkResponse.OpenJObjectResponse();
                     Assert.IsNotNull(responseObj, "Response should contain JSON object");
                 }
                 else
@@ -572,8 +574,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             Assert.IsTrue(response.IsSuccessStatusCode, 
                 $"Should work with query parameters: {response.OpenResponse()}");
             
-            var jObject = response.OpenJsonObjectResponse();
-            var variantGroups = jObject["variant_groups"] as JsonArray;
+            var jObject = response.OpenJObjectResponse();
+            var variantGroups = jObject["variant_groups"] as JArray;
             Assert.IsNotNull(variantGroups, "Should have variant_groups array with advanced parameters");
             
             Console.WriteLine($"✅ Found {variantGroups.Count} variant groups with advanced query parameters");

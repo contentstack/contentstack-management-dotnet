@@ -1,13 +1,13 @@
-using System.Text.Json.Serialization;
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
     public class DateField : Field
     {
-        [JsonPropertyName("startDate")]
+        [JsonProperty(propertyName: "startDate")]
         public string StartDate { get; set; }
-        [JsonPropertyName("endDate")]
+        [JsonProperty(propertyName: "endDate")]
         public string EndDate { get; set; }
     }
 }

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Queryable;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Services.Models
 {
@@ -13,7 +14,7 @@ namespace Contentstack.Management.Core.Services.Models
         private readonly bool _isLink;
 
         internal VariantContentTypeLinkService(
-            JsonSerializerOptions serializerOptions,
+            JsonSerializer serializer,
             Core.Models.Stack stack,
             string resourcePath,
             List<string> contentTypeUids,
@@ -21,7 +22,7 @@ namespace Contentstack.Management.Core.Services.Models
             bool isLink,
             ParameterCollection collection = null
         )
-            : base(serializerOptions, stack: stack, collection: collection)
+            : base(serializer, stack: stack, collection: collection)
         {
             if (stack.APIKey == null)
             {
@@ -59,29 +60,36 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            using var ms = new MemoryStream();
-            using (var writer = new Utf8JsonWriter(ms))
+            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
             {
+                JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
+                
                 writer.WritePropertyName("content_types");
                 writer.WriteStartArray();
                 foreach (var uid in _contentTypeUids)
                 {
                     writer.WriteStartObject();
-                    writer.WriteString("uid", uid);
-                    writer.WriteString("status", _isLink ? "linked" : "unlinked");
+                    writer.WritePropertyName("uid");
+                    writer.WriteValue(uid);
+                    writer.WritePropertyName("status");
+                    writer.WriteValue(_isLink ? "linked" : "unlinked");
                     writer.WriteEndObject();
                 }
                 writer.WriteEndArray();
-                writer.WriteString("uid", _variantGroupUid);
+
+                writer.WritePropertyName("uid");
+                writer.WriteValue(_variantGroupUid);
+
                 writer.WritePropertyName("branches");
                 writer.WriteStartArray();
-                writer.WriteStringValue("main");
+                writer.WriteValue("main");
                 writer.WriteEndArray();
-                writer.WriteEndObject();
-            }
 
-            this.ByteContent = ms.ToArray();
+                writer.WriteEndObject();
+
+                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(stringWriter.ToString());
+            }
         }
     }
 }

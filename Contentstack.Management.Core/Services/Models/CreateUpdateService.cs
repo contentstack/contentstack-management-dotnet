@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
+using System.IO;
 using Contentstack.Management.Core.Queryable;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -11,8 +13,8 @@ namespace Contentstack.Management.Core.Services.Models
         private readonly string fieldName;
         #region Internal
 
-        internal CreateUpdateService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, T dataModel, string fieldName, string httpMethod = "POST", ParameterCollection collection = null)
-            : base(serializerOptions, stack: stack, collection)
+        internal CreateUpdateService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, T dataModel, string fieldName, string httpMethod = "POST", ParameterCollection collection = null)
+            : base(serializer, stack: stack, collection)
         {
             if (stack.APIKey == null)
             {
@@ -43,9 +45,14 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            var inner = JsonSerializer.Serialize(_typedModel, SerializerOptions);
-            var snippet = $"{{\"{fieldName}\": {inner}}}";
-            this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            {
+                JsonWriter writer = new JsonTextWriter(stringWriter);
+
+                Serializer.Serialize(writer, _typedModel);
+                string snippet = $"{{\"{fieldName}\": {stringWriter.ToString()}}}";
+                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet); 
+            }
         }
     }
 }

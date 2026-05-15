@@ -1,7 +1,7 @@
 using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Contentstack.Management.Core.Models.Fields;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Utils
 {
@@ -10,37 +10,37 @@ namespace Contentstack.Management.Core.Utils
     /// </summary>
     public class FieldJsonConverter : JsonConverter<Field>
     {
-        public override Field Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override bool CanWrite => false;
+
+        public override void WriteJson(JsonWriter writer, Field value, JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonTokenType.Null)
+            throw new NotSupportedException();
+        }
+
+        public override Field ReadJson(JsonReader reader, Type objectType, Field existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.Null)
                 return null;
 
-            using var doc = JsonDocument.ParseValue(ref reader);
-            var root = doc.RootElement;
-            var targetType = ResolveConcreteType(root);
-            var innerOpts = options.WithoutConverter<FieldJsonConverter>();
-            return (Field)JsonSerializer.Deserialize(root.GetRawText(), targetType, innerOpts);
-        }
+            var jo = JObject.Load(reader);
+            var dataType = jo["data_type"]?.Value<string>();
+            var targetType = ResolveConcreteType(jo, dataType);
+            var field = (Field)Activator.CreateInstance(targetType);
 
-        public override void Write(Utf8JsonWriter writer, Field value, JsonSerializerOptions options)
-        {
-            if (value == null)
+            using (var subReader = jo.CreateReader())
             {
-                writer.WriteNullValue();
-                return;
+                serializer.Populate(subReader, field);
             }
 
-            var innerOpts = options.WithoutConverter<FieldJsonConverter>();
-            JsonSerializer.Serialize(writer, value, value.GetType(), innerOpts);
+            return field;
         }
 
-        private static Type ResolveConcreteType(JsonElement jo)
+        private static Type ResolveConcreteType(JObject jo, string dataType)
         {
-            var extensionUid = jo.TryGetProperty("extension_uid", out var ext) ? ext.GetString() : null;
+            // API returns extension-backed fields with data_type = extension's data type (e.g. "text"), not "extension".
+            var extensionUid = jo["extension_uid"]?.Value<string>();
             if (!string.IsNullOrEmpty(extensionUid))
                 return typeof(ExtensionField);
-
-            var dataType = jo.TryGetProperty("data_type", out var dt) ? dt.GetString() : null;
 
             if (string.IsNullOrEmpty(dataType))
                 return typeof(Field);
@@ -64,22 +64,16 @@ namespace Contentstack.Management.Core.Utils
                 case "isodate":
                     return typeof(DateField);
                 case "file":
-                    if (jo.TryGetProperty("field_metadata", out var fm))
-                    {
-                        if (jo.TryGetProperty("dimension", out _) ||
-                            (fm.TryGetProperty("image", out var img) && img.ValueKind == JsonValueKind.True))
-                            return typeof(ImageField);
-                    }
-                    else if (jo.TryGetProperty("dimension", out _))
+                    var fm = jo["field_metadata"];
+                    if (jo["dimension"] != null || fm?["image"]?.Value<bool>() == true)
                         return typeof(ImageField);
-
                     return typeof(FileField);
                 case "json":
                     return typeof(JsonField);
                 case "text":
-                    if (jo.TryGetProperty("enum", out _))
+                    if (jo["enum"] != null)
                         return typeof(SelectField);
-                    var displayType = jo.TryGetProperty("display_type", out var dtp) ? dtp.GetString() : null;
+                    var displayType = jo["display_type"]?.Value<string>();
                     if (displayType == "dropdown" || displayType == "checkbox")
                         return typeof(SelectField);
                     return typeof(TextboxField);

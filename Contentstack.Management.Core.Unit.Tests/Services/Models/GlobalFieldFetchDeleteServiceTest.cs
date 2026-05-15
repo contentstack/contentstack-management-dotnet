@@ -5,6 +5,7 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Models;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Services.Models
 {
@@ -34,7 +35,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var resourcePath = "/global_fields/test_uid";
 
             // Act
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, null);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, null);
 
             // Assert
             Assert.IsNotNull(service);
@@ -49,7 +50,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var apiVersion = "3.2";
 
             // Act
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
 
             // Assert
             Assert.IsNotNull(service);
@@ -64,7 +65,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var apiVersion = "3.2";
 
             // Act
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
 
             // Assert
             Assert.IsTrue(service.Headers.ContainsKey("api_version"));
@@ -78,7 +79,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var resourcePath = "/global_fields/test_uid";
 
             // Act
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, null);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, null);
 
             // Assert
             Assert.IsFalse(service.Headers.ContainsKey("api_version"));
@@ -90,7 +91,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             // Arrange
             var resourcePath = "/global_fields/test_uid";
             var apiVersion = "3.2";
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
             
             // Verify header is initially present
             Assert.IsTrue(service.Headers.ContainsKey("api_version"));
@@ -109,7 +110,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             // Arrange
             var resourcePath = "/global_fields/test_uid";
             var apiVersion = "3.2";
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
             
             // Verify header is initially present
             Assert.IsTrue(service.Headers.ContainsKey("api_version"));
@@ -128,7 +129,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             // Arrange
             var resourcePath = "/global_fields/test_uid";
             var apiVersion = "3.2";
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
             
             // Verify header is initially present
             Assert.IsTrue(service.Headers.ContainsKey("api_version"));
@@ -146,7 +147,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
         {
             // Arrange
             var resourcePath = "/global_fields/test_uid";
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, null);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, null);
             
             // Manually add api_version header (simulating it being added elsewhere)
             service.Headers["api_version"] = "3.2";
@@ -165,7 +166,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             // Arrange
             var resourcePath = "/global_fields/test_uid";
             var apiVersion = "3.2";
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
 
             // Act & Assert - should not throw exception
             service.OnResponse(null, _stack.client.contentstackOptions);
@@ -182,7 +183,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var apiVersion = "";
 
             // Act
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
 
             // Assert
             Assert.IsFalse(service.Headers.ContainsKey("api_version"));
@@ -196,7 +197,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             var apiVersion = "   ";
 
             // Act
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
 
             // Assert
             Assert.IsFalse(service.Headers.ContainsKey("api_version"));
@@ -208,7 +209,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             // Arrange
             var resourcePath = "/global_fields/test_uid";
             var apiVersion = "3.2";
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
             
             // Test with 201 Created
             var mockResponse201 = new MockHttpResponse(201, "Created");
@@ -230,7 +231,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             // Arrange
             var resourcePath = "/global_fields/test_uid";
             var apiVersion = "3.2";
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
 
             // Test various client error codes
             var errorCodes = new[] { 400, 401, 403, 404, 422 };
@@ -255,7 +256,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Services.Models
             // Arrange
             var resourcePath = "/global_fields/test_uid";
             var apiVersion = "3.2";
-            var service = new GlobalFieldFetchDeleteService(TestJsonSerializerOptions.CreateDefault(), _stack, resourcePath, apiVersion);
+            var service = new GlobalFieldFetchDeleteService(JsonSerializer.CreateDefault(), _stack, resourcePath, apiVersion);
 
             // Test various server error codes
             var errorCodes = new[] { 500, 502, 503, 504 };

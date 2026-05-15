@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models
 {
@@ -48,7 +49,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonSerializer.Serialize(globalFieldRefs);
+            var json = JsonConvert.SerializeObject(globalFieldRefs);
 
             Assert.IsTrue(json.Contains("\"uid\":\"referenced_global_field\""));
             Assert.IsTrue(json.Contains("\"occurrence_count\":3"));
@@ -71,7 +72,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             }";
 
             
-            var globalFieldRefs = JsonSerializer.Deserialize<GlobalFieldRefs>(json);
+            var globalFieldRefs = JsonConvert.DeserializeObject<GlobalFieldRefs>(json);
 
             Assert.AreEqual("referenced_global_field", globalFieldRefs.Uid);
             Assert.AreEqual(2, globalFieldRefs.OccurrenceCount);
@@ -95,7 +96,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonSerializer.Serialize(globalFieldRefs);
+            var json = JsonConvert.SerializeObject(globalFieldRefs);
 
             Assert.IsTrue(json.Contains("\"uid\":\"test_uid\""));
             Assert.IsTrue(json.Contains("\"occurrence_count\":1"));
@@ -115,7 +116,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonSerializer.Serialize(globalFieldRefs);
+            var json = JsonConvert.SerializeObject(globalFieldRefs);
 
             Assert.IsTrue(json.Contains("\"uid\":\"test_uid\""));
             Assert.IsTrue(json.Contains("\"occurrence_count\":0"));

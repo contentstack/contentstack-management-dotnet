@@ -1,13 +1,13 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models
 {
     public class PublishVariant
     {
-        [JsonPropertyName("uid")]
+        [JsonProperty("uid")]
         public string Uid { get; set; }
 
-        [JsonPropertyName("version")]
+        [JsonProperty("version")]
         public int? Version { get; set; }
     }
 }

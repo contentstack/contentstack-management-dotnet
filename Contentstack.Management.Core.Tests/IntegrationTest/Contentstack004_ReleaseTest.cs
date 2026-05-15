@@ -6,6 +6,7 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Queryable;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using Contentstack.Management.Core.Exceptions;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
@@ -37,7 +38,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public async Task Initialize()
         {
-            StackResponse response = StackResponse.getStack(_client.SerializerOptions);
+            StackResponse response = StackResponse.getStack(_client.serializer);
             _stack = _client.Stack(response.Stack.APIKey);
         }
 
@@ -167,7 +168,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse contentstackResponse = _stack.Release().Create(releaseModel);
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 if (!contentstackResponse.IsSuccessStatusCode || response?["release"] == null)
                 {
@@ -194,7 +195,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.IsNotNull(releaseUid);
                 
                 ContentstackResponse contentstackResponse = _stack.Release(releaseUid).Fetch();
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -238,7 +239,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse contentstackResponse = await _stack.Release().CreateAsync(releaseModel);
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 if (!contentstackResponse.IsSuccessStatusCode || response?["release"] == null)
                 {
@@ -273,7 +274,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     };
 
                     ContentstackResponse contentstackResponse = _stack.Release().Create(releaseModel);
-                    var response = contentstackResponse.OpenJsonObjectResponse();
+                    var response = contentstackResponse.OpenJObjectResponse();
 
                     if (!contentstackResponse.IsSuccessStatusCode || response?["release"] == null)
                     {
@@ -321,7 +322,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     };
 
                     ContentstackResponse contentstackResponse = await _stack.Release().CreateAsync(releaseModel);
-                    var response = contentstackResponse.OpenJsonObjectResponse();
+                    var response = contentstackResponse.OpenJObjectResponse();
 
                     if (!contentstackResponse.IsSuccessStatusCode || response?["release"] == null)
                     {
@@ -401,7 +402,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.IsNotNull(releaseUid);
                 
                 ContentstackResponse contentstackResponse = await _stack.Release(releaseUid).FetchAsync();
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -439,13 +440,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 releaseUids = CreateSixNumberedReleases();
 
                 ContentstackResponse contentstackResponse = _stack.Release().Query().Find();
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
                 Assert.IsNotNull(response["releases"]);
                 
-                var releases = response["releases"] as JsonArray;
+                var releases = response["releases"] as JArray;
                 Assert.IsNotNull(releases);
                 
                 Assert.IsTrue(releases.Count >= 6, $"Expected at least 6 releases, but found {releases.Count}");
@@ -478,13 +479,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 releaseUids = await CreateSixNumberedReleasesAsync();
 
                 ContentstackResponse contentstackResponse = await _stack.Release().Query().FindAsync();
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
                 Assert.IsNotNull(response["releases"]);
                 
-                var releases = response["releases"] as JsonArray;
+                var releases = response["releases"] as JArray;
                 Assert.IsNotNull(releases);
                 
                 Assert.IsTrue(releases.Count >= 6, $"Expected at least 6 releases, but found {releases.Count}");
@@ -518,7 +519,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 string releaseToFetch = releaseUids[2];
                 ContentstackResponse contentstackResponse = _stack.Release(releaseToFetch).Fetch();
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -548,7 +549,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 string releaseToFetch = releaseUids[4];
                 ContentstackResponse contentstackResponse = await _stack.Release(releaseToFetch).FetchAsync();
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -585,7 +586,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse contentstackResponse = _stack.Release(releaseUid).Update(updateModel);
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -630,7 +631,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse contentstackResponse = await _stack.Release(releaseUid).UpdateAsync(updateModel);
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -671,7 +672,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string cloneDescription = _testReleaseDescription + " (Cloned)";
 
                 ContentstackResponse contentstackResponse = _stack.Release(originalReleaseUid).Clone(cloneName, cloneDescription);
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -725,7 +726,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 string cloneDescription = _testReleaseDescription + " (Cloned Async)";
 
                 ContentstackResponse contentstackResponse = await _stack.Release(originalReleaseUid).CloneAsync(cloneName, cloneDescription);
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -777,7 +778,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 parameters.Add("limit", "5");
 
                 ContentstackResponse contentstackResponse = _stack.Release().Query().Limit(5).Find();
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -802,7 +803,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 parameters.Add("limit", "5");
 
                 ContentstackResponse contentstackResponse = await _stack.Release().Query().Limit(5).FindAsync();
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -833,7 +834,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 parameters.Add("include_count", "true");
 
                 ContentstackResponse contentstackResponse = _stack.Release().Create(releaseModel, parameters);
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -868,7 +869,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 parameters.Add("include_count", "true");
 
                 ContentstackResponse contentstackResponse = await _stack.Release().CreateAsync(releaseModel, parameters);
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -895,7 +896,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 releaseUid = CreateTestRelease();
 
                 ContentstackResponse contentstackResponse = _stack.Release(releaseUid).Item().GetAll();
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -929,7 +930,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 releaseUid = await CreateTestReleaseAsync();
 
                 ContentstackResponse contentstackResponse = await _stack.Release(releaseUid).Item().GetAllAsync();
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 Assert.IsNotNull(response);
                 Assert.IsTrue(contentstackResponse.IsSuccessStatusCode);
@@ -996,7 +997,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse createResponse = _stack.Release().Create(releaseModel);
-                var createResponseJson = createResponse.OpenJsonObjectResponse();
+                var createResponseJson = createResponse.OpenJObjectResponse();
                 string releaseToDeleteUid = createResponseJson["release"]["uid"].ToString();
 
                 ContentstackResponse contentstackResponse = _stack.Release(releaseToDeleteUid).Delete();
@@ -1025,7 +1026,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse createResponse = await _stack.Release().CreateAsync(releaseModel);
-                var createResponseJson = createResponse.OpenJsonObjectResponse();
+                var createResponseJson = createResponse.OpenJObjectResponse();
                 string releaseToDeleteUid = createResponseJson["release"]["uid"].ToString();
 
                 ContentstackResponse contentstackResponse = await _stack.Release(releaseToDeleteUid).DeleteAsync();
@@ -1058,7 +1059,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse createResponse = _stack.Release().Create(releaseModel);
-                var createResponseJson = createResponse.OpenJsonObjectResponse();
+                var createResponseJson = createResponse.OpenJObjectResponse();
                 Assert.IsTrue(createResponse.IsSuccessStatusCode, "Create release must succeed.");
                 string releaseToDeleteUid = createResponseJson["release"]["uid"].ToString();
 
@@ -1102,7 +1103,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse createResponse = await _stack.Release().CreateAsync(releaseModel);
-                var createResponseJson = createResponse.OpenJsonObjectResponse();
+                var createResponseJson = createResponse.OpenJObjectResponse();
                 Assert.IsTrue(createResponse.IsSuccessStatusCode, "Create release must succeed.");
                 string releaseToDeleteUid = createResponseJson["release"]["uid"].ToString();
 

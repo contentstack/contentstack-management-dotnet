@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Text.Json;
-using System.Text.Json.Nodes;
+using Newtonsoft.Json;
+using System.Globalization;
+using Newtonsoft.Json.Linq;
 using OtpNet;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Utils;
@@ -17,7 +18,7 @@ namespace Contentstack.Management.Core.Services.User
         #endregion
 
         #region Constructor
-        internal LoginService(JsonSerializerOptions serializerOptions, ICredentials credentials, string token = null, string mfaSecret = null): base(serializerOptions)
+        internal LoginService(JsonSerializer serializer, ICredentials credentials, string token = null, string mfaSecret = null): base(serializer)
         {
             this.HttpMethod = "POST";
             this.ResourcePath = "user-session";
@@ -45,33 +46,44 @@ namespace Contentstack.Management.Core.Services.User
 
         public override void ContentBody()
         {
-            var credential = _credentials as NetworkCredential;
-            using var ms = new MemoryStream();
-            using (var writer = new Utf8JsonWriter(ms))
+            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
             {
+                var credential = _credentials as NetworkCredential;
+                JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
                 writer.WritePropertyName("user");
                 writer.WriteStartObject();
-                writer.WriteString("email", credential.UserName);
-                writer.WriteString("password", credential.Password);
+                writer.WritePropertyName("email");
+                writer.WriteValue(credential.UserName);
+                writer.WritePropertyName("password");
+                writer.WriteValue(credential.Password);
                 if (_token != null)
-                    writer.WriteString("tfa_token", _token);
+                {
+                    writer.WritePropertyName("tfa_token");
+                    writer.WriteValue(_token);
+                }
                 writer.WriteEndObject();
                 writer.WriteEndObject();
-            }
 
-            this.ByteContent = ms.ToArray();
+                string snippet = stringWriter.ToString();
+                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+            }
         }
 
         public override void OnResponse(IResponse httpResponse, ContentstackClientOptions config)
         {
             if (httpResponse.IsSuccessStatusCode)
             {
-                var root = httpResponse.OpenJsonObjectResponse();
-                if (root.TryGetPropertyValue("user", out var userNode) && userNode is JsonObject userObj)
+                JObject jObject = httpResponse.OpenJObjectResponse();
+                var user = jObject.GetValue("user");
+                if (user != null && user.GetType() == typeof(JObject))
                 {
-                    if (userObj.TryGetPropertyValue("authtoken", out var at) && at != null)
-                        config.Authtoken = at.GetValue<string>();
+                    JObject userObj = (JObject)user;
+                    var authtoken = userObj.GetValue("authtoken");
+                    if (authtoken != null)
+                    {
+                        config.Authtoken = (string)authtoken;
+                    }
                 }
             }
 

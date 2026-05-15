@@ -3,13 +3,14 @@ using AutoFixture;
 using Contentstack.Management.Core.Services.User;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
 {
     [TestClass]
     public class LogoutServiceTest
     {
-        private JsonSerializerOptions serializer = TestJsonSerializerOptions.CreateDefault();
+        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly string _authtoken = "authtoken";
         private readonly IFixture _fixture = new Fixture();
 

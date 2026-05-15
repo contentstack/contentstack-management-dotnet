@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
@@ -7,10 +7,10 @@ namespace Contentstack.Management.Core.Models.Fields
     /// </summary>
     public class NumberField : Field
     {
-        [JsonPropertyName("min")]
+        [JsonProperty(propertyName: "min")]
         public int? Min { get; set; }
 
-        [JsonPropertyName("max")]
+        [JsonProperty(propertyName: "max")]
         public int? Max { get; set; }
     }
 }

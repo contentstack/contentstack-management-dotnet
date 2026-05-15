@@ -1,9 +1,8 @@
 using System;
-using System.Text.Json;
 using AutoFixture;
 using Contentstack.Management.Core.Models.Fields;
-using Contentstack.Management.Core.Unit.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
 {
@@ -11,7 +10,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
     public class GlobalFieldReferenceSerializationTest
     {
         private readonly IFixture _fixture = new Fixture();
-        private static readonly JsonSerializerOptions JsonOptions = TestJsonSerializerOptions.CreateDefault();
 
         [TestMethod]
         public void Should_Serialize_GlobalFieldReference_To_JSON()
@@ -34,7 +32,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             };
 
             
-            var json = JsonSerializer.Serialize(globalFieldRef, JsonOptions);
+            var json = JsonConvert.SerializeObject(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"display_name\":\"Product Information\""));
             Assert.IsTrue(json.Contains("\"uid\":\"product_info\""));
@@ -65,7 +63,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             }";
 
             
-            var globalFieldRef = JsonSerializer.Deserialize<GlobalFieldReference>(json, JsonOptions);
+            var globalFieldRef = JsonConvert.DeserializeObject<GlobalFieldReference>(json);
 
             Assert.IsNotNull(globalFieldRef);
             Assert.AreEqual("Product Information", globalFieldRef.DisplayName);
@@ -97,7 +95,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             };
 
             
-            var json = JsonSerializer.Serialize(globalFieldRef, JsonOptions);
+            var json = JsonConvert.SerializeObject(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"multiple\":true"));
             Assert.IsTrue(json.Contains("\"mandatory\":false"));
@@ -120,7 +118,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             };
 
             
-            var json = JsonSerializer.Serialize(globalFieldRef, JsonOptions);
+            var json = JsonConvert.SerializeObject(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"unique\":true"));
             Assert.IsTrue(json.Contains("\"mandatory\":true"));
@@ -143,7 +141,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             };
 
             
-            var json = JsonSerializer.Serialize(globalFieldRef, JsonOptions);
+            var json = JsonConvert.SerializeObject(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"non_localizable\":true"));
         }
@@ -165,9 +163,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             };
 
             
-            var json = JsonSerializer.Serialize(globalFieldRef, JsonOptions);
+            var json = JsonConvert.SerializeObject(globalFieldRef);
 
-            // Null values are omitted (same as ContentstackClient SerializerOptions)
+            // Null values are ignored due to ItemNullValueHandling = NullValueHandling.Ignore
             Assert.IsFalse(json.Contains("\"reference_to\""));
         }
 
@@ -188,7 +186,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             };
 
             
-            var json = JsonSerializer.Serialize(globalFieldRef, JsonOptions);
+            var json = JsonConvert.SerializeObject(globalFieldRef);
 
             // Empty strings are still serialized
             Assert.IsTrue(json.Contains("\"reference_to\":\"\""));
@@ -220,7 +218,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             };
 
             
-            var json = JsonSerializer.Serialize(globalFieldRef, JsonOptions);
+            var json = JsonConvert.SerializeObject(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"field_metadata\""));
             Assert.IsTrue(json.Contains("\"description\":\"Complex product reference with rich metadata\""));
@@ -255,7 +253,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             }";
 
             
-            var globalFieldRef = JsonSerializer.Deserialize<GlobalFieldReference>(json, JsonOptions);
+            var globalFieldRef = JsonConvert.DeserializeObject<GlobalFieldReference>(json);
 
             Assert.IsNotNull(globalFieldRef);
             Assert.AreEqual("Complex Product Reference", globalFieldRef.DisplayName);
@@ -269,8 +267,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             
             Assert.IsNotNull(globalFieldRef.FieldMetadata);
             Assert.AreEqual("Complex product reference with rich metadata", globalFieldRef.FieldMetadata.Description);
-            Assert.IsInstanceOfType(globalFieldRef.FieldMetadata.DefaultValue, typeof(JsonElement));
-            Assert.AreEqual("default_product", ((JsonElement)globalFieldRef.FieldMetadata.DefaultValue).GetString());
+            Assert.AreEqual("default_product", globalFieldRef.FieldMetadata.DefaultValue);
             Assert.AreEqual(3, globalFieldRef.FieldMetadata.Version);
             Assert.IsTrue(globalFieldRef.FieldMetadata.AllowRichText);
             Assert.IsFalse(globalFieldRef.FieldMetadata.Multiline);

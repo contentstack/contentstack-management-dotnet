@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Exceptions
 {
@@ -41,7 +41,7 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// This is error message.
         /// </summary>
-        [JsonPropertyName("error_message")]
+        [JsonProperty("error_message")]
         public string ErrorMessage
         {
             get
@@ -58,13 +58,13 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// This is error code.
         /// </summary>
-        [JsonPropertyName("error_code")]
+        [JsonProperty("error_code")]
         public int ErrorCode { get; set; }
 
         /// <summary>
         /// Set of errors in detail.
         /// </summary>
-        [JsonPropertyName("errors")]
+        [JsonProperty("errors")]
         public Dictionary<string, object> Errors { get; set; }
 
         /// <summary>
@@ -90,9 +90,9 @@ namespace Contentstack.Management.Core.Exceptions
             {
                 try
                 {
-                    exception = JsonSerializer.Deserialize<ContentstackErrorException>(stringResponse);
+                    exception = JObject.Parse(stringResponse).ToObject<ContentstackErrorException>();
                 }
-                catch (JsonException)
+                catch (JsonReaderException)
                 {
                     // Handle HTML error responses or other non-JSON content
                     exception = new ContentstackErrorException();

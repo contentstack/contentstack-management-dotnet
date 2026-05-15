@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
@@ -13,13 +14,13 @@ namespace Contentstack.Management.Core.Services.Stack
 
         #region Internal
         internal StackCreateUpdateService(
-            JsonSerializerOptions serializerOptions,
+            JsonSerializer serializer,
             Core.Models.Stack stack,
             string name,
             string masterLocale = null,
             string description = null,
             string organizationUid = null)
-            : base(serializerOptions, stack)
+            : base(serializer, stack)
         {
             this.ResourcePath = "/stacks";
 
@@ -52,23 +53,37 @@ namespace Contentstack.Management.Core.Services.Stack
 
         public override void ContentBody()
         {
-            using var ms = new MemoryStream();
-            using (var writer = new Utf8JsonWriter(ms))
+            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
             {
+                JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
                 writer.WritePropertyName("stack");
                 writer.WriteStartObject();
                 if (!string.IsNullOrEmpty(_name))
-                    writer.WriteString("name", _name);
+                {
+                    writer.WritePropertyName("name");
+                    writer.WriteValue(_name);
+                }
                 if (!string.IsNullOrEmpty(_description))
-                    writer.WriteString("description", _description);
-                if (this.HttpMethod == "POST")
-                    writer.WriteString("master_locale", _masterLocale);
+                {
+                    writer.WritePropertyName("description");
+                    writer.WriteValue(_description);
+                }
+                switch (this.HttpMethod)
+                {
+                    case "POST":
+                        writer.WritePropertyName("master_locale");
+                        writer.WriteValue(_masterLocale);
+                        break;
+                    default:
+                        break;
+                }
                 writer.WriteEndObject();
                 writer.WriteEndObject();
-            }
 
-            this.ByteContent = ms.ToArray();
+                string snippet = stringWriter.ToString();
+                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+            }
         }
         #endregion
     }

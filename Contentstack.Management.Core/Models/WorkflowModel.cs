@@ -1,45 +1,47 @@
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 namespace Contentstack.Management.Core.Models
 {
-        public class WorkflowModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class WorkflowModel
     {
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
-        [JsonPropertyName("enabled")]
+        [JsonProperty(propertyName: "enabled")]
         public bool Enabled { get; set; } = true;
-        [JsonPropertyName("branches")]
+        [JsonProperty(propertyName: "branches")]
         public List<string> Branches { get; set; }
-        [JsonPropertyName("content_types")]
+        [JsonProperty(propertyName: "content_types")]
         public List<string> ContentTypes { get; set; }
-        [JsonPropertyName("admin_users")]
+        [JsonProperty(propertyName: "admin_users")]
         public Dictionary<string, object> AdminUsers { get; set; }
 
-        [JsonPropertyName("workflow_stages")]
+        [JsonProperty(propertyName: "workflow_stages")]
         public List<WorkflowStage> WorkflowStages { get; set; }
     }
 
-        public class WorkflowStage
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class WorkflowStage
     {
-        [JsonPropertyName("uid")]
+        [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
-        [JsonPropertyName("color")]
+        [JsonProperty(propertyName: "color")]
         public string Color { get; set; }
-        [JsonPropertyName("SYS_ACL")]
+        [JsonProperty(propertyName: "SYS_ACL")]
         public Dictionary<string, object> SystemACL { get; set; }
-        [JsonPropertyName("next_available_stages")]
+        [JsonProperty(propertyName: "next_available_stages")]
         public List<string> NextAvailableStages { get; set; }
-        [JsonPropertyName("allStages")]
+        [JsonProperty(propertyName: "allStages")]
         public bool AllStages { get; set; } = true;
-        [JsonPropertyName("allUsers")]
+        [JsonProperty(propertyName: "allUsers")]
         public bool AllUsers { get; set; } = true;
-        [JsonPropertyName("specificStages")]
+        [JsonProperty(propertyName: "specificStages")]
         public bool SpecificStages { get; set; } = false;
-        [JsonPropertyName("specificUsers")]
+        [JsonProperty(propertyName: "specificUsers")]
         public bool SpecificUsers { get; set; } = false;
-        [JsonPropertyName("entry_lock")]
+        [JsonProperty(propertyName: "entry_lock")]
         public string EntryLock { get; set; }
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
     }
 }

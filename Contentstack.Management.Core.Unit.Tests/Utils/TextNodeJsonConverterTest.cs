@@ -1,20 +1,22 @@
+using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Unit.Tests.Utils
 {
     [TestClass]
     public class TextNodeJsonConverterTest
     {
-        private static JsonSerializerOptions CreateOptions()
+        private JsonSerializer _serializer;
+
+        [TestInitialize]
+        public void Setup()
         {
-            var options = new JsonSerializerOptions();
-            options.Converters.Add(new TextNodeJsonConverter());
-            options.Converters.Add(new NodeJsonConverter());
-            return options;
+            _serializer = new JsonSerializer();
         }
 
         [TestMethod]
@@ -31,7 +33,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 ""superscript"": true,
                 ""break"": false
             }";
-            var result = JsonSerializer.Deserialize<TextNode>(json, CreateOptions());
+            var reader = new JsonTextReader(new System.IO.StringReader(json));
+            var converter = new TextNodeJsonConverter();
+
+            var result = converter.ReadJson(reader, typeof(TextNode), null, false, _serializer);
 
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(TextNode));
@@ -63,13 +68,22 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 attrs = new Dictionary<string, object> { { "class", "test-class" } },
                 children = new List<Node>()
             };
-            var result = JsonSerializer.Serialize(textNode, CreateOptions());
+            var stringWriter = new System.IO.StringWriter();
+            var writer = new JsonTextWriter(stringWriter);
+            var converter = new TextNodeJsonConverter();
 
+            converter.WriteJson(writer, textNode, _serializer);
+
+            var result = stringWriter.ToString();
             Assert.IsTrue(result.Contains("\"text\":\"Hello World\""));
             Assert.IsTrue(result.Contains("\"bold\":true"));
+            // italic is false, so it won't be written by the converter
             Assert.IsTrue(result.Contains("\"underline\":true"));
+            // strikethrough is false, so it won't be written by the converter
             Assert.IsTrue(result.Contains("\"inlineCode\":true"));
+            // subscript is false, so it won't be written by the converter
             Assert.IsTrue(result.Contains("\"superscript\":true"));
+            // break is false, so it won't be written by the converter
             Assert.IsTrue(result.Contains("\"attrs\""));
             Assert.IsTrue(result.Contains("\"children\""));
         }
@@ -89,8 +103,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 superscript = false,
                 @break = false
             };
-            var result = JsonSerializer.Serialize(textNode, CreateOptions());
+            var stringWriter = new System.IO.StringWriter();
+            var writer = new JsonTextWriter(stringWriter);
+            var converter = new TextNodeJsonConverter();
 
+            converter.WriteJson(writer, textNode, _serializer);
+
+            var result = stringWriter.ToString();
             Assert.IsTrue(result.Contains("\"text\":\"Simple text\""));
             Assert.IsFalse(result.Contains("\"bold\""));
             Assert.IsFalse(result.Contains("\"italic\""));
@@ -117,8 +136,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 superscript = false,
                 @break = false
             };
-            var result = JsonSerializer.Serialize(textNode, CreateOptions());
+            var stringWriter = new System.IO.StringWriter();
+            var writer = new JsonTextWriter(stringWriter);
+            var converter = new TextNodeJsonConverter();
 
+            converter.WriteJson(writer, textNode, _serializer);
+
+            var result = stringWriter.ToString();
             Assert.IsFalse(result.Contains("\"text\""));
             Assert.IsTrue(result.Contains("\"bold\":true"));
         }
@@ -138,8 +162,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 superscript = false,
                 @break = false
             };
-            var result = JsonSerializer.Serialize(textNode, CreateOptions());
+            var stringWriter = new System.IO.StringWriter();
+            var writer = new JsonTextWriter(stringWriter);
+            var converter = new TextNodeJsonConverter();
 
+            converter.WriteJson(writer, textNode, _serializer);
+
+            var result = stringWriter.ToString();
             Assert.IsFalse(result.Contains("\"text\""));
             Assert.IsTrue(result.Contains("\"bold\":true"));
         }
@@ -153,8 +182,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 attrs = null,
                 children = new List<Node>()
             };
-            var result = JsonSerializer.Serialize(textNode, CreateOptions());
+            var stringWriter = new System.IO.StringWriter();
+            var writer = new JsonTextWriter(stringWriter);
+            var converter = new TextNodeJsonConverter();
 
+            converter.WriteJson(writer, textNode, _serializer);
+
+            var result = stringWriter.ToString();
             Assert.IsFalse(result.Contains("\"attrs\""));
         }
 
@@ -167,8 +201,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Utils
                 attrs = new Dictionary<string, object>(),
                 children = null
             };
-            var result = JsonSerializer.Serialize(textNode, CreateOptions());
+            var stringWriter = new System.IO.StringWriter();
+            var writer = new JsonTextWriter(stringWriter);
+            var converter = new TextNodeJsonConverter();
 
+            converter.WriteJson(writer, textNode, _serializer);
+
+            var result = stringWriter.ToString();
             Assert.IsFalse(result.Contains("\"children\""));
         }
     }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Queryable;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Services
 {

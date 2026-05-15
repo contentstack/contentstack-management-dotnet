@@ -46,7 +46,7 @@ namespace Contentstack.Management.Core.Models
         public override ContentstackResponse Create(ContentModelling model, ParameterCollection collection = null)
         {
             ThrowIfUidNotEmpty();
-            var service = new GlobalFieldService(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, apiVersion, collection: collection);
+            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, collection: collection);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -66,7 +66,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
-            var service = new GlobalFieldService(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, apiVersion, collection: collection);
+            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, collection: collection);
             return stack.client.InvokeAsync<GlobalFieldService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -85,7 +85,7 @@ namespace Contentstack.Management.Core.Models
         public override ContentstackResponse Update(ContentModelling model, ParameterCollection collection = null)
         {
             ThrowIfUidEmpty();
-            var service = new GlobalFieldService(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, apiVersion, "PUT", collection: collection);
+            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, "PUT", collection: collection);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -105,7 +105,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new GlobalFieldService(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, apiVersion, "PUT", collection: collection);
+            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, "PUT", collection: collection);
             return stack.client.InvokeAsync<GlobalFieldService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -123,7 +123,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new GlobalFieldFetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, apiVersion, collection: collection);
+            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, collection: collection);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -141,7 +141,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new GlobalFieldFetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, apiVersion, collection: collection);
+            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, collection: collection);
             return stack.client.InvokeAsync<GlobalFieldFetchDeleteService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -159,7 +159,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new GlobalFieldFetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, apiVersion, "DELETE", collection: collection);
+            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, "DELETE", collection: collection);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -177,7 +177,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new GlobalFieldFetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, apiVersion, "DELETE", collection: collection);
+            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, "DELETE", collection: collection);
             return stack.client.InvokeAsync<GlobalFieldFetchDeleteService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
     }

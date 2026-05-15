@@ -1,6 +1,6 @@
 ﻿using System;
 using Contentstack.Management.Core.Queryable;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Organization
@@ -9,7 +9,7 @@ namespace Contentstack.Management.Core.Services.Organization
     {
 
         #region Internal
-        internal OrganizationStackService(JsonSerializerOptions serializerOptions, string uid, ParameterCollection collection = null) : base(serializerOptions, collection: collection)
+        internal OrganizationStackService(JsonSerializer serializer, string uid, ParameterCollection collection = null) : base(serializer, collection: collection)
         {
 
             if (string.IsNullOrEmpty(uid))

@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Models;
 
 namespace Contentstack.Management.Core.Services.Stack.BulkOperation
@@ -20,8 +20,8 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
         /// <param name="stack">The stack instance.</param>
         /// <param name="data">The add items data.</param>
         /// <param name="bulkVersion">The bulk version.</param>
-        public BulkAddItemsService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack stack, BulkAddItemsData data, string bulkVersion = null)
-            : base(serializerOptions, stack)
+        public BulkAddItemsService(JsonSerializer serializer, Contentstack.Management.Core.Models.Stack stack, BulkAddItemsData data, string bulkVersion = null)
+            : base(serializer, stack)
         {
             _data = data ?? throw new ArgumentNullException(nameof(data));
             _bulkVersion = bulkVersion;
@@ -43,7 +43,7 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
         {
             if (_data != null)
             {
-                var json = JsonSerializer.Serialize(_data, SerializerOptions);
+                var json = JsonConvert.SerializeObject(_data);
                 ByteContent = Encoding.UTF8.GetBytes(json);
             }
         }

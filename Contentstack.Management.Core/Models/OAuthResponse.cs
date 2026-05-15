@@ -1,5 +1,5 @@
 using System;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -9,23 +9,23 @@ namespace Contentstack.Management.Core.Models
     public class OAuthResponse
     {
        
-        [JsonPropertyName("access_token")]
+        [JsonProperty("access_token")]
         public string AccessToken { get; set; }
 
        
-        [JsonPropertyName("refresh_token")]
+        [JsonProperty("refresh_token")]
         public string RefreshToken { get; set; }
 
         
-        [JsonPropertyName("expires_in")]
+        [JsonProperty("expires_in")]
         public int ExpiresIn { get; set; }
 
        
-        [JsonPropertyName("organization_uid")]
+        [JsonProperty("organization_uid")]
         public string OrganizationUid { get; set; }
 
         
-        [JsonPropertyName("user_uid")]
+        [JsonProperty("user_uid")]
         public string UserUid { get; set; }
     }
 }

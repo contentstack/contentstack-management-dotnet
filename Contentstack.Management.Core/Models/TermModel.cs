@@ -1,80 +1,83 @@
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models
 {
     /// <summary>
     /// Model for Term create/update and API response.
     /// </summary>
-        public class TermModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class TermModel
     {
-        [JsonPropertyName("uid")]
+        [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
 
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
 
-        [JsonPropertyName("taxonomy_uid")]
+        [JsonProperty(propertyName: "taxonomy_uid")]
         public string TaxonomyUid { get; set; }
 
-        [JsonPropertyName("parent_uid")]
+        [JsonProperty(propertyName: "parent_uid")]
         public string ParentUid { get; set; }
 
-        [JsonPropertyName("depth")]
+        [JsonProperty(propertyName: "depth")]
         public int? Depth { get; set; }
 
-        [JsonPropertyName("children_count")]
+        [JsonProperty(propertyName: "children_count")]
         public int? ChildrenCount { get; set; }
 
-        [JsonPropertyName("referenced_entries_count")]
+        [JsonProperty(propertyName: "referenced_entries_count")]
         public int? ReferencedEntriesCount { get; set; }
 
-        [JsonPropertyName("ancestors")]
+        [JsonProperty(propertyName: "ancestors")]
         public List<TermAncestorDescendant> Ancestors { get; set; }
 
-        [JsonPropertyName("descendants")]
+        [JsonProperty(propertyName: "descendants")]
         public List<TermAncestorDescendant> Descendants { get; set; }
 
-        [JsonPropertyName("created_at")]
+        [JsonProperty(propertyName: "created_at")]
         public string CreatedAt { get; set; }
 
-        [JsonPropertyName("updated_at")]
+        [JsonProperty(propertyName: "updated_at")]
         public string UpdatedAt { get; set; }
     }
 
     /// <summary>
     /// Represents an ancestor or descendant term in hierarchy.
     /// </summary>
-        public class TermAncestorDescendant
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class TermAncestorDescendant
     {
-        [JsonPropertyName("uid")]
+        [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
 
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
 
-        [JsonPropertyName("parent_uid")]
+        [JsonProperty(propertyName: "parent_uid")]
         public string ParentUid { get; set; }
 
-        [JsonPropertyName("depth")]
+        [JsonProperty(propertyName: "depth")]
         public int? Depth { get; set; }
 
-        [JsonPropertyName("children_count")]
+        [JsonProperty(propertyName: "children_count")]
         public int? ChildrenCount { get; set; }
 
-        [JsonPropertyName("referenced_entries_count")]
+        [JsonProperty(propertyName: "referenced_entries_count")]
         public int? ReferencedEntriesCount { get; set; }
     }
 
     /// <summary>
     /// Model for Term move operation (parent_uid, order).
     /// </summary>
-        public class TermMoveModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class TermMoveModel
     {
-        [JsonPropertyName("parent_uid")]
+        [JsonProperty(propertyName: "parent_uid")]
         public string ParentUid { get; set; }
 
-        [JsonPropertyName("order")]
+        [JsonProperty(propertyName: "order")]
         public int? Order { get; set; }
     }
 }

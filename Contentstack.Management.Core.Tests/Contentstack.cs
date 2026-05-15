@@ -5,13 +5,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Tests
 {
@@ -118,13 +119,17 @@ namespace Contentstack.Management.Core.Tests
                 }
                 catch (Exception ex) when (IsAccountLockout(ex) && attempt < maxRetries)
                 {
-                    int delay = baseDelayMs * (int)Math.Pow(2, attempt);
+                    int delay = baseDelayMs * (int)Math.Pow(2, attempt); // Exponential backoff
                     System.Threading.Thread.Sleep(delay);
                 }
             }
+            // Final attempt without catching lockout
             return client.Login(Credential, null, MfaSecret);
         }
 
+        /// <summary>
+        /// Executes async login with retry logic for account lockouts
+        /// </summary>
         public static async Task<ContentstackResponse> LoginWithRetryAsync(ContentstackClient client, int maxRetries = 3, int baseDelayMs = 5000)
         {
             for (int attempt = 0; attempt <= maxRetries; attempt++)
@@ -135,61 +140,88 @@ namespace Contentstack.Management.Core.Tests
                 }
                 catch (Exception ex) when (IsAccountLockout(ex) && attempt < maxRetries)
                 {
-                    int delay = baseDelayMs * (int)Math.Pow(2, attempt);
+                    int delay = baseDelayMs * (int)Math.Pow(2, attempt); // Exponential backoff
                     await Task.Delay(delay);
                 }
             }
+            // Final attempt without catching lockout
             return await client.LoginAsync(Credential, null, MfaSecret);
         }
 
+        /// <summary>
+        /// Executes login with TOTP-aware retry logic for token reuse and account lockouts
+        /// </summary>
         public static ContentstackResponse LoginWithTotpRetry(ContentstackClient client, int maxRetries = 3)
         {
             for (int attempt = 0; attempt <= maxRetries; attempt++)
             {
                 try
                 {
+                    // Ensure fresh TOTP window before each attempt
                     EnsureFreshTotpWindow();
                     return client.Login(Credential, null, MfaSecret);
                 }
                 catch (Exception ex) when (attempt < maxRetries)
                 {
                     if (IsTotpReuse(ex))
+                    {
+                        // Wait for fresh TOTP window (35+ seconds)
                         System.Threading.Thread.Sleep(35000);
+                    }
                     else if (IsAccountLockout(ex))
                     {
+                        // Exponential backoff for account lockout
                         int delay = 5000 * (int)Math.Pow(2, attempt);
                         System.Threading.Thread.Sleep(delay);
                     }
                     else
+                    {
+                        // For other errors, short delay before retry
                         System.Threading.Thread.Sleep(1000);
+                    }
                 }
             }
+            
+            // Final attempt without catching errors
             EnsureFreshTotpWindow();
             return client.Login(Credential, null, MfaSecret);
         }
 
+        /// <summary>
+        /// Executes async login with TOTP-aware retry logic for token reuse and account lockouts
+        /// </summary>
         public static async Task<ContentstackResponse> LoginWithTotpRetryAsync(ContentstackClient client, int maxRetries = 3)
         {
             for (int attempt = 0; attempt <= maxRetries; attempt++)
             {
                 try
                 {
+                    // Ensure fresh TOTP window before each attempt
                     EnsureFreshTotpWindow();
                     return await client.LoginAsync(Credential, null, MfaSecret);
                 }
                 catch (Exception ex) when (attempt < maxRetries)
                 {
                     if (IsTotpReuse(ex))
+                    {
+                        // Wait for fresh TOTP window (35+ seconds)
                         await Task.Delay(35000);
+                    }
                     else if (IsAccountLockout(ex))
                     {
+                        // Exponential backoff for account lockout
                         int delay = 5000 * (int)Math.Pow(2, attempt);
                         await Task.Delay(delay);
                     }
                     else
+                    {
+                        // For other errors, short delay before retry
                         await Task.Delay(1000);
+                    }
                 }
             }
+            
+            // Final attempt without catching errors
             EnsureFreshTotpWindow();
             return await client.LoginAsync(Credential, null, MfaSecret);
         }
@@ -210,16 +242,17 @@ namespace Contentstack.Management.Core.Tests
             return client;
         }
 
-        public static T serialize<T>(JsonSerializerOptions options, string filePath)
+        public static T serialize<T>(JsonSerializer serializer, string filePath)
         {
             string response = GetResourceText(filePath);
-            return JsonSerializer.Deserialize<T>(response, options);
+            JObject jObject = JObject.Parse(response);
+            return jObject.ToObject<T>(serializer);
         }
-
-        public static T serializeArray<T>(JsonSerializerOptions options, string filePath)
+        public static T serializeArray<T>(JsonSerializer serializer, string filePath)
         {
             string response = GetResourceText(filePath);
-            return JsonSerializer.Deserialize<T>(response, options);
+            JArray jObject = JArray.Parse(response);
+            return jObject.ToObject<T>(serializer);
         }
 
         public static string GetResourceText(string resourceName)

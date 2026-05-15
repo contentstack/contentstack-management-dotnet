@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
     public class GroupField : Field
     {
-        [JsonPropertyName("format")]
+        [JsonProperty(propertyName: "format")]
         public string Format { get; set; }
-        [JsonPropertyName("schema")]
+        [JsonProperty(propertyName: "schema")]
         public List<Field> Schema { get; set; }
-        [JsonPropertyName("max_instance")]
+        [JsonProperty(propertyName: "max_instance")]
         public int? MaxInstance { get; set; }
     }
 }

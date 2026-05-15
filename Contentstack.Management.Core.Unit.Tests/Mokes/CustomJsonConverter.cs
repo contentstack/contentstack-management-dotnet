@@ -1,17 +1,44 @@
-﻿using Contentstack.Management.Core.Attributes;
+﻿using System;
+using Contentstack.Management.Core.Attributes;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
-    /// <summary>
-    /// Marker types for <see cref="CsmJsonConverterAttribute"/> tests (not used as real JSON converters).
-    /// </summary>
     [CsmJsonConverter("CustomAutoload")]
-    public class CustomJsonConverter
+    public class CustomJsonConverter : JsonConverter
     {
+        public override bool CanConvert(Type objectType)
+        {
+            return false; // Mock converter - not actually used for conversion
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     [CsmJsonConverter("CustomManualLoad", false)]
-    public class CustomConverter
+    public class CustomConverter : JsonConverter
     {
+        public override bool CanConvert(Type objectType)
+        {
+            return false; // Mock converter - not actually used for conversion
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

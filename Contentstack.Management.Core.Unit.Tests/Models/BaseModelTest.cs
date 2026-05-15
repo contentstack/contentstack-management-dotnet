@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
@@ -37,28 +36,28 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         }
 
         [TestMethod]
-        public async Task Initialize_ContentType()
+        public void Initialize_ContentType()
         {
             BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>());
 
             Assert.IsNull(baseModel.Uid);
             Assert.ThrowsException<InvalidOperationException>(() => baseModel.Fetch());
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.FetchAsync());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.FetchAsync());
             Assert.ThrowsException<InvalidOperationException>(() => baseModel.Update(new ContentModelling()));
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.UpdateAsync(new ContentModelling()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.UpdateAsync(new ContentModelling()));
             Assert.ThrowsException<InvalidOperationException>(() => baseModel.Delete());
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.DeleteAsync());
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.DeleteAsync());
 
         }
         [TestMethod]
-        public async Task Initialize_BaseModel_With_Uid()
+        public void Initialize_BaseModel_With_Uid()
         {
             string uid = _fixture.Create<string>();
             BaseModel<ContentModelling> baseModel = new BaseModel<ContentModelling>(_stack, _fixture.Create<string>(), uid);
 
             Assert.AreEqual(uid, baseModel.Uid);
             Assert.ThrowsException<InvalidOperationException>(() => baseModel.Create(new ContentModelling()));
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.CreateAsync(new ContentModelling()));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => baseModel.CreateAsync(new ContentModelling()));
         }
 
         [TestMethod]
@@ -70,7 +69,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = baseModel.Create(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -82,7 +81,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await baseModel.CreateAsync(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -94,7 +93,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = baseModel.Update(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -106,7 +105,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await baseModel.UpdateAsync(new ContentModelling());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -118,7 +117,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = baseModel.Fetch();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -130,7 +129,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await baseModel.FetchAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -142,7 +141,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = baseModel.Delete();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -154,7 +153,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await baseModel.DeleteAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
     }
 }

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Text.Json.Nodes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core
 {
@@ -20,7 +20,7 @@ namespace Contentstack.Management.Core
         Dictionary<string, string> _headers;
         HashSet<string> _headerNamesSet;
         private readonly HttpResponseMessage _response;
-        private readonly JsonSerializerOptions _serializerOptions;
+        private readonly JsonSerializer _serializer;
 
         #region Public
         /// <summary>
@@ -126,10 +126,10 @@ namespace Contentstack.Management.Core
         }
         #endregion
 
-        internal ContentstackResponse(HttpResponseMessage response, JsonSerializerOptions serializerOptions)
+        internal ContentstackResponse(HttpResponseMessage response, JsonSerializer serializer)
         {
             _response = response;
-            _serializerOptions = serializerOptions;
+            _serializer = serializer;
 
             this.StatusCode = response.StatusCode;
             this.IsSuccessStatusCode = response.IsSuccessStatusCode;
@@ -146,11 +146,11 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// Json Object format response.
         /// </summary>
-        /// <returns>The JsonObject.</returns>
-        public JsonObject OpenJsonObjectResponse()
+        /// <returns>The JObject.</returns>
+        public JObject OpenJObjectResponse()
         {
             ThrowIfDisposed();
-            return JsonNode.Parse(OpenResponse())!.AsObject();
+            return JObject.Parse(OpenResponse());
         }
 
         /// <summary>
@@ -171,8 +171,8 @@ namespace Contentstack.Management.Core
         public TResponse OpenTResponse<TResponse>()
         {
             ThrowIfDisposed();
-            string json = OpenResponse();
-            return JsonSerializer.Deserialize<TResponse>(json, _serializerOptions);
+            JObject jObject = OpenJObjectResponse();
+            return jObject.ToObject<TResponse>(_serializer);
         }
 
 

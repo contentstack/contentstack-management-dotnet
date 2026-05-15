@@ -40,7 +40,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void TestInitialize()
         {
-            var response = StackResponse.getStack(_client.SerializerOptions);
+            var response = StackResponse.getStack(_client.serializer);
             _stack = _client.Stack(response.Stack.APIKey);
         }
 
@@ -51,7 +51,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test001_Should_DisposableSimple_FullLifecycle_Sync()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
             try
             {
                 TestOutputLogger.LogContext("TestScenario", "DisposableSimple_Sync");
@@ -101,7 +101,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test002_Should_DisposableSimple_FullLifecycle_Async()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
             try
             {
                 TestOutputLogger.LogContext("TestScenario", "DisposableSimple_Async");
@@ -146,7 +146,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test003_Should_DisposableSimple_Delete_Sync()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
             _stack.ContentType().Create(model);
             try
             {
@@ -164,7 +164,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test004_Should_DisposableSimple_Delete_Async()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
             await _stack.ContentType().CreateAsync(model);
             try
             {
@@ -186,7 +186,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test005_Should_Error_Create_DuplicateUid_Sync()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
             _stack.ContentType().Create(model);
             try
             {
@@ -207,7 +207,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test006_Should_Error_Create_DuplicateUid_Async()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
             await _stack.ContentType().CreateAsync(model);
             try
             {
@@ -228,7 +228,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test007_Should_Error_Create_InvalidUid_Sync()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
             model.Uid = "Invalid-UID-Caps!";
             AssertLogger.ThrowsContentstackError(
                 () => _stack.ContentType().Create(model),
@@ -242,7 +242,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test008_Should_Error_Create_InvalidUid_Async()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
             model.Uid = "Invalid-UID-Caps!";
             await AssertLogger.ThrowsContentstackErrorAsync(
                 async () => await _stack.ContentType().CreateAsync(model),
@@ -309,7 +309,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public void Test013_Should_Error_Update_NonExistent_Sync()
         {
-            var m = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", NewSuffix());
+            var m = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", NewSuffix());
             AssertLogger.ThrowsContentstackError(
                 () => _stack.ContentType("non_existent_ct_" + NewSuffix()).Update(m),
                 "UpdateMissing",
@@ -321,7 +321,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [DoNotParallelize]
         public async Task Test014_Should_Error_Update_NonExistent_Async()
         {
-            var m = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", NewSuffix());
+            var m = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", NewSuffix());
             await AssertLogger.ThrowsContentstackErrorAsync(
                 async () => await _stack.ContentType("non_existent_ct_" + NewSuffix()).UpdateAsync(m),
                 "UpdateMissingAsync",
@@ -360,7 +360,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test017_Should_ComplexFixture_CreateFetch_AssertStructure_Sync()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeComplex.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeComplex.json", sfx);
             try
             {
                 _stack.ContentType().Create(model);
@@ -399,7 +399,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test018_Should_ComplexFixture_CreateFetch_AssertStructure_Async()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeComplex.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeComplex.json", sfx);
             try
             {
                 await _stack.ContentType().CreateAsync(model);
@@ -417,7 +417,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test019_Should_MediumFixture_CreateFetch_AssertFieldTypes_Sync()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeMedium.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeMedium.json", sfx);
             try
             {
                 _stack.ContentType().Create(model);
@@ -448,7 +448,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test020_Should_MediumFixture_CreateFetch_AssertFieldTypes_Async()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeMedium.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeMedium.json", sfx);
             try
             {
                 await _stack.ContentType().CreateAsync(model);
@@ -473,7 +473,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 extUid = UploadDisposableCustomFieldExtensionAndGetUid(sfx);
                 TestOutputLogger.LogContext("ExtensionUid", extUid ?? "");
 
-                var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+                var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
                 ctUid = model.Uid;
                 model.Schema.Add(new ExtensionField
                 {
@@ -509,7 +509,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 extUid = await UploadDisposableCustomFieldExtensionAndGetUidAsync(sfx);
                 TestOutputLogger.LogContext("ExtensionUid", extUid ?? "");
 
-                var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+                var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
                 ctUid = model.Uid;
                 model.Schema.Add(new ExtensionField
                 {
@@ -656,7 +656,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test027_Should_Error_Create_ContentType_ExtensionField_NonExistentExtension_Sync()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
             try
             {
                 model.Schema.Add(new ExtensionField
@@ -685,7 +685,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test028_Should_Error_Create_ContentType_ExtensionField_NonExistentExtension_Async()
         {
             var sfx = NewSuffix();
-            var model = ContentTypeFixtureLoader.LoadFromMock(_client.SerializerOptions, "contentTypeSimple.json", sfx);
+            var model = ContentTypeFixtureLoader.LoadFromMock(_client.serializer, "contentTypeSimple.json", sfx);
             try
             {
                 model.Schema.Add(new ExtensionField
@@ -834,7 +834,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         private static string ParseExtensionUidFromUploadResponse(ContentstackResponse response)
         {
-            var jo = response.OpenJsonObjectResponse();
+            var jo = response.OpenJObjectResponse();
             var token = jo["extension"]?["uid"] ?? jo["uid"];
             return token?.ToString();
         }

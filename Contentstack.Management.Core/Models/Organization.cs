@@ -38,7 +38,7 @@ namespace Contentstack.Management.Core.Models
         {
             _client.ThrowIfNotLoggedIn();
 
-            var Organizations = new GetOrganizations(_client.SerializerOptions, parameters, this.Uid);
+            var Organizations = new GetOrganizations(_client.serializer, parameters, this.Uid);
 
             return _client.InvokeSync(Organizations);
         }
@@ -59,7 +59,7 @@ namespace Contentstack.Management.Core.Models
         {
             _client.ThrowIfNotLoggedIn();
 
-            var Organizations = new GetOrganizations(_client.SerializerOptions, parameters, this.Uid);
+            var Organizations = new GetOrganizations(_client.serializer, parameters, this.Uid);
 
             return _client.InvokeAsync<GetOrganizations, ContentstackResponse>(Organizations);
         }
@@ -81,7 +81,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var Roles = new OrganizationRolesService(_client.SerializerOptions, this.Uid, parameters);
+            var Roles = new OrganizationRolesService(_client.serializer, this.Uid, parameters);
 
             return _client.InvokeSync(Roles);
         }
@@ -103,7 +103,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var Roles = new OrganizationRolesService(_client.SerializerOptions, this.Uid, parameters);
+            var Roles = new OrganizationRolesService(_client.serializer, this.Uid, parameters);
 
             return _client.InvokeAsync<OrganizationRolesService, ContentstackResponse>(Roles);
         }
@@ -138,7 +138,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var userInviteService = new UserInvitationService(_client.SerializerOptions, this.Uid, "POST");
+            var userInviteService = new UserInvitationService(_client.serializer, this.Uid, "POST");
 
             if (orgInvite != null)
             {
@@ -183,7 +183,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var userInviteService = new UserInvitationService(_client.SerializerOptions, this.Uid, "POST");
+            var userInviteService = new UserInvitationService(_client.serializer, this.Uid, "POST");
 
             if (orgInvite != null)
             {
@@ -217,7 +217,7 @@ namespace Contentstack.Management.Core.Models
             {
                 throw new ArgumentNullException("emails", CSConstants.EmailsRequired);
             }
-            var userInviteService = new UserInvitationService(_client.SerializerOptions, this.Uid, "DELETE");
+            var userInviteService = new UserInvitationService(_client.serializer, this.Uid, "DELETE");
             userInviteService.RemoveUsers(emails);
             return _client.InvokeSync(userInviteService);
         }
@@ -242,7 +242,7 @@ namespace Contentstack.Management.Core.Models
             {
                 throw new ArgumentNullException("emails", CSConstants.EmailsRequired);
             }
-            var userInviteService = new UserInvitationService(_client.SerializerOptions, this.Uid, "DELETE");
+            var userInviteService = new UserInvitationService(_client.serializer, this.Uid, "DELETE");
             userInviteService.RemoveUsers(emails);
             return _client.InvokeAsync<UserInvitationService, ContentstackResponse>(userInviteService);
         }
@@ -265,7 +265,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
             
-            var userInviteService = new ResendInvitationService(_client.SerializerOptions, this.Uid, shareUid);
+            var userInviteService = new ResendInvitationService(_client.serializer, this.Uid, shareUid);
             return _client.InvokeSync(userInviteService);
         }
 
@@ -287,7 +287,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
             
-            var userInviteService = new ResendInvitationService(_client.SerializerOptions, this.Uid, shareUid);
+            var userInviteService = new ResendInvitationService(_client.serializer, this.Uid, shareUid);
             return _client.InvokeAsync<ResendInvitationService, ContentstackResponse>(userInviteService);
         }
 
@@ -308,7 +308,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var userInviteService = new UserInvitationService(_client.SerializerOptions, this.Uid, "GET", parameter);
+            var userInviteService = new UserInvitationService(_client.serializer, this.Uid, "GET", parameter);
 
             return _client.InvokeSync(userInviteService);
         }
@@ -330,7 +330,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var userInviteService = new UserInvitationService(_client.SerializerOptions, this.Uid, "GET", parameter);
+            var userInviteService = new UserInvitationService(_client.serializer, this.Uid, "GET", parameter);
 
             return _client.InvokeAsync<UserInvitationService, ContentstackResponse>(userInviteService);
         }
@@ -352,7 +352,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var service = new TransferOwnershipService(_client.SerializerOptions, this.Uid, email);
+            var service = new TransferOwnershipService(_client.serializer, this.Uid, email);
 
             return _client.InvokeSync(service);
         }
@@ -374,7 +374,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var service = new TransferOwnershipService(_client.SerializerOptions, this.Uid, email);
+            var service = new TransferOwnershipService(_client.serializer, this.Uid, email);
 
             return _client.InvokeAsync<TransferOwnershipService, ContentstackResponse>(service);
         }
@@ -395,7 +395,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var service = new OrganizationStackService(_client.SerializerOptions, this.Uid, parameter);
+            var service = new OrganizationStackService(_client.serializer, this.Uid, parameter);
 
             return _client.InvokeSync(service);
         }
@@ -417,7 +417,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var service = new OrganizationStackService(_client.SerializerOptions, this.Uid, parameter);
+            var service = new OrganizationStackService(_client.serializer, this.Uid, parameter);
 
             return _client.InvokeAsync<OrganizationStackService, ContentstackResponse>(service);
         }

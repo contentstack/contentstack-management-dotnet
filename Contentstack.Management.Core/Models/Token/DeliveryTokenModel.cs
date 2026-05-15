@@ -1,46 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.Token
 {
-        public class ManagementTokenModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class ManagementTokenModel
     {
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
-        [JsonPropertyName("description")]
+        [JsonProperty(propertyName: "description")]
         public string Description { get; set; }
-        [JsonPropertyName("Scope")]
+        [JsonProperty(propertyName: "Scope")]
         public List<TokenScope> Scope { get; set; }
-        [JsonPropertyName("expires_on")]
+        [JsonProperty(propertyName: "expires_on")]
         public string ExpiresOn { get; set; }
-        [JsonPropertyName("is_email_notification_enabled")]
+        [JsonProperty(propertyName: "is_email_notification_enabled")]
         public bool IsEmailNotificationEnabled { get; set; } = false;
     }
 
-        public class DeliveryTokenModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class DeliveryTokenModel
     {
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
-        [JsonPropertyName("description")]
+        [JsonProperty(propertyName: "description")]
         public string Description { get; set; }
-        [JsonPropertyName("scope")]
+        [JsonProperty(propertyName: "scope")]
         public List<DeliveryTokenScope> Scope { get; set; }
     }
 
-        public class DeliveryTokenScope: TokenScope
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class DeliveryTokenScope: TokenScope
     {
-        [JsonPropertyName("environments")]
+        [JsonProperty(propertyName: "environments")]
         public List<string> Environments { get; set; }
     }
 
-        public class TokenScope
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class TokenScope
     {
-        [JsonPropertyName("module")]
+        [JsonProperty(propertyName: "module")]
         public string Module { get; set; }
-        [JsonPropertyName("acl")]
+        [JsonProperty(propertyName: "acl")]
         public Dictionary<string, string> ACL { get; set; }
-        [JsonPropertyName("branches")]
+        [JsonProperty(propertyName: "branches")]
         public List<string> Branches { get; set; }
     }
 }

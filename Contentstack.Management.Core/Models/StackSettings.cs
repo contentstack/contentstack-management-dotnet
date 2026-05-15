@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models
 {
     public class StackSettings
     {
-        [JsonPropertyName("stack_variables")]
+        [JsonProperty("stack_variables")]
         public Dictionary<string, object> StackVariables { get; set; }
-        [JsonPropertyName("discrete_variables")]
+        [JsonProperty("discrete_variables")]
         public Dictionary<string, object> DiscreteVariables { get; set; }
-        [JsonPropertyName("rte")]
+        [JsonProperty("rte")]
         public Dictionary<string, object> Rte { get; set; }
     }
 }

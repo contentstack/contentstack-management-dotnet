@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Contentstack.Management.Core.Utils;
 using System.Net;
 using System.IO;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Exceptions;
 
 namespace Contentstack.Management.Core.Http
@@ -17,7 +17,7 @@ namespace Contentstack.Management.Core.Http
         private bool _disposed = false;
         private readonly HttpClient _httpClient;
         private readonly HttpRequestMessage _request;
-        private readonly JsonSerializerOptions _serializerOptions;
+        private readonly JsonSerializer _serializer;
         #endregion
 
         #region Public
@@ -54,10 +54,10 @@ namespace Contentstack.Management.Core.Http
         #endregion
 
         #region Constructor
-        internal ContentstackHttpRequest(HttpClient httpClient, JsonSerializerOptions serializerOptions)
+        internal ContentstackHttpRequest(HttpClient httpClient, JsonSerializer serializer)
         {
             _httpClient = httpClient;
-            _serializerOptions = serializerOptions;
+            _serializer = serializer;
             _request = new HttpRequestMessage();
         }
         #endregion
@@ -126,14 +126,14 @@ namespace Contentstack.Management.Core.Http
 
                 if (responseMessage.StatusCode >= HttpStatusCode.Ambiguous &&
                     responseMessage.StatusCode < HttpStatusCode.BadRequest)
-                    return new ContentstackResponse(responseMessage, _serializerOptions);
+                    return new ContentstackResponse(responseMessage, _serializer);
 
                 if (!responseMessage.IsSuccessStatusCode)
                 {
                     throw ContentstackErrorException.CreateException(responseMessage);
                 }
 
-                return new ContentstackResponse(responseMessage, _serializerOptions);
+                return new ContentstackResponse(responseMessage, _serializer);
             }
             catch (HttpRequestException httpException)
             {

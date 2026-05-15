@@ -87,7 +87,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidNotEmpty();
 
-            var service = new UploadService(stack.client.SerializerOptions, stack, resourcePath, model);
+            var service = new UploadService(stack.client.serializer, stack, resourcePath, model);
             return stack.client.InvokeSync(service);
         }
 
@@ -109,7 +109,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
 
-            var service = new UploadService(stack.client.SerializerOptions, stack, resourcePath, model);
+            var service = new UploadService(stack.client.serializer, stack, resourcePath, model);
             return stack.client.InvokeAsync<UploadService, ContentstackResponse>(service, true);
         }
 
@@ -130,7 +130,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidEmpty();
 
-            var service = new UploadService(stack.client.SerializerOptions, stack, resourcePath, model, "PUT");
+            var service = new UploadService(stack.client.serializer, stack, resourcePath, model, "PUT");
             return stack.client.InvokeSync(service);
         }
 
@@ -152,7 +152,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new UploadService(stack.client.SerializerOptions, stack, resourcePath, model, "PUT");
+            var service = new UploadService(stack.client.serializer, stack, resourcePath, model, "PUT");
             return stack.client.InvokeAsync<UploadService, ContentstackResponse>(service, true);
         }
 
@@ -172,7 +172,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -192,7 +192,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service, true);
         }
 
@@ -212,7 +212,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
             return stack.client.InvokeSync(service);
         }
 
@@ -232,7 +232,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service, true);
         }
 
@@ -252,7 +252,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.SerializerOptions, stack, details, $"{resourcePath}/publish", "asset");
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -272,7 +272,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.SerializerOptions, stack, details, $"{resourcePath}/publish", "asset");
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -292,7 +292,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.SerializerOptions, stack, details, $"{resourcePath}/unpublish", "asset");
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -312,7 +312,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.SerializerOptions, stack, details, $"{resourcePath}/unpublish", "asset");
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -331,7 +331,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchReferencesService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -350,7 +350,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchReferencesService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchReferencesService, ContentstackResponse>(service);
         }
 

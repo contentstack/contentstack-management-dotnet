@@ -8,7 +8,7 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text.Json.Nodes;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
@@ -40,7 +40,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void Initialize()
         {
-            StackResponse response = StackResponse.getStack(_client.SerializerOptions);
+            StackResponse response = StackResponse.getStack(_client.serializer);
             _stack = _client.Stack(response.Stack.APIKey);
         }
 
@@ -66,7 +66,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         private static string ParseRoleUid(ContentstackResponse response)
         {
-            var jo = response.OpenJsonObjectResponse();
+            var jo = response.OpenJObjectResponse();
             return jo?["role"]?["uid"]?.ToString();
         }
 
@@ -87,7 +87,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
-        private static bool RolesArrayContainsUid(JsonArray roles, string uid)
+        private static bool RolesArrayContainsUid(JArray roles, string uid)
         {
             if (roles == null || string.IsNullOrEmpty(uid))
             {
@@ -324,7 +324,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 roleUid = ParseRoleUid(response);
                 AssertLogger.IsNotNull(roleUid, "role uid");
 
-                var jo = response.OpenJsonObjectResponse();
+                var jo = response.OpenJObjectResponse();
                 AssertLogger.AreEqual(name, jo["role"]?["name"]?.ToString(), "Response name should match", "RoleName");
             }
             finally
@@ -349,7 +349,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse fetchResponse = _stack.Role(roleUid).Fetch();
                 AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "Fetch should succeed", "FetchSyncSuccess");
 
-                var role = fetchResponse.OpenJsonObjectResponse()?["role"];
+                var role = fetchResponse.OpenJObjectResponse()?["role"];
                 AssertLogger.AreEqual(name, role?["name"]?.ToString(), "Fetched name should match", "FetchedName");
                 AssertLogger.AreEqual(roleUid, role?["uid"]?.ToString(), "Fetched uid should match", "FetchedUid");
             }
@@ -375,7 +375,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse queryResponse = _stack.Role().Query().Find();
                 AssertLogger.IsTrue(queryResponse.IsSuccessStatusCode, "Query Find should succeed", "QueryFindSuccess");
 
-                var roles = queryResponse.OpenJsonObjectResponse()?["roles"] as JsonArray;
+                var roles = queryResponse.OpenJObjectResponse()?["roles"] as JArray;
                 AssertLogger.IsNotNull(roles, "roles array");
                 AssertLogger.IsTrue(
                     RolesArrayContainsUid(roles, roleUid),
@@ -408,7 +408,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse fetchResponse = _stack.Role(roleUid).Fetch();
                 AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "Fetch after update should succeed", "FetchAfterUpdate");
-                var role = fetchResponse.OpenJsonObjectResponse()?["role"];
+                var role = fetchResponse.OpenJObjectResponse()?["role"];
                 AssertLogger.AreEqual(updatedName, role?["name"]?.ToString(), "Name should reflect update", "UpdatedName");
             }
             finally
@@ -466,7 +466,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 roleUid = ParseRoleUid(response);
                 AssertLogger.IsNotNull(roleUid, "role uid");
 
-                var jo = response.OpenJsonObjectResponse();
+                var jo = response.OpenJObjectResponse();
                 AssertLogger.AreEqual(name, jo["role"]?["name"]?.ToString(), "Response name should match", "RoleName");
             }
             finally
@@ -491,7 +491,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse fetchResponse = await _stack.Role(roleUid).FetchAsync();
                 AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "FetchAsync should succeed", "FetchAsyncSuccess");
 
-                var role = fetchResponse.OpenJsonObjectResponse()?["role"];
+                var role = fetchResponse.OpenJObjectResponse()?["role"];
                 AssertLogger.AreEqual(name, role?["name"]?.ToString(), "Fetched name should match", "FetchedName");
                 AssertLogger.AreEqual(roleUid, role?["uid"]?.ToString(), "Fetched uid should match", "FetchedUid");
             }
@@ -517,7 +517,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse queryResponse = await _stack.Role().Query().FindAsync();
                 AssertLogger.IsTrue(queryResponse.IsSuccessStatusCode, "Query FindAsync should succeed", "QueryFindAsyncSuccess");
 
-                var roles = queryResponse.OpenJsonObjectResponse()?["roles"] as JsonArray;
+                var roles = queryResponse.OpenJObjectResponse()?["roles"] as JArray;
                 AssertLogger.IsNotNull(roles, "roles array");
                 AssertLogger.IsTrue(
                     RolesArrayContainsUid(roles, roleUid),
@@ -550,7 +550,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse fetchResponse = await _stack.Role(roleUid).FetchAsync();
                 AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "FetchAsync after update should succeed", "FetchAsyncAfterUpdate");
-                var role = fetchResponse.OpenJsonObjectResponse()?["role"];
+                var role = fetchResponse.OpenJObjectResponse()?["role"];
                 AssertLogger.AreEqual(updatedName, role?["name"]?.ToString(), "Name should reflect update", "UpdatedName");
             }
             finally
@@ -888,11 +888,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     AssertLogger.IsNotNull(roleUid, "NullRulesAccepted");
                     
                     // Verify API accepted the request - detailed rule validation is optional
-                    var responseContent = response.OpenJsonObjectResponse();
+                    var responseContent = response.OpenJObjectResponse();
                     if (responseContent?["role"] != null)
                     {
                         var role = responseContent["role"];
-                        var rules = role["rules"] as JsonArray;
+                        var rules = role["rules"] as JArray;
                         if (rules != null && rules.Count > 0)
                         {
                             AssertLogger.IsTrue(true, "DefaultRulesAdded");
@@ -941,7 +941,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     AssertLogger.IsNotNull(roleUid, "EmptyRulesAccepted");
                     
                     // Verify API accepted the request - detailed rule validation is optional
-                    var responseContent = response.OpenJsonObjectResponse();
+                    var responseContent = response.OpenJObjectResponse();
                     if (responseContent?["role"] != null)
                     {
                         AssertLogger.IsTrue(true, "EmptyRulesHandledByAPI");
@@ -985,7 +985,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     AssertLogger.IsNotNull(roleUid, "EmptyBranchesAccepted");
                     
                     // Verify API accepted the request - detailed branch validation is optional
-                    var responseContent = response.OpenJsonObjectResponse();
+                    var responseContent = response.OpenJObjectResponse();
                     if (responseContent?["role"] != null)
                     {
                         AssertLogger.IsTrue(true, "EmptyBranchesHandledByAPI");
@@ -1029,7 +1029,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     AssertLogger.IsNotNull(roleUid, "NonexistentBranchAccepted");
                     
                     // Verify API accepted the request - detailed branch validation is optional
-                    var responseContent = response.OpenJsonObjectResponse();
+                    var responseContent = response.OpenJObjectResponse();
                     if (responseContent?["role"] != null)
                     {
                         AssertLogger.IsTrue(true, "NonexistentBranchHandledByAPI");
@@ -1144,7 +1144,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     AssertLogger.IsTrue(true, "EmptyNameUpdateAccepted");
                     
                     // Verify API preserved original name when empty name provided
-                    var role = updateResponse.OpenJsonObjectResponse()?["role"];
+                    var role = updateResponse.OpenJObjectResponse()?["role"];
                     var currentName = role?["name"]?.ToString();
                     AssertLogger.AreEqual(originalName, currentName, "OriginalNamePreserved");
                     AssertLogger.IsTrue(!string.IsNullOrEmpty(currentName), "NameNotEmpty");
@@ -1401,7 +1401,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     AssertLogger.IsTrue(true, "EmptyNameUpdateAcceptedAsync");
                     
                     // Verify API preserved original name when empty name provided
-                    var role = updateResponse.OpenJsonObjectResponse()?["role"];
+                    var role = updateResponse.OpenJObjectResponse()?["role"];
                     var currentName = role?["name"]?.ToString();
                     AssertLogger.AreEqual(originalName, currentName, "OriginalNamePreservedAsync");
                     AssertLogger.IsTrue(!string.IsNullOrEmpty(currentName), "NameNotEmptyAsync");
@@ -2264,7 +2264,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentstackResponse fetchResponse = _stack.Role(roleUid).Fetch();
                     if (fetchResponse.IsSuccessStatusCode)
                     {
-                        var role = fetchResponse.OpenJsonObjectResponse()?["role"];
+                        var role = fetchResponse.OpenJObjectResponse()?["role"];
                         var fetchedName = role?["name"]?.ToString();
                         AssertLogger.AreEqual(unicodeName, fetchedName, "Unicode name should be preserved", "UnicodePreserved");
                     }
@@ -2360,7 +2360,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         else if (response.StatusCode == (HttpStatusCode)422) // Unprocessable Entity
                         {
                             // Check for role limit error (Error Code 157)
-                            var errorContent = response.OpenJsonObjectResponse();
+                            var errorContent = response.OpenJObjectResponse();
                             var errorCode = errorContent?["error_code"]?.ToString();
                             
                             if (errorCode == "157")
@@ -2574,7 +2574,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse fetchResponse = _stack.Role(roleUid).Fetch();
                 if (fetchResponse.IsSuccessStatusCode)
                 {
-                    var role = fetchResponse.OpenJsonObjectResponse()?["role"];
+                    var role = fetchResponse.OpenJObjectResponse()?["role"];
                     AssertLogger.IsNotNull(role, "ConcurrentFinalState");
                 }
                 

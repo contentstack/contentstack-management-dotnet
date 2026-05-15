@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using Contentstack.Management.Core.Models;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Tests.Model
 {
@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Tests.Model
     {
         public string Notice { get; set; }
 
-        [JsonPropertyName("stack_settings")]
+        [JsonProperty("stack_settings")]
         public StackSettings StackSettings { get; set; }
     }
 }

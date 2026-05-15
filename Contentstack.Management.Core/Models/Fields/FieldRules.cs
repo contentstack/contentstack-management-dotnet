@@ -1,36 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
     public class FieldRules
     {
-        [JsonPropertyName("match_type")]
+        [JsonProperty(propertyName: "match_type")]
         public string MatchType { get; set; }
-        [JsonPropertyName("actions")]
+        [JsonProperty(propertyName: "actions")]
         public List<Action> Actions { get; set; }
-        [JsonPropertyName("conditions")]
+        [JsonProperty(propertyName: "conditions")]
         public List<Condition> conditions { get; set; }
     }
 
     public class Action
     {
-        [JsonPropertyName("action")]
+        [JsonProperty(propertyName: "action")]
         public string state { get; set; }
-        [JsonPropertyName("target_field")]
+        [JsonProperty(propertyName: "target_field")]
         public string TargetField { get; set; }
     }
 
     public class Condition
     {
-        [JsonPropertyName("dataType")]
+        [JsonProperty(propertyName: "dataType")]
         public string DataType { get; set; }
-        [JsonPropertyName("operand_field")]
+        [JsonProperty(propertyName: "operand_field")]
         public string OperandField { get; set; }
-        [JsonPropertyName("operator")]
+        [JsonProperty(propertyName: "operator")]
         public string Operator { get; set; }
-        [JsonPropertyName("value")]
+        [JsonProperty(propertyName: "value")]
         public string Value { get; set; }
     }
 }

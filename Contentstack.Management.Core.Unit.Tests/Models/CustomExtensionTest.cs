@@ -9,6 +9,7 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Models.CustomExtension;
 using Contentstack.Management.Core.Models.Fields;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models
 {

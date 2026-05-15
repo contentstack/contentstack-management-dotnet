@@ -26,7 +26,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfVersionNumberNotEmpty();
 
-            var service = new VersionService(stack.client.SerializerOptions, stack, this.resourcePath, "GET", fieldName, collection);
+            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "GET", fieldName, collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -34,7 +34,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfVersionNumberNotEmpty();
 
-            var service = new VersionService(stack.client.SerializerOptions, stack, this.resourcePath, "GET", fieldName, collection);
+            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "GET", fieldName, collection);
             return stack.client.InvokeAsync<VersionService, ContentstackResponse>(service);
         }
 
@@ -42,7 +42,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfVersionNumberEmpty();
 
-            var service = new VersionService(stack.client.SerializerOptions, stack, this.resourcePath, "DELETE", fieldName);
+            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "DELETE", fieldName);
             return stack.client.InvokeSync(service);
         }
 
@@ -50,7 +50,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfVersionNumberEmpty();
 
-            var service = new VersionService(stack.client.SerializerOptions, stack, this.resourcePath, "DELETE", fieldName);
+            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "DELETE", fieldName);
             return stack.client.InvokeAsync<VersionService, ContentstackResponse>(service);
         }
 
@@ -58,7 +58,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfVersionNumberEmpty();
 
-            var service = new VersionService(stack.client.SerializerOptions, stack, this.resourcePath, "POST", fieldName);
+            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "POST", fieldName);
             service.name = name;
             service.locale = locale;
             service.force = force;
@@ -70,7 +70,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfVersionNumberEmpty();
 
-            var service = new VersionService(stack.client.SerializerOptions, stack, this.resourcePath, "POST", fieldName);
+            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "POST", fieldName);
             service.name = name;
             service.locale = locale;
             service.force = force;

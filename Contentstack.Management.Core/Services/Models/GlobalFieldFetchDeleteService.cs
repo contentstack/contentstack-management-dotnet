@@ -1,6 +1,6 @@
 using System;
 using Contentstack.Management.Core.Queryable;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -15,8 +15,8 @@ namespace Contentstack.Management.Core.Services.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalFieldFetchDeleteService"/> class.
         /// </summary>
-        internal GlobalFieldFetchDeleteService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, string apiVersion, string httpMethod = "GET", ParameterCollection collection = null)
-            : base(serializerOptions, stack: stack, collection)
+        internal GlobalFieldFetchDeleteService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, string apiVersion, string httpMethod = "GET", ParameterCollection collection = null)
+            : base(serializer, stack: stack, collection)
         {
             if (stack.APIKey == null)
             {

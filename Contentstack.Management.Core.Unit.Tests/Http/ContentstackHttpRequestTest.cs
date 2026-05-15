@@ -28,7 +28,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
         [TestInitialize]
         public void Initialize()
         {
-            _httpRequest = new ContentstackHttpRequest(new System.Net.Http.HttpClient(), Utils.Utilities.GetJsonSerializerOptions());
+            _httpRequest = new ContentstackHttpRequest(new System.Net.Http.HttpClient(), Utils.Utilities.GetJsonSerializer());
         }
 
 
@@ -129,7 +129,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
                   ItExpr.IsAny<CancellationToken>())
                .ReturnsAsync(response);
             var httpClient = new HttpClient(handlerMock.Object);
-            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializerOptions());
+            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializer());
             HttpRequest.RequestUri = new Uri("https://localhost.com");
             var httpResponse = HttpRequest.GetResponse();
 
@@ -156,7 +156,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
                   ItExpr.IsAny<CancellationToken>())
                .ReturnsAsync(response);
             var httpClient = new HttpClient(handlerMock.Object);
-            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializerOptions());
+            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializer());
             HttpRequest.RequestUri = new Uri("https://localhost.com");
             try
             {
@@ -191,7 +191,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
                   ItExpr.IsAny<CancellationToken>())
                .ReturnsAsync(response);
             var httpClient = new HttpClient(handlerMock.Object);
-            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializerOptions());
+            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializer());
             HttpRequest.RequestUri = new Uri("https://localhost.com");
             try
             {
@@ -225,7 +225,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
                   ItExpr.IsAny<CancellationToken>())
                .ReturnsAsync(response);
             var httpClient = new HttpClient(handlerMock.Object);
-            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializerOptions());
+            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializer());
             HttpRequest.RequestUri = new Uri("https://localhost.com");
             try
             {
@@ -258,7 +258,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
                .Throws(new HttpRequestException(response));
 
             var httpClient = new HttpClient(handlerMock.Object);
-            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializerOptions());
+            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializer());
             HttpRequest.RequestUri = new Uri("https://localhost.com");
             try
             {
@@ -292,7 +292,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
                .Throws(new HttpRequestException("Outer Exception" ,new IOException(response)));
 
             var httpClient = new HttpClient(handlerMock.Object);
-            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializerOptions());
+            var HttpRequest = new ContentstackHttpRequest(httpClient, Utils.Utilities.GetJsonSerializer());
             HttpRequest.RequestUri = new Uri("https://localhost.com");
             try
             {

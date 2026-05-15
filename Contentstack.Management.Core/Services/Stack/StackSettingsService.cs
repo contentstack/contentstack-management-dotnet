@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Models;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
@@ -13,7 +13,7 @@ namespace Contentstack.Management.Core.Services.Stack
 
         private readonly StackSettings _settings;
 
-        internal StackSettingsService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string method = "GET", StackSettings settings = null) : base(serializerOptions, stack)
+        internal StackSettingsService(JsonSerializer serializer, Core.Models.Stack stack, string method = "GET", StackSettings settings = null) : base(serializer, stack)
         {
             if (stack.APIKey == null)
             {
@@ -29,7 +29,7 @@ namespace Contentstack.Management.Core.Services.Stack
             switch (HttpMethod)
             {
                 case "POST":
-                    string snippet = $"{{\"stack_settings\":{JsonSerializer.Serialize(_settings, SerializerOptions)}}}";
+                    string snippet = $"{{\"stack_settings\":{JsonConvert.SerializeObject(_settings)}}}";
                     ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
                     break;
                 default:

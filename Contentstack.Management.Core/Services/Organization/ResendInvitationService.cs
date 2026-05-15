@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Organization
@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Services.Organization
     {
       
         #region Internal
-        internal ResendInvitationService(JsonSerializerOptions serializerOptions, string uid, string shareUid) : base(serializerOptions)
+        internal ResendInvitationService(JsonSerializer serializer, string uid, string shareUid) : base(serializer)
         {
             if (string.IsNullOrEmpty(uid))
             {

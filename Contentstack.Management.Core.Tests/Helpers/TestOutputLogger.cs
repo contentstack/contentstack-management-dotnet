@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Tests.Helpers
 {
@@ -64,7 +64,7 @@ namespace Contentstack.Management.Core.Tests.Helpers
         {
             try
             {
-                var json = JsonSerializer.Serialize(data);
+                var json = JsonConvert.SerializeObject(data, Formatting.None);
                 Console.Write(START_MARKER);
                 Console.Write(json);
                 Console.WriteLine(END_MARKER);

@@ -1,33 +1,34 @@
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models
 {
-        public class ExtensionModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class ExtensionModel
     {
-        [JsonPropertyName("title")]
+        [JsonProperty(propertyName: "title")]
         public string Title { get; set; }
-        [JsonPropertyName("data_type")]
+        [JsonProperty(propertyName: "data_type")]
         public string DataType { get; set; }
-        [JsonPropertyName("tags")]
+        [JsonProperty(propertyName: "tags")]
         public List<string> Tags { get; set; }
-        [JsonPropertyName("src")]
+        [JsonProperty(propertyName: "src")]
         public string Src { get; set; }
-        [JsonPropertyName("srcdoc")]
+        [JsonProperty(propertyName: "srcdoc")]
         public string Srcdoc { get; set; }
-        [JsonPropertyName("type")]
+        [JsonProperty(propertyName: "type")]
         public string Type { get; set; }
-        [JsonPropertyName("config")]
+        [JsonProperty(propertyName: "config")]
         public string Config { get; set; }
-        [JsonPropertyName("multiple")]
+        [JsonProperty(propertyName: "multiple")]
         public bool Multiple { get; set; }
-        [JsonPropertyName("scope")]
+        [JsonProperty(propertyName: "scope")]
         public ExtensionScope Scope { get; set; }
     }
 
     public class ExtensionScope
     {
-        [JsonPropertyName("content_types")]
+        [JsonProperty(propertyName: "content_types")]
         public List<string> ContentTypes { get; set; }
     }
 }

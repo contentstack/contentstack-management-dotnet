@@ -1,6 +1,6 @@
 ﻿using System;
 using Contentstack.Management.Core.Queryable;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Services.Stack
 {
@@ -8,8 +8,8 @@ namespace Contentstack.Management.Core.Services.Stack
     {
         #region Internal
 
-        internal FetchStackService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, ParameterCollection collection = null)
-            : base(serializerOptions, stack, collection)
+        internal FetchStackService(JsonSerializer serializer, Core.Models.Stack stack, ParameterCollection collection = null)
+            : base(serializer, stack, collection)
         {
             this.ResourcePath = "stacks";
 

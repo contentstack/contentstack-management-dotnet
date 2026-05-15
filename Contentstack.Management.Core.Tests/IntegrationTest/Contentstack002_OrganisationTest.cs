@@ -8,6 +8,8 @@ using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
+
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
     [TestClass]
@@ -46,9 +48,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = organization.GetOrganizations();
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
-                _count = (response["organizations"] as System.Text.Json.Nodes.JsonArray).Count;
+                _count = (response["organizations"] as Newtonsoft.Json.Linq.JArray).Count;
                 
             } catch (Exception e)
             {
@@ -68,9 +70,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = await organization.GetOrganizationsAsync();
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
-                _count = (response["organizations"] as System.Text.Json.Nodes.JsonArray).Count;
+                _count = (response["organizations"] as Newtonsoft.Json.Linq.JArray).Count;
 
             }
             catch (Exception e)
@@ -92,9 +94,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 collection.Add("skip", 4);
                 ContentstackResponse contentstackResponse = organization.GetOrganizations(collection);
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
-                var count = (response["organizations"] as System.Text.Json.Nodes.JsonArray).Count;
+                var count = (response["organizations"] as Newtonsoft.Json.Linq.JArray).Count;
             }
             catch (Exception e)
             {
@@ -116,7 +118,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = organization.GetOrganizations();
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.IsNotNull(response["organization"], "organization");
 
@@ -144,7 +146,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = organization.GetOrganizations(collection);
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.IsNotNull(response["organization"], "organization");
                 AssertLogger.IsNotNull(response["organization"]["plan"], "plan");
@@ -168,7 +170,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = organization.Roles();
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
 
                 RoleUID = (string)response["roles"][0]["uid"];
                 AssertLogger.IsNotNull(response, "response");
@@ -193,7 +195,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = await organization.RolesAsync();
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.IsNotNull(response["roles"], "roles");
             }
@@ -223,9 +225,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     invitation
                 }, null);
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
-                AssertLogger.AreEqual(1, ((JsonArray)response["shares"]).Count, "sharesCount");
+                AssertLogger.AreEqual(1, ((JArray)response["shares"]).Count, "sharesCount");
                 InviteID = (string)response["shares"][0]["uid"];
                 AssertLogger.AreEqual("The invitation has been sent successfully.", (string)response["notice"], "notice");
             }
@@ -255,9 +257,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     invitation
                 }, null);
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
-                AssertLogger.AreEqual(1, ((JsonArray)response["shares"]).Count, "sharesCount");
+                AssertLogger.AreEqual(1, ((JArray)response["shares"]).Count, "sharesCount");
                 InviteIDAsync = (string)response["shares"][0]["uid"];
                 AssertLogger.AreEqual("The invitation has been sent successfully.", (string)response["notice"], "notice");
             }
@@ -279,7 +281,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = organization.ResendInvitation(InviteID);
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.AreEqual("The invitation has been resent successfully.", (string)response["notice"], "notice");
             }
@@ -301,7 +303,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Organization organization = _client.Organization(org.Uid);
                 ContentstackResponse contentstackResponse = await organization.ResendInvitationAsync(InviteIDAsync);
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.AreEqual("The invitation has been resent successfully.", (string)response["notice"], "notice");
             }
@@ -324,7 +326,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = organization.RemoveUser(new System.Collections.Generic.List<string>() { EmailSync } );
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.AreEqual("The invitation has been deleted successfully.", (string)response["notice"], "notice");
             }
@@ -346,7 +348,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Organization organization = _client.Organization(org.Uid);
                 ContentstackResponse contentstackResponse = await organization.RemoveUserAsync(new System.Collections.Generic.List<string>() { EmailAsync });
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.AreEqual("The invitation has been deleted successfully.", (string)response["notice"], "notice");
             }
@@ -369,10 +371,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = organization.GetInvitations();
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.IsNotNull(response["shares"], "shares");
-                AssertLogger.AreEqual(response["shares"].GetType(), typeof(JsonArray), "sharesType");
+                AssertLogger.AreEqual(response["shares"].GetType(), typeof(JArray), "sharesType");
 
             }
             catch (Exception e)
@@ -393,10 +395,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Organization organization = _client.Organization(org.Uid);
                 ContentstackResponse contentstackResponse = await organization.GetInvitationsAsync();
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.IsNotNull(response["shares"], "shares");
-                AssertLogger.AreEqual(response["shares"].GetType(), typeof(JsonArray), "sharesType");
+                AssertLogger.AreEqual(response["shares"].GetType(), typeof(JArray), "sharesType");
             }
             catch (Exception e)
             {
@@ -417,10 +419,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse contentstackResponse = organization.GetStacks();
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.IsNotNull(response["stacks"], "stacks");
-                AssertLogger.AreEqual(response["stacks"].GetType(), typeof(JsonArray), "stacksType");
+                AssertLogger.AreEqual(response["stacks"].GetType(), typeof(JArray), "stacksType");
 
             }
             catch (Exception e)
@@ -441,10 +443,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Organization organization = _client.Organization(org.Uid);
                 ContentstackResponse contentstackResponse = await organization.GetStacksAsync();
 
-                var response = contentstackResponse.OpenJsonObjectResponse();
+                var response = contentstackResponse.OpenJObjectResponse();
                 AssertLogger.IsNotNull(response, "response");
                 AssertLogger.IsNotNull(response["stacks"], "stacks");
-                AssertLogger.AreEqual(response["stacks"].GetType(), typeof(JsonArray), "stacksType");
+                AssertLogger.AreEqual(response["stacks"].GetType(), typeof(JArray), "stacksType");
             }
             catch (Exception e)
             {

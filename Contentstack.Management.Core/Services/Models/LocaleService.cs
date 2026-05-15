@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
 {
     internal class LocaleService: ContentstackService
     {
-        internal LocaleService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath = null)
-           : base(serializerOptions, stack: stack)
+        internal LocaleService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath = null)
+           : base(serializer, stack: stack)
         {
             if (stack.APIKey == null)
             {

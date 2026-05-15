@@ -259,7 +259,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.GetAll();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -274,7 +274,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.GetAllAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
 
@@ -290,7 +290,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.Fetch();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -305,7 +305,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.FetchAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -320,7 +320,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.Create(_fixture.Create<string>(), "en-us", _fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -335,7 +335,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.CreateAsync(_fixture.Create<string>(), "en-us", _fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -350,7 +350,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.Update(_fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -365,7 +365,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.UpdateAsync(_fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -380,7 +380,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.TransferOwnership(_fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -395,7 +395,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.TransferOwnershipAsync(_fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -410,7 +410,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.UpdateUserRole(_fixture.Create<List<UserInvitation>>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -425,7 +425,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.UpdateUserRoleAsync(_fixture.Create<List<UserInvitation>>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
 
@@ -441,7 +441,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.Settings();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -456,7 +456,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.SettingsAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -471,7 +471,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.ResetSettings();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -486,7 +486,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.ResetSettingsAsync();
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -501,7 +501,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.AddSettings(_fixture.Create<StackSettings>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -516,7 +516,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.AddSettingsAsync(_fixture.Create<StackSettings>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -531,7 +531,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.Share(_fixture.Create<List<UserInvitation>>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -546,7 +546,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.ShareAsync(_fixture.Create<List<UserInvitation>>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -561,7 +561,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.UnShare(_fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -576,7 +576,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.UnShareAsync(_fixture.Create<string>());
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         #region Bulk Operation Tests
@@ -641,7 +641,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().Publish(publishDetails);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -676,7 +676,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().PublishAsync(publishDetails);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -707,7 +707,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().Publish(publishDetails, true, true, true);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -742,7 +742,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().Unpublish(unpublishDetails);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -777,7 +777,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().UnpublishAsync(unpublishDetails);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -809,7 +809,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().Delete(deleteDetails);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -841,7 +841,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().DeleteAsync(deleteDetails);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -874,7 +874,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().Update(updateBody);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -907,7 +907,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().UpdateAsync(updateBody);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -934,7 +934,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().AddItems(itemsData);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -961,7 +961,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().AddItemsAsync(itemsData, "1.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -988,7 +988,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().AddItems(itemsData, "1.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1015,7 +1015,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().UpdateItems(itemsData, "1.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1042,7 +1042,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().UpdateItems(itemsData, "2.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1069,7 +1069,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().UpdateItemsAsync(itemsData, "1.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1096,7 +1096,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().UpdateItemsAsync(itemsData, "2.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1131,7 +1131,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().AddItems(itemsData, "2.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1166,7 +1166,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().AddItemsAsync(itemsData, "2.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1201,7 +1201,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().UpdateItems(itemsData, "2.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1236,7 +1236,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().UpdateItemsAsync(itemsData, "2.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1266,7 +1266,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().AddItems(itemsData, "1.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1296,7 +1296,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().AddItemsAsync(itemsData, "2.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1326,7 +1326,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().UpdateItems(itemsData, "1.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1356,7 +1356,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().UpdateItemsAsync(itemsData, "2.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1411,7 +1411,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().JobStatus("job_id_123");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1426,7 +1426,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().JobStatusAsync("job_id_123");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1441,7 +1441,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().JobStatus("job_id_123", "1.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1475,7 +1475,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().ReleaseItems(releaseData);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1509,7 +1509,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await stack.BulkOperation().ReleaseItemsAsync(releaseData);
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -1543,7 +1543,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = stack.BulkOperation().ReleaseItems(releaseData, "1.0");
 
             Assert.AreEqual(contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+            Assert.AreEqual(contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
         }
 
         [TestMethod]

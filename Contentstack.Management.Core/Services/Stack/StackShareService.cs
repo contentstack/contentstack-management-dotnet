@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Text.Json;
 using Contentstack.Management.Core.Models;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
@@ -13,7 +14,7 @@ namespace Contentstack.Management.Core.Services.Stack
 
         private string _removeUser;
 
-        internal StackShareService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack) : base(serializerOptions, stack)
+        internal StackShareService(JsonSerializer serializer, Core.Models.Stack stack) : base(serializer, stack)
         {
             if (string.IsNullOrEmpty(stack.APIKey))
             {
@@ -36,16 +37,16 @@ namespace Contentstack.Management.Core.Services.Stack
 
         public override void ContentBody()
         {
-            using var ms = new MemoryStream();
-            using (var writer = new Utf8JsonWriter(ms))
+            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
             {
+                JsonWriter writer = new JsonTextWriter(stringWriter);
                 writer.WriteStartObject();
                 if (_invitations != null)
                 {
                     writer.WritePropertyName("emails");
                     writer.WriteStartArray();
                     foreach (UserInvitation user in _invitations)
-                        writer.WriteStringValue(user.Email);
+                        writer.WriteValue(user.Email);
                     writer.WriteEndArray();
 
                     writer.WritePropertyName("roles");
@@ -55,19 +56,21 @@ namespace Contentstack.Management.Core.Services.Stack
                         writer.WritePropertyName(invitation.Email);
                         writer.WriteStartArray();
                         foreach (string role in invitation.Roles)
-                            writer.WriteStringValue(role);
+                            writer.WriteValue(role);
                         writer.WriteEndArray();
                     }
                     writer.WriteEndObject();
                 }
                 else if (_removeUser != null)
                 {
-                    writer.WriteString("email", _removeUser);
+                    writer.WritePropertyName("email");
+                    writer.WriteValue(_removeUser);
                 }
                 writer.WriteEndObject();
-            }
 
-            this.ByteContent = ms.ToArray();
+                string snippet = stringWriter.ToString();
+                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+            }
         }
     }
 }

@@ -75,7 +75,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Http
             contentstackHttpResponse.Dispose();
 
             Assert.ThrowsException<ObjectDisposedException>(() => contentstackHttpResponse.OpenResponse());
-            Assert.ThrowsException<ObjectDisposedException>(() => contentstackHttpResponse.OpenJsonObjectResponse());
+            Assert.ThrowsException<ObjectDisposedException>(() => contentstackHttpResponse.OpenJObjectResponse());
             Assert.ThrowsException<ObjectDisposedException>(() => contentstackHttpResponse.OpenTResponse<StackModel>());
 
             contentstackHttpResponse.Dispose();

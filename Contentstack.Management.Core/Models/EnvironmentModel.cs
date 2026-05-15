@@ -1,31 +1,32 @@
-using System.Text.Json.Serialization;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 namespace Contentstack.Management.Core.Models
 {
-        public class EnvironmentModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class EnvironmentModel
     {
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
-        [JsonPropertyName("servers")]
+        [JsonProperty(propertyName: "servers")]
         public List<Server> Servers { get; set; }
-        [JsonPropertyName("urls")]
+        [JsonProperty(propertyName: "urls")]
         public List<LocalesUrl> Urls { get; set; }
-        [JsonPropertyName("deploy_content")]
+        [JsonProperty(propertyName: "deploy_content")]
         public bool DeployContent { get; set; } = true;
         
     }
 
     public class Server
     {
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
     }
 
     public class LocalesUrl
     {
-        [JsonPropertyName("url")]
+        [JsonProperty(propertyName: "url")]
         public string Url { get; set; }
-        [JsonPropertyName("locale")]
+        [JsonProperty(propertyName: "locale")]
         public string Locale { get; set; }
     }
 }

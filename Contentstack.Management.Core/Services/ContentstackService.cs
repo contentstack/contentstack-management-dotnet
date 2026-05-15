@@ -4,7 +4,7 @@ using System.Text;
 using System.Net.Http;
 using System.Collections.Generic;
 using Contentstack.Management.Core.Http;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Queryable;
 using System.Net.Http.Headers;
@@ -23,16 +23,16 @@ namespace Contentstack.Management.Core.Services
         private bool _useQueryString = false;
 
         private bool _disposed = false;
-        private JsonSerializerOptions _serializerOptions { get; set; }
+        private JsonSerializer _serializer { get; set; }
 
         #endregion
 
         #region Constructor
-        internal ContentstackService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack = null, ParameterCollection collection = null)
+        internal ContentstackService(JsonSerializer serializer, Core.Models.Stack stack = null, ParameterCollection collection = null)
         {
-            if (serializerOptions == null)
+            if (serializer == null)
             {
-                throw new ArgumentNullException("serializerOptions", CSConstants.JSONSerializerError);
+                throw new ArgumentNullException("serializer", CSConstants.JSONSerializerError);
             }
 
             if (stack != null)
@@ -54,15 +54,15 @@ namespace Contentstack.Management.Core.Services
             }
             
             this.collection = collection ?? new ParameterCollection();
-            _serializerOptions = serializerOptions;
+            _serializer = serializer;
         }
         #endregion
 
-        public JsonSerializerOptions SerializerOptions
+        public JsonSerializer Serializer
         {
             get
             {
-                return _serializerOptions;
+                return _serializer;
             }
         }
 
@@ -197,7 +197,7 @@ namespace Contentstack.Management.Core.Services
             {
                 Headers["api_version"] = apiVersion;
             }
-            var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializerOptions);
+            var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializer);
             contentstackHttpRequest.Method = new HttpMethod(HttpMethod);
             contentstackHttpRequest.RequestUri = requestUri;
 

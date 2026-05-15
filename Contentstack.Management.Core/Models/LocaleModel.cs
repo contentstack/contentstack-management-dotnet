@@ -1,15 +1,16 @@
-using System.Text.Json.Serialization;
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models
 {
-        public class LocaleModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class LocaleModel
     {
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
-        [JsonPropertyName("code")]
+        [JsonProperty(propertyName: "code")]
         public string Code { get; set; }
-        [JsonPropertyName("fallback_locale")]
+        [JsonProperty(propertyName: "fallback_locale")]
         public string FallbackLocale { get; set; }
     }
 }

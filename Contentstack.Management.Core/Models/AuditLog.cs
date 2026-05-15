@@ -38,7 +38,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -58,7 +58,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -78,7 +78,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -98,7 +98,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using System.Net.Http;
 using System.Reflection;
 using System.Collections.Generic;
@@ -16,11 +15,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         public static ContentstackResponse CreateContentstackResponse(string resourceName)
         {
             HttpResponseMessage httpResponseMessage = CreateFromResource(resourceName);
-            var options = new JsonSerializerOptions 
-            {
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            };
-            return new ContentstackResponse(httpResponseMessage, options);
+            return new ContentstackResponse(httpResponseMessage, JsonSerializer.Create(new JsonSerializerSettings()));
         }
 
         public static HttpResponseMessage CreateFromResource(string resourceName)

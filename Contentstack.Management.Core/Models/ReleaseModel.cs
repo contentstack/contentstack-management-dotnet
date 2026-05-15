@@ -1,54 +1,57 @@
-using System.Text.Json.Serialization;
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 namespace Contentstack.Management.Core.Models
 {
-        public class ReleaseModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class ReleaseModel
     {
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
 
-        [JsonPropertyName("description")]
+        [JsonProperty(propertyName: "description")]
         public string Description { get; set; }
 
-        [JsonPropertyName("locked")]
+        [JsonProperty(propertyName: "locked")]
         public bool Locked { get; set; }
 
-        [JsonPropertyName("archived")]
+        [JsonProperty(propertyName: "archived")]
         public bool Archived { get; set; }
 
     }
 
-        public class DeployModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class DeployModel
     {
-        [JsonPropertyName("environments")]
+        [JsonProperty(propertyName: "environments")]
         public List<string> Environments { get; set; }
 
-        [JsonPropertyName("locales")]
+        [JsonProperty(propertyName: "locales")]
         public List<string> Locales { get; set; }
 
-        [JsonPropertyName("scheduledAt")]
+        [JsonProperty(propertyName: "scheduledAt")]
         public string ScheduledAt { get; set; }
 
-        [JsonPropertyName("action")]
+        [JsonProperty(propertyName: "action")]
         public string Action { get; set; }
 
     }
 
-        public class ReleaseItemModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class ReleaseItemModel
     {
-        [JsonPropertyName("uid")]
+        [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
 
-        [JsonPropertyName("version")]
+        [JsonProperty(propertyName: "version")]
         public int Version { get; set; }
 
-        [JsonPropertyName("locale")]
+        [JsonProperty(propertyName: "locale")]
         public string Locale { get; set; }
 
-        [JsonPropertyName("content_type_uid")]
+        [JsonProperty(propertyName: "content_type_uid")]
         public string ContentTypeUID { get; set; }
 
-        [JsonPropertyName("action")]
+        [JsonProperty(propertyName: "action")]
         public string Action { get; set; }
     }
 }

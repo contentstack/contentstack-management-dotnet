@@ -1,33 +1,32 @@
 ﻿using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Contentstack.Management.Core.Models;
+using Microsoft.Extensions.Options;
 
 namespace Contentstack.Management.Core.Utils
 {
-    public class TextNodeJsonConverter : JsonConverter<TextNode>
+	public class TextNodeJsonConverter : JsonConverter<TextNode>
     {
-        public override TextNode Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override TextNode ReadJson(JsonReader reader, Type objectType, TextNode existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            using var doc = JsonDocument.ParseValue(ref reader);
-            var innerOpts = options.WithoutConverter<TextNodeJsonConverter>();
-            return JsonSerializer.Deserialize<TextNode>(doc.RootElement.GetRawText(), innerOpts) ?? new TextNode();
+            JObject jObject = JObject.Load(reader);
+
+            TextNode txtnode = new TextNode();
+
+            serializer.Populate(jObject.CreateReader(), txtnode);
+
+            return txtnode;
         }
 
-        public override void Write(Utf8JsonWriter writer, TextNode value, JsonSerializerOptions options)
+        public override void WriteJson(JsonWriter writer, TextNode value, JsonSerializer serializer)
         {
-            if (value == null)
-            {
-                writer.WriteNullValue();
-                return;
-            }
-
             writer.WriteStartObject();
 
             if (value.attrs != null)
             {
                 writer.WritePropertyName("attrs");
-                JsonSerializer.Serialize(writer, value.attrs, options);
+                serializer.Serialize(writer, value.attrs);
             }
 
             if (value.children != null)
@@ -36,7 +35,7 @@ namespace Contentstack.Management.Core.Utils
                 writer.WriteStartArray();
                 foreach (var child in value.children)
                 {
-                    JsonSerializer.Serialize(writer, child, options);
+                    serializer.Serialize(writer, child);
                 }
                 writer.WriteEndArray();
             }
@@ -44,47 +43,47 @@ namespace Contentstack.Management.Core.Utils
             if (value.bold)
             {
                 writer.WritePropertyName("bold");
-                writer.WriteBooleanValue(value.bold);
+                writer.WriteValue(value.bold);
             }
             if (value.italic)
             {
                 writer.WritePropertyName("italic");
-                writer.WriteBooleanValue(value.italic);
+                writer.WriteValue(value.italic);
             }
             if (value.underline)
             {
                 writer.WritePropertyName("underline");
-                writer.WriteBooleanValue(value.underline);
+                writer.WriteValue(value.underline);
             }
             if (value.strikethrough)
             {
                 writer.WritePropertyName("strikethrough");
-                writer.WriteBooleanValue(value.strikethrough);
+                writer.WriteValue(value.strikethrough);
             }
             if (value.inlineCode)
             {
                 writer.WritePropertyName("inlineCode");
-                writer.WriteBooleanValue(value.inlineCode);
+                writer.WriteValue(value.inlineCode);
             }
             if (value.subscript)
             {
                 writer.WritePropertyName("subscript");
-                writer.WriteBooleanValue(value.subscript);
+                writer.WriteValue(value.subscript);
             }
             if (value.superscript)
             {
                 writer.WritePropertyName("superscript");
-                writer.WriteBooleanValue(value.superscript);
+                writer.WriteValue(value.superscript);
             }
             if (value.@break)
             {
                 writer.WritePropertyName("break");
-                writer.WriteBooleanValue(value.@break);
+                writer.WriteValue(value.@break);
             }
             if (!string.IsNullOrEmpty(value.text))
             {
                 writer.WritePropertyName("text");
-                writer.WriteStringValue(value.text);
+                writer.WriteValue(value.text);
             }
 
             writer.WriteEndObject();

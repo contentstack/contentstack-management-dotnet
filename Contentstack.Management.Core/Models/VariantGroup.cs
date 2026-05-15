@@ -108,7 +108,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new VariantContentTypeLinkService(
-                stack.client.SerializerOptions,
+                stack.client.serializer,
                 stack,
                 $"{resourcePath}/variants",
                 contentTypeUids,
@@ -142,7 +142,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new VariantContentTypeLinkService(
-                stack.client.SerializerOptions,
+                stack.client.serializer,
                 stack,
                 $"{resourcePath}/variants",
                 contentTypeUids,
@@ -178,7 +178,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new VariantContentTypeLinkService(
-                stack.client.SerializerOptions,
+                stack.client.serializer,
                 stack,
                 $"{resourcePath}/variants",
                 contentTypeUids,
@@ -212,7 +212,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new VariantContentTypeLinkService(
-                stack.client.SerializerOptions,
+                stack.client.serializer,
                 stack,
                 $"{resourcePath}/variants",
                 contentTypeUids,

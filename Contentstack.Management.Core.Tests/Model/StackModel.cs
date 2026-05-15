@@ -1,23 +1,23 @@
 ﻿using System;
 using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Tests.Model
 {
     public class StackModel
     {
-        [JsonPropertyName("api_key")]
+        [JsonProperty("api_key")]
         public string APIKey { get; set; }
 
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        [JsonPropertyName("master_locale")]
+        [JsonProperty("master_locale")]
         public string MasterLocale { get; set; }
 
-        [JsonPropertyName("org_uid")]
+        [JsonProperty("org_uid")]
         public string OrgUid { get; set; }
     }
 
@@ -25,10 +25,11 @@ namespace Contentstack.Management.Core.Tests.Model
     {
         public StackModel Stack { get; set; }
 
-        public static StackResponse getStack(JsonSerializerOptions options)
+        public static StackResponse getStack(JsonSerializer serializer)
         {
             string response = File.ReadAllText("./stackApiKey.txt");
-            return JsonSerializer.Deserialize<StackResponse>(response, options);
+            JObject jObject = JObject.Parse(response);
+            return jObject.ToObject<StackResponse>(serializer);
         }
     }
 }

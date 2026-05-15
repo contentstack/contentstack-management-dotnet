@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Helpers;
@@ -12,6 +13,8 @@ using Contentstack.Management.Core.Models.Fields;
 using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
@@ -179,7 +182,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         /// </summary>
         private static Stack GetStack()
         {
-            StackResponse response = StackResponse.getStack(_client.SerializerOptions);
+            StackResponse response = StackResponse.getStack(_client.serializer);
             return _client.Stack(response.Stack.APIKey);
         }
 
@@ -209,7 +212,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public async Task Initialize()
         {
-            StackResponse response = StackResponse.getStack(_client.SerializerOptions);
+            StackResponse response = StackResponse.getStack(_client.serializer);
             _stack = _client.Stack(response.Stack.APIKey);
 
             // Create test environment and release for bulk operations (for new stack)
@@ -266,8 +269,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentstackResponse listResponse = _stack.Workflow().FindAll();
                     if (listResponse.IsSuccessStatusCode)
                     {
-                        var listJson = listResponse.OpenJsonObjectResponse();
-                        var existing = (listJson["workflows"] as JsonArray) ?? (listJson["workflow"] as JsonArray);
+                        var listJson = listResponse.OpenJObjectResponse();
+                        var existing = (listJson["workflows"] as JArray) ?? (listJson["workflow"] as JArray);
                         if (existing != null)
                         {
                             foreach (var wf in existing)
@@ -275,7 +278,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                                 if (wf["name"]?.ToString() == workflowName && wf["uid"] != null)
                                 {
                                     _bulkTestWorkflowUid = wf["uid"].ToString();
-                                    var existingStages = wf["workflow_stages"] as JsonArray;
+                                    var existingStages = wf["workflow_stages"] as JArray;
                                     if (existingStages != null && existingStages.Count >= 2)
                                     {
                                         _bulkTestWorkflowStage1Uid = existingStages[0]["uid"]?.ToString();
@@ -341,7 +344,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 // Print what we are sending so failures show the exact request JSON
-                string sentJson = JsonSerializer.Serialize(new { workflow = workflowModel }, new JsonSerializerOptions { WriteIndented = true });
+                string sentJson = JsonConvert.SerializeObject(new { workflow = workflowModel }, Formatting.Indented);
 
                 ContentstackResponse response = _stack.Workflow().Create(workflowModel);
                 string responseBody = null;
@@ -351,14 +354,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode,
                     $"Workflow create failed: HTTP {(int)response.StatusCode}.\n--- REQUEST BODY ---\n{sentJson}\n--- RESPONSE BODY ---\n{responseBody}", "workflowCreateSuccess");
 
-                var responseJson = JsonNode.Parse(responseBody ?? "{}");
+                var responseJson = JObject.Parse(responseBody ?? "{}");
                 var workflowObj = responseJson["workflow"];
                 AssertLogger.IsNotNull(workflowObj, "workflowObj");
                 AssertLogger.IsFalse(string.IsNullOrEmpty(workflowObj["uid"]?.ToString()), "Workflow UID is empty.", "workflowUid");
 
                 _bulkTestWorkflowUid = workflowObj["uid"].ToString();
                 TestOutputLogger.LogContext("WorkflowUid", _bulkTestWorkflowUid);
-                var stages = workflowObj["workflow_stages"] as JsonArray;
+                var stages = workflowObj["workflow_stages"] as JArray;
                 AssertLogger.IsNotNull(stages, "workflow_stages");
                 AssertLogger.IsTrue(stages.Count >= 2, $"Expected at least 2 stages, got {stages.Count}.", "stagesCount");
                 _bulkTestWorkflowStage1Uid = stages[0]["uid"].ToString(); // New stage 1
@@ -393,8 +396,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentstackResponse listResponse = _stack.Workflow().PublishRule().FindAll();
                     if (listResponse.IsSuccessStatusCode)
                     {
-                        var listJson = listResponse.OpenJsonObjectResponse();
-                        var rules = (listJson["publishing_rules"] as JsonArray) ?? (listJson["publishing_rule"] as JsonArray);
+                        var listJson = listResponse.OpenJObjectResponse();
+                        var rules = (listJson["publishing_rules"] as JArray) ?? (listJson["publishing_rule"] as JArray);
                         if (rules != null)
                         {
                             foreach (var rule in rules)
@@ -426,7 +429,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     DisableApproval = false
                 };
 
-                string sentJson = JsonSerializer.Serialize(new { publishing_rule = publishRuleModel }, new JsonSerializerOptions { WriteIndented = true });
+                string sentJson = JsonConvert.SerializeObject(new { publishing_rule = publishRuleModel }, Formatting.Indented);
 
                 ContentstackResponse response = _stack.Workflow().PublishRule().Create(publishRuleModel);
                 string responseBody = null;
@@ -436,7 +439,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode,
                     $"Publish rule create failed: HTTP {(int)response.StatusCode}.\n--- REQUEST BODY ---\n{sentJson}\n--- RESPONSE BODY ---\n{responseBody}", "publishRuleCreateSuccess");
 
-                var responseJson = JsonNode.Parse(responseBody ?? "{}");
+                var responseJson = JObject.Parse(responseBody ?? "{}");
                 var ruleObj = responseJson["publishing_rule"];
                 AssertLogger.IsNotNull(ruleObj, "publishing_rule");
                 AssertLogger.IsFalse(string.IsNullOrEmpty(ruleObj["uid"]?.ToString()), "Publishing rule UID is empty.", "publishRuleUid");
@@ -481,7 +484,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Create the content type
                 ContentstackResponse response = _stack.ContentType().Create(contentModelling);
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
 
                 AssertLogger.IsNotNull(response, "createContentTypeResponse");
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "contentTypeCreateSuccess");
@@ -541,7 +544,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     var entry = new SimpleEntry { Title = title };
                     ContentstackResponse response = _stack.ContentType(_contentTypeUid).Entry().Create(entry);
-                    var responseJson = response.OpenJsonObjectResponse();
+                    var responseJson = response.OpenJObjectResponse();
 
                     AssertLogger.IsNotNull(response, "createEntryResponse");
                     AssertLogger.IsTrue(response.IsSuccessStatusCode, "entryCreateSuccess");
@@ -598,7 +601,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                // Perform bulk publish; skipWorkflowStage=true bypasses publish rules enforced by workflow stages
                ContentstackResponse response = _stack.BulkOperation().Publish(publishDetails, skipWorkflowStage: true, approvals: true);
-               var responseJson = response.OpenJsonObjectResponse();
+               var responseJson = response.OpenJObjectResponse();
 
                AssertLogger.IsNotNull(response, "bulkPublishResponse");
                AssertLogger.IsTrue(response.IsSuccessStatusCode, "bulkPublishSuccess");
@@ -645,7 +648,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                // Perform bulk unpublish; skipWorkflowStage=true bypasses publish rules enforced by workflow stages
                ContentstackResponse response = _stack.BulkOperation().Unpublish(unpublishDetails, skipWorkflowStage: true, approvals: true);
-               var responseJson = response.OpenJsonObjectResponse();
+               var responseJson = response.OpenJObjectResponse();
 
                AssertLogger.IsNotNull(response, "bulkUnpublishResponse");
                AssertLogger.IsTrue(response.IsSuccessStatusCode, "bulkUnpublishSuccess");
@@ -697,7 +700,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Bulk publish failed with status {(int)response.StatusCode} ({response.StatusCode}).", "bulkPublishSuccess");
                 AssertLogger.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.", "statusCode");
 
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
                 AssertLogger.IsNotNull(responseJson, "responseJson");
             }
             catch (Exception ex)
@@ -705,7 +708,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (ex is ContentstackErrorException cex)
                 {
                     string errorsJson = cex.Errors != null && cex.Errors.Count > 0
-                        ? JsonSerializer.Serialize(cex.Errors, new JsonSerializerOptions { WriteIndented = true })
+                        ? JsonConvert.SerializeObject(cex.Errors, Formatting.Indented)
                         : "(none)";
                     string failMessage = string.Format(
                         "Bulk publish with skipWorkflowStage and approvals failed. HTTP {0} ({1}). ErrorCode: {2}. Message: {3}. Errors: {4}",
@@ -762,7 +765,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Bulk publish failed with status {(int)response.StatusCode} ({response.StatusCode}).", "bulkUnpublishSuccess");
                 AssertLogger.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.", "statusCode");
 
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
                 AssertLogger.IsNotNull(responseJson, "responseJson");
             }
             catch (Exception ex)
@@ -770,7 +773,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (ex is ContentstackErrorException cex)
                 {
                     string errorsJson = cex.Errors != null && cex.Errors.Count > 0
-                        ? JsonSerializer.Serialize(cex.Errors, new JsonSerializerOptions { WriteIndented = true })
+                        ? JsonConvert.SerializeObject(cex.Errors, Formatting.Indented)
                         : "(none)";
                     string failMessage = string.Format(
                         "Bulk unpublish with skipWorkflowStage and approvals failed. HTTP {0} ({1}). ErrorCode: {2}. Message: {3}. Errors: {4}",
@@ -826,7 +829,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Bulk publish with api_version 3.2 failed with status {(int)response.StatusCode} ({response.StatusCode}).", "bulkPublishSuccess");
                 AssertLogger.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.", "statusCode");
 
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
                 AssertLogger.IsNotNull(responseJson, "responseJson");
             }
             catch (Exception ex)
@@ -870,7 +873,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Bulk unpublish with api_version 3.2 failed with status {(int)response.StatusCode} ({response.StatusCode}).", "bulkUnpublishSuccess");
                 AssertLogger.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Expected 200 OK, got {(int)response.StatusCode}.", "statusCode");
 
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
                 AssertLogger.IsNotNull(responseJson, "responseJson");
             }
             catch (Exception ex)
@@ -928,7 +931,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Perform bulk release using AddItems in deployment mode
                 ContentstackResponse releaseResponse = _stack.BulkOperation().AddItems(releaseData, "2.0");
-                var releaseResponseJson = releaseResponse.OpenJsonObjectResponse();
+                var releaseResponseJson = releaseResponse.OpenJObjectResponse();
 
                 AssertLogger.IsNotNull(releaseResponse, "releaseResponse");
                 AssertLogger.IsTrue(releaseResponse.IsSuccessStatusCode, "releaseAddItemsSuccess");
@@ -984,7 +987,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
                
                 ContentstackResponse bulkUpdateResponse = _stack.BulkOperation().UpdateItems(releaseData, "2.0");
-                var bulkUpdateResponseJson = bulkUpdateResponse.OpenJsonObjectResponse();
+                var bulkUpdateResponseJson = bulkUpdateResponse.OpenJObjectResponse();
 
                 AssertLogger.IsNotNull(bulkUpdateResponse, "bulkUpdateResponse");
                 AssertLogger.IsTrue(bulkUpdateResponse.IsSuccessStatusCode, "bulkUpdateSuccess");
@@ -1068,7 +1071,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.BulkOperation().Update(workflowUpdateBody);
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
 
                 AssertLogger.IsNotNull(response, "bulkWorkflowResponse");
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "bulkWorkflowSuccess");
@@ -1285,7 +1288,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 // Create unauthenticated client
                 var unauthenticatedClient = new ContentstackClient();
-                StackResponse response = StackResponse.getStack(_client.SerializerOptions);
+                StackResponse response = StackResponse.getStack(_client.serializer);
                 var unauthenticatedStack = unauthenticatedClient.Stack(response.Stack.APIKey);
 
                 var publishDetails = new BulkPublishDetails
@@ -1335,7 +1338,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // Note: LoginAsync requires ICredentials, not string
                 // invalidClient.LoginAsync("invalid_authtoken_12345").Wait();
                 
-                StackResponse response = StackResponse.getStack(_client.SerializerOptions);
+                StackResponse response = StackResponse.getStack(_client.serializer);
                 var invalidStack = invalidClient.Stack(response.Stack.APIKey);
 
                 var publishDetails = new BulkPublishDetails
@@ -2968,7 +2971,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     var response = await _stack.BulkOperation().AddItemsAsync(problematicData);
                     if (response.IsSuccessStatusCode)
                     {
-                        var responseJson = response.OpenJsonObjectResponse();
+                        var responseJson = response.OpenJObjectResponse();
                         if (responseJson["job_id"] != null)
                         {
                             string jobId = responseJson["job_id"].ToString();
@@ -2980,7 +2983,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                             try
                             {
                                 var jobStatusResponse = await _stack.BulkOperation().JobStatusAsync(jobId);
-                                var jobJson = jobStatusResponse.OpenJsonObjectResponse();
+                                var jobJson = jobStatusResponse.OpenJObjectResponse();
                                 
                                 // Look for failure indicators in job status
                                 if (jobJson["status"]?.ToString() == "failed" || 
@@ -3110,7 +3113,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         var result = results[i];
                         if (result.IsSuccessStatusCode)
                         {
-                            var resultJson = result.OpenJsonObjectResponse();
+                            var resultJson = result.OpenJObjectResponse();
                             if (resultJson["job_id"] != null)
                             {
                                 Console.WriteLine($"[Test055] Concurrent job {i + 1} created successfully: {resultJson["job_id"]}");
@@ -3178,7 +3181,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         var response = await _stack.BulkOperation().UpdateAsync(workflowBody);
                         if (response.IsSuccessStatusCode)
                         {
-                            var responseJson = response.OpenJsonObjectResponse();
+                            var responseJson = response.OpenJObjectResponse();
                             if (responseJson["job_id"] != null)
                             {
                                 string jobId = responseJson["job_id"].ToString();
@@ -3600,7 +3603,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 ContentstackResponse statusResponse = await _stack.BulkOperation().JobStatusAsync(jobId, bulkVersion);
-                var statusJson = statusResponse.OpenJsonObjectResponse();
+                var statusJson = statusResponse.OpenJObjectResponse();
 
                 AssertLogger.IsNotNull(statusResponse, "jobStatusResponse");
                 AssertLogger.IsTrue(statusResponse.IsSuccessStatusCode, "jobStatusSuccess");
@@ -3630,7 +3633,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.Environment().Create(environmentModel);
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
 
                 if (response.IsSuccessStatusCode && responseJson["environment"] != null)
                 {
@@ -3657,7 +3660,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = _stack.Release().Create(releaseModel);
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
 
                 if (response.IsSuccessStatusCode && responseJson["release"] != null)
                 {
@@ -3695,11 +3698,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 try
                 {
                     ContentstackResponse response = _stack.Environment().Query().Find();
-                    var responseJson = response.OpenJsonObjectResponse();
+                    var responseJson = response.OpenJObjectResponse();
 
                     if (response.IsSuccessStatusCode && responseJson["environments"] != null)
                     {
-                        var environments = responseJson["environments"] as JsonArray;
+                        var environments = responseJson["environments"] as JArray;
                         if (environments != null && environments.Count > 0)
                         {
                             var environmentUids = new List<string>();
@@ -3776,7 +3779,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     var entry = new SimpleEntry { Title = "Bulk test entry" };
                     ContentstackResponse createResponse = _stack.ContentType(_contentTypeUid).Entry().Create(entry);
-                    var responseJson = createResponse.OpenJsonObjectResponse();
+                    var responseJson = createResponse.OpenJObjectResponse();
                     if (createResponse.IsSuccessStatusCode && responseJson["entry"] != null && responseJson["entry"]["uid"] != null)
                     {
                         _createdEntries.Add(new EntryInfo
@@ -3802,10 +3805,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 ContentstackResponse response = stack.Environment().Query().Find();
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
                 if (response.IsSuccessStatusCode && responseJson["environments"] != null)
                 {
-                    var environments = responseJson["environments"] as JsonArray;
+                    var environments = responseJson["environments"] as JArray;
                     if (environments != null && environments.Count > 0)
                     {
                         var uids = new List<string>();
@@ -3830,10 +3833,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 ContentstackResponse response = stack.Environment().Query().Find();
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
                 if (response.IsSuccessStatusCode && responseJson["environments"] != null)
                 {
-                    var environments = responseJson["environments"] as JsonArray;
+                    var environments = responseJson["environments"] as JArray;
                     if (environments != null && environments.Count > 0)
                     {
                         var uids = new List<string>();
@@ -3878,7 +3881,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = stack.Environment().Create(environmentModel);
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
                 if (response.IsSuccessStatusCode && responseJson["environment"]?["uid"] != null)
                     _bulkTestEnvironmentUid = responseJson["environment"]["uid"].ToString();
             }
@@ -3913,7 +3916,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 };
 
                 ContentstackResponse response = stack.Environment().Create(environmentModel);
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
                 if (response.IsSuccessStatusCode && responseJson["environment"]?["uid"] != null)
                     _bulkTestEnvironmentUid = responseJson["environment"]["uid"].ToString();
             }
@@ -3942,8 +3945,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentstackResponse listResponse = stack.Workflow().FindAll();
                     if (listResponse.IsSuccessStatusCode)
                     {
-                        var listJson = listResponse.OpenJsonObjectResponse();
-                        var existing = (listJson["workflows"] as JsonArray) ?? (listJson["workflow"] as JsonArray);
+                        var listJson = listResponse.OpenJObjectResponse();
+                        var existing = (listJson["workflows"] as JArray) ?? (listJson["workflow"] as JArray);
                         if (existing != null)
                         {
                             foreach (var wf in existing)
@@ -3951,7 +3954,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                                 if (wf["name"]?.ToString() == workflowName && wf["uid"] != null)
                                 {
                                     _bulkTestWorkflowUid = wf["uid"].ToString();
-                                    var existingStages = wf["workflow_stages"] as JsonArray;
+                                    var existingStages = wf["workflow_stages"] as JArray;
                                     if (existingStages != null && existingStages.Count >= 2)
                                     {
                                         _bulkTestWorkflowStage1Uid = existingStages[0]["uid"]?.ToString();
@@ -4026,7 +4029,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         return;
                     }
 
-                    var workflowJson = workflowResponse.OpenJsonObjectResponse();
+                    var workflowJson = workflowResponse.OpenJObjectResponse();
                     var workflowObj = workflowJson["workflow"];
                     if (workflowObj == null)
                     {
@@ -4037,7 +4040,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
 
                     _bulkTestWorkflowUid = workflowObj["uid"]?.ToString();
-                    var stages = workflowObj["workflow_stages"] as JsonArray;
+                    var stages = workflowObj["workflow_stages"] as JArray;
                     if (stages != null && stages.Count >= 2)
                     {
                         _bulkTestWorkflowStage1Uid = stages[0]?["uid"]?.ToString();
@@ -4058,8 +4061,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentstackResponse ruleListResponse = stack.Workflow().PublishRule().FindAll();
                     if (ruleListResponse.IsSuccessStatusCode)
                     {
-                        var ruleListJson = ruleListResponse.OpenJsonObjectResponse();
-                        var rules = (ruleListJson["publishing_rules"] as JsonArray) ?? (ruleListJson["publishing_rule"] as JsonArray);
+                        var ruleListJson = ruleListResponse.OpenJObjectResponse();
+                        var rules = (ruleListJson["publishing_rules"] as JArray) ?? (ruleListJson["publishing_rule"] as JArray);
                         if (rules != null)
                         {
                             foreach (var rule in rules)
@@ -4100,7 +4103,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     return;
                 }
 
-                var ruleJson = ruleResponse.OpenJsonObjectResponse();
+                var ruleJson = ruleResponse.OpenJObjectResponse();
                 _bulkTestPublishRuleUid = ruleJson["publishing_rule"]?["uid"]?.ToString();
             }
             catch (ContentstackErrorException ex)
@@ -4174,7 +4177,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentstackResponse r = _stack.BulkOperation().Update(body);
                     if (r.IsSuccessStatusCode)
                     {
-                        var j = r.OpenJsonObjectResponse();
+                        var j = r.OpenJObjectResponse();
                         if (j?["job_id"] != null) { await Task.Delay(2000); await CheckBulkJobStatus(j["job_id"].ToString()); }
                     }
                 }
@@ -4188,11 +4191,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 // Query entries from the content type
                 ContentstackResponse response = _stack.ContentType(_contentTypeUid).Entry().Query().Find();
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
 
                 if (response.IsSuccessStatusCode && responseJson["entries"] != null)
                 {
-                    var entries = responseJson["entries"] as JsonArray;
+                    var entries = responseJson["entries"] as JArray;
                     if (entries != null && entries.Count > 0)
                     {
                         var entryList = new List<EntryInfo>();
@@ -4245,11 +4248,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 try
                 {
                     ContentstackResponse response = _stack.Release().Query().Find();
-                    var responseJson = response.OpenJsonObjectResponse();
+                    var responseJson = response.OpenJObjectResponse();
 
                     if (response.IsSuccessStatusCode && responseJson["releases"] != null)
                     {
-                        var releases = responseJson["releases"] as JsonArray;
+                        var releases = responseJson["releases"] as JArray;
                         if (releases != null && releases.Count > 0)
                         {
                             var releaseUids = new List<string>();
@@ -4301,11 +4304,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Query for available releases
                 ContentstackResponse response = _stack.Release().Query().Find();
-                var responseJson = response.OpenJsonObjectResponse();
+                var responseJson = response.OpenJObjectResponse();
 
                 if (response.IsSuccessStatusCode && responseJson["releases"] != null)
                 {
-                    var releases = responseJson["releases"] as JsonArray;
+                    var releases = responseJson["releases"] as JArray;
                     if (releases != null && releases.Count > 0)
                     {
                         // Get the first available release
@@ -4328,10 +4331,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         public class SimpleEntry : IEntry
         {
-            [JsonPropertyName("title")]
+            [JsonProperty(propertyName: "title")]
             public string Title { get; set; }
 
-            [JsonPropertyName("_variant")]
+            [JsonProperty(propertyName: "_variant")]
             public object Variant { get; set; }
         }
 

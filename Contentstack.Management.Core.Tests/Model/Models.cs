@@ -1,57 +1,56 @@
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using Contentstack.Management.Core.Models;
+using System.Collections.Generic;
 
 namespace Contentstack.Management.Core.Tests.Model
 {
     public class GlobalFieldModel
     {
-        [JsonPropertyName("global_field")]
+        [JsonProperty("global_field")]
         public ContentModelling Modelling { get; set; }
     }
-
     public class GlobalFieldsModel
     {
-        [JsonPropertyName("global_fields")]
+        [JsonProperty("global_fields")]
         public List<ContentModelling> Modellings { get; set; }
     }
 
     public class ContentTypeModel
     {
-        [JsonPropertyName("content_type")]
+        [JsonProperty("content_type")]
         public ContentModelling Modelling { get; set; }
     }
-
     public class ContentTypesModel
     {
-        [JsonPropertyName("content_types")]
+        [JsonProperty("content_types")]
         public List<ContentModelling> Modellings { get; set; }
     }
 
     public class TaxonomyResponseModel
     {
-        [JsonPropertyName("taxonomy")]
+        [JsonProperty("taxonomy")]
         public TaxonomyModel Taxonomy { get; set; }
     }
 
     public class TaxonomiesResponseModel
     {
-        [JsonPropertyName("taxonomies")]
+        [JsonProperty("taxonomies")]
         public List<TaxonomyModel> Taxonomies { get; set; }
     }
 
     public class TermResponseModel
     {
-        [JsonPropertyName("term")]
+        [JsonProperty("term")]
         public TermModel Term { get; set; }
     }
 
     public class TermsResponseModel
     {
-        [JsonPropertyName("terms")]
+        [JsonProperty("terms")]
         public List<TermModel> Terms { get; set; }
 
-        [JsonPropertyName("count")]
+        [JsonProperty("count")]
         public int? Count { get; set; }
     }
 }
+

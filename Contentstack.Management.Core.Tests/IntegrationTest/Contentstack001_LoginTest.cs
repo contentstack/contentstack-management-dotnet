@@ -8,6 +8,7 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Contentstack.Management.Core.Queryable;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
@@ -144,7 +145,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 ContentstackResponse response = client.GetUser();
 
-                var user = response.OpenJsonObjectResponse();
+                var user = response.OpenJObjectResponse();
 
                 AssertLogger.IsNotNull(user, "user");
 
@@ -168,11 +169,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 ContentstackResponse response = await client.GetUserAsync();
 
-                var user = response.OpenJsonObjectResponse();
+                var user = response.OpenJObjectResponse();
 
                 AssertLogger.IsNotNull(user, "user");
                 AssertLogger.IsNotNull(user["user"]["organizations"], "organizations");
-                AssertLogger.IsInstanceOfType(user["user"]["organizations"], typeof(JsonArray), "organizations");
+                AssertLogger.IsInstanceOfType(user["user"]["organizations"], typeof(JArray), "organizations");
                 AssertLogger.IsNull(user["user"]["organizations"][0]["org_roles"], "org_roles");
 
             }
@@ -198,11 +199,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 ContentstackResponse response = client.GetUser(collection);
 
-                var user = response.OpenJsonObjectResponse();
+                var user = response.OpenJObjectResponse();
 
                 AssertLogger.IsNotNull(user, "user");
                 AssertLogger.IsNotNull(user["user"]["organizations"], "organizations");
-                AssertLogger.IsInstanceOfType(user["user"]["organizations"], typeof(JsonArray), "organizations");
+                AssertLogger.IsInstanceOfType(user["user"]["organizations"], typeof(JArray), "organizations");
                 AssertLogger.IsNotNull(user["user"]["organizations"][0]["org_roles"], "org_roles");
             }
             catch (Exception e)
@@ -999,7 +1000,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 AssertLogger.IsTrue(true, "ContentstackErrorException acceptable for malformed JSON");
             }
-            catch (JsonException)
+            catch (Newtonsoft.Json.JsonException)
             {
                 AssertLogger.IsTrue(true, "JsonException acceptable for malformed JSON");
             }
@@ -1026,7 +1027,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 AssertLogger.IsTrue(true, "ContentstackErrorException acceptable for malformed JSON");
             }
-            catch (JsonException)
+            catch (Newtonsoft.Json.JsonException)
             {
                 AssertLogger.IsTrue(true, "JsonException acceptable for malformed JSON");
             }
@@ -1057,7 +1058,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 AssertLogger.IsTrue(true, "ArgumentException acceptable for empty response");
             }
-            catch (JsonException)
+            catch (Newtonsoft.Json.JsonReaderException)
             {
                 AssertLogger.IsTrue(true, "JsonReaderException acceptable for empty response");
             }
@@ -1088,7 +1089,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 AssertLogger.IsTrue(true, "ArgumentException acceptable for empty response");
             }
-            catch (JsonException)
+            catch (Newtonsoft.Json.JsonReaderException)
             {
                 AssertLogger.IsTrue(true, "JsonReaderException acceptable for empty response");
             }
@@ -1140,7 +1141,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 AssertLogger.IsTrue(true, "KeyNotFoundException acceptable for unexpected structure");
             }
-            catch (JsonException)
+            catch (Newtonsoft.Json.JsonException)
             {
                 AssertLogger.IsTrue(true, "JsonException acceptable for unexpected structure");
             }
@@ -1392,7 +1393,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 AssertLogger.IsTrue(true, "ContentstackErrorException acceptable for malformed response");
             }
-            catch (JsonException)
+            catch (Newtonsoft.Json.JsonException)
             {
                 AssertLogger.IsTrue(true, "JsonException acceptable for malformed response");
             }
@@ -1855,7 +1856,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     results.Add((scenario, false, "TaskCanceledException"));
                 }
-                catch (JsonException)
+                catch (Newtonsoft.Json.JsonException)
                 {
                     results.Add((scenario, false, "JsonException"));
                 }

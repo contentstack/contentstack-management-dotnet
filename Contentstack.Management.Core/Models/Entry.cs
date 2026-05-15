@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Abstractions;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -210,7 +211,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new DeleteService<Dictionary<string, List<string>>>(stack.client.SerializerOptions, stack, resourcePath, "entry", new Dictionary<string, List<string>>()
+            var service = new DeleteService<Dictionary<string, List<string>>>(stack.client.serializer, stack, resourcePath, "entry", new Dictionary<string, List<string>>()
             {
                 {"locales", locales }
             });
@@ -234,7 +235,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new DeleteService<Dictionary<string, List<string>>>(stack.client.SerializerOptions, stack, resourcePath, "entry", new Dictionary<string, List<string>>()
+            var service = new DeleteService<Dictionary<string, List<string>>>(stack.client.serializer, stack, resourcePath, "entry", new Dictionary<string, List<string>>()
             {
                 {"locales", locales }
             });
@@ -263,7 +264,7 @@ namespace Contentstack.Management.Core.Models
 
             collection.Add("locale", locale);
 
-            var service = new LocalizationService<IEntry>(stack.client.SerializerOptions, stack, resourcePath, model, "entry", collection);
+            var service = new LocalizationService<IEntry>(stack.client.serializer, stack, resourcePath, model, "entry", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -289,7 +290,7 @@ namespace Contentstack.Management.Core.Models
 
             collection.Add("locale", locale);
 
-            var service = new LocalizationService<IEntry>(stack.client.SerializerOptions, stack, resourcePath, model, "entry", collection);
+            var service = new LocalizationService<IEntry>(stack.client.serializer, stack, resourcePath, model, "entry", collection);
             return stack.client.InvokeAsync<LocalizationService<IEntry>, ContentstackResponse>(service);
         }
 
@@ -313,7 +314,7 @@ namespace Contentstack.Management.Core.Models
 
             collection.Add("locale", locale);
 
-            var service = new LocalizationService<IEntry>(stack.client.SerializerOptions, stack, resourcePath, null, "entry", collection, true);
+            var service = new LocalizationService<IEntry>(stack.client.serializer, stack, resourcePath, null, "entry", collection, true);
             return stack.client.InvokeSync(service);
         }
 
@@ -337,7 +338,7 @@ namespace Contentstack.Management.Core.Models
 
             collection.Add("locale", locale);
 
-            var service = new LocalizationService<IEntry>(stack.client.SerializerOptions, stack, resourcePath, null, "entry", collection, true);
+            var service = new LocalizationService<IEntry>(stack.client.serializer, stack, resourcePath, null, "entry", collection, true);
             return stack.client.InvokeAsync<LocalizationService<IEntry>, ContentstackResponse>(service);
         }
 
@@ -356,7 +357,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new LocaleService(stack.client.SerializerOptions, stack, resourcePath);
+            var service = new LocaleService(stack.client.serializer, stack, resourcePath);
             return stack.client.InvokeSync(service);
         }
 
@@ -375,7 +376,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new LocaleService(stack.client.SerializerOptions, stack, resourcePath);
+            var service = new LocaleService(stack.client.serializer, stack, resourcePath);
             return stack.client.InvokeAsync<LocaleService, ContentstackResponse>(service);
         }
 
@@ -394,7 +395,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchReferencesService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -413,7 +414,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchReferencesService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchReferencesService, ContentstackResponse>(service);
         }
 
@@ -434,7 +435,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.SerializerOptions, stack, details, $"{resourcePath}/publish", "entry", locale);
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "entry", locale);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -455,7 +456,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.SerializerOptions, stack, details, $"{resourcePath}/publish", "entry", locale);
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "entry", locale);
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -476,7 +477,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.SerializerOptions, stack, details, $"{resourcePath}/unpublish", "entry", locale);
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -497,7 +498,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.SerializerOptions, stack, details, $"{resourcePath}/unpublish", "entry", locale);
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -519,7 +520,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
 
             var text = File.ReadAllText(filePath);
-            var service = new ImportExportService(stack.client.SerializerOptions, stack, resourcePath, true, "POST", collection);
+            var service = new ImportExportService(stack.client.serializer, stack, resourcePath, true, "POST", collection);
             service.ByteContent = System.Text.Encoding.UTF8.GetBytes(text);
 
             return stack.client.InvokeSync(service);
@@ -544,7 +545,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var text = File.ReadAllText(filePath);
-            var service = new ImportExportService(stack.client.SerializerOptions, stack, resourcePath, isImport: true, "POST", collection);
+            var service = new ImportExportService(stack.client.serializer, stack, resourcePath, isImport: true, "POST", collection);
             service.ByteContent = System.Text.Encoding.UTF8.GetBytes(text);
             return stack.client.InvokeAsync<ImportExportService, ContentstackResponse>(service);
         }
@@ -568,13 +569,16 @@ namespace Contentstack.Management.Core.Models
 
             try
             {
-                var service = new ImportExportService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
+                var service = new ImportExportService(stack.client.serializer, stack, resourcePath, collection: collection);
                 ContentstackResponse response = stack.client.InvokeSync(service);
                 if (response.IsSuccessStatusCode)
                 {
-                    var json = response.OpenJsonObjectResponse();
-                    var opts = new JsonSerializerOptions { WriteIndented = true };
-                    File.WriteAllText(filePath, json.ToJsonString(opts));
+                    using (StreamWriter file = File.CreateText(filePath))
+                    using (JsonTextWriter writer = new JsonTextWriter(file))
+                    {
+                        JObject json = response.OpenJObjectResponse();
+                        json.WriteTo(writer);
+                    }
                 }
                 return response;
             } catch (Exception e)
@@ -605,7 +609,7 @@ namespace Contentstack.Management.Core.Models
             {
                 { "workflow_stage", model}
             };
-            var service = new CreateUpdateService<Dictionary<string, EntryWorkflowStage>>(stack.client.SerializerOptions, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            var service = new CreateUpdateService<Dictionary<string, EntryWorkflowStage>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -630,7 +634,7 @@ namespace Contentstack.Management.Core.Models
             {
                 { "workflow_stage", model}
             };
-            var service = new CreateUpdateService<Dictionary<string, EntryWorkflowStage>>(stack.client.SerializerOptions, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            var service = new CreateUpdateService<Dictionary<string, EntryWorkflowStage>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
             return stack.client.InvokeAsync<CreateUpdateService<Dictionary<string, EntryWorkflowStage>>, ContentstackResponse>(service);
         }
 
@@ -655,7 +659,7 @@ namespace Contentstack.Management.Core.Models
             {
                 { "publishing_rule", publishAction}
             };
-            var service = new CreateUpdateService<Dictionary<string, EntryPublishAction>>(stack.client.SerializerOptions, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            var service = new CreateUpdateService<Dictionary<string, EntryPublishAction>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
             return stack.client.InvokeSync(service);
         }
         /// <summary>
@@ -679,7 +683,7 @@ namespace Contentstack.Management.Core.Models
             {
                 { "publishing_rule", publishAction}
             };
-            var service = new CreateUpdateService<Dictionary<string, EntryPublishAction>>(stack.client.SerializerOptions, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            var service = new CreateUpdateService<Dictionary<string, EntryPublishAction>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
             return stack.client.InvokeAsync<CreateUpdateService<Dictionary<string, EntryPublishAction>>, ContentstackResponse>(service);
         }
     }

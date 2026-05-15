@@ -1,106 +1,107 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 namespace Contentstack.Management.Core.Models
 {
-        public class RoleModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class RoleModel
     {
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
 
-        [JsonPropertyName("description")]
+        [JsonProperty(propertyName: "description")]
         public string Description { get; set; }
 
-        [JsonPropertyName("rules")]
+        [JsonProperty(propertyName: "rules")]
         public List<Rule> Rules { get; set; }
 
-        [JsonPropertyName("deploy_content")]
+        [JsonProperty(propertyName: "deploy_content")]
         public bool DeployContent { get; set; } = true;
     }
 
     public class Rule
     {
-        [JsonPropertyName("acl")]
+        [JsonProperty(propertyName: "acl")]
         public Dictionary<string, object> ACL { get; }
 
-        [JsonPropertyName("restrict")]
+        [JsonProperty(propertyName: "restrict")]
         public bool Restrict { get; }
     }
 
     public class ContentTypeRules: Rule
     {
-        [JsonPropertyName("module")]
+        [JsonProperty(propertyName: "module")]
         public string Module { get; } = "content_type";
 
-        [JsonPropertyName("content_types")]
+        [JsonProperty(propertyName: "content_types")]
         public List<string> ContentTypes { get; set; }
     }
 
     public class BranchRules : Rule
     {
-        [JsonPropertyName("module")]
+        [JsonProperty(propertyName: "module")]
         public string Module { get; } = "branch";
 
-        [JsonPropertyName("branches")]
+        [JsonProperty(propertyName: "branches")]
         public List<string> Branches { get; set; }
     }
 
     public class BranchAliasRules : Rule
     {
-        [JsonPropertyName("module")]
+        [JsonProperty(propertyName: "module")]
         public string Module { get; } = "branch_alias";
 
-        [JsonPropertyName("branch_aliases")]
+        [JsonProperty(propertyName: "branch_aliases")]
         public List<string> BranchAliases { get; set; }
     }
 
     public class AssetRules : Rule
     {
-        [JsonPropertyName("module")]
+        [JsonProperty(propertyName: "module")]
         public string Module { get; } = "asset";
 
-        [JsonPropertyName("assets")]
-        public List<string> Assets { get; set; } = new List<string>();
+        [JsonProperty(propertyName: "assets")]
+        public List<string> Assets { get; set; }
     }
 
     public class FolderRules : Rule
     {
-        [JsonPropertyName("module")]
+        [JsonProperty(propertyName: "module")]
         public string Module { get; } = "folder";
 
-        [JsonPropertyName("folders")]
+        [JsonProperty(propertyName: "folders")]
         public List<string> Folders { get; set; }
     }
 
     public class EnvironmentRules : Rule
     {
-        [JsonPropertyName("module")]
+        [JsonProperty(propertyName: "module")]
         public string Module { get; } = "environment";
 
-        [JsonPropertyName("environments")]
+        [JsonProperty(propertyName: "environments")]
         public List<string> Environments { get; set; }
     }
 
     public class TaxonomyContentType
     {
-        [JsonPropertyName("uid")]
+        [JsonProperty(propertyName: "uid")]
         public string Uid { get; set; }
 
-        [JsonPropertyName("acl")]
+        [JsonProperty(propertyName: "acl")]
         public Dictionary<string, object> ACL { get; }
     }
 
     public class TaxonomyRules : Rule
     {
-        [JsonPropertyName("module")]
+        [JsonProperty(propertyName: "module")]
         public string Module { get; } = "taxonomy";
 
-        [JsonPropertyName("taxonomies")]
+        [JsonProperty(propertyName: "taxonomies")]
         public List<string> Taxonomies { get; set; }
 
-        [JsonPropertyName("terms")]
+        [JsonProperty(propertyName: "terms")]
         public List<string> Terms { get; set; }
 
-        [JsonPropertyName("content_types")]
+        [JsonProperty(propertyName: "content_types")]
         public List<TaxonomyContentType> ContentTypes { get; set; }
     }
 }

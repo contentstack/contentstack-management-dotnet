@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using System.Text.Json.Nodes;
+using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core
 {
@@ -19,7 +19,7 @@ namespace Contentstack.Management.Core
 
         string OpenResponse();
 
-        JsonObject OpenJsonObjectResponse();
+        JObject OpenJObjectResponse();
 
         TResponse OpenTResponse<TResponse>();
     }

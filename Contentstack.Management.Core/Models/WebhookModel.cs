@@ -1,34 +1,36 @@
-using System.Text.Json.Serialization;
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 namespace Contentstack.Management.Core.Models
 {
-        public class WebhookModel
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class WebhookModel
     {
-        [JsonPropertyName("name")]
+        [JsonProperty(propertyName: "name")]
         public string Name { get; set; }
-        [JsonPropertyName("destinations")]
+        [JsonProperty(propertyName: "destinations")]
         public List<WebhookTarget> destinations { get; set; }
-        [JsonPropertyName("channels")]
+        [JsonProperty(propertyName: "channels")]
         public List<string> Channels { get; set; }
-        [JsonPropertyName("branches")]
+        [JsonProperty(propertyName: "branches")]
         public List<string> Branches { get; set; }
-        [JsonPropertyName("retry_policy")]
+        [JsonProperty(propertyName: "retry_policy")]
         public string RetryPolicy { get; set; }
-        [JsonPropertyName("disabled")]
+        [JsonProperty(propertyName: "disabled")]
         public bool Disabled { get; set; } = false;
-        [JsonPropertyName("concise_payload")]
+        [JsonProperty(propertyName: "concise_payload")]
         public bool ConcisePayload { get; set; } = true;
     }
 
-        public class WebhookTarget
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+    public class WebhookTarget
     {
-        [JsonPropertyName("target_url")]
+        [JsonProperty(propertyName: "target_url")]
         public string TargetUrl { get; set; }
-        [JsonPropertyName("http_basic_auth")]
+        [JsonProperty(propertyName: "http_basic_auth")]
         public string HttpBasicAuth { get; set; }
-        [JsonPropertyName("http_basic_password")]
+        [JsonProperty(propertyName: "http_basic_password")]
         public string HttpBasicPassword { get; set; }
-        [JsonPropertyName("custom_header")]
+        [JsonProperty(propertyName: "custom_header")]
         public List<Dictionary<string, object>> CustomHeader { get; set; }
     }
 }
