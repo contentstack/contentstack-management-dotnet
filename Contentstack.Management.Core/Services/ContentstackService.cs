@@ -8,10 +8,12 @@ using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Queryable;
 using System.Net.Http.Headers;
+using System.Text.Json;
+using Contentstack.Management.Core.Enums;
 
 namespace Contentstack.Management.Core.Services
 {
-    internal class ContentstackService : IContentstackService
+    internal class ContentstackService : DualJsonWriter, IContentstackService
     {
 
         #region
@@ -23,17 +25,24 @@ namespace Contentstack.Management.Core.Services
         private bool _useQueryString = false;
 
         private bool _disposed = false;
-        private JsonSerializer _serializer { get; set; }
+        private Newtonsoft.Json.JsonSerializer _serializer { get; set; }
+        private JsonSerializerSettings _serializerSettings { get; set; }
+        private JsonSerializerOptions _stjOptions { get; set; }
+        private SerializationMode _serializationMode { get; set; }
 
         #endregion
 
         #region Constructor
-        internal ContentstackService(JsonSerializer serializer, Core.Models.Stack stack = null, ParameterCollection collection = null)
+        internal ContentstackService(Newtonsoft.Json.JsonSerializer serializer, Core.Models.Stack stack = null, ParameterCollection collection = null, JsonSerializerOptions stjOptions = null, SerializationMode serializationMode = SerializationMode.Newtonsoft)
         {
             if (serializer == null)
             {
                 throw new ArgumentNullException("serializer", CSConstants.JSONSerializerError);
             }
+
+            _stjOptions = stjOptions ?? new JsonSerializerOptions();
+            _serializationMode = serializationMode;
+            _serializerSettings = new JsonSerializerSettings();
 
             if (stack != null)
             {
@@ -56,9 +65,25 @@ namespace Contentstack.Management.Core.Services
             this.collection = collection ?? new ParameterCollection();
             _serializer = serializer;
         }
+
+        /// <summary>
+        /// Gets the serialization mode for this service.
+        /// </summary>
+        protected SerializationMode GetSerializationMode() => _serializationMode;
+
+        /// <summary>
+        /// Gets the Newtonsoft.Json serializer settings.
+        /// </summary>
+        protected JsonSerializerSettings GetSerializerSettings() => _serializerSettings;
+
+        /// <summary>
+        /// Gets the System.Text.Json serializer options.
+        /// </summary>
+        protected JsonSerializerOptions GetStjOptions() => _stjOptions;
+
         #endregion
 
-        public JsonSerializer Serializer
+        public Newtonsoft.Json.JsonSerializer Serializer
         {
             get
             {
@@ -197,7 +222,7 @@ namespace Contentstack.Management.Core.Services
             {
                 Headers["api_version"] = apiVersion;
             }
-            var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializer);
+            var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializer, _stjOptions);
             contentstackHttpRequest.Method = new HttpMethod(HttpMethod);
             contentstackHttpRequest.RequestUri = requestUri;
 

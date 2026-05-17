@@ -1,8 +1,11 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
+using System.Text.Json;
+using Contentstack.Management.Core.Enums;
 
 namespace Contentstack.Management.Core.Services.Stack
 {
@@ -14,13 +17,15 @@ namespace Contentstack.Management.Core.Services.Stack
 
         #region Internal
         internal StackCreateUpdateService(
-            JsonSerializer serializer,
+            Newtonsoft.Json.JsonSerializer serializer,
             Core.Models.Stack stack,
             string name,
             string masterLocale = null,
             string description = null,
-            string organizationUid = null)
-            : base(serializer, stack)
+            string organizationUid = null,
+            JsonSerializerOptions stjOptions = null,
+            SerializationMode serializationMode = SerializationMode.Newtonsoft)
+            : base(serializer, stack, stjOptions: stjOptions, serializationMode: serializationMode)
         {
             this.ResourcePath = "/stacks";
 
@@ -53,37 +58,22 @@ namespace Contentstack.Management.Core.Services.Stack
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
-            {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-                writer.WriteStartObject();
-                writer.WritePropertyName("stack");
-                writer.WriteStartObject();
-                if (!string.IsNullOrEmpty(_name))
-                {
-                    writer.WritePropertyName("name");
-                    writer.WriteValue(_name);
-                }
-                if (!string.IsNullOrEmpty(_description))
-                {
-                    writer.WritePropertyName("description");
-                    writer.WriteValue(_description);
-                }
-                switch (this.HttpMethod)
-                {
-                    case "POST":
-                        writer.WritePropertyName("master_locale");
-                        writer.WriteValue(_masterLocale);
-                        break;
-                    default:
-                        break;
-                }
-                writer.WriteEndObject();
-                writer.WriteEndObject();
+            // Build the stack object dynamically based on what's provided
+            var stackObj = new Dictionary<string, object>();
 
-                string snippet = stringWriter.ToString();
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
-            }
+            if (!string.IsNullOrEmpty(_name))
+                stackObj["name"] = _name;
+
+            if (!string.IsNullOrEmpty(_description))
+                stackObj["description"] = _description;
+
+            if (HttpMethod == "POST" && !string.IsNullOrEmpty(_masterLocale))
+                stackObj["master_locale"] = _masterLocale;
+
+            var stackRequest = new { stack = stackObj };
+            var mode = GetSerializationMode();
+            WriteObjectWithBothEngines(stackRequest, mode, GetSerializerSettings(), GetStjOptions(), out byte[] content);
+            ByteContent = content;
         }
         #endregion
     }

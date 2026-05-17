@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
+using System.Text.Json;
+using Contentstack.Management.Core.Enums;
 
 namespace Contentstack.Management.Core.Services.User
 {
@@ -12,7 +14,7 @@ namespace Contentstack.Management.Core.Services.User
         private readonly string _password;
         private readonly string _confirmPassword;
 
-        internal ResetPasswordService(JsonSerializer serializer, string resetPasswordToken, string password, string confirmPassword) : base(serializer)
+        internal ResetPasswordService(Newtonsoft.Json.JsonSerializer serializer, string resetPasswordToken, string password, string confirmPassword, JsonSerializerOptions stjOptions = null, SerializationMode serializationMode = SerializationMode.Newtonsoft) : base(serializer, stjOptions: stjOptions, serializationMode: serializationMode)
         {
             if (string.IsNullOrEmpty(resetPasswordToken))
             {
@@ -36,24 +38,19 @@ namespace Contentstack.Management.Core.Services.User
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            var resetPasswordRequest = new
             {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-                writer.WriteStartObject();
-                writer.WritePropertyName("user");
-                    writer.WriteStartObject();
-                    writer.WritePropertyName("reset_password_token");
-                    writer.WriteValue(_resetPasswordToken);
-                    writer.WritePropertyName("password");
-                    writer.WriteValue(_password);
-                    writer.WritePropertyName("password_confirmation");
-                    writer.WriteValue(_confirmPassword);
-                    writer.WriteEndObject();
-                writer.WriteEndObject();
+                user = new
+                {
+                    reset_password_token = _resetPasswordToken,
+                    password = _password,
+                    password_confirmation = _confirmPassword
+                }
+            };
 
-                string snippet = stringWriter.ToString();
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
-            }
+            var mode = GetSerializationMode();
+            WriteObjectWithBothEngines(resetPasswordRequest, mode, GetSerializerSettings(), GetStjOptions(), out byte[] content);
+            this.ByteContent = content;
         }
     }
 }

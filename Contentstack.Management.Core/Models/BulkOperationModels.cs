@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -255,36 +256,42 @@ namespace Contentstack.Management.Core.Models
         /// Gets or sets the workflow stage UID.
         /// </summary>
         [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the comment.
         /// </summary>
         [JsonProperty(propertyName: "comment")]
+        [JsonPropertyName("comment")]
         public string Comment { get; set; }
 
         /// <summary>
         /// Gets or sets the due date.
         /// </summary>
         [JsonProperty(propertyName: "due_date")]
+        [JsonPropertyName("due_date")]
         public string DueDate { get; set; }
 
         /// <summary>
         /// Gets or sets whether to notify.
         /// </summary>
         [JsonProperty(propertyName: "notify")]
+        [JsonPropertyName("notify")]
         public bool Notify { get; set; }
 
         /// <summary>
         /// Gets or sets the list of assigned users.
         /// </summary>
         [JsonProperty(propertyName: "assigned_to")]
+        [JsonPropertyName("assigned_to")]
         public List<BulkWorkflowUser> AssignedTo { get; set; }
 
         /// <summary>
         /// Gets or sets the list of assigned roles.
         /// </summary>
         [JsonProperty(propertyName: "assigned_by_roles")]
+        [JsonPropertyName("assigned_by_roles")]
         public List<BulkWorkflowRole> AssignedByRoles { get; set; }
 
         /// <summary>
@@ -315,18 +322,21 @@ namespace Contentstack.Management.Core.Models
         /// Gets or sets the user UID.
         /// </summary>
         [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the user name.
         /// </summary>
         [JsonProperty(propertyName: "name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the user email.
         /// </summary>
         [JsonProperty(propertyName: "email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
     }
 
@@ -339,12 +349,14 @@ namespace Contentstack.Management.Core.Models
         /// Gets or sets the role UID.
         /// </summary>
         [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         /// <summary>
         /// Gets or sets the role name.
         /// </summary>
         [JsonProperty(propertyName: "name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
     }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core
 {
@@ -20,7 +22,8 @@ namespace Contentstack.Management.Core
         Dictionary<string, string> _headers;
         HashSet<string> _headerNamesSet;
         private readonly HttpResponseMessage _response;
-        private readonly JsonSerializer _serializer;
+        private readonly Newtonsoft.Json.JsonSerializer _serializer;
+        private readonly JsonSerializerOptions _stjOptions;
 
         #region Public
         /// <summary>
@@ -126,10 +129,11 @@ namespace Contentstack.Management.Core
         }
         #endregion
 
-        internal ContentstackResponse(HttpResponseMessage response, JsonSerializer serializer)
+        internal ContentstackResponse(HttpResponseMessage response, Newtonsoft.Json.JsonSerializer serializer, JsonSerializerOptions stjOptions = null)
         {
             _response = response;
             _serializer = serializer;
+            _stjOptions = stjOptions ?? new JsonSerializerOptions();
 
             this.StatusCode = response.StatusCode;
             this.IsSuccessStatusCode = response.IsSuccessStatusCode;
@@ -173,6 +177,28 @@ namespace Contentstack.Management.Core
             ThrowIfDisposed();
             JObject jObject = OpenJObjectResponse();
             return jObject.ToObject<TResponse>(_serializer);
+        }
+
+        /// <summary>
+        /// System.Text.Json JsonObject format response.
+        /// </summary>
+        /// <returns>The JsonObject.</returns>
+        public JsonObject OpenJsonObjectResponse()
+        {
+            ThrowIfDisposed();
+            return JsonNode.Parse(OpenResponse())?.AsObject();
+        }
+
+        /// <summary>
+        /// Type response to serialize the response using System.Text.Json.
+        /// </summary>
+        /// <typeparam name="TResponse">The type to serialize the response into.</typeparam>
+        /// <returns></returns>
+        public TResponse OpenTResponseStj<TResponse>()
+        {
+            ThrowIfDisposed();
+            string json = OpenResponse();
+            return System.Text.Json.JsonSerializer.Deserialize<TResponse>(json, _stjOptions);
         }
 
 

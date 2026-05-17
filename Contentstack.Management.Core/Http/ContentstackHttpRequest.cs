@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
@@ -8,6 +8,7 @@ using System.Net;
 using System.IO;
 using Newtonsoft.Json;
 using Contentstack.Management.Core.Exceptions;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Http
 {
@@ -17,7 +18,8 @@ namespace Contentstack.Management.Core.Http
         private bool _disposed = false;
         private readonly HttpClient _httpClient;
         private readonly HttpRequestMessage _request;
-        private readonly JsonSerializer _serializer;
+        private readonly Newtonsoft.Json.JsonSerializer _serializer;
+        private readonly JsonSerializerOptions _stjOptions;
         #endregion
 
         #region Public
@@ -54,10 +56,11 @@ namespace Contentstack.Management.Core.Http
         #endregion
 
         #region Constructor
-        internal ContentstackHttpRequest(HttpClient httpClient, JsonSerializer serializer)
+        internal ContentstackHttpRequest(HttpClient httpClient, Newtonsoft.Json.JsonSerializer serializer, JsonSerializerOptions stjOptions = null)
         {
             _httpClient = httpClient;
             _serializer = serializer;
+            _stjOptions = stjOptions ?? new JsonSerializerOptions();
             _request = new HttpRequestMessage();
         }
         #endregion
@@ -126,14 +129,14 @@ namespace Contentstack.Management.Core.Http
 
                 if (responseMessage.StatusCode >= HttpStatusCode.Ambiguous &&
                     responseMessage.StatusCode < HttpStatusCode.BadRequest)
-                    return new ContentstackResponse(responseMessage, _serializer);
+                    return new ContentstackResponse(responseMessage, _serializer, _stjOptions);
 
                 if (!responseMessage.IsSuccessStatusCode)
                 {
                     throw ContentstackErrorException.CreateException(responseMessage);
                 }
 
-                return new ContentstackResponse(responseMessage, _serializer);
+                return new ContentstackResponse(responseMessage, _serializer, _stjOptions);
             }
             catch (HttpRequestException httpException)
             {

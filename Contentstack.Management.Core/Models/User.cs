@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Contentstack.Management.Core.Services.User;
 
 namespace Contentstack.Management.Core.Models
@@ -36,7 +36,7 @@ namespace Contentstack.Management.Core.Models
         {
             _client.ThrowIfAlreadyLoggedIn();
 
-            var forgotPassword = new ForgotPasswordService(_client.serializer, email);
+            var forgotPassword = new ForgotPasswordService(_client.serializer, email, _client.SerializerOptions, _client.SerializationMode);
 
             return _client.InvokeSync(forgotPassword);
         }
@@ -57,7 +57,7 @@ namespace Contentstack.Management.Core.Models
         {
             _client.ThrowIfAlreadyLoggedIn();
 
-            var forgotPassword = new ForgotPasswordService(_client.serializer, email);
+            var forgotPassword = new ForgotPasswordService(_client.serializer, email, _client.SerializerOptions, _client.SerializationMode);
 
             return _client.InvokeAsync<ForgotPasswordService, ContentstackResponse>(forgotPassword);
         }
@@ -80,7 +80,7 @@ namespace Contentstack.Management.Core.Models
         {
             _client.ThrowIfAlreadyLoggedIn();
 
-            var resetPassword = new ResetPasswordService(_client.serializer, resetToken, password, confirmPassword);
+            var resetPassword = new ResetPasswordService(_client.serializer, resetToken, password, confirmPassword, _client.SerializerOptions, _client.SerializationMode);
 
             return _client.InvokeSync(resetPassword);
         }
@@ -103,7 +103,7 @@ namespace Contentstack.Management.Core.Models
         {
             _client.ThrowIfAlreadyLoggedIn();
 
-            var resetPassword = new ResetPasswordService(_client.serializer, resetToken, password, confirmPassword);
+            var resetPassword = new ResetPasswordService(_client.serializer, resetToken, password, confirmPassword, _client.SerializerOptions, _client.SerializationMode);
 
             return _client.InvokeAsync<ResetPasswordService, ContentstackResponse>(resetPassword);
         }

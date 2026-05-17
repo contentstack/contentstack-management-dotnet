@@ -55,6 +55,7 @@
     <Folder Include="Attributes\" />
     <Folder Include="Services\" />
     <Folder Include="Services\User\" />
+    <Folder Include="Services\Serialization\" />
     <Folder Include="Runtime\" />
     <Folder Include="Runtime\Pipeline\" />
     <Folder Include="Runtime\Contexts\" />
@@ -68,11 +69,13 @@
     <Folder Include="Models\CustomExtension\" />
     <Folder Include="Models\Token\" />
     <Folder Include="Runtime\Pipeline\RertyHandler\" />
+    <Folder Include="Enums\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Otp.NET" Version="1.4.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 </Project>

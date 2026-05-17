@@ -340,7 +340,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.serializer, this);
+            var service = new StackSettingsService(client.serializer, this, stjOptions: client.SerializerOptions, serializationMode: client.SerializationMode);
 
             return client.InvokeSync(service);
         }
@@ -361,7 +361,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.serializer, this);
+            var service = new StackSettingsService(client.serializer, this, stjOptions: client.SerializerOptions, serializationMode: client.SerializationMode);
 
             return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
@@ -387,7 +387,7 @@ namespace Contentstack.Management.Core.Models
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
                 Rte = new Dictionary<string, object>()
-            });
+            }, client.SerializerOptions, client.SerializationMode);
 
             return client.InvokeSync(service);
         }
@@ -413,7 +413,7 @@ namespace Contentstack.Management.Core.Models
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
                 Rte = new Dictionary<string, object>()
-            });
+            }, client.SerializerOptions, client.SerializationMode);
 
             return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
@@ -438,7 +438,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("settings", CSConstants.StackSettingsRequired);
             }
 
-            var service = new StackSettingsService(client.serializer, this, "POST", settings);
+            var service = new StackSettingsService(client.serializer, this, "POST", settings, client.SerializerOptions, client.SerializationMode);
 
             return client.InvokeSync(service);
         }
@@ -462,7 +462,7 @@ namespace Contentstack.Management.Core.Models
             {
                 throw new ArgumentNullException("settings", CSConstants.StackSettingsRequired);
             }
-            var service = new StackSettingsService(client.serializer, this, "POST", settings);
+            var service = new StackSettingsService(client.serializer, this, "POST", settings, client.SerializerOptions, client.SerializationMode);
 
             return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }

@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 namespace Contentstack.Management.Core.Models
 {
     [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
@@ -23,10 +24,13 @@ namespace Contentstack.Management.Core.Models
     public class AssignToUser
     {
         [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
         [JsonProperty(propertyName: "name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
         [JsonProperty(propertyName: "email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
     }
 

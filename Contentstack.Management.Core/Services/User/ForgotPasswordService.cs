@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
+using System.Text.Json;
+using Contentstack.Management.Core.Enums;
 
 namespace Contentstack.Management.Core.Services.User
 {
@@ -10,7 +12,7 @@ namespace Contentstack.Management.Core.Services.User
     {
         private readonly string _email;
 
-        internal ForgotPasswordService(JsonSerializer serializer, string email): base (serializer)
+        internal ForgotPasswordService(Newtonsoft.Json.JsonSerializer serializer, string email, JsonSerializerOptions stjOptions = null, SerializationMode serializationMode = SerializationMode.Newtonsoft): base (serializer, stjOptions: stjOptions, serializationMode: serializationMode)
         {
             if (string.IsNullOrEmpty(email))
             {
@@ -24,20 +26,17 @@ namespace Contentstack.Management.Core.Services.User
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            var forgotPasswordRequest = new
             {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-                writer.WriteStartObject();
-                writer.WritePropertyName("user");
-                    writer.WriteStartObject();
-                    writer.WritePropertyName("email");
-                    writer.WriteValue(_email);
-                    writer.WriteEndObject();
-                writer.WriteEndObject();
+                user = new
+                {
+                    email = _email
+                }
+            };
 
-                string snippet = stringWriter.ToString();
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
-            }
+            var mode = GetSerializationMode();
+            WriteObjectWithBothEngines(forgotPasswordRequest, mode, GetSerializerSettings(), GetStjOptions(), out byte[] content);
+            this.ByteContent = content;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Contentstack.Management.Core;
 using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
@@ -79,6 +80,37 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             {
                 var jObject = OpenJObjectResponse();
                 return jObject.ToObject<TResponse>();
+            }
+            catch
+            {
+                return default(TResponse);
+            }
+        }
+
+        public JsonObject OpenJsonObjectResponse()
+        {
+            if (string.IsNullOrEmpty(_responseContent))
+                return new JsonObject();
+            
+            try
+            {
+                return JsonNode.Parse(_responseContent)?.AsObject() ?? new JsonObject();
+            }
+            catch
+            {
+                // Return empty JsonObject if parsing fails
+                return new JsonObject();
+            }
+        }
+
+        public TResponse OpenTResponseStj<TResponse>()
+        {
+            if (string.IsNullOrEmpty(_responseContent))
+                return default(TResponse);
+
+            try
+            {
+                return System.Text.Json.JsonSerializer.Deserialize<TResponse>(_responseContent);
             }
             catch
             {

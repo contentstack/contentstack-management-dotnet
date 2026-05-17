@@ -19,6 +19,9 @@ using Contentstack.Management.Core.Queryable;
 using Environment = System.Environment;
 using System.Collections.Generic;
 using Contentstack.Management.Core.Runtime.Pipeline.RetryHandler;
+using System.Text.Json;
+using Contentstack.Management.Core.Enums;
+using Contentstack.Management.Core.Services.Serialization;
 
 namespace Contentstack.Management.Core
 {
@@ -29,7 +32,9 @@ namespace Contentstack.Management.Core
     {
         internal ContentstackRuntimePipeline ContentstackPipeline { get; set; }
         internal ContentstackClientOptions contentstackOptions;
-        internal JsonSerializer serializer => JsonSerializer.Create(SerializerSettings);
+        internal Newtonsoft.Json.JsonSerializer serializer => Newtonsoft.Json.JsonSerializer.Create(SerializerSettings);
+        internal ISerializationEngine SerializationEngine => SerializationEngineFactory.Create(
+            SerializationMode, SerializerSettings, SerializerOptions);
 
         #region Private
         private HttpClient _httpClient;
@@ -52,6 +57,16 @@ namespace Contentstack.Management.Core
         /// Get and Set method for deserialization.
         /// </summary>
         public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings();
+
+        /// <summary>
+        /// Get and Set method for System.Text.Json serialization options.
+        /// </summary>
+        public JsonSerializerOptions SerializerOptions { get; set; } = new JsonSerializerOptions();
+
+        /// <summary>
+        /// Get and Set method for controlling which serialization engine to use.
+        /// </summary>
+        public SerializationMode SerializationMode { get; set; } = SerializationMode.Newtonsoft;
 
         #endregion
 
@@ -372,7 +387,7 @@ namespace Contentstack.Management.Core
         public ContentstackResponse Login(ICredentials credentials, string token = null, string mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
-            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret);
+            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret, SerializerOptions, SerializationMode);
 
             return InvokeSync(Login);
         }
@@ -394,7 +409,7 @@ namespace Contentstack.Management.Core
         public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string token = null, string mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
-            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret);
+            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret, SerializerOptions, SerializationMode);
 
             return InvokeAsync<LoginService, ContentstackResponse>(Login);
         }
@@ -434,7 +449,7 @@ namespace Contentstack.Management.Core
         public ContentstackResponse Logout(string authtoken = null)
         {
             string token = authtoken ?? contentstackOptions.Authtoken;
-            LogoutService logout = new LogoutService(serializer, token);
+            LogoutService logout = new LogoutService(serializer, token, SerializerOptions, SerializationMode);
 
             return InvokeSync(logout);
         }
@@ -452,7 +467,7 @@ namespace Contentstack.Management.Core
         public Task<ContentstackResponse> LogoutAsync(string authtoken = null)
         {
             string token = authtoken ?? contentstackOptions.Authtoken;
-            LogoutService logout = new LogoutService(serializer, token);
+            LogoutService logout = new LogoutService(serializer, token, SerializerOptions, SerializationMode);
 
             return InvokeAsync<LogoutService, ContentstackResponse>(logout);
         }
@@ -677,7 +692,7 @@ namespace Contentstack.Management.Core
         {
             ThrowIfNotLoggedIn();
 
-            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection);
+            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection, SerializerOptions, SerializationMode);
 
             return InvokeSync(getUser);
         }
@@ -696,7 +711,7 @@ namespace Contentstack.Management.Core
         {
             ThrowIfNotLoggedIn();
 
-            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection);
+            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection, SerializerOptions, SerializationMode);
 
             return InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
         }

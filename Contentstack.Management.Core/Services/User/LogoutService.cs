@@ -1,6 +1,8 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
+using System.Text.Json;
+using Contentstack.Management.Core.Enums;
 
 namespace Contentstack.Management.Core.Services.User
 {
@@ -9,7 +11,7 @@ namespace Contentstack.Management.Core.Services.User
         private readonly string _authtoken;
 
         #region Constructor
-        public LogoutService(JsonSerializer serializer, string authtoken): base(serializer)
+        public LogoutService(Newtonsoft.Json.JsonSerializer serializer, string authtoken, JsonSerializerOptions stjOptions = null, SerializationMode serializationMode = SerializationMode.Newtonsoft): base(serializer, stjOptions: stjOptions, serializationMode: serializationMode)
         {
             this.HttpMethod = "DELETE";
             this.ResourcePath = "user-session";

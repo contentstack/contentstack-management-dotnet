@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using Contentstack.Management.Core.Models;
 using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
+using System.Text.Json;
+using Contentstack.Management.Core.Enums;
 
 namespace Contentstack.Management.Core.Services.Stack
 {
@@ -13,7 +15,7 @@ namespace Contentstack.Management.Core.Services.Stack
 
         private readonly StackSettings _settings;
 
-        internal StackSettingsService(JsonSerializer serializer, Core.Models.Stack stack, string method = "GET", StackSettings settings = null) : base(serializer, stack)
+        internal StackSettingsService(Newtonsoft.Json.JsonSerializer serializer, Core.Models.Stack stack, string method = "GET", StackSettings settings = null, JsonSerializerOptions stjOptions = null, SerializationMode serializationMode = SerializationMode.Newtonsoft) : base(serializer, stack, stjOptions: stjOptions, serializationMode: serializationMode)
         {
             if (stack.APIKey == null)
             {
@@ -29,12 +31,13 @@ namespace Contentstack.Management.Core.Services.Stack
             switch (HttpMethod)
             {
                 case "POST":
-                    string snippet = $"{{\"stack_settings\":{JsonConvert.SerializeObject(_settings)}}}";
-                    ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+                    var wrapper = new { stack_settings = _settings };
+                    var mode = GetSerializationMode();
+                    WriteObjectWithBothEngines(wrapper, mode, GetSerializerSettings(), GetStjOptions(), out byte[] content);
+                    ByteContent = content;
                     break;
                 default:
                     break;
-
             }
         }
         #endregion
