@@ -1,37 +1,5 @@
 # Changelog
 
-## [v0.11.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.11.0-beta.1)
-### 🚀 Features
-- **System.Text.Json Migration Support (Phase 1)**
-  - Added `SerializationMode` enum with support for `Newtonsoft`, `SystemTextJson`, and `Auto` modes
-  - Implemented serialization abstraction layer with `ISerializationEngine` interface
-  - Added `NewtonsoftSerializationEngine` and `SystemTextJsonSerializationEngine` implementations
-  - Introduced STJ-specific response methods: `OpenJsonObjectResponse()` and `OpenTResponseStj<T>()`
-  - Added dual JSON attribute support: existing `[JsonProperty]` + new `[JsonPropertyName]` 
-  - Implemented comprehensive STJ JSON navigation and deserialization patterns
-### 🔧 Technical Improvements  
-- **Enhanced JSON Handling**
-  - Added `JsonConversionExtensions` for seamless JObject ↔ JsonObject conversion
-  - Implemented `DualJsonWriter` with `Utf8JsonWriterInfo` helper for dynamic JSON operations
-  - Fixed ambiguous `JsonSerializer` references throughout codebase
-  - Enhanced `IResponse` interface with STJ-specific methods
-### 🏗️ Architecture Changes
-- **Serialization Engine Factory**
-  - Added `SerializationEngineFactory` for dynamic serialization engine selection
-  - Integrated serialization mode detection across all service layers
-  - Updated all model constructors to accept both Newtonsoft and STJ serializers
-### 📦 Dependencies
-- Added `System.Text.Json` NuGet package dependency
-- Maintained backward compatibility with existing `Newtonsoft.Json` usage
-### ⚠️ Breaking Changes
-- **SerializationMode Selection**: STJ usage requires explicit `SerializationMode.SystemTextJson` configuration
-- **Constructor Changes**: Service classes now require serializer parameter in constructors
-- **Response Method Additions**: New STJ-specific methods added to `IResponse` interface
-### 🧪 Migration Notes
-- **Backward Compatible**: Existing Newtonsoft.Json code continues to work unchanged
-- **Incremental Adoption**: Teams can migrate module-by-module using `SerializationMode`
-- **Testing Required**: Validate serialization behavior when switching modes
-
 
 ## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
  - Feat
