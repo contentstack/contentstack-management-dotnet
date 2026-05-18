@@ -1,7 +1,8 @@
 using System;
 using System.Net;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
@@ -29,7 +30,6 @@ namespace Contentstack.Management.Core
     {
         internal ContentstackRuntimePipeline ContentstackPipeline { get; set; }
         internal ContentstackClientOptions contentstackOptions;
-        internal JsonSerializer serializer => JsonSerializer.Create(SerializerSettings);
 
         #region Private
         private HttpClient _httpClient;
@@ -39,7 +39,7 @@ namespace Contentstack.Management.Core
         private string xUserAgent => $"contentstack-management-dotnet/{Version}";
         
         // OAuth token storage
-        private readonly Dictionary<string, OAuthTokens> _oauthTokens = new Dictionary<string, OAuthTokens>();
+        // private readonly Dictionary<string, OAuthTokens> _oauthTokens = new Dictionary<string, OAuthTokens>();
         
         private bool _isRefreshingToken = false;
         #endregion
@@ -51,7 +51,13 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// Get and Set method for deserialization.
         /// </summary>
-        public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings();
+        public JsonSerializerOptions SerializerOptions { get; set; } = new JsonSerializerOptions();
+
+        /// <summary>
+        /// Compatibility property for models that haven't been migrated yet.
+        /// Returns SerializerOptions for backward compatibility.
+        /// </summary>
+        internal JsonSerializerOptions serializer => SerializerOptions;
 
         #endregion
 
@@ -190,18 +196,13 @@ namespace Contentstack.Management.Core
                 }
             }
 
-            SerializerSettings.DateParseHandling = DateParseHandling.None;
-            SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-            SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            // Configure System.Text.Json options
+            SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            SerializerOptions.PropertyNameCaseInsensitive = true;
 
-            foreach (Type t in CsmJsonConverterAttribute.GetCustomAttribute(typeof(CsmJsonConverterAttribute)))
-            {
-                SerializerSettings.Converters.Add((JsonConverter)Activator.CreateInstance(t));
-            }
-            SerializerSettings.Converters.Add(new NodeJsonConverter());
-            SerializerSettings.Converters.Add(new TextNodeJsonConverter());
-            SerializerSettings.Converters.Add(new FieldJsonConverter());
+            // SerializerOptions.Converters.Add(new FieldJsonConverter()); // Excluded for now
+            SerializerOptions.Converters.Add(new NodeJsonConverter());
+            SerializerOptions.Converters.Add(new TextNodeJsonConverter());
         }
 
         protected void BuildPipeline()
@@ -251,11 +252,13 @@ namespace Contentstack.Management.Core
         {
             ThrowIfDisposed();
 
+            /*
             // Check and refresh OAuth tokens if needed before making API calls
             if (contentstackOptions.IsOAuthToken && !string.IsNullOrEmpty(contentstackOptions.Authtoken))
             {
                 await EnsureOAuthTokenIsValidAsync();
             }
+            */
 
             ExecutionContext context = new ExecutionContext(
               new RequestContext()
@@ -304,6 +307,7 @@ namespace Contentstack.Management.Core
         }
         #endregion
 
+        /*
         /// <summary>
         /// <see cref="Models.User" /> session consists of calls that will help you to update user of your Contentstack account.
         /// </summary>
@@ -318,7 +322,9 @@ namespace Contentstack.Management.Core
         {
             return new User(this);
         }
+        */
 
+        /*
         /// <summary>
         /// <see cref="Models.Organization" /> the top-level entity in the hierarchy of Contentstack, consisting of stacks and stack resources, and users.
         /// <see cref="Models.Organization" />  allows easy management of projects as well as users within the Organization.
@@ -335,7 +341,9 @@ namespace Contentstack.Management.Core
         {
             return new Organization(this, uid);
         }
+        */
 
+        /*
         /// <summary>
         /// <see cref="Models.Stack" /> is a space that stores the content of a project (a web or mobile property).
         /// Within a stack, you can create content structures, content entries, users, etc. related to the project. 
@@ -353,6 +361,7 @@ namespace Contentstack.Management.Core
         {
             return new Stack(this, apiKey, managementToken, branchUid);
         }
+        */
 
         #region LoginMethod
         /// <summary>
@@ -372,7 +381,7 @@ namespace Contentstack.Management.Core
         public ContentstackResponse Login(ICredentials credentials, string token = null, string mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
-            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret);
+            LoginService Login = new LoginService(SerializerOptions, credentials, token, mfaSecret);
 
             return InvokeSync(Login);
         }
@@ -394,7 +403,7 @@ namespace Contentstack.Management.Core
         public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string token = null, string mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
-            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret);
+            LoginService Login = new LoginService(SerializerOptions, credentials, token, mfaSecret);
 
             return InvokeAsync<LoginService, ContentstackResponse>(Login);
         }
@@ -434,7 +443,7 @@ namespace Contentstack.Management.Core
         public ContentstackResponse Logout(string authtoken = null)
         {
             string token = authtoken ?? contentstackOptions.Authtoken;
-            LogoutService logout = new LogoutService(serializer, token);
+            LogoutService logout = new LogoutService(SerializerOptions, token);
 
             return InvokeSync(logout);
         }
@@ -452,12 +461,13 @@ namespace Contentstack.Management.Core
         public Task<ContentstackResponse> LogoutAsync(string authtoken = null)
         {
             string token = authtoken ?? contentstackOptions.Authtoken;
-            LogoutService logout = new LogoutService(serializer, token);
+            LogoutService logout = new LogoutService(SerializerOptions, token);
 
             return InvokeAsync<LogoutService, ContentstackResponse>(logout);
         }
         #endregion
 
+        /*
         #region OAuth Methods
         /// <summary>
         /// Creates an OAuth handler for OAuth 2.0 authentication flow.
@@ -490,7 +500,9 @@ namespace Contentstack.Management.Core
 
             return new OAuthHandler(this, options);
         }
+        */
 
+        /*
         /// <summary>
         /// Creates an OAuth handler with default OAuth options.
         /// Uses the default AppId, ClientId, and RedirectUri.
@@ -510,7 +522,9 @@ namespace Contentstack.Management.Core
             var defaultOptions = new OAuthOptions();
             return new OAuthHandler(this, defaultOptions);
         }
+        */
 
+        /*
         /// <summary>
         /// Sets OAuth tokens for the client to use for authenticated requests.
         /// This method is called internally by the OAuthHandler after successful token exchange or refresh.
@@ -662,6 +676,7 @@ namespace Contentstack.Management.Core
             _oauthTokens.Clear();
         }
         #endregion
+        */
 
         /// <summary>
         /// The Get user call returns comprehensive information of an existing user account.
@@ -677,7 +692,7 @@ namespace Contentstack.Management.Core
         {
             ThrowIfNotLoggedIn();
 
-            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection);
+            GetLoggedInUserService getUser = new GetLoggedInUserService(SerializerOptions, collection);
 
             return InvokeSync(getUser);
         }
@@ -696,11 +711,12 @@ namespace Contentstack.Management.Core
         {
             ThrowIfNotLoggedIn();
 
-            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection);
+            GetLoggedInUserService getUser = new GetLoggedInUserService(SerializerOptions, collection);
 
             return InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
         }
 
+        /*
         /// <summary>
         /// Ensures that the current OAuth token is valid and refreshes it if needed.
         /// This method is called before each API request to automatically handle token refresh.
@@ -768,6 +784,7 @@ namespace Contentstack.Management.Core
                     $"OAuth token validation failed: {ex.Message}", ex);
             }
         }
+        */
     }
 }
 

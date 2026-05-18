@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using Contentstack.Management.Core;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
@@ -47,6 +47,22 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         public bool IsHeaderPresent(string headerName)
         {
             return _headers.ContainsKey(headerName);
+        }
+
+        public JsonObject OpenJsonObjectResponse()
+        {
+            if (string.IsNullOrEmpty(_responseContent))
+                return new JsonObject();
+            
+            try
+            {
+                return JsonNode.Parse(_responseContent)!.AsObject();
+            }
+            catch
+            {
+                // Return empty JsonObject if parsing fails
+                return new JsonObject();
+            }
         }
 
         public JObject OpenJObjectResponse()

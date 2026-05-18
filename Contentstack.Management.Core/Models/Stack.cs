@@ -5,7 +5,7 @@ using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Stack;
 using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Models;
-using Contentstack.Management.Core.Models.Token;
+// using Contentstack.Management.Core.Models.Token; // Excluded for now
 
 namespace Contentstack.Management.Core.Models
 {
@@ -602,6 +602,8 @@ namespace Contentstack.Management.Core.Models
             return new Locale(this, code);
         }
 
+        /*
+        // The following resource methods are temporarily commented out as they reference excluded model types
         /// <summary>
         /// <see cref="Models.ContentType" /> defines the structure or schema of a page or a section of your web or mobile property.
         /// To create content for your application, you are required to first create a content type, and then create entries using the content type. 
@@ -782,6 +784,7 @@ namespace Contentstack.Management.Core.Models
 
             return new ManagementToken(this, uid);
         }
+        */
 
         /// <summary>
         /// A <see cref="Models.Role" /> collection of permissions that will be applicable to all the users who are assigned this role.
@@ -954,6 +957,7 @@ namespace Contentstack.Management.Core.Models
 
             return new BulkOperation(this);
         }
+        // End of temporarily commented resource methods
         #endregion
 
         #region Throw Error

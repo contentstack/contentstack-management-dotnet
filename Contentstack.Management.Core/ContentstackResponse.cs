@@ -4,7 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core
@@ -20,7 +21,7 @@ namespace Contentstack.Management.Core
         Dictionary<string, string> _headers;
         HashSet<string> _headerNamesSet;
         private readonly HttpResponseMessage _response;
-        private readonly JsonSerializer _serializer;
+        private readonly JsonSerializerOptions _serializerOptions;
 
         #region Public
         /// <summary>
@@ -126,10 +127,10 @@ namespace Contentstack.Management.Core
         }
         #endregion
 
-        internal ContentstackResponse(HttpResponseMessage response, JsonSerializer serializer)
+        internal ContentstackResponse(HttpResponseMessage response, JsonSerializerOptions serializerOptions)
         {
             _response = response;
-            _serializer = serializer;
+            _serializerOptions = serializerOptions;
 
             this.StatusCode = response.StatusCode;
             this.IsSuccessStatusCode = response.IsSuccessStatusCode;
@@ -146,7 +147,18 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// Json Object format response.
         /// </summary>
-        /// <returns>The JObject.</returns>
+        /// <returns>The JsonObject.</returns>
+        public JsonObject OpenJsonObjectResponse()
+        {
+            ThrowIfDisposed();
+            return JsonNode.Parse(OpenResponse())!.AsObject();
+        }
+
+        /// <summary>
+        /// Backward compatibility method for non-migrated models. Will be removed in future versions.
+        /// </summary>
+        /// <returns>The JObject (Newtonsoft.Json).</returns>
+        [Obsolete("Use OpenJsonObjectResponse() instead. This method will be removed in future versions.")]
         public JObject OpenJObjectResponse()
         {
             ThrowIfDisposed();
@@ -171,8 +183,8 @@ namespace Contentstack.Management.Core
         public TResponse OpenTResponse<TResponse>()
         {
             ThrowIfDisposed();
-            JObject jObject = OpenJObjectResponse();
-            return jObject.ToObject<TResponse>(_serializer);
+            string json = OpenResponse();
+            return JsonSerializer.Deserialize<TResponse>(json, _serializerOptions);
         }
 
 
