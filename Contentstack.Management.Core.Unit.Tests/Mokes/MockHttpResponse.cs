@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using Contentstack.Management.Core;
-using Newtonsoft.Json.Linq;
 using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes

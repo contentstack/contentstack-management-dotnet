@@ -154,6 +154,9 @@
     
     <!-- Mock handlers that use old API -->
     <Compile Remove="Mokes\MockHttpHandlerWithRetries.cs" />
+    
+    <!-- MockHttpResponse uses Newtonsoft.Json for obsolete JObject method -->
+    <Compile Remove="Mokes\MockHttpResponse.cs" />
   </ItemGroup>
 
   <ItemGroup>
