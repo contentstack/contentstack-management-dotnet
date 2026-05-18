@@ -8,7 +8,7 @@
       <TargetFrameworks>netstandard2.0</TargetFrameworks>
     </PropertyGroup>
     <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <Title>Contentstack Management</Title>
     <Authors>Contentstack</Authors>
@@ -73,6 +73,73 @@
     <PackageReference Include="Otp.NET" Version="1.4.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <!-- Temporary backward compatibility - will be removed after full migration -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <!-- Temporarily exclude non-core models that reference the old Newtonsoft serializer -->
+    <!-- These will be migrated to System.Text.Json later -->
+    <Compile Remove="Models\Asset.cs" />
+    <Compile Remove="Models\AssetModel.cs" />
+    <Compile Remove="Models\AuditLog.cs" />
+    <Compile Remove="Models\BaseModel.cs" />
+    <Compile Remove="Models\BulkOperation.cs" />
+    <Compile Remove="Models\ContentModelling.cs" />
+    <Compile Remove="Models\ContentType.cs" />
+    <Compile Remove="Models\Entry.cs" />
+    <Compile Remove="Models\EntryVariant.cs" />
+    <Compile Remove="Models\Environment.cs" />
+    <Compile Remove="Models\Extension.cs" />
+    <Compile Remove="Models\Folder.cs" />
+    <Compile Remove="Models\GlobalField.cs" />
+    <Compile Remove="Models\Label.cs" />
+    <Compile Remove="Models\Locale.cs" />
+    <Compile Remove="Models\Organization.cs" />
+    <Compile Remove="Models\PublishQueue.cs" />
+    <Compile Remove="Models\PublishRule.cs" />
+    <Compile Remove="Models\Release.cs" />
+    <Compile Remove="Models\ReleaseItem.cs" />
+    <Compile Remove="Models\Role.cs" />
+    <Compile Remove="Models\Taxonomy.cs" />
+    <Compile Remove="Models\Term.cs" />
+    <Compile Remove="Models\User.cs" />
+    <Compile Remove="Models\VariantGroup.cs" />
+    <Compile Remove="Models\Version.cs" />
+    <Compile Remove="Models\Webhook.cs" />
+    <Compile Remove="Models\Workflow.cs" />
+    <Compile Remove="Models\CustomExtension\**\*.cs" />
+    <Compile Remove="Models\Fields\**\*.cs" />
+    <Compile Remove="Models\Token\**\*.cs" />
+    
+    <!-- Temporarily exclude non-core services that haven't been migrated yet -->
+    <Compile Remove="Services\DeleteReleaseItemService.cs" />
+    <Compile Remove="Services\QueryService.cs" />
+    <Compile Remove="Services\Models\**\*.cs" />
+    <Compile Remove="Services\OAuth\**\*.cs" />
+    <Compile Remove="Services\Stack\StackOwnershipService.cs" />
+    <Compile Remove="Services\Stack\StackShareService.cs" />
+    <Compile Remove="Services\Stack\UpdateUserRoleService.cs" />
+    <Compile Remove="Services\Organization\OrgRoles.cs" />
+    
+    <!-- Temporarily exclude services that depend on Stack -->
+    <Compile Remove="Services\Stack\**\*.cs" />
+    
+    <!-- Temporarily exclude OAuth handler -->
+    <Compile Remove="OAuthHandler.cs" />
+    
+    <!-- Temporarily exclude FieldJsonConverter as it depends on Models.Fields namespace -->
+    <Compile Remove="Utils\FieldJsonConverter.cs" />
+    
+    <!-- Temporarily exclude Stack.cs as it depends on many excluded model types -->
+    <Compile Remove="Models\Stack.cs" />
+    
+    <!-- Temporarily exclude Queryable classes that depend on Stack -->
+    <Compile Remove="Queryable\Query.cs" />
+    <!-- Keep ParameterCollection and QueryParamValue as they're needed by core services -->
+    
+    <!-- Temporarily exclude ContentstackClient methods that depend on excluded models -->
+    <!-- We'll need to comment out specific methods in ContentstackClient.cs -->
   </ItemGroup>
 </Project>

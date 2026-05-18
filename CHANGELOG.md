@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.11.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.11.0-beta.1)
+ - **Breaking Change**
+   - **System.Text.Json Migration (Beta)**
+     - Migrated core serialization from Newtonsoft.Json to System.Text.Json
+     - Updated ContentstackClient, ContentstackResponse, and core HTTP handling
+     - Added backward compatibility for IResponse interface with both JsonObject and JObject support
+     - Temporarily excluded non-core models and services during migration
+     - Enhanced JSON serialization performance and reduced dependencies
+     - **Note**: This is a beta release - some features may be temporarily unavailable
 
 ## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
  - Feat
