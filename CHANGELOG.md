@@ -1,6 +1,6 @@
 # Changelog
 
-## [v0.11.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.11.0-beta.1)
+## [v1.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.11.0-beta.1)
  - **Breaking Change**
    - **System.Text.Json Migration (Beta)**
      - Migrated core serialization from Newtonsoft.Json to System.Text.Json
