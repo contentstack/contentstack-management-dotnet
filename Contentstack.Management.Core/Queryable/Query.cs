@@ -13,7 +13,7 @@ namespace Contentstack.Management.Core.Queryable
         private readonly ParameterCollection _collection = new ParameterCollection();
         private readonly string _apiVersion;
 
-        internal Query(Stack stack, string resourcePath, string apiVersion = null)
+        internal Query(Stack stack, string resourcePath, string? apiVersion = null)
         {
             if(stack == null)
             {
