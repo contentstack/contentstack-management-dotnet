@@ -1,6 +1,17 @@
 # Changelog
 
-## [v1.0.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.11.0-beta.1)
+## [v1.0.0-beta.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.2)
+ - **System.Text.Json Migration Complete (Beta)**
+   - **✅ Core Modules STJ-Only**: Client, User, Organization, and Stack modules fully migrated
+   - **✅ Service Layer**: All User, Organization, Stack services converted to System.Text.Json
+   - **✅ Model Updates**: Updated constructors and service calls to use JsonSerializerOptions
+   - **✅ Response Handling**: Implemented OpenJsonObjectResponse() for STJ-based JSON parsing
+   - **✅ Backward Compatibility**: Non-migrated modules continue using Newtonsoft.Json
+   - **✅ Testing Infrastructure**: Comprehensive web application for STJ validation
+   - **Performance**: Improved JSON serialization performance and reduced memory footprint
+   - **Architecture**: Clean separation between STJ and Newtonsoft implementations
+
+## [v1.0.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.1)
  - **Breaking Change**
    - **System.Text.Json Migration (Beta)**
      - Migrated core serialization from Newtonsoft.Json to System.Text.Json
