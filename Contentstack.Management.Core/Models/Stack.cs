@@ -17,7 +17,7 @@ namespace Contentstack.Management.Core.Models
         public string BranchUid { get; private set; }
 
         #region Constructor
-        public Stack(ContentstackClient contentstackClient, string apiKey = null, string managementToken = null, string branchUid = null)
+        public Stack(ContentstackClient contentstackClient, string? apiKey = null, string? managementToken = null, string? branchUid = null)
         {
             client = contentstackClient;
             APIKey = apiKey;
@@ -39,7 +39,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse GetAll(ParameterCollection parameters = null)
+        public ContentstackResponse GetAll(ParameterCollection? parameters = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
@@ -61,7 +61,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> GetAllAsync(ParameterCollection parameters = null)
+        public Task<ContentstackResponse> GetAllAsync(ParameterCollection? parameters = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
@@ -83,7 +83,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse Fetch(ParameterCollection parameters = null)
+        public ContentstackResponse Fetch(ParameterCollection? parameters = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -104,7 +104,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> FetchAsync(ParameterCollection parameters = null)
+        public Task<ContentstackResponse> FetchAsync(ParameterCollection? parameters = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -173,7 +173,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse Create(string name, string masterLocale, string organisationUid, string description = null)
+        public ContentstackResponse Create(string name, string masterLocale, string organisationUid, string? description = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
@@ -201,7 +201,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> CreateAsync(string name, string masterLocale, string organisationUid, string description = null)
+        public Task<ContentstackResponse> CreateAsync(string name, string masterLocale, string organisationUid, string? description = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
@@ -229,7 +229,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse Update(string name, string description = null)
+        public ContentstackResponse Update(string name, string? description = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -255,7 +255,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> UpdateAsync(string name, string description = null)
+        public Task<ContentstackResponse> UpdateAsync(string name, string? description = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
