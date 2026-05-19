@@ -8,6 +8,7 @@ using System.Text.Json;
 using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Queryable;
 using System.Net.Http.Headers;
+using Contentstack.Management.Core.Models;
 
 namespace Contentstack.Management.Core.Services
 {
@@ -28,14 +29,14 @@ namespace Contentstack.Management.Core.Services
         #endregion
 
         #region Constructor
-        internal ContentstackService(JsonSerializerOptions serializerOptions, object stack = null, ParameterCollection collection = null)
+        internal ContentstackService(JsonSerializerOptions serializerOptions, Models.Stack stack = null, ParameterCollection collection = null)
         {
             if (serializerOptions == null)
             {
                 throw new ArgumentNullException("serializerOptions", CSConstants.JSONSerializerError);
             }
 
-            /*
+            // Restored Stack integration for STJ-only migration
             if (stack != null)
             {
                 if (!string.IsNullOrEmpty(stack.APIKey))
@@ -49,12 +50,11 @@ namespace Contentstack.Management.Core.Services
                 }
 
                 this.ManagementToken = stack.ManagementToken;
-            }else
+            }
+            else
             {
                 this.ManagementToken = null;
             }
-            */
-            // Temporarily disabled Stack integration
             
             this.collection = collection ?? new ParameterCollection();
             _serializerOptions = serializerOptions;

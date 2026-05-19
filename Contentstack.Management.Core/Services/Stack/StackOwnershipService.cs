@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
-using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
@@ -11,8 +9,8 @@ namespace Contentstack.Management.Core.Services.Stack
         private readonly string _email;
 
         #region Internal
-        internal StackOwnershipService(JsonSerializer serializer, Core.Models.Stack stack, string email)
-            : base(serializer, stack)
+        internal StackOwnershipService(Core.Models.Stack stack, string email, JsonSerializerOptions stjOptions = null)
+            : base(stjOptions ?? new JsonSerializerOptions(), stack)
         {
             if (string.IsNullOrEmpty(stack.APIKey))
             {
@@ -31,16 +29,13 @@ namespace Contentstack.Management.Core.Services.Stack
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            var requestData = new
             {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-                writer.WriteStartObject();
-                writer.WritePropertyName("transfer_to");
-                writer.WriteValue(_email);
-                writer.WriteEndObject();
-                string snippet = stringWriter.ToString();
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
-            }
+                transfer_to = _email
+            };
+
+            string jsonString = JsonSerializer.Serialize(requestData, SerializerOptions);
+            this.ByteContent = System.Text.Encoding.UTF8.GetBytes(jsonString);
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+using System.Text.Json;
+using System.Linq;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
@@ -14,8 +13,8 @@ namespace Contentstack.Management.Core.Services.Stack
         #region Internal
         private readonly List<UserInvitation> _users;
 
-        internal UpdateUserRoleService(JsonSerializer serializer, Core.Models.Stack stack, List<UserInvitation>userInvitation)
-            : base(serializer, stack)
+        internal UpdateUserRoleService(Core.Models.Stack stack, List<UserInvitation> userInvitation, JsonSerializerOptions stjOptions = null)
+            : base(stjOptions ?? new JsonSerializerOptions(), stack)
         {
             if (userInvitation == null)
             {
@@ -33,25 +32,16 @@ namespace Contentstack.Management.Core.Services.Stack
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            var requestData = new
             {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-                writer.WriteStartObject();
-                writer.WritePropertyName("users");
-                writer.WriteStartObject();
-                foreach (UserInvitation invitation in this._users)
-                {
-                    writer.WritePropertyName(invitation.Uid);
-                    writer.WriteStartArray();
-                    foreach (string role in invitation.Roles)
-                        writer.WriteValue(role);
-                    writer.WriteEndArray();
-                }
-                writer.WriteEndObject();
-                writer.WriteEndObject();
-                string snippet = stringWriter.ToString();
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
-            }
+                users = _users.ToDictionary(
+                    invitation => invitation.Uid,
+                    invitation => invitation.Roles.ToArray()
+                )
+            };
+
+            string jsonString = JsonSerializer.Serialize(requestData, SerializerOptions);
+            this.ByteContent = System.Text.Encoding.UTF8.GetBytes(jsonString);
         }
         #endregion
     }

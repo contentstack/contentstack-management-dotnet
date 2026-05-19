@@ -131,7 +131,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         public ContentstackClient(
-            string authtoken = null,
+            string? authtoken = null,
             string host = "api.contentstack.io",
             int port = 443,
             string version = "v3",
@@ -139,9 +139,9 @@ namespace Contentstack.Management.Core
             long maxResponseContentBufferSize = CSConstants.ContentBufferSize,
             int timeout = 30,
             bool retryOnError = true,
-            string proxyHost = null,
+            string? proxyHost = null,
             int proxyPort = -1,
-            ICredentials proxyCredentials = null
+            ICredentials? proxyCredentials = null
             ) :
         this(new OptionsWrapper<ContentstackClientOptions>(new ContentstackClientOptions()
         {
@@ -161,7 +161,7 @@ namespace Contentstack.Management.Core
         { }
         #endregion
 
-        protected void Initialize(HttpClient httpClient = null)
+        protected void Initialize(HttpClient? httpClient = null)
         {
             if (httpClient != null)
             {
@@ -229,7 +229,7 @@ namespace Contentstack.Management.Core
             }, LogManager);
         }
 
-        internal ContentstackResponse InvokeSync<TRequest>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null) where TRequest : IContentstackService
+        internal ContentstackResponse InvokeSync<TRequest>(TRequest request, bool addAcceptMediaHeader = false, string? apiVersion = null) where TRequest : IContentstackService
         {
             ThrowIfDisposed();
 
@@ -246,7 +246,7 @@ namespace Contentstack.Management.Core
             return (ContentstackResponse)ContentstackPipeline.InvokeSync(context, addAcceptMediaHeader, apiVersion).httpResponse;
         }
 
-        internal async Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null)
+        internal async Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string? apiVersion = null)
             where TRequest : IContentstackService
             where TResponse : ContentstackResponse
         {
@@ -307,7 +307,6 @@ namespace Contentstack.Management.Core
         }
         #endregion
 
-        /*
         /// <summary>
         /// <see cref="Models.User" /> session consists of calls that will help you to update user of your Contentstack account.
         /// </summary>
@@ -322,9 +321,7 @@ namespace Contentstack.Management.Core
         {
             return new User(this);
         }
-        */
 
-        /*
         /// <summary>
         /// <see cref="Models.Organization" /> the top-level entity in the hierarchy of Contentstack, consisting of stacks and stack resources, and users.
         /// <see cref="Models.Organization" />  allows easy management of projects as well as users within the Organization.
@@ -337,13 +334,11 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Organization" />.</returns>
-        public Organization Organization(string uid = null)
+        public Organization Organization(string? uid = null)
         {
             return new Organization(this, uid);
         }
-        */
 
-        /*
         /// <summary>
         /// <see cref="Models.Stack" /> is a space that stores the content of a project (a web or mobile property).
         /// Within a stack, you can create content structures, content entries, users, etc. related to the project. 
@@ -352,16 +347,15 @@ namespace Contentstack.Management.Core
         /// <param name="managementToken">Stack Management token </param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_KEY>");
         /// Stack Stack = client.Stack("<API_KEY>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Stack" />.</returns>
-        public Stack Stack(string apiKey = null, string managementToken = null, string branchUid = null)
+        public Stack Stack(string? apiKey = null, string? managementToken = null, string? branchUid = null)
         {
             return new Stack(this, apiKey, managementToken, branchUid);
         }
-        */
 
         #region LoginMethod
         /// <summary>
@@ -378,7 +372,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse" /></returns>
-        public ContentstackResponse Login(ICredentials credentials, string token = null, string mfaSecret = null)
+        public ContentstackResponse Login(ICredentials credentials, string? token = null, string? mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
             LoginService Login = new LoginService(SerializerOptions, credentials, token, mfaSecret);
@@ -400,7 +394,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string token = null, string mfaSecret = null)
+        public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string? token = null, string? mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
             LoginService Login = new LoginService(SerializerOptions, credentials, token, mfaSecret);
@@ -440,7 +434,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse" /></returns>
-        public ContentstackResponse Logout(string authtoken = null)
+        public ContentstackResponse Logout(string? authtoken = null)
         {
             string token = authtoken ?? contentstackOptions.Authtoken;
             LogoutService logout = new LogoutService(SerializerOptions, token);
@@ -458,7 +452,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> LogoutAsync(string authtoken = null)
+        public Task<ContentstackResponse> LogoutAsync(string? authtoken = null)
         {
             string token = authtoken ?? contentstackOptions.Authtoken;
             LogoutService logout = new LogoutService(SerializerOptions, token);
@@ -688,7 +682,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse GetUser(ParameterCollection collection = null)
+        public ContentstackResponse GetUser(ParameterCollection? collection = null)
         {
             ThrowIfNotLoggedIn();
 
@@ -707,7 +701,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> GetUserAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> GetUserAsync(ParameterCollection? collection = null)
         {
             ThrowIfNotLoggedIn();
 

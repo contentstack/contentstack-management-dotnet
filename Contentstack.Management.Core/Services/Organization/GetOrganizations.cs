@@ -1,4 +1,4 @@
-﻿
+
 using Contentstack.Management.Core.Queryable;
 using System.Text.Json;
 namespace Contentstack.Management.Core.Services.Organization

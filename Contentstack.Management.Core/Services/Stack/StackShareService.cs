@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+using System.Text.Json;
+using System.Linq;
 using Contentstack.Management.Core.Models;
-using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Stack
@@ -14,7 +13,7 @@ namespace Contentstack.Management.Core.Services.Stack
 
         private string _removeUser;
 
-        internal StackShareService(JsonSerializer serializer, Core.Models.Stack stack) : base(serializer, stack)
+        internal StackShareService(Core.Models.Stack stack, JsonSerializerOptions stjOptions = null) : base(stjOptions ?? new JsonSerializerOptions(), stack)
         {
             if (string.IsNullOrEmpty(stack.APIKey))
             {
@@ -37,40 +36,33 @@ namespace Contentstack.Management.Core.Services.Stack
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            object requestData;
+            
+            if (_invitations != null)
             {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-                writer.WriteStartObject();
-                if (_invitations != null)
+                requestData = new
                 {
-                    writer.WritePropertyName("emails");
-                    writer.WriteStartArray();
-                    foreach (UserInvitation user in _invitations)
-                        writer.WriteValue(user.Email);
-                    writer.WriteEndArray();
-
-                    writer.WritePropertyName("roles");
-                    writer.WriteStartObject();
-                    foreach (UserInvitation invitation in _invitations)
-                    {
-                        writer.WritePropertyName(invitation.Email);
-                        writer.WriteStartArray();
-                        foreach (string role in invitation.Roles)
-                            writer.WriteValue(role);
-                        writer.WriteEndArray();
-                    }
-                    writer.WriteEndObject();
-                }
-                else if (_removeUser != null)
-                {
-                    writer.WritePropertyName("email");
-                    writer.WriteValue(_removeUser);
-                }
-                writer.WriteEndObject();
-
-                string snippet = stringWriter.ToString();
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+                    emails = _invitations.Select(u => u.Email).ToArray(),
+                    roles = _invitations.ToDictionary(
+                        invitation => invitation.Email,
+                        invitation => invitation.Roles.ToArray()
+                    )
+                };
             }
+            else if (_removeUser != null)
+            {
+                requestData = new
+                {
+                    email = _removeUser
+                };
+            }
+            else
+            {
+                requestData = new { };
+            }
+
+            string jsonString = JsonSerializer.Serialize(requestData, SerializerOptions);
+            this.ByteContent = System.Text.Encoding.UTF8.GetBytes(jsonString);
         }
     }
 }
