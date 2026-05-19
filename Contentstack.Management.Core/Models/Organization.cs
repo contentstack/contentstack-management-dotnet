@@ -12,7 +12,7 @@ namespace Contentstack.Management.Core.Models
         private readonly ContentstackClient _client;       
 
         #region Constructor
-        public Organization(ContentstackClient contentstackClient, string uid = null)
+        public Organization(ContentstackClient contentstackClient, string? uid = null)
         {
             _client = contentstackClient;
             Uid = uid;
@@ -34,7 +34,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse GetOrganizations(ParameterCollection parameters = null)
+        public ContentstackResponse GetOrganizations(ParameterCollection? parameters = null)
         {
             _client.ThrowIfNotLoggedIn();
 
@@ -55,7 +55,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> GetOrganizationsAsync(ParameterCollection parameters = null)
+        public Task<ContentstackResponse> GetOrganizationsAsync(ParameterCollection? parameters = null)
         {
             _client.ThrowIfNotLoggedIn();
 
@@ -76,7 +76,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse Roles(ParameterCollection parameters = null)
+        public ContentstackResponse Roles(ParameterCollection? parameters = null)
         {
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
@@ -98,7 +98,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> RolesAsync(ParameterCollection parameters = null)
+        public Task<ContentstackResponse> RolesAsync(ParameterCollection? parameters = null)
         {
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
@@ -303,7 +303,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse GetInvitations(ParameterCollection parameter = null)
+        public ContentstackResponse GetInvitations(ParameterCollection? parameter = null)
         {
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
@@ -325,7 +325,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> GetInvitationsAsync(ParameterCollection parameter = null)
+        public Task<ContentstackResponse> GetInvitationsAsync(ParameterCollection? parameter = null)
         {
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
@@ -390,7 +390,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse GetStacks(ParameterCollection parameter = null)
+        public ContentstackResponse GetStacks(ParameterCollection? parameter = null)
         {
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
@@ -412,7 +412,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> GetStacksAsync(ParameterCollection parameter = null)
+        public Task<ContentstackResponse> GetStacksAsync(ParameterCollection? parameter = null)
         {
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();

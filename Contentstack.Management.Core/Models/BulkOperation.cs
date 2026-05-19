@@ -51,7 +51,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().Publish(publishDetails);
         /// </code></pre>
         /// </example>
-        public ContentstackResponse Publish(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string apiVersion = null)
+        public ContentstackResponse Publish(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string? apiVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -69,7 +69,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="isNested">Set to true for nested publish operations.</param>
         /// <param name="apiVersion">The API version to use.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> PublishAsync(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string apiVersion = null)
+        public Task<ContentstackResponse> PublishAsync(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string? apiVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -109,7 +109,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().Unpublish(unpublishDetails);
         /// </code></pre>
         /// </example>
-        public ContentstackResponse Unpublish(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string apiVersion = null)
+        public ContentstackResponse Unpublish(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string? apiVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -127,7 +127,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="isNested">Set to true for nested unpublish operations.</param>
         /// <param name="apiVersion">The API version to use.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> UnpublishAsync(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string apiVersion = null)
+        public Task<ContentstackResponse> UnpublishAsync(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string? apiVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -327,7 +327,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().AddItemsWithDeployment(deployData, "release_uid", "publish", new List<string> { "en-us" }, true, "2.0");
         /// </code></pre>
         /// </example>
-        public ContentstackResponse AddItemsWithDeployment(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        public ContentstackResponse AddItemsWithDeployment(BulkAddItemsData data, string releaseUid, string action, List<string>? locales = null, bool? reference = null, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -370,7 +370,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="reference">Whether to include references. Only used when releaseUid is specified.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> AddItemsWithDeploymentAsync(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        public Task<ContentstackResponse> AddItemsWithDeploymentAsync(BulkAddItemsData data, string releaseUid, string action, List<string>? locales = null, bool? reference = null, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -475,7 +475,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().UpdateItemsWithDeployment(deployData, "release_uid", "publish", new List<string> { "en-us" }, true, "2.0");
         /// </code></pre>
         /// </example>
-        public ContentstackResponse UpdateItemsWithDeployment(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        public ContentstackResponse UpdateItemsWithDeployment(BulkAddItemsData data, string releaseUid, string action, List<string>? locales = null, bool? reference = null, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -518,7 +518,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="reference">Whether to include references. Only used when releaseUid is specified.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> UpdateItemsWithDeploymentAsync(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        public Task<ContentstackResponse> UpdateItemsWithDeploymentAsync(BulkAddItemsData data, string releaseUid, string action, List<string>? locales = null, bool? reference = null, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -547,7 +547,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().JobStatus("job_id", "1.0");
         /// </code></pre>
         /// </example>
-        public ContentstackResponse JobStatus(string jobId, string bulkVersion = null)
+        public ContentstackResponse JobStatus(string jobId, string? bulkVersion = null)
         {
             if (string.IsNullOrWhiteSpace(jobId)) throw new ArgumentNullException(nameof(jobId));
             
@@ -564,7 +564,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="jobId">The ID of the job.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> JobStatusAsync(string jobId, string bulkVersion = null)
+        public Task<ContentstackResponse> JobStatusAsync(string jobId, string? bulkVersion = null)
         {
             if (string.IsNullOrWhiteSpace(jobId)) throw new ArgumentNullException(nameof(jobId));
             
@@ -608,7 +608,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().ReleaseItems(releaseData);
         /// </code></pre>
         /// </example>
-        public ContentstackResponse ReleaseItems(BulkReleaseItemsData data, string bulkVersion = null)
+        public ContentstackResponse ReleaseItems(BulkReleaseItemsData data, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -623,7 +623,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="data">The release items data containing release, action, locale, reference, and items.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> ReleaseItemsAsync(BulkReleaseItemsData data, string bulkVersion = null)
+        public Task<ContentstackResponse> ReleaseItemsAsync(BulkReleaseItemsData data, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
