@@ -44,7 +44,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
 
-            var service = new FetchStackService(client.serializer, this, parameters);
+            var service = new FetchStackService(client.SerializerOptions, this, parameters);
 
             return client.InvokeSync(service);
         }
@@ -66,7 +66,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
 
-            var service = new FetchStackService(client.serializer, this, parameters);
+            var service = new FetchStackService(client.SerializerOptions, this, parameters);
 
             return client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
         }
@@ -88,7 +88,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new FetchStackService(client.serializer, this, parameters);
+            var service = new FetchStackService(client.SerializerOptions, this, parameters);
             return client.InvokeSync(service);
         }
 
@@ -109,7 +109,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new FetchStackService(client.serializer, this, parameters);
+            var service = new FetchStackService(client.SerializerOptions, this, parameters);
 
             return client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
         }
@@ -131,7 +131,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackOwnershipService(client.serializer, this, email);
+            var service = new StackOwnershipService(this, email, client.SerializerOptions);
 
             return client.InvokeSync(service);
         }
@@ -153,7 +153,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackOwnershipService(client.serializer, this, email);
+            var service = new StackOwnershipService(this, email, client.SerializerOptions);
 
             return client.InvokeAsync<StackOwnershipService, ContentstackResponse>(service);
         }
@@ -181,7 +181,7 @@ namespace Contentstack.Management.Core.Models
             ThrowInvalideLocale(masterLocale);
             ThrowInvalideOrganizationUid(organisationUid);
 
-            var service = new StackCreateUpdateService(client.serializer, this, name, masterLocale, description, organizationUid: organisationUid);
+            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, masterLocale, description, organizationUid: organisationUid);
 
             return client.InvokeSync(service);
         }
@@ -209,7 +209,7 @@ namespace Contentstack.Management.Core.Models
             ThrowInvalideLocale(masterLocale);
             ThrowInvalideOrganizationUid(organisationUid);
 
-            var service = new StackCreateUpdateService(client.serializer, this, name, masterLocale, description, organizationUid: organisationUid);
+            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, masterLocale, description, organizationUid: organisationUid);
 
             return client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
         }
@@ -235,7 +235,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
             ThrowInvalideName(name);
 
-            var service = new StackCreateUpdateService(client.serializer, this, name, description: description);
+            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, description: description);
 
             return client.InvokeSync(service);
         }
@@ -261,7 +261,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfAPIKeyEmpty();
             ThrowInvalideName(name);
 
-            var service = new StackCreateUpdateService(client.serializer, this, name, description: description);
+            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, description: description);
 
             return client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
         }
@@ -290,7 +290,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new UpdateUserRoleService(client.serializer, this, usersRole);
+            var service = new UpdateUserRoleService(this, usersRole, client.SerializerOptions);
 
             return client.InvokeSync(service);
         }
@@ -319,7 +319,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new UpdateUserRoleService(client.serializer, this, usersRole);
+            var service = new UpdateUserRoleService(this, usersRole, client.SerializerOptions);
 
             return client.InvokeAsync<UpdateUserRoleService, ContentstackResponse>(service);
         }
@@ -340,7 +340,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.serializer, this);
+            var service = new StackSettingsService(client.SerializerOptions, this);
 
             return client.InvokeSync(service);
         }
@@ -361,7 +361,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.serializer, this);
+            var service = new StackSettingsService(client.SerializerOptions, this);
 
             return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
@@ -382,7 +382,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.serializer, this, "POST", new StackSettings()
+            var service = new StackSettingsService(client.SerializerOptions, this, "POST", new StackSettings()
             {
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
@@ -408,7 +408,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.serializer, this, "POST", new StackSettings()
+            var service = new StackSettingsService(client.SerializerOptions, this, "POST", new StackSettings()
             {
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
@@ -438,7 +438,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("settings", CSConstants.StackSettingsRequired);
             }
 
-            var service = new StackSettingsService(client.serializer, this, "POST", settings);
+            var service = new StackSettingsService(client.SerializerOptions, this, "POST", settings);
 
             return client.InvokeSync(service);
         }
@@ -462,7 +462,7 @@ namespace Contentstack.Management.Core.Models
             {
                 throw new ArgumentNullException("settings", CSConstants.StackSettingsRequired);
             }
-            var service = new StackSettingsService(client.serializer, this, "POST", settings);
+            var service = new StackSettingsService(client.SerializerOptions, this, "POST", settings);
 
             return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
@@ -492,7 +492,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("invitations", CSConstants.InvitationsRequired);
             }
 
-            var service = new StackShareService(client.serializer, this);
+            var service = new StackShareService(this, client.SerializerOptions);
             service.AddUsers(invitations);
 
             return client.InvokeSync(service);
@@ -523,7 +523,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("invitations", CSConstants.InvitationsRequired);
             }
 
-            var service = new StackShareService(client.serializer, this);
+            var service = new StackShareService(this, client.SerializerOptions);
             service.AddUsers(invitations);
 
             return client.InvokeAsync<StackShareService, ContentstackResponse>(service);
@@ -549,7 +549,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
 
-            var service = new StackShareService(client.serializer, this);
+            var service = new StackShareService(this, client.SerializerOptions);
             service.RemoveUsers(email);
 
             return client.InvokeSync(service);
@@ -576,7 +576,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
 
-            var service = new StackShareService(client.serializer, this);
+            var service = new StackShareService(this, client.SerializerOptions);
             service.RemoveUsers(email);
 
             return client.InvokeAsync<StackShareService, ContentstackResponse>(service);
@@ -594,6 +594,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="code">Locale code fot language</param>
         /// <returns>The <see cref="Models.Locale"/></returns>
+        /*
         public Locale Locale(string code = null)
         {
             ThrowIfNotLoggedIn();
@@ -601,6 +602,7 @@ namespace Contentstack.Management.Core.Models
 
             return new Locale(this, code);
         }
+        */
 
         /*
         // The following resource methods are temporarily commented out as they reference excluded model types
@@ -798,6 +800,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Release" /></returns>
+        /*
         public Role Role(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -805,6 +808,7 @@ namespace Contentstack.Management.Core.Models
 
             return new Role(this, uid);
         }
+        */
 
         /// <summary>
         /// A <see cref="Models.Release" /> is a set of entries and assets that needs to be deployed (published or unpublished) all at once to a particular environment.
@@ -818,6 +822,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Release" /></returns>
+        /*
         public Release Release(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -825,6 +830,7 @@ namespace Contentstack.Management.Core.Models
 
             return new Release(this, uid);
         }
+        */
 
 
         /// <summary>
@@ -839,6 +845,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Workflow" /></returns>
+        /*
         public Workflow Workflow(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -846,6 +853,7 @@ namespace Contentstack.Management.Core.Models
 
             return new Workflow(this, uid);
         }
+        */
 
         /// <summary>
         /// A <see cref="Models.PublishQueue" /> displays the historical and current details of activities such as publish, unpublish, or delete that can be performed on entries and/or assets.
@@ -860,6 +868,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.PublishQueue" /></returns>
+        /*
         public PublishQueue PublishQueue(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -867,6 +876,7 @@ namespace Contentstack.Management.Core.Models
 
             return new PublishQueue(this, uid);
         }
+        */
         /// <summary>
         /// A <see cref="Models.Webhook" /> a mechanism that sends real-time information to any third-party app or service to keep your application in sync with your Contentstack account. 
         /// </summary>
@@ -879,6 +889,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>
+        /*
         public Webhook Webhook(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -886,6 +897,7 @@ namespace Contentstack.Management.Core.Models
 
             return new Webhook(this, uid);
         }
+        */
 
         /// <summary>
         /// A <see cref="Models.AuditLog" /> displays a record of all the activities performed in a stack and helps you keep a track of all published items, updates, deletes, and current status of the existing content.
@@ -899,6 +911,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>
+        /*
         public AuditLog AuditLog(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -906,6 +919,7 @@ namespace Contentstack.Management.Core.Models
 
             return new AuditLog(this, uid);
         }
+        */
 
         /// <summary>
         /// A <see cref="Models.VariantGroup" /> allows you to manage variant groups and their associated content types.
@@ -920,6 +934,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.VariantGroup" /></returns>
+        /*
         public VariantGroup VariantGroup(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -927,6 +942,7 @@ namespace Contentstack.Management.Core.Models
 
             return new VariantGroup(this, uid);
         }
+        */
 
         /// <summary>
         /// Gets the bulk operation instance for performing bulk operations on entries and assets.

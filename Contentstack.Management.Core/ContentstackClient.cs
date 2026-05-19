@@ -307,7 +307,6 @@ namespace Contentstack.Management.Core
         }
         #endregion
 
-        /*
         /// <summary>
         /// <see cref="Models.User" /> session consists of calls that will help you to update user of your Contentstack account.
         /// </summary>
@@ -322,9 +321,7 @@ namespace Contentstack.Management.Core
         {
             return new User(this);
         }
-        */
 
-        /*
         /// <summary>
         /// <see cref="Models.Organization" /> the top-level entity in the hierarchy of Contentstack, consisting of stacks and stack resources, and users.
         /// <see cref="Models.Organization" />  allows easy management of projects as well as users within the Organization.
@@ -341,9 +338,7 @@ namespace Contentstack.Management.Core
         {
             return new Organization(this, uid);
         }
-        */
 
-        /*
         /// <summary>
         /// <see cref="Models.Stack" /> is a space that stores the content of a project (a web or mobile property).
         /// Within a stack, you can create content structures, content entries, users, etc. related to the project. 
@@ -352,7 +347,7 @@ namespace Contentstack.Management.Core
         /// <param name="managementToken">Stack Management token </param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_KEY>");
         /// Stack Stack = client.Stack("<API_KEY>");
         /// </code></pre>
         /// </example>
@@ -361,7 +356,6 @@ namespace Contentstack.Management.Core
         {
             return new Stack(this, apiKey, managementToken, branchUid);
         }
-        */
 
         #region LoginMethod
         /// <summary>

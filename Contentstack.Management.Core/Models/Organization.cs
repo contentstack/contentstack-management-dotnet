@@ -38,7 +38,7 @@ namespace Contentstack.Management.Core.Models
         {
             _client.ThrowIfNotLoggedIn();
 
-            var Organizations = new GetOrganizations(_client.serializer, parameters, this.Uid);
+            var Organizations = new GetOrganizations(_client.SerializerOptions, parameters, this.Uid);
 
             return _client.InvokeSync(Organizations);
         }
@@ -59,7 +59,7 @@ namespace Contentstack.Management.Core.Models
         {
             _client.ThrowIfNotLoggedIn();
 
-            var Organizations = new GetOrganizations(_client.serializer, parameters, this.Uid);
+            var Organizations = new GetOrganizations(_client.SerializerOptions, parameters, this.Uid);
 
             return _client.InvokeAsync<GetOrganizations, ContentstackResponse>(Organizations);
         }
@@ -81,7 +81,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var Roles = new OrganizationRolesService(_client.serializer, this.Uid, parameters);
+            var Roles = new OrganizationRolesService(this.Uid, parameters, _client.SerializerOptions);
 
             return _client.InvokeSync(Roles);
         }
@@ -103,7 +103,7 @@ namespace Contentstack.Management.Core.Models
             _client.ThrowIfNotLoggedIn();
             this.ThrowIfOrganizationUidNull();
 
-            var Roles = new OrganizationRolesService(_client.serializer, this.Uid, parameters);
+            var Roles = new OrganizationRolesService(this.Uid, parameters, _client.SerializerOptions);
 
             return _client.InvokeAsync<OrganizationRolesService, ContentstackResponse>(Roles);
         }

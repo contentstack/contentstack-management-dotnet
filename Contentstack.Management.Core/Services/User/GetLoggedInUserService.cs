@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Contentstack.Management.Core.Queryable;
 using System.Text.Json;
 
