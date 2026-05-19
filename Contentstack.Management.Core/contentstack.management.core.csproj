@@ -111,18 +111,14 @@
     <Compile Remove="Models\Workflow.cs" />
     <Compile Remove="Models\CustomExtension\**\*.cs" />
     <!-- Re-enable core Field models for ContentType support -->
-    <Compile Remove="Models\Fields\TextboxField.cs" />
-    <Compile Remove="Models\Fields\TaxonomyField.cs" />
-    <Compile Remove="Models\Fields\SelectField.cs" />
-    <Compile Remove="Models\Fields\ReferenceField.cs" />
-    <Compile Remove="Models\Fields\NumberField.cs" />
-    <Compile Remove="Models\Fields\ModularBlockField.cs" />
-    <Compile Remove="Models\Fields\JsonField.cs" />
-    <Compile Remove="Models\Fields\GroupField.cs" />
-    <Compile Remove="Models\Fields\GlobalFieldReference.cs" />
-    <Compile Remove="Models\Fields\FileField.cs" />
-    <Compile Remove="Models\Fields\ExtensionField.cs" />
-    <Compile Remove="Models\Fields\DateField.cs" />
+    <!-- Phase 1 field types - RE-ENABLED and converted to STJ -->
+    <!-- DateField.cs, NumberField.cs, TextboxField.cs, ExtensionField.cs, ReferenceField.cs, GlobalFieldReference.cs - RE-ENABLED -->
+    <!-- Phase 2 field types - RE-ENABLED and converted to STJ -->
+    <!-- FileField.cs (includes ImageField and Dimension), JsonField.cs - RE-ENABLED -->
+    <!-- Phase 3 field types - RE-ENABLED and converted to STJ -->
+    <!-- SelectField.cs (includes SelectEnum), TaxonomyField.cs (includes TaxonomyFieldBinding) - RE-ENABLED -->
+    <!-- Phase 4 field types - RE-ENABLED and converted to STJ -->
+    <!-- GroupField.cs, ModularBlockField.cs (includes Block) - RE-ENABLED -->
     <!-- FieldMetadata.cs, Field.cs, FieldRules.cs - RE-ENABLED for ContentType -->
     <Compile Remove="Models\Token\**\*.cs" />
     

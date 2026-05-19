@@ -1,34 +1,34 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
     public class FileField : Field
     {
-        [JsonProperty(propertyName: "extensions")]
+        [JsonPropertyName("extensions")]
         public List<string> Extensions { get; set; }
-        [JsonProperty(propertyName: "max")]
+        [JsonPropertyName("max")]
         public int? Maxsize { get; set; }
-        [JsonProperty(propertyName: "min")]
+        [JsonPropertyName("min")]
         public int? MinSize { get; set; }
         
     }
     public class ImageField : FileField
     {
-        [JsonProperty(propertyName: "dimension")]
+        [JsonPropertyName("dimension")]
         public Dimension Dimensions { get; set; }
         /// <summary>
         /// Allows you to enter additional data about a field. Also, you can add additional values under ‘field_metadata’.
         /// </summary>
-        [JsonProperty(propertyName: "field_metadata")]
+        [JsonPropertyName("field_metadata")]
         public new FileFieldMetadata FieldMetadata { get; set; }
     }
     public class Dimension
     {
-        [JsonProperty(propertyName: "height")]
+        [JsonPropertyName("height")]
         public Dictionary<string, int?> Height { get; set; }
-        [JsonProperty(propertyName: "width")]
+        [JsonPropertyName("width")]
         public Dictionary<string, int?> Width { get; set; }
     }
 }

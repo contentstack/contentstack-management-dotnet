@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Models.Fields
     /// </summary>
     public class TaxonomyField : Field
     {
-        [JsonProperty(propertyName: "taxonomies")]
+        [JsonPropertyName("taxonomies")]
         public List<TaxonomyFieldBinding> Taxonomies { get; set; }
     }
 
@@ -17,19 +17,19 @@ namespace Contentstack.Management.Core.Models.Fields
     /// </summary>
     public class TaxonomyFieldBinding
     {
-        [JsonProperty(propertyName: "taxonomy_uid")]
+        [JsonPropertyName("taxonomy_uid")]
         public string TaxonomyUid { get; set; }
 
-        [JsonProperty(propertyName: "max_terms")]
+        [JsonPropertyName("max_terms")]
         public int? MaxTerms { get; set; }
 
-        [JsonProperty(propertyName: "mandatory")]
+        [JsonPropertyName("mandatory")]
         public bool Mandatory { get; set; }
 
-        [JsonProperty(propertyName: "multiple")]
+        [JsonPropertyName("multiple")]
         public bool Multiple { get; set; }
 
-        [JsonProperty(propertyName: "non_localizable")]
+        [JsonPropertyName("non_localizable")]
         public bool NonLocalizable { get; set; }
     }
 }

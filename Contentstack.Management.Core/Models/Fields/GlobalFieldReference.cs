@@ -1,5 +1,5 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
@@ -12,30 +12,30 @@ namespace Contentstack.Management.Core.Models.Fields
         /// <summary>
         /// The UID of the global field being referenced.
         /// </summary>
-        [JsonProperty(propertyName: "reference_to")]
+        [JsonPropertyName("reference_to")]
         public string ReferenceTo { get; set; }
 
         /// <summary>
         /// Determines if this field can accept multiple values.
         /// </summary>
-        [JsonProperty(propertyName: "multiple")]
+        [JsonPropertyName("multiple")]
         public new bool Multiple { get; set; }
 
         /// <summary>
         /// Determines if this field is mandatory.
         /// </summary>
-        [JsonProperty(propertyName: "mandatory")]
+        [JsonPropertyName("mandatory")]
         public new bool Mandatory { get; set; }
 
         /// <summary>
         /// Determines if this field value must be unique.
         /// </summary>
-        [JsonProperty(propertyName: "unique")]
+        [JsonPropertyName("unique")]
         public new bool Unique { get; set; }
         /// <summary>
         /// Determines if this field is non-localizable.
         /// </summary>
-        [JsonProperty(propertyName: "non_localizable")]
+        [JsonPropertyName("non_localizable")]
         public bool NonLocalizable { get; set; }
     }
 } 
