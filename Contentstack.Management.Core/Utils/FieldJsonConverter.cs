@@ -36,6 +36,15 @@ namespace Contentstack.Management.Core.Utils
 
         private static Type ResolveConcreteType(JsonElement jo)
         {
+            // Simplified implementation - only use base Field type for now
+            // Specific field types (GroupField, ModularBlockField, etc.) are still excluded from compilation
+            // Uncomment the full implementation below when those field types are migrated to STJ and re-enabled
+
+            return typeof(Field);
+
+            // TODO: Uncomment this when specific field types are re-enabled in compilation
+            /*
+            // Check for extension fields first
             var extensionUid = jo.TryGetProperty("extension_uid", out var ext) ? ext.GetString() : null;
             if (!string.IsNullOrEmpty(extensionUid))
                 return typeof(ExtensionField);
@@ -86,6 +95,7 @@ namespace Contentstack.Management.Core.Utils
                 default:
                     return typeof(Field);
             }
+            */
         }
     }
 }

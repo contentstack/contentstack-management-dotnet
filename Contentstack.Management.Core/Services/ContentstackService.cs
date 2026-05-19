@@ -29,7 +29,7 @@ namespace Contentstack.Management.Core.Services
         #endregion
 
         #region Constructor
-        internal ContentstackService(JsonSerializerOptions serializerOptions, Models.Stack stack = null, ParameterCollection collection = null)
+        internal ContentstackService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack stack = null, ParameterCollection collection = null)
         {
             if (serializerOptions == null)
             {

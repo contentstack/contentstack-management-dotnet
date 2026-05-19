@@ -84,10 +84,10 @@
     <Compile Remove="Models\Asset.cs" />
     <Compile Remove="Models\AssetModel.cs" />
     <Compile Remove="Models\AuditLog.cs" />
-    <Compile Remove="Models\BaseModel.cs" />
+    <!-- BaseModel.cs - RE-ENABLED for ContentType -->
     <!-- BulkOperation.cs - RE-ENABLED -->
-    <Compile Remove="Models\ContentModelling.cs" />
-    <Compile Remove="Models\ContentType.cs" />
+    <!-- ContentModelling.cs - RE-ENABLED for ContentType -->
+    <!-- ContentType.cs - RE-ENABLED -->
     <Compile Remove="Models\Entry.cs" />
     <Compile Remove="Models\EntryVariant.cs" />
     <Compile Remove="Models\Environment.cs" />
@@ -110,13 +110,39 @@
     <Compile Remove="Models\Webhook.cs" />
     <Compile Remove="Models\Workflow.cs" />
     <Compile Remove="Models\CustomExtension\**\*.cs" />
-    <Compile Remove="Models\Fields\**\*.cs" />
+    <!-- Re-enable core Field models for ContentType support -->
+    <Compile Remove="Models\Fields\TextboxField.cs" />
+    <Compile Remove="Models\Fields\TaxonomyField.cs" />
+    <Compile Remove="Models\Fields\SelectField.cs" />
+    <Compile Remove="Models\Fields\ReferenceField.cs" />
+    <Compile Remove="Models\Fields\NumberField.cs" />
+    <Compile Remove="Models\Fields\ModularBlockField.cs" />
+    <Compile Remove="Models\Fields\JsonField.cs" />
+    <Compile Remove="Models\Fields\GroupField.cs" />
+    <Compile Remove="Models\Fields\GlobalFieldReference.cs" />
+    <Compile Remove="Models\Fields\FileField.cs" />
+    <Compile Remove="Models\Fields\ExtensionField.cs" />
+    <Compile Remove="Models\Fields\DateField.cs" />
+    <!-- FieldMetadata.cs, Field.cs, FieldRules.cs - RE-ENABLED for ContentType -->
     <Compile Remove="Models\Token\**\*.cs" />
     
     <!-- Re-enable core services for Client, User, Organization, Stack modules -->
     <Compile Remove="Services\DeleteReleaseItemService.cs" />
-    <Compile Remove="Services\QueryService.cs" />
-    <Compile Remove="Services\Models\**\*.cs" />
+    <!-- QueryService.cs - RE-ENABLED for ContentType listing -->
+    <!-- Re-enable essential model services for ContentType -->
+    <Compile Remove="Services\Models\GlobalFieldService.cs" />
+    <Compile Remove="Services\Models\GlobalFieldFetchDeleteService.cs" />
+    <Compile Remove="Services\Models\ImportExportService.cs" />
+    <Compile Remove="Services\Models\LocaleService.cs" />
+    <Compile Remove="Services\Models\LocalizationService.cs" />
+    <Compile Remove="Services\Models\FetchReferencesService.cs" />
+    <Compile Remove="Services\Models\CreateUpdateFolderService.cs" />
+    <Compile Remove="Services\Models\UploadService.cs" />
+    <Compile Remove="Services\Models\VariantContentTypeLinkService.cs" />
+    <Compile Remove="Services\Models\PublishUnpublishService.cs" />
+    <!-- Exclude Versioning services -->
+    <Compile Remove="Services\Models\Versioning\**\*.cs" />
+    <!-- CreateUpdateService, FetchDeleteService, DeleteService - RE-ENABLED for ContentType -->
     <Compile Remove="Services\OAuth\**\*.cs" />
     <!-- StackOwnershipService.cs, StackShareService.cs, UpdateUserRoleService.cs - RE-ENABLED -->
     <!-- OrgRoles.cs - RE-ENABLED -->
@@ -127,8 +153,7 @@
     <!-- Keep OAuth handler excluded -->
     <Compile Remove="OAuthHandler.cs" />
     
-    <!-- Keep FieldJsonConverter excluded -->
-    <Compile Remove="Utils\FieldJsonConverter.cs" />
+    <!-- FieldJsonConverter.cs - RE-ENABLED for ContentType Field support -->
     
     <!-- Stack.cs - RE-ENABLED -->
     
