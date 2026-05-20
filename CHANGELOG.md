@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.0.0-beta.5](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.5)
+ - **Environment & Global Field STJ Migration**
+   - Migrated Environment and Global Field modules from Newtonsoft.Json to System.Text.Json
+   - Updated service constructors to use JsonSerializerOptions and Utf8JsonWriter serialization
+   - Re-enabled Environment() and GlobalField() methods in Stack class
+
 ## [v1.0.0-beta.4](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.4)
  - **Assets STJ Migration Complete**
    - Fully migrated Assets module from Newtonsoft.Json to System.Text.Json
