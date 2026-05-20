@@ -1,5 +1,12 @@
 # Changelog
 
+## [v1.0.0-beta.4](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.4)
+ - **Assets STJ Migration Complete**
+   - Fully migrated Assets module from Newtonsoft.Json to System.Text.Json
+   - Updated Asset.cs, AssetModel.cs, Folder.cs, and Version.cs with STJ service integration
+   - Migrated UploadService, CreateUpdateFolderService, FetchReferencesService, PublishUnpublishService, and VersionService to use Utf8JsonWriter and JsonSerializerOptions
+   - Re-enabled Stack.Asset() method for asset operations
+
 ## [v1.0.0-beta.3](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.3)
  - **ContentType & QueryService STJ Migration**
    - **✅ ContentType Module**: Fully migrated ContentType model and dependencies to System.Text.Json

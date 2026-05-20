@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Utils;
 
@@ -7,8 +7,8 @@ namespace Contentstack.Management.Core.Services.Models
 {
     internal class FetchReferencesService : ContentstackService
     {
-        internal FetchReferencesService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath = null, ParameterCollection collection = null)
-           : base(serializer, stack: stack, collection)
+        internal FetchReferencesService(Core.Models.Stack stack, string resourcePath = null, ParameterCollection collection = null, JsonSerializerOptions stjOptions = null)
+           : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection)
         {
             if (stack.APIKey == null)
             {

@@ -23,6 +23,7 @@ namespace Contentstack.Management.Core.Models
             resourcePath = uid == null ? "/assets/folders" : $"/assets/folders/{uid}";
         }
 
+
         /// <summary>
         /// The Create a folder call is used to create an asset folder and/or add a parent folder to it.
         /// </summary>
@@ -39,7 +40,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidNotEmpty();
 
-            var service = new CreateUpdateFolderService(stack.client.serializer, stack, name, null, parentUid);
+            var service = new CreateUpdateFolderService(stack, name, null, parentUid, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -60,7 +61,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
 
-            var service = new CreateUpdateFolderService(stack.client.serializer, stack, name, null, parentUid);
+            var service = new CreateUpdateFolderService(stack, name, null, parentUid, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<CreateUpdateFolderService, ContentstackResponse>(service);
         }
 
@@ -80,7 +81,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateFolderService(stack.client.serializer, stack, name, null, parentUid);
+            var service = new CreateUpdateFolderService(stack, name, null, parentUid, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -101,7 +102,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateFolderService(stack.client.serializer, stack, name, null, parentUid);
+            var service = new CreateUpdateFolderService(stack, name, null, parentUid, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<CreateUpdateFolderService, ContentstackResponse>(service);
         }
 
@@ -121,7 +122,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -141,7 +142,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -161,7 +162,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE");
             return stack.client.InvokeSync(service);
         }
 
@@ -181,7 +182,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE");
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 

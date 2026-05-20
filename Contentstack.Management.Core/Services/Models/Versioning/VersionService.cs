@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Text.Json;
 using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models.Versioning
@@ -16,8 +16,8 @@ namespace Contentstack.Management.Core.Services.Models.Versioning
         internal string locale;
         internal bool force;
 
-        internal VersionService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, string httpMethod, string fieldName, ParameterCollection collection = null)
-            : base(serializer, stack: stack, collection)
+        internal VersionService(Core.Models.Stack stack, string resourcePath, string httpMethod, string fieldName, ParameterCollection collection = null, JsonSerializerOptions stjOptions = null)
+            : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection)
         {
             if (stack.APIKey == null)
             {
@@ -46,36 +46,37 @@ namespace Contentstack.Management.Core.Services.Models.Versioning
         {
             if (HttpMethod != "GET")
             {
-                using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+                using var stream = new MemoryStream();
+                using var writer = new Utf8JsonWriter(stream);
+                
+                writer.WriteStartObject();
+                writer.WritePropertyName(fieldName);
+                writer.WriteStartObject();
+                
+                if (name != null)
                 {
-                    JsonWriter writer = new JsonTextWriter(stringWriter);
-                    writer.WriteStartObject();
-                    writer.WritePropertyName(fieldName);
-                    writer.WriteStartObject();
-                    if (name != null)
-                    {
-                        writer.WritePropertyName("_version_name");
-                        writer.WriteValue(name);
-                    }
-
-                    if (locale != null)
-                    {
-                        writer.WritePropertyName("locale");
-                        writer.WriteValue(locale);
-                    }
-
-                    if (force)
-                    {
-                        writer.WritePropertyName("force");
-                        writer.WriteValue(force);
-                    }
-                    writer.WriteEndObject();
-                    writer.WriteEndObject();
-                    string snippet = stringWriter.ToString();
-                    this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
+                    writer.WritePropertyName("_version_name");
+                    writer.WriteStringValue(name);
                 }
+
+                if (locale != null)
+                {
+                    writer.WritePropertyName("locale");
+                    writer.WriteStringValue(locale);
+                }
+
+                if (force)
+                {
+                    writer.WritePropertyName("force");
+                    writer.WriteBooleanValue(force);
+                }
+                
+                writer.WriteEndObject();
+                writer.WriteEndObject();
+                writer.Flush();
+
+                this.ByteContent = stream.ToArray();
             }
-            
         }
     }
 }

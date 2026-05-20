@@ -625,7 +625,6 @@ namespace Contentstack.Management.Core.Models
             return new ContentType(this, uid);
         }
 
-        /*
         /// <summary>
         /// <see cref="Models.Asset"/> efer to all the media files (images, videos, PDFs, audio files, and so on) uploaded in your Contentstack repository for future use. 
         /// </summary>
@@ -646,6 +645,7 @@ namespace Contentstack.Management.Core.Models
             return new Asset(this, uid);
         }
 
+        /*
         /// <summary>
         /// <see cref="Models.GlobalField" /> defines the structure or schema of a page or a section of your web or mobile property. To create global Fields for your application, you are required to first create a global field. Read more about <a href='https://www.contentstack.com/docs/guide/global-fields'>Global Fields</a>.
         /// </summary>
@@ -666,6 +666,7 @@ namespace Contentstack.Management.Core.Models
             return new GlobalField(this, uid, apiVersion);
         }
 
+        /*
         /// <summary>
         /// <see cref="Models.Extension" /> let you create custom fields and custom widgets that lets you customize Contentstack's default UI and behavior. 
         /// </summary>

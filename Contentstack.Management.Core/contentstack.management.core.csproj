@@ -81,8 +81,7 @@
   <ItemGroup>
     <!-- Re-enable core models for Client, User, Organization, Stack modules -->
     <!-- Keep other models excluded until later migration phases -->
-    <Compile Remove="Models\Asset.cs" />
-    <Compile Remove="Models\AssetModel.cs" />
+    <!-- Asset.cs, AssetModel.cs - RE-ENABLED for Assets module -->
     <Compile Remove="Models\AuditLog.cs" />
     <!-- BaseModel.cs - RE-ENABLED for ContentType -->
     <!-- BulkOperation.cs - RE-ENABLED -->
@@ -92,7 +91,7 @@
     <Compile Remove="Models\EntryVariant.cs" />
     <Compile Remove="Models\Environment.cs" />
     <Compile Remove="Models\Extension.cs" />
-    <Compile Remove="Models\Folder.cs" />
+    <!-- Folder.cs - RE-ENABLED for Assets module -->
     <Compile Remove="Models\GlobalField.cs" />
     <Compile Remove="Models\Label.cs" />
     <Compile Remove="Models\Locale.cs" />
@@ -106,7 +105,7 @@
     <Compile Remove="Models\Term.cs" />
     <!-- User.cs - RE-ENABLED -->
     <Compile Remove="Models\VariantGroup.cs" />
-    <Compile Remove="Models\Version.cs" />
+    <!-- Version.cs - RE-ENABLED for Assets module -->
     <Compile Remove="Models\Webhook.cs" />
     <Compile Remove="Models\Workflow.cs" />
     <Compile Remove="Models\CustomExtension\**\*.cs" />
@@ -131,13 +130,10 @@
     <Compile Remove="Services\Models\ImportExportService.cs" />
     <Compile Remove="Services\Models\LocaleService.cs" />
     <Compile Remove="Services\Models\LocalizationService.cs" />
-    <Compile Remove="Services\Models\FetchReferencesService.cs" />
-    <Compile Remove="Services\Models\CreateUpdateFolderService.cs" />
-    <Compile Remove="Services\Models\UploadService.cs" />
+    <!-- FetchReferencesService, CreateUpdateFolderService, UploadService, PublishUnpublishService - RE-ENABLED for Assets module -->
     <Compile Remove="Services\Models\VariantContentTypeLinkService.cs" />
-    <Compile Remove="Services\Models\PublishUnpublishService.cs" />
-    <!-- Exclude Versioning services -->
-    <Compile Remove="Services\Models\Versioning\**\*.cs" />
+    <!-- Versioning services - RE-ENABLED for Assets module -->
+    <!-- <Compile Remove="Services\Models\Versioning\**\*.cs" /> -->
     <!-- CreateUpdateService, FetchDeleteService, DeleteService - RE-ENABLED for ContentType -->
     <Compile Remove="Services\OAuth\**\*.cs" />
     <!-- StackOwnershipService.cs, StackShareService.cs, UpdateUserRoleService.cs - RE-ENABLED -->
