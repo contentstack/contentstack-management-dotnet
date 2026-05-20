@@ -617,7 +617,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.ContentType"/></returns>
-        public ContentType ContentType(string uid = null)
+        public ContentType ContentType(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
