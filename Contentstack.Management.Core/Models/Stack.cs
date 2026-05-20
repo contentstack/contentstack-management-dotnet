@@ -645,7 +645,6 @@ namespace Contentstack.Management.Core.Models
             return new Asset(this, uid);
         }
 
-        /*
         /// <summary>
         /// <see cref="Models.GlobalField" /> defines the structure or schema of a page or a section of your web or mobile property. To create global Fields for your application, you are required to first create a global field. Read more about <a href='https://www.contentstack.com/docs/guide/global-fields'>Global Fields</a>.
         /// </summary>
@@ -727,6 +726,7 @@ namespace Contentstack.Management.Core.Models
 
             return new Taxonomy(this, uid);
         }
+        */
 
         /// <summary>
         /// A publishing <see cref="Models.Environment" /> corresponds to one or more deployment servers or a content delivery destination where the entries need to be published.
@@ -748,6 +748,7 @@ namespace Contentstack.Management.Core.Models
             return new Environment(this, uid);
         }
 
+        /*
         /// <summary>
         /// You can use <see cref="Models.Token.DeliveryToken" /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
         /// </summary>
