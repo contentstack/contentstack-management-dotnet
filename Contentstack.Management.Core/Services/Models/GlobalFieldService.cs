@@ -1,9 +1,8 @@
 using System;
-using System.Globalization;
-using System.IO;
+using System.Collections.Generic;
+using System.Text.Json;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -20,8 +19,8 @@ namespace Contentstack.Management.Core.Services.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalFieldService"/> class.
         /// </summary>
-        internal GlobalFieldService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, ContentModelling dataModel, string fieldName, string apiVersion, string httpMethod = "POST", ParameterCollection collection = null)
-            : base(serializer, stack: stack, collection)
+        internal GlobalFieldService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, ContentModelling dataModel, string fieldName, string apiVersion, string httpMethod = "POST", ParameterCollection collection = null)
+            : base(serializerOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection)
         {
             if (stack.APIKey == null)
             {
@@ -60,14 +59,13 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
+            var requestData = new Dictionary<string, object>
             {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
+                { fieldName, _typedModel }
+            };
 
-                Serializer.Serialize(writer, _typedModel);
-                string snippet = $"{{\"{fieldName}\": {stringWriter.ToString()}}}";
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet); 
-            }
+            string jsonString = JsonSerializer.Serialize(requestData, SerializerOptions);
+            this.ByteContent = System.Text.Encoding.UTF8.GetBytes(jsonString);
         }
 
         /// <summary>

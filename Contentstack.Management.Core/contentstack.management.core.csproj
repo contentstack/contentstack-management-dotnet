@@ -89,10 +89,10 @@
     <!-- ContentType.cs - RE-ENABLED -->
     <Compile Remove="Models\Entry.cs" />
     <Compile Remove="Models\EntryVariant.cs" />
-    <Compile Remove="Models\Environment.cs" />
+    <!-- Environment.cs - RE-ENABLED for Environment module STJ migration -->
     <Compile Remove="Models\Extension.cs" />
     <!-- Folder.cs - RE-ENABLED for Assets module -->
-    <Compile Remove="Models\GlobalField.cs" />
+    <!-- GlobalField.cs - RE-ENABLED for Global Field module STJ migration -->
     <Compile Remove="Models\Label.cs" />
     <Compile Remove="Models\Locale.cs" />
     <!-- Organization.cs - RE-ENABLED -->
@@ -125,8 +125,7 @@
     <Compile Remove="Services\DeleteReleaseItemService.cs" />
     <!-- QueryService.cs - RE-ENABLED for ContentType listing -->
     <!-- Re-enable essential model services for ContentType -->
-    <Compile Remove="Services\Models\GlobalFieldService.cs" />
-    <Compile Remove="Services\Models\GlobalFieldFetchDeleteService.cs" />
+    <!-- GlobalFieldService.cs, GlobalFieldFetchDeleteService.cs - RE-ENABLED for Global Field module STJ migration -->
     <Compile Remove="Services\Models\ImportExportService.cs" />
     <Compile Remove="Services\Models\LocaleService.cs" />
     <Compile Remove="Services\Models\LocalizationService.cs" />
