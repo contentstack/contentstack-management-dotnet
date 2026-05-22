@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
     public class ReferenceField : Field
     {
-        [JsonProperty(propertyName: "reference_to")]
-        public object ReferenceTo { get; set; }
-        [JsonProperty(propertyName: "plugins")]
+        [JsonPropertyName("reference_to")]
+        public JsonElement? ReferenceTo { get; set; }
+        [JsonPropertyName("plugins")]
         public List<string> Plugins { get; set; }
     }
 }

@@ -200,7 +200,7 @@ namespace Contentstack.Management.Core
             SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             SerializerOptions.PropertyNameCaseInsensitive = true;
 
-            // SerializerOptions.Converters.Add(new FieldJsonConverter()); // Excluded for now
+            SerializerOptions.Converters.Add(new FieldJsonConverter()); // Re-enabled for ContentType support
             SerializerOptions.Converters.Add(new NodeJsonConverter());
             SerializerOptions.Converters.Add(new TextNodeJsonConverter());
         }

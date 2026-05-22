@@ -79,7 +79,6 @@ namespace Contentstack.Management.Core.Queryable
             return this;
         }
 
-        /*
         /// <summary>
         /// The Find all object call fetches the list of all objects owned by a particular user account.
         /// </summary>
@@ -119,7 +118,6 @@ namespace Contentstack.Management.Core.Queryable
 
             return _stack.client.InvokeAsync<QueryService, ContentstackResponse>(service, false, _apiVersion);
         }
-        */
         #endregion
         #region Throw Error
 

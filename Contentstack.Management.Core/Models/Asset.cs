@@ -13,7 +13,7 @@ namespace Contentstack.Management.Core.Models
 
         internal string resourcePath;
 
-        internal Asset(Stack stack, string uid = null)
+        internal Asset(Stack stack, string? uid = null)
         {
             stack.ThrowIfAPIKeyEmpty();
             
@@ -49,7 +49,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Folder"/></returns>
-        public Folder Folder(string uid = null)
+        public Folder Folder(string? uid = null)
         {
             ThrowIfUidNotEmpty();
             return new Folder(stack, uid);
@@ -83,11 +83,11 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Create(AssetModel model, ParameterCollection collection = null)
+        public virtual ContentstackResponse Create(AssetModel model, ParameterCollection? collection = null)
         {
             ThrowIfUidNotEmpty();
 
-            var service = new UploadService(stack.client.serializer, stack, resourcePath, model);
+            var service = new UploadService(stack, resourcePath, model, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -104,12 +104,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public virtual Task<ContentstackResponse> CreateAsync(AssetModel model, ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> CreateAsync(AssetModel model, ParameterCollection? collection = null)
         {
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
 
-            var service = new UploadService(stack.client.serializer, stack, resourcePath, model);
+            var service = new UploadService(stack, resourcePath, model, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<UploadService, ContentstackResponse>(service, true);
         }
 
@@ -126,11 +126,11 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Update(AssetModel model, ParameterCollection collection = null)
+        public virtual ContentstackResponse Update(AssetModel model, ParameterCollection? collection = null)
         {
             ThrowIfUidEmpty();
 
-            var service = new UploadService(stack.client.serializer, stack, resourcePath, model, "PUT");
+            var service = new UploadService(stack, resourcePath, model, "PUT", stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -147,12 +147,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> UpdateAsync(AssetModel model, ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> UpdateAsync(AssetModel model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new UploadService(stack.client.serializer, stack, resourcePath, model, "PUT");
+            var service = new UploadService(stack, resourcePath, model, "PUT", stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<UploadService, ContentstackResponse>(service, true);
         }
 
@@ -167,12 +167,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
+        public virtual ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -187,12 +187,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service, true);
         }
 
@@ -212,7 +212,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE");
             return stack.client.InvokeSync(service);
         }
 
@@ -232,7 +232,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE");
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service, true);
         }
 
@@ -247,12 +247,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string apiVersion = null)
+        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
+            var service = new PublishUnpublishService(stack, details, $"{resourcePath}/publish", "asset", stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -267,12 +267,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string apiVersion = null)
+        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "asset");
+            var service = new PublishUnpublishService(stack, details, $"{resourcePath}/publish", "asset", stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -287,12 +287,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string apiVersion = null)
+        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
+            var service = new PublishUnpublishService(stack, details, $"{resourcePath}/unpublish", "asset", stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -307,12 +307,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string apiVersion = null)
+        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "asset");
+            var service = new PublishUnpublishService(stack, details, $"{resourcePath}/unpublish", "asset", stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -326,12 +326,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse References(ParameterCollection collection = null)
+        public virtual ContentstackResponse References(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchReferencesService(stack, resourcePath, collection: collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -345,12 +345,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> ReferencesAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> ReferencesAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchReferencesService(stack, resourcePath, collection: collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<FetchReferencesService, ContentstackResponse>(service);
         }
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Utils;
 
@@ -10,7 +10,7 @@ namespace Contentstack.Management.Core.Services
         #region Internal
 
         internal QueryService(Core.Models.Stack stack, ParameterCollection collection, string resourcePath)
-            : base(stack.client.serializer, stack, collection)
+            : base(stack.client.SerializerOptions, stack, collection)
         {
             if (string.IsNullOrEmpty(resourcePath))
             {

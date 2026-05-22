@@ -36,6 +36,7 @@ namespace Contentstack.Management.Core.Utils
 
         private static Type ResolveConcreteType(JsonElement jo)
         {
+            // Check for extension fields first
             var extensionUid = jo.TryGetProperty("extension_uid", out var ext) ? ext.GetString() : null;
             if (!string.IsNullOrEmpty(extensionUid))
                 return typeof(ExtensionField);
