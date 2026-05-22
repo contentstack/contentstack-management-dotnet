@@ -936,7 +936,6 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.VariantGroup" /></returns>
-        /*
         public VariantGroup VariantGroup(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -944,7 +943,6 @@ namespace Contentstack.Management.Core.Models
 
             return new VariantGroup(this, uid);
         }
-        */
 
         /// <summary>
         /// Gets the bulk operation instance for performing bulk operations on entries and assets.
