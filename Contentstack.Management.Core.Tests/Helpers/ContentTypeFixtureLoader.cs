@@ -1,6 +1,6 @@
 using Contentstack.Management.Core.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Tests.Helpers
 {
@@ -9,15 +9,15 @@ namespace Contentstack.Management.Core.Tests.Helpers
     /// </summary>
     public static class ContentTypeFixtureLoader
     {
-        public static ContentModelling LoadFromMock(JsonSerializer serializer, string embeddedFileName, string uidSuffix)
+        public static ContentModelling LoadFromMock(JsonSerializerOptions options, string embeddedFileName, string uidSuffix)
         {
             var text = Contentstack.GetResourceText(embeddedFileName);
-            var jo = JObject.Parse(text);
-            var baseUid = jo["uid"]?.Value<string>() ?? "ct";
+            var jo = JsonNode.Parse(text)!.AsObject();
+            var baseUid = jo["uid"]?.GetValue<string>() ?? "ct";
             jo["uid"] = $"{baseUid}_{uidSuffix}";
-            var title = jo["title"]?.Value<string>() ?? "CT";
+            var title = jo["title"]?.GetValue<string>() ?? "CT";
             jo["title"] = $"{title} {uidSuffix}";
-            return jo.ToObject<ContentModelling>(serializer);
+            return JsonSerializer.Deserialize<ContentModelling>(jo.ToJsonString(), options);
         }
     }
 }

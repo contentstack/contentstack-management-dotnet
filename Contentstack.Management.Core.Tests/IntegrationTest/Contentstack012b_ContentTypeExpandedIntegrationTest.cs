@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Models;
-using Contentstack.Management.Core.Models.CustomExtension;
 using Contentstack.Management.Core.Models.Fields;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
@@ -834,7 +833,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         private static string ParseExtensionUidFromUploadResponse(ContentstackResponse response)
         {
-            var jo = response.OpenJObjectResponse();
+            var jo = response.OpenJsonObjectResponse();
             var token = jo["extension"]?["uid"] ?? jo["uid"];
             return token?.ToString();
         }

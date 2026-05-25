@@ -55,24 +55,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Temporarily exclude tests that depend on excluded models and services -->
-    
-    <!-- Models that depend on excluded types -->
-    <Compile Remove="Models\AssetTest.cs" />
-    <Compile Remove="Models\AssetModelTest.cs" />
+    <!-- Out-of-scope model tests (not in the 12-module migration) -->
+    <Compile Remove="Models\LocaleTest.cs" />
+
     <Compile Remove="Models\AuditLogTest.cs" />
     <Compile Remove="Models\BaseModelTest.cs" />
-    <Compile Remove="Models\ContentTypeTest.cs" />
     <Compile Remove="Models\DeliveryTokenTest.cs" />
-    <Compile Remove="Models\EntryTest.cs" />
-    <Compile Remove="Models\EntryVariantTest.cs" />
-    <Compile Remove="Models\EnvironmentTest.cs" />
     <Compile Remove="Models\ExtensionTest.cs" />
     <Compile Remove="Models\ExtensionModelTest.cs" />
-    <Compile Remove="Models\FolderTest.cs" />
-    <Compile Remove="Models\GlobalFieldTest.cs" />
     <Compile Remove="Models\LabelTest.cs" />
-    <Compile Remove="Models\LocaleTest.cs" />
     <Compile Remove="Models\PublishQueueTest.cs" />
     <Compile Remove="Models\PublishRuleTest.cs" />
     <Compile Remove="Models\ReleaseTest.cs" />
@@ -80,83 +71,38 @@
     <Compile Remove="Models\RoleTest.cs" />
     <Compile Remove="Models\TaxonomyTest.cs" />
     <Compile Remove="Models\TermTest.cs" />
-    <Compile Remove="Models\VariantGroupTest.cs" />
     <Compile Remove="Models\WebhookTest.cs" />
     <Compile Remove="Models\WorkflowTest.cs" />
-    
-    <!-- Models that depend on Fields namespace -->
-    <Compile Remove="Models\ContentModel\**\*.cs" />
-    <Compile Remove="Models\Fields\**\*.cs" />
     <Compile Remove="Models\CustomExtensionTest.cs" />
-    <Compile Remove="Models\ContentModellingNestedGlobalFieldTest.cs" />
-    
-    <!-- Services that depend on Stack namespace -->
-    <Compile Remove="Core\Services\Stack\**\*.cs" />
-    <Compile Remove="Core\Services\Models\**\*.cs" />
-    <Compile Remove="Services\Models\**\*.cs" />
+
+    <!-- Bulk Operations excluded from migration scope -->
+    <Compile Remove="Core\Services\Stack\BulkAddItemsServiceTest.cs" />
+    <Compile Remove="Core\Services\Stack\BulkDeleteServiceTest.cs" />
+    <Compile Remove="Core\Services\Stack\BulkJobStatusServiceTest.cs" />
+    <Compile Remove="Core\Services\Stack\BulkPublishServiceTest.cs" />
+    <Compile Remove="Core\Services\Stack\BulkReleaseItemsServiceTest.cs" />
+    <Compile Remove="Core\Services\Stack\BulkUnpublishServiceTest.cs" />
+    <Compile Remove="Core\Services\Stack\BulkUpdateItemsServiceTest.cs" />
+    <Compile Remove="Core\Services\Stack\BulkWorkflowUpdateServiceTest.cs" />
     <Compile Remove="Services\BulkOperationServicesTest.cs" />
-    
-    <!-- Services that depend on excluded models -->
-    <Compile Remove="Core\Services\QueryServiceTest.cs" />
-    
-    <!-- OAuth tests -->
+
+    <!-- OAuth tests (out of scope) -->
     <Compile Remove="OAuth\**\*.cs" />
-    
-    <!-- Queryable tests that depend on Stack -->
+
+    <!-- Infrastructure tests not yet migrated -->
     <Compile Remove="Queryable\QueryTest.cs" />
-    
-    <!-- Additional model tests that were missed -->
-    <Compile Remove="Models\StackTest.cs" />
-    <Compile Remove="Models\UserTest.cs" />
-    
-    <!-- Utils tests that depend on old converter API -->
     <Compile Remove="Utils\TextNodeJsonConverterTest.cs" />
     <Compile Remove="Utils\NodeJsonConverterTest.cs" />
-    
-    <!-- HTTP tests that use old JsonSerializer -->
     <Compile Remove="Http\ContentstackHttpRequestTest.cs" />
-    
-    <!-- Mock files that use old API -->
-    <Compile Remove="Mokes\MockService.cs" />
-    <Compile Remove="Mokes\MockResponse.cs" />
-    
-    <!-- User service tests that still use JsonSerializer -->
-    <Compile Remove="Core\Services\User\**\*.cs" />
-    
-    <!-- Organization service tests that use JsonSerializer -->
-    <Compile Remove="Core\Services\Organization\**\*.cs" />
-    
-    <!-- Organization model test -->
-    <Compile Remove="Models\OrganizationTest.cs" />
-    
-    <!-- HTTP response tests that depend on MockResponse -->
     <Compile Remove="Http\ContentstackHttpResponseTest.cs" />
     <Compile Remove="Http\ContentstackErrorExceptionTest.cs" />
-    
-    <!-- Utility tests that depend on MockService -->
     <Compile Remove="Utils\ContentstackUtilitiesTest.cs" />
-    
-    <!-- ContentstackClient tests that depend on MockService/MockResponse -->
-    <Compile Remove="Core\ContentstackClientTest.cs" />
-    
-    <!-- Additional tests that depend on MockService/MockResponse -->
     <Compile Remove="Runtime\Pipeline\RetryHandler\RetryHandlerTest.cs" />
     <Compile Remove="Runtime\Pipeline\ContentstackRuntimePipelineTest.cs" />
-    
-    <!-- ContentstackService tests that use JsonSerializer -->
-    <Compile Remove="Core\Services\ContentstackServiceTest.cs" />
-    
-    <!-- Runtime tests that use MockService/MockResponse -->
     <Compile Remove="Runtime\Pipeline\RetryHandler\RetryHandlerIntegrationTest.cs" />
     <Compile Remove="Runtime\Pipeline\HttpHandler\HttpHandlerTest.cs" />
     <Compile Remove="Runtime\Pipeline\RetryHandler\DefaultRetryPolicyTest.cs" />
     <Compile Remove="Runtime\Contexts\ContextTest.cs" />
-    
-    <!-- Mock handlers that use old API -->
-    <Compile Remove="Mokes\MockHttpHandlerWithRetries.cs" />
-    
-    <!-- MockHttpResponse uses Newtonsoft.Json for obsolete JObject method -->
-    <Compile Remove="Mokes\MockHttpResponse.cs" />
   </ItemGroup>
 
   <ItemGroup>

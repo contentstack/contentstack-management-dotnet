@@ -6,7 +6,7 @@ using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Services.User;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
 {
@@ -14,7 +14,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
     public class LoginServiceTest
     {
         ICredentials credentials = new NetworkCredential("name", "password");
-        JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
 
         [TestMethod]
         public void Should_Not_Allow_Null_serializer()
@@ -25,13 +25,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Not_Allow_Null_Credentials()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new LoginService(serializer, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new LoginService(serializerOptions, null));
         }
 
         [TestMethod]
         public void Should_Allow_Credentials()
         {
-            var loginService = new LoginService(serializer, credentials);
+            var loginService = new LoginService(serializerOptions, credentials);
             loginService.ContentBody();
 
             Assert.IsNotNull(loginService);
@@ -43,7 +43,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Allow_Credentials_With_Token()
         {
-            var loginService = new LoginService(serializer, credentials, "token");
+            var loginService = new LoginService(serializerOptions, credentials, "token");
             loginService.ContentBody();
 
             Assert.IsNotNull(loginService);
@@ -55,7 +55,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         {
 
             string testMfaSecret = "JBSWY3DPEHPK3PXP"; // Base32 encoded "Hello!"
-            var loginService = new LoginService(serializer, credentials, null, testMfaSecret);
+            var loginService = new LoginService(serializerOptions, credentials, null, testMfaSecret);
             loginService.ContentBody();
 
             Assert.IsNotNull(loginService);
@@ -74,8 +74,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         public void Should_Generate_TOTP_Token_When_MfaSecret_Provided()
         {
             string testMfaSecret = "JBSWY3DPEHPK3PXP"; // Base32 encoded "Hello!"
-            var loginService1 = new LoginService(serializer, credentials, null, testMfaSecret);
-            var loginService2 = new LoginService(serializer, credentials, null, testMfaSecret);
+            var loginService1 = new LoginService(serializerOptions, credentials, null, testMfaSecret);
+            var loginService2 = new LoginService(serializerOptions, credentials, null, testMfaSecret);
             
             loginService1.ContentBody();
             loginService2.ContentBody();
@@ -106,7 +106,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
             // file deepcode ignore NoHardcodedCredentials/test: random test token
             string explicitToken = "123456";
             
-            var loginService = new LoginService(serializer, credentials, explicitToken, testMfaSecret);
+            var loginService = new LoginService(serializerOptions, credentials, explicitToken, testMfaSecret);
             loginService.ContentBody();
 
             var contentString = Encoding.Default.GetString(loginService.ByteContent);
@@ -122,13 +122,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
             // Invalid Base32 secret (contains invalid characters)
             string invalidMfaSecret = "INVALID_BASE32_123!@#";
             
-            var loginService = new LoginService(serializer, credentials, null, invalidMfaSecret);
+            var loginService = new LoginService(serializerOptions, credentials, null, invalidMfaSecret);
         }
 
         [TestMethod]
         public void Should_Not_Generate_Token_When_MfaSecret_Is_Empty()
         {
-            var loginService = new LoginService(serializer, credentials, null, "");
+            var loginService = new LoginService(serializerOptions, credentials, null, "");
             loginService.ContentBody();
 
             var contentString = Encoding.Default.GetString(loginService.ByteContent);
@@ -141,7 +141,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Not_Generate_Token_When_MfaSecret_Is_Null()
         {
-            var loginService = new LoginService(serializer, credentials, null, null);
+            var loginService = new LoginService(serializerOptions, credentials, null, null);
             loginService.ContentBody();
 
             var contentString = Encoding.Default.GetString(loginService.ByteContent);
@@ -154,7 +154,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Override_Authtoken_To_ContentstackOptions_On_Success()
         {
-            var loginService = new LoginService(serializer, credentials);
+            var loginService = new LoginService(serializerOptions, credentials);
             var config = new ContentstackClientOptions();
             ContentstackResponse httpResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
 
@@ -168,7 +168,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Not_Override_Authtoken_To_ContentstackOptions_On_Failuer_response()
         {
-            var loginService = new LoginService(serializer, credentials);
+            var loginService = new LoginService(serializerOptions, credentials);
             var config = new ContentstackClientOptions();
             ContentstackResponse httpResponse = MockResponse.CreateContentstackResponse("422Response.txt");
 

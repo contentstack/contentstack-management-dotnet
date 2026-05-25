@@ -4,14 +4,14 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Organization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
 {
     [TestClass]
     public class TransferOwnershipServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture()
         .Customize(new AutoMoqCustomization());
 
@@ -24,14 +24,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         [TestMethod]
         public void Should_Throw_On_Null_UID()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new TransferOwnershipService(serializer, null, _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new TransferOwnershipService(serializerOptions, null, _fixture.Create<string>()));
 
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_Email()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new TransferOwnershipService(serializer, _fixture.Create<string>(), null));
+            Assert.ThrowsException<ArgumentNullException>(() => new TransferOwnershipService(serializerOptions, _fixture.Create<string>(), null));
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         {
             var orgUid = _fixture.Create<string>();
             var email = _fixture.Create<string>();
-            var service = new TransferOwnershipService(serializer, orgUid, email);
+            var service = new TransferOwnershipService(serializerOptions, orgUid, email);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -52,7 +52,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         {
             var orgUid = _fixture.Create<string>();
             var email = _fixture.Create<string>();
-            var service = new TransferOwnershipService(serializer, orgUid, email);
+            var service = new TransferOwnershipService(serializerOptions, orgUid, email);
 
 
             service.ContentBody();

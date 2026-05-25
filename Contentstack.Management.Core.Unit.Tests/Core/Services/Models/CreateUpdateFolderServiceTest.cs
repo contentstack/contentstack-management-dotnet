@@ -1,18 +1,17 @@
-﻿using System;
+using System;
 using System.Text;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
 {
     [TestClass]
     public class CreateUpdateFolderServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
        .Customize(new AutoMoqCustomization());
 
@@ -21,7 +20,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Should_Throw_On_Null_Serializer()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateFolderService(
-                null,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<string>(),
                 _fixture.Create<string>(),
@@ -31,7 +29,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Should_Throw_On_API_Key()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateFolderService(
-                serializer,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<string>(),
                 _fixture.Create<string>(),
@@ -43,7 +40,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         {
             var apiKey = _fixture.Create<string>();
             Assert.ThrowsException<ArgumentNullException>(() => new CreateUpdateFolderService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 null,
                 _fixture.Create<string>(),
@@ -59,7 +55,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var collection = new Management.Core.Queryable.ParameterCollection();
             collection.Add(_fixture.Create<string>(), false);
             CreateUpdateFolderService service = new CreateUpdateFolderService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 name,
                 null,
@@ -82,7 +77,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var collection = new Management.Core.Queryable.ParameterCollection();
             collection.Add(_fixture.Create<string>(), false);
             CreateUpdateFolderService service = new CreateUpdateFolderService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 name,
                 uid,

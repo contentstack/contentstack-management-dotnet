@@ -53,11 +53,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Temporarily exclude all integration tests that depend on excluded models -->
-    <Compile Remove="IntegrationTest\**\*.cs" />
-    
-    <!-- Exclude model helpers and fixtures -->
-    <Compile Remove="Model\Models.cs" />
-    <Compile Remove="Helpers\ContentTypeFixtureLoader.cs" />
+    <!-- Exclude out-of-scope integration tests (still use Newtonsoft or depend on excluded SDK types) -->
+    <Compile Remove="IntegrationTest\Contentstack004_ReleaseTest.cs" />
+    <Compile Remove="IntegrationTest\Contentstack012b_ContentTypeExpandedIntegrationTest.cs" />
+
+    <Compile Remove="IntegrationTest\Contentstack015_BulkOperationTest.cs" />
+    <Compile Remove="IntegrationTest\Contentstack016_DeliveryTokenTest.cs" />
+    <Compile Remove="IntegrationTest\Contentstack017_TaxonomyTest.cs" />
+    <Compile Remove="IntegrationTest\Contentstack019_RoleTest.cs" />
+    <Compile Remove="IntegrationTest\Contentstack020_WorkflowTest.cs" />
   </ItemGroup>
 </Project>

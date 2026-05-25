@@ -11,7 +11,7 @@ using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
@@ -229,16 +229,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             Assert.IsTrue(response.IsSuccessStatusCode, 
                 $"Should successfully fetch variant groups: {response.OpenResponse()}");
             
-            var jObject = response.OpenJObjectResponse();
-            var variantGroups = jObject["variant_groups"] as JArray;
-            
+            var jObject = response.OpenJsonObjectResponse();
+            var variantGroups = jObject["variant_groups"]?.AsArray();
+
             Assert.IsNotNull(variantGroups, "Variant groups array should not be null");
             Console.WriteLine($"Found {variantGroups.Count} variant groups");
-            
+
             // Store first variant group for subsequent tests
             if (variantGroups.Count > 0)
             {
-                _testVariantGroupUid = variantGroups[0]["uid"]?.ToString();
+                _testVariantGroupUid = variantGroups[0]?["uid"]?.ToString();
                 TestOutputLogger.LogContext("VariantGroupUID", _testVariantGroupUid);
                 Console.WriteLine($"Using variant group UID: {_testVariantGroupUid}");
             }
@@ -264,17 +264,17 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             Assert.IsTrue(response.IsSuccessStatusCode, 
                 $"Should successfully fetch variant groups with pagination: {response.OpenResponse()}");
             
-            var jObject = response.OpenJObjectResponse();
+            var jObject = response.OpenJsonObjectResponse();
             Assert.IsNotNull(jObject["variant_groups"], "Should have variant_groups array");
-            
+
             // Check if count is included when requested
             if (jObject["count"] != null)
             {
                 Console.WriteLine($"Total count: {jObject["count"]}");
             }
-            
-            var variantGroups = jObject["variant_groups"] as JArray;
-            Console.WriteLine($"Returned {variantGroups.Count} variant groups with pagination");
+
+            var variantGroups = jObject["variant_groups"]?.AsArray();
+            Console.WriteLine($"Returned {variantGroups?.Count ?? 0} variant groups with pagination");
             
             // Verify pagination worked - should return at most 5 items
             Assert.IsTrue(variantGroups.Count <= 5, "Pagination limit should be respected");
@@ -298,39 +298,39 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 return;
             }
             
-            var jObject = contentTypesResponse.OpenJObjectResponse();
-            var contentTypesArray = jObject["content_types"] as JArray;
-            
+            var jObject = contentTypesResponse.OpenJsonObjectResponse();
+            var contentTypesArray = jObject["content_types"]?.AsArray();
+
             if (contentTypesArray == null || contentTypesArray.Count == 0)
             {
                 Assert.Inconclusive("No content types found in the stack. Please create at least one content type to run VariantGroup link/unlink tests.");
                 return;
             }
-            
+
             // Store all available content types for use in various tests
             foreach (var ct in contentTypesArray)
             {
-                var uid = ct["uid"]?.ToString();
+                var uid = ct?["uid"]?.ToString();
                 if (!string.IsNullOrEmpty(uid))
                 {
                     _availableContentTypes.Add(uid);
                 }
             }
-            
+
             // Use the first available content type as primary test subject
             _testContentTypeUid = _availableContentTypes[0];
-            var primaryContentTypeName = contentTypesArray[0]["title"]?.ToString();
-            
+            var primaryContentTypeName = contentTypesArray[0]?["title"]?.ToString();
+
             Assert.IsNotNull(_testContentTypeUid, "Content type UID should not be null");
-            
+
             TestOutputLogger.LogContext("ContentTypeUID", _testContentTypeUid);
             Console.WriteLine($"Using primary content type: {primaryContentTypeName} (UID: {_testContentTypeUid})");
-            
+
             // Log all available content types for debugging
             Console.WriteLine($"Found {_availableContentTypes.Count} content types in the stack:");
             foreach (var ct in contentTypesArray)
             {
-                Console.WriteLine($"  - {ct["title"]} (UID: {ct["uid"]})");
+                Console.WriteLine($"  - {ct?["title"]} (UID: {ct?["uid"]})");
             }
         }
 
@@ -359,7 +359,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     Console.WriteLine($"✅ Successfully linked content type {_testContentTypeUid} to variant group {_testVariantGroupUid}");
                     
                     // Verify the response structure
-                    var responseObj = linkResponse.OpenJObjectResponse();
+                    var responseObj = linkResponse.OpenJsonObjectResponse();
                     Assert.IsNotNull(responseObj, "Response should contain JSON object");
                 }
                 else
@@ -574,12 +574,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             Assert.IsTrue(response.IsSuccessStatusCode, 
                 $"Should work with query parameters: {response.OpenResponse()}");
             
-            var jObject = response.OpenJObjectResponse();
-            var variantGroups = jObject["variant_groups"] as JArray;
+            var jObject = response.OpenJsonObjectResponse();
+            var variantGroups = jObject["variant_groups"]?.AsArray();
             Assert.IsNotNull(variantGroups, "Should have variant_groups array with advanced parameters");
-            
+
             Console.WriteLine($"✅ Found {variantGroups.Count} variant groups with advanced query parameters");
-            
+
             if (jObject["count"] != null)
             {
                 Console.WriteLine($"   Total count in response: {jObject["count"]}");
