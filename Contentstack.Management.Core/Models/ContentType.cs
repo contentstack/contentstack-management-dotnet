@@ -155,7 +155,6 @@ namespace Contentstack.Management.Core.Models
             return base.DeleteAsync(collection);
         }
 
-        /*
         /// <summary>
         /// <see cref="Models.Entry" /> is the actual piece of content created using one of the defined content types.
         /// </summary>
@@ -177,6 +176,5 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
             return new Entry(stack, Uid, uid);
         }
-        */
     }
 }

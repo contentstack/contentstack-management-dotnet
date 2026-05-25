@@ -87,8 +87,7 @@
     <!-- BulkOperation.cs - RE-ENABLED -->
     <!-- ContentModelling.cs - RE-ENABLED for ContentType -->
     <!-- ContentType.cs - RE-ENABLED -->
-    <Compile Remove="Models\Entry.cs" />
-    <Compile Remove="Models\EntryVariant.cs" />
+    <!-- Entry.cs, EntryVariant.cs - RE-ENABLED for Entry module STJ migration -->
     <!-- Environment.cs - RE-ENABLED for Environment module STJ migration -->
     <Compile Remove="Models\Extension.cs" />
     <!-- Folder.cs - RE-ENABLED for Assets module -->
@@ -104,7 +103,7 @@
     <Compile Remove="Models\Taxonomy.cs" />
     <Compile Remove="Models\Term.cs" />
     <!-- User.cs - RE-ENABLED -->
-    <Compile Remove="Models\VariantGroup.cs" />
+    <!-- Models\VariantGroup.cs - RE-ENABLED for VariantGroup module STJ migration -->
     <!-- Version.cs - RE-ENABLED for Assets module -->
     <Compile Remove="Models\Webhook.cs" />
     <Compile Remove="Models\Workflow.cs" />
@@ -126,11 +125,9 @@
     <!-- QueryService.cs - RE-ENABLED for ContentType listing -->
     <!-- Re-enable essential model services for ContentType -->
     <!-- GlobalFieldService.cs, GlobalFieldFetchDeleteService.cs - RE-ENABLED for Global Field module STJ migration -->
-    <Compile Remove="Services\Models\ImportExportService.cs" />
-    <Compile Remove="Services\Models\LocaleService.cs" />
-    <Compile Remove="Services\Models\LocalizationService.cs" />
+    <!-- ImportExportService.cs, LocaleService.cs, LocalizationService.cs - RE-ENABLED for Entry module STJ migration -->
     <!-- FetchReferencesService, CreateUpdateFolderService, UploadService, PublishUnpublishService - RE-ENABLED for Assets module -->
-    <Compile Remove="Services\Models\VariantContentTypeLinkService.cs" />
+    <!-- Services\Models\VariantContentTypeLinkService.cs - RE-ENABLED for VariantGroup module STJ migration -->
     <!-- Versioning services - RE-ENABLED for Assets module -->
     <!-- <Compile Remove="Services\Models\Versioning\**\*.cs" /> -->
     <!-- CreateUpdateService, FetchDeleteService, DeleteService - RE-ENABLED for ContentType -->

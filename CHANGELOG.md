@@ -1,5 +1,14 @@
 # Changelog
 
+## [v1.0.0-beta.6](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.6)
+ - **Entry, Entry Variant & Variant Group STJ Migration Complete**
+   - Migrated Entry and EntryVariant modules from Newtonsoft.Json to System.Text.Json
+   - Fully migrated VariantGroup module with VariantContentTypeLinkService using Utf8JsonWriter
+   - Re-enabled Stack.VariantGroup() method for variant group operations
+   - Updated service constructors to use JsonSerializerOptions instead of JsonSerializer
+   - Enhanced variant group API integration with proper content type linking
+   - Removed build exclusions for VariantGroup files to re-enable module functionality
+
 ## [v1.0.0-beta.5](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.5)
  - **Environment & Global Field STJ Migration**
    - Migrated Environment and Global Field modules from Newtonsoft.Json to System.Text.Json
