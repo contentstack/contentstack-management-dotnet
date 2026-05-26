@@ -1,59 +1,25 @@
 # Changelog
 
-## [v1.0.0-beta.6](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.6)
- - **Entry, Entry Variant & Variant Group STJ Migration Complete**
-   - Migrated Entry and EntryVariant modules from Newtonsoft.Json to System.Text.Json
-   - Fully migrated VariantGroup module with VariantContentTypeLinkService using Utf8JsonWriter
-   - Re-enabled Stack.VariantGroup() method for variant group operations
-   - Updated service constructors to use JsonSerializerOptions instead of JsonSerializer
-   - Enhanced variant group API integration with proper content type linking
-   - Removed build exclusions for VariantGroup files to re-enable module functionality
-
-## [v1.0.0-beta.5](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.5)
- - **Environment & Global Field STJ Migration**
-   - Migrated Environment and Global Field modules from Newtonsoft.Json to System.Text.Json
-   - Updated service constructors to use JsonSerializerOptions and Utf8JsonWriter serialization
-   - Re-enabled Environment() and GlobalField() methods in Stack class
-
-## [v1.0.0-beta.4](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.4)
- - **Assets STJ Migration Complete**
-   - Fully migrated Assets module from Newtonsoft.Json to System.Text.Json
-   - Updated Asset.cs, AssetModel.cs, Folder.cs, and Version.cs with STJ service integration
-   - Migrated UploadService, CreateUpdateFolderService, FetchReferencesService, PublishUnpublishService, and VersionService to use Utf8JsonWriter and JsonSerializerOptions
-   - Re-enabled Stack.Asset() method for asset operations
-
-## [v1.0.0-beta.3](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.3)
- - **ContentType & QueryService STJ Migration**
-   - **✅ ContentType Module**: Fully migrated ContentType model and dependencies to System.Text.Json
-   - **✅ QueryService Migration**: Re-enabled and migrated QueryService for content type listing
-   - **✅ Field System**: Converted core Field models (FieldMetadata, Field, FieldRules) to STJ
-   - **✅ ContentModelling**: Updated ContentModelling and Option classes with STJ attributes
-   - **✅ Service Layer**: Migrated CreateUpdateService, FetchDeleteService, and DeleteService
-   - **✅ Web App Integration**: Complete ContentType CRUD interface with modern UI
-   - **✅ Schema Validation**: Added default "Title" field to prevent 422 API errors
-   - **✅ Error Handling**: Enhanced error reporting with detailed API validation messages
-   - **✅ Navigation**: Integrated ContentType management into Stack workflow
-
-## [v1.0.0-beta.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.2)
- - **System.Text.Json Migration Complete (Beta)**
-   - **✅ Core Modules STJ-Only**: Client, User, Organization, and Stack modules fully migrated
-   - **✅ Service Layer**: All User, Organization, Stack services converted to System.Text.Json
-   - **✅ Model Updates**: Updated constructors and service calls to use JsonSerializerOptions
-   - **✅ Response Handling**: Implemented OpenJsonObjectResponse() for STJ-based JSON parsing
-   - **✅ Backward Compatibility**: Non-migrated modules continue using Newtonsoft.Json
-   - **✅ Testing Infrastructure**: Comprehensive web application for STJ validation
-   - **Performance**: Improved JSON serialization performance and reduced memory footprint
-   - **Architecture**: Clean separation between STJ and Newtonsoft implementations
-
 ## [v1.0.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.1)
  - **Breaking Change**
    - **System.Text.Json Migration (Beta)**
      - Migrated core serialization from Newtonsoft.Json to System.Text.Json
      - Updated ContentstackClient, ContentstackResponse, and core HTTP handling
      - Added backward compatibility for IResponse interface with both JsonObject and JObject support
-     - Temporarily excluded non-core models and services during migration
-     - Enhanced JSON serialization performance and reduced dependencies
-     - **Note**: This is a beta release - some features may be temporarily unavailable
+     - Migrated core modules including Client, User, Organization, Stack, ContentType, Assets, Environment, Global Field, Entry, Entry Variant, and Variant Group to System.Text.Json
+     - Re-enabled previously excluded modules and Stack methods including Asset(), Environment(), GlobalField(), and VariantGroup()
+     - Migrated QueryService and related service layers to use JsonSerializerOptions and Utf8JsonWriter
+     - Updated constructors, response handling, and serialization services across modules
+     - Migrated field system models, content modelling classes, and variant group integrations
+     - Enhanced variant group API integration with proper content type linking
+     - Added OpenJsonObjectResponse() support for STJ-based JSON parsing
+     - Improved error handling with enhanced API validation messages
+     - Added schema validation improvements including default Title field handling
+     - Improved JSON serialization performance and reduced memory footprint
+     - Reduced Newtonsoft.Json dependency while maintaining backward compatibility for non-migrated functionality
+     - Added comprehensive STJ migration testing and validation infrastructure
+     - Added/updated unit and integration test coverage for all migrated modules including Client, User, Organization, Stack, ContentType, Assets, Environment, Global Field, Entry, Entry Variant, and Variant Group
+     - **Note**: This is a beta release and APIs/modules may continue evolving during migration stabilization
 
 ## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
  - Feat
