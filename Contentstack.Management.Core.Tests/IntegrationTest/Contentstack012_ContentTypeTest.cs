@@ -9,8 +9,6 @@ using Contentstack.Management.Core.Models.Fields;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
-
 // Resolve ambiguous reference between System.Action and Contentstack.Management.Core.Models.Fields.Action
 using SystemAction = System.Action;
 
@@ -991,7 +989,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Uid = "invalid_reference",
                 DisplayName = "Invalid Reference", 
                 DataType = "reference",
-                ReferenceTo = new List<string> { "nonexistent_content_type_uid" }
+                ReferenceTo = System.Text.Json.JsonSerializer.SerializeToElement(new System.Collections.Generic.List<string> { "nonexistent_content_type_uid" })
             });
 
             try
@@ -1064,7 +1062,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         DataType = "text",
                         FieldMetadata = new FieldMetadata 
                         { 
-                            Default = "true", 
+                            Default = System.Text.Json.JsonDocument.Parse("true").RootElement, 
                             Version = 3,
                             AllowRichText = false,
                             Multiline = false,

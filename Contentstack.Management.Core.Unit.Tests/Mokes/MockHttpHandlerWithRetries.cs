@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Internal;
 using Contentstack.Management.Core.Runtime.Contexts;
 using Contentstack.Management.Core.Runtime.Pipeline;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
@@ -41,7 +41,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
                 {
                     response.Content = new StringContent(body);
                 }
-                return new ContentstackResponse(response, JsonSerializer.Create(new JsonSerializerSettings()));
+                return new ContentstackResponse(response, new JsonSerializerOptions());
             });
         }
 
@@ -111,7 +111,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             // Default: return success
             var defaultResponse = new HttpResponseMessage(HttpStatusCode.OK);
             defaultResponse.Content = new StringContent("{\"success\": true}");
-            var contentstackResponse = new ContentstackResponse(defaultResponse, JsonSerializer.Create(new JsonSerializerSettings()));
+            var contentstackResponse = new ContentstackResponse(defaultResponse, new JsonSerializerOptions());
             executionContext.ResponseContext.httpResponse = contentstackResponse;
             return await System.Threading.Tasks.Task.FromResult<T>((T)(IResponse)contentstackResponse);
         }
@@ -142,7 +142,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
             // Default: return success
             var defaultResponse = new HttpResponseMessage(HttpStatusCode.OK);
             defaultResponse.Content = new StringContent("{\"success\": true}");
-            var contentstackResponse = new ContentstackResponse(defaultResponse, JsonSerializer.Create(new JsonSerializerSettings()));
+            var contentstackResponse = new ContentstackResponse(defaultResponse, new JsonSerializerOptions());
             executionContext.ResponseContext.httpResponse = contentstackResponse;
         }
     }

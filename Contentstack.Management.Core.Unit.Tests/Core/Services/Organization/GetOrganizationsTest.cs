@@ -3,14 +3,14 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Organization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
 {
     [TestClass]
     public class GetOrganizationsTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture()
         .Customize(new AutoMoqCustomization());
 
@@ -23,7 +23,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         [TestMethod]
         public void Should_Initialize_with_Serializer()
         {
-            var getOrganisationService = new GetOrganizations(serializer, null);
+            var getOrganisationService = new GetOrganizations(serializerOptions, null);
 
             Assert.IsNotNull(getOrganisationService);
             Assert.AreEqual(true, getOrganisationService.UseQueryString);
@@ -35,7 +35,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Initialize_with_Organization_Uid()
         {
             var orgid = _fixture.Create<string>();
-            var getOrganisationService = new GetOrganizations(serializer, null, orgid);
+            var getOrganisationService = new GetOrganizations(serializerOptions, null, orgid);
 
             Assert.IsNotNull(getOrganisationService);
             Assert.AreEqual(true, getOrganisationService.UseQueryString);
@@ -47,7 +47,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         [TestMethod]
         public void Should_Initialize_with_Serializer_Empty_Param_Collection()
         {
-            var getOrganisationService = new GetOrganizations(serializer, new Management.Core.Queryable.ParameterCollection());
+            var getOrganisationService = new GetOrganizations(serializerOptions, new Management.Core.Queryable.ParameterCollection());
 
             Assert.IsNotNull(getOrganisationService);
             Assert.AreEqual(true, getOrganisationService.UseQueryString);
@@ -60,7 +60,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         {
             var collection = new Management.Core.Queryable.ParameterCollection();
             collection.Add(_fixture.Create<string>(), false);
-            var getOrganisationService = new GetOrganizations(serializer, collection);
+            var getOrganisationService = new GetOrganizations(serializerOptions, collection);
 
             Assert.IsNotNull(getOrganisationService);
             Assert.AreEqual(true, getOrganisationService.UseQueryString);

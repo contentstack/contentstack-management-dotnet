@@ -59,6 +59,7 @@ namespace Contentstack.Management.Core.Exceptions
         /// This is error code.
         /// </summary>
         [JsonPropertyName("error_code")]
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
         public int ErrorCode { get; set; }
 
         /// <summary>

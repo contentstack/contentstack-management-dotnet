@@ -13,7 +13,8 @@ namespace Contentstack.Management.Core.Models.Fields
         /// The UID of the global field being referenced.
         /// </summary>
         [JsonPropertyName("reference_to")]
-        public string ReferenceTo { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? ReferenceTo { get; set; }
 
         /// <summary>
         /// Determines if this field can accept multiple values.

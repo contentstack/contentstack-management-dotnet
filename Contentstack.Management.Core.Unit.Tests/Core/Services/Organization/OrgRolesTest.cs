@@ -1,28 +1,27 @@
-﻿using System;
+using System;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Organization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
 {
     [TestClass]
     public class OrgRolesTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
             .Customize(new AutoMoqCustomization());
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new OrganizationRolesService(null, _fixture.Create<string>(), null));
+            Assert.ThrowsException<ArgumentNullException>(() => new OrganizationRolesService(null, null));
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_UID()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new OrganizationRolesService(serializer, null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new OrganizationRolesService(null, null));
 
         }
 
@@ -33,7 +32,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
             var collection = new Management.Core.Queryable.ParameterCollection();
             collection.Add(_fixture.Create<string>(), false);
 
-            var orgRoles = new OrganizationRolesService(serializer, orgId, collection);
+            var orgRoles = new OrganizationRolesService(orgId, collection);
 
             Assert.IsNotNull(orgRoles);
             Assert.AreEqual(true, orgRoles.UseQueryString);

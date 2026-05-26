@@ -10,21 +10,21 @@ using Contentstack.Management.Core.Models.Fields;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Contentstack.Management.Core.Abstractions;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
     public class ProductBannerEntry : IEntry
     {
-        [JsonProperty("title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonProperty("banner_title")]
+        [JsonPropertyName("banner_title")]
         public string BannerTitle { get; set; }
 
-        [JsonProperty("banner_color")]
+        [JsonPropertyName("banner_color")]
         public string BannerColor { get; set; }
     }
 
@@ -262,8 +262,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             var vgResponse = await _stack.VariantGroup().FindAsync(collection);
             Console.WriteLine("Variant Groups Response: " + vgResponse.OpenResponse());
 
-            var vgJObject = vgResponse.OpenJObjectResponse();
-            var groups = vgJObject["variant_groups"] as JArray;
+            var vgJsonObject = vgResponse.OpenJsonObjectResponse();
+            var groups = vgJsonObject["variant_groups"]?.AsArray();
 
             if (groups == null || groups.Count == 0)
             {
@@ -271,26 +271,26 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 return;
             }
 
-            _variantGroupUid = groups[0]["uid"]?.ToString();
-            
-            var variantsArray = groups[0]["variants"] as JArray;
+            _variantGroupUid = groups[0]?["uid"]?.ToString();
+
+            var variantsArray = groups[0]?["variants"]?.AsArray();
             if (variantsArray != null && variantsArray.Count > 0)
             {
-                _variantUid = variantsArray[0]["uid"]?.ToString();
+                _variantUid = variantsArray[0]?["uid"]?.ToString();
             }
             else
             {
-                var variantUids = groups[0]["variant_uids"] as JArray;
+                var variantUids = groups[0]?["variant_uids"]?.AsArray();
                 if (variantUids != null && variantUids.Count > 0)
                 {
-                    _variantUid = variantUids[0].ToString();
+                    _variantUid = variantUids[0]?.ToString();
                 }
             }
 
             if (string.IsNullOrEmpty(_variantUid))
             {
                 // Fallback to demo UIDs if none are returned by the API so the test doesn't skip
-                _variantUid = "cs2082f36d4099af4e";
+                _variantUid = "cs372c03252b23f623";
                 Console.WriteLine("Warning: The variant group had no variants. Using a hardcoded variant UID for testing: " + _variantUid);
             }
 
@@ -352,11 +352,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
             // 4. Ensure Base Entry exists
             var queryResp = await _stack.ContentType(_contentTypeUid).Entry().Query().FindAsync();
-            var entriesArray = queryResp.OpenJObjectResponse()["entries"] as JArray;
-            
+            var entriesArray = queryResp.OpenJsonObjectResponse()["entries"]?.AsArray();
+
             if (entriesArray != null && entriesArray.Count > 0)
             {
-                _entryUid = entriesArray[0]["uid"]?.ToString();
+                _entryUid = entriesArray[0]?["uid"]?.ToString();
             }
             else
             {
@@ -369,8 +369,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 var entryResponse = await _stack.ContentType(_contentTypeUid).Entry().CreateAsync(entryData);
                 Assert.IsTrue(entryResponse.IsSuccessStatusCode, "Should create base entry: " + entryResponse.OpenResponse());
-                var entryObj = entryResponse.OpenJObjectResponse()["entry"];
-                _entryUid = entryObj["uid"]?.ToString();
+                var entryObj = entryResponse.OpenJsonObjectResponse()["entry"];
+                _entryUid = entryObj?["uid"]?.ToString();
             }
 
             Assert.IsNotNull(_entryUid, "Entry UID should not be null");
@@ -1679,7 +1679,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     return;
                 }
 
-                var entryObj = entryResponse.OpenJObjectResponse()["entry"];
+                var entryObj = entryResponse.OpenJsonObjectResponse()["entry"];
                 tempEntryUid = entryObj["uid"]?.ToString();
 
                 // Try to create variant - should fail since content type is not linked to variant group
@@ -2047,7 +2047,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     return;
                 }
 
-                var entryObj = entryResponse.OpenJObjectResponse()["entry"];
+                var entryObj = entryResponse.OpenJsonObjectResponse()["entry"];
                 tempEntryUid = entryObj["uid"]?.ToString();
 
                 // Try to create variant - should fail
@@ -3454,10 +3454,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
     /// </summary>
     public class SimpleTestEntry : IEntry
     {
-        [JsonProperty(propertyName: "title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonProperty(propertyName: "_variant")]
+        [JsonPropertyName("_variant")]
         public object Variant { get; set; }
     }
 }

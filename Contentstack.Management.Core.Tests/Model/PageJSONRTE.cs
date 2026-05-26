@@ -1,5 +1,5 @@
 using Contentstack.Management.Core.Models;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Contentstack.Management.Core.Abstractions;
 
 namespace Contentstack.Management.Core.Tests.Model
@@ -8,12 +8,12 @@ namespace Contentstack.Management.Core.Tests.Model
     {
         public const string ContentType = "page_json_rte";
 
-        [JsonProperty(propertyName: "uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
-        [JsonProperty(propertyName: "_content_type_uid")]
+        [JsonPropertyName("_content_type_uid")]
         public string ContentTypeUid { get; set; }
         public string Title { get; set; }
-        [JsonProperty(propertyName: "rte_data")]
+        [JsonPropertyName("rte_data")]
         public Node RteData { get; set; }
     }
 }

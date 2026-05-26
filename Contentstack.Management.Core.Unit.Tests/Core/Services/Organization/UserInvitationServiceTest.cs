@@ -7,14 +7,14 @@ using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Organization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
 {
     [TestClass]
     public class UserInvitationServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture()
         .Customize(new AutoMoqCustomization());
 
@@ -27,14 +27,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         [TestMethod]
         public void Should_Throw_On_Null_UID()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new UserInvitationService(serializer, null, _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new UserInvitationService(serializerOptions, null, _fixture.Create<string>()));
 
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_Method()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new UserInvitationService(serializer, _fixture.Create<string>(), null));
+            Assert.ThrowsException<ArgumentNullException>(() => new UserInvitationService(serializerOptions, _fixture.Create<string>(), null));
 
         }
 
@@ -42,7 +42,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Initialize_with_Organization_Uid()
         {
             var orgUid = _fixture.Create<string>();
-            var service = new UserInvitationService(serializer, orgUid);
+            var service = new UserInvitationService(serializerOptions, orgUid);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("GET", service.HttpMethod);
@@ -54,7 +54,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Initialize_with_Organization_Uid_And_Method()
         {
             var orgUid = _fixture.Create<string>();
-            var service = new UserInvitationService(serializer, orgUid, "POST");
+            var service = new UserInvitationService(serializerOptions, orgUid, "POST");
 
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -66,7 +66,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Pass_Null_Content_On_Get_Method()
         {
             var orgUid = _fixture.Create<string>();
-            var service = new UserInvitationService(serializer, orgUid);
+            var service = new UserInvitationService(serializerOptions, orgUid);
 
             service.ContentBody();
 
@@ -80,7 +80,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
             var orgUid = _fixture.Create<string>();
             var collection = new Management.Core.Queryable.ParameterCollection();
             collection.Add(_fixture.Create<string>(), _fixture.Create<string>());
-            var service = new UserInvitationService(serializer, orgUid, "GET", collection);
+            var service = new UserInvitationService(serializerOptions, orgUid, "GET", collection);
 
             Assert.IsNotNull(service);
             Assert.AreEqual(true, service.UseQueryString);
@@ -93,7 +93,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Return_Content_Of_Post_Method()
         {
             var orgUid = _fixture.Create<string>();
-            var service = new UserInvitationService(serializer, orgUid, "POST");
+            var service = new UserInvitationService(serializerOptions, orgUid, "POST");
 
             service.ContentBody();
 
@@ -105,7 +105,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Return_Content_Organization_Invite_Of_Post_Method()
         {
             var orgUid = _fixture.Create<string>();
-            var service = new UserInvitationService(serializer, orgUid, "POST");
+            var service = new UserInvitationService(serializerOptions, orgUid, "POST");
 
             var userInvitation = new UserInvitation()
             {
@@ -127,7 +127,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Return_Content_Stack_Invite_Of_Post_Method()
         {
             var orgUid = _fixture.Create<string>();
-            var service = new UserInvitationService(serializer, orgUid, "POST");
+            var service = new UserInvitationService(serializerOptions, orgUid, "POST");
 
             var userInvitation = new UserInvitation()
             {
@@ -153,7 +153,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Return_Content_Organization_and_Stack_Invite_Of_Post_Method()
         {
             var orgUid = _fixture.Create<string>();
-            var service = new UserInvitationService(serializer, orgUid, "POST");
+            var service = new UserInvitationService(serializerOptions, orgUid, "POST");
 
             var userInvitation = new UserInvitation()
             {
@@ -184,7 +184,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Return_Content_Of_Delete_Method()
         {
             var orgUid = _fixture.Create<string>();
-            var service = new UserInvitationService(serializer, orgUid, "DELETE");
+            var service = new UserInvitationService(serializerOptions, orgUid, "DELETE");
 
             Assert.IsNotNull(service);
             service.ContentBody();
@@ -196,7 +196,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Return_Content_User_Email_Delete_Method()
         {
             var orgUid = _fixture.Create<string>();
-            var service = new UserInvitationService(serializer, orgUid, "DELETE");
+            var service = new UserInvitationService(serializerOptions, orgUid, "DELETE");
 
             var emails = _fixture.Create<List<string>>();
             var email = new List<string>();

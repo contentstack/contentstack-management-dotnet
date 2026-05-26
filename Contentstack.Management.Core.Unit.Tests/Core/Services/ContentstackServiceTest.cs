@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -14,14 +12,14 @@ using Contentstack.Management.Core.Services;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Contentstack.Management.Core.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services
 {
     [TestClass]
     public class ContentstackServiceTest
     {
-        JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture()
             .Customize(new AutoMoqCustomization());
         [TestMethod]
@@ -33,7 +31,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Should_Throw_Object_Disposed_Exception_On_Dispose()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
             contentstackService.Dispose();
 
             Assert.ThrowsException<ObjectDisposedException>(() => contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions()));
@@ -46,30 +44,23 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Returns_Null_Content()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
             contentstackService.ContentBody();
 
             Assert.IsNotNull(contentstackService);
             Assert.IsNull(contentstackService.Content);
-            Assert.IsNotNull(contentstackService.Serializer);
+            Assert.IsNotNull(contentstackService.SerializerOptions);
         }
 
         [TestMethod]
         public void Return_Content_data()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
 
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
-            {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-                writer.WriteStartObject();
-                writer.WritePropertyName("user");
-                writer.WriteValue("test_Mock_user");
-                writer.WriteEndObject();
+            var obj = new { user = "test_Mock_user" };
+            string snippet = JsonSerializer.Serialize(obj);
+            contentstackService.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
 
-                string snippet = stringWriter.ToString();
-                contentstackService.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
-            }
             contentstackService.WriteContentByte();
             Assert.IsNotNull(contentstackService.Content);
 
@@ -78,7 +69,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_Null_On_Response()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
             var config = new ContentstackClientOptions();
             ContentstackResponse httpResponse = MockResponse.CreateContentstackResponse("LoginResponse.txt");
 
@@ -92,7 +83,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_True_On_Get_Method()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
 
             Assert.AreEqual(HttpMethod.Get.ToString(), contentstackService.HttpMethod);
             Assert.IsTrue(contentstackService.UseQueryString);
@@ -101,7 +92,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_False_Other_Than_Get_Method()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
             contentstackService.HttpMethod = HttpMethod.Post.ToString();
 
             Assert.AreEqual(HttpMethod.Post.ToString(), contentstackService.HttpMethod);
@@ -142,7 +133,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_True_On_Setting_UseQueryString_To_True_For_All_Methods()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
             contentstackService.UseQueryString = true;
 
             contentstackService.HttpMethod = HttpMethod.Post.ToString();
@@ -185,7 +176,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_ResourcePath_On_Setting_ResourcePath()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
             contentstackService.ResourcePath = "resourcePath";
 
             Assert.AreEqual("resourcePath", contentstackService.ResourcePath);
@@ -194,7 +185,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_PathResources_On_Adding_Path_Resource()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
 
             contentstackService.AddPathResource("content_type_uid", "contentTypeUid");
             contentstackService.AddPathResource("entry_uid", "entryUid");
@@ -207,7 +198,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_PathResources_On_Adding_Query_Resource()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
 
             contentstackService.AddQueryResource("content_type_uid", "contentTypeUid");
             contentstackService.AddQueryResource("entry_uid", "entryUid");
@@ -220,7 +211,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_True_HttpBody_On_PUT_POST_PATCH_Methods()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
 
             contentstackService.HttpMethod = HttpMethod.Put.ToString();
 
@@ -242,7 +233,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_False_HttpBody_On_Other_Then_PUT_POST_PATCH_Methods()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
 
             contentstackService.HttpMethod = HttpMethod.Get.ToString();
 
@@ -264,7 +255,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_Empty_String_On_Non_Exist_HeaderKey()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
 
             Assert.AreEqual(string.Empty, contentstackService.GetHeaderValue("unknown"));
         }
@@ -272,7 +263,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_Value_For_HeaderKey()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
 
             contentstackService.Headers[HeadersKey.ContentTypeHeader] = "application/json";
 
@@ -282,7 +273,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void CreateHttpRequest_Should_Set_Content_Type_When_ShouldSetContentType_Returns_True()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
             var config = new ContentstackClientOptions();
             config.Authtoken = _fixture.Create<string>();
 
@@ -295,7 +286,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         [TestMethod]
         public void Return_HttpRequest_On_Create_HttpRequest()
         {
-            var contentstackService = new ContentstackService(serializer);
+            var contentstackService = new ContentstackService(serializerOptions);
             var config = new ContentstackClientOptions();
             config.Authtoken = _fixture.Create<string>();
             ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), config);
@@ -311,7 +302,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         {
             var token = _fixture.Create<string>();
 
-            var contentstackService = new ContentstackService(serializer, new Management.Core.Models.Stack(null, managementToken: token));
+            var contentstackService = new ContentstackService(serializerOptions, new Management.Core.Models.Stack(null, managementToken: token));
             ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
 
             IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("authorization");
@@ -325,7 +316,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         {
             var apiKey = _fixture.Create<string>();
 
-            var contentstackService = new ContentstackService(serializer, new Management.Core.Models.Stack(null, apiKey: apiKey));
+            var contentstackService = new ContentstackService(serializerOptions, new Management.Core.Models.Stack(null, apiKey: apiKey));
             ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
 
             IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("api_key");
@@ -339,7 +330,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
         {
             var token = _fixture.Create<string>();
 
-            var contentstackService = new ContentstackService(serializer, new Management.Core.Models.Stack(null, branchUid: token));
+            var contentstackService = new ContentstackService(serializerOptions, new Management.Core.Models.Stack(null, branchUid: token));
             ContentstackHttpRequest httpClient = (ContentstackHttpRequest)contentstackService.CreateHttpRequest(new HttpClient(), new ContentstackClientOptions());
 
             IEnumerable<string> headerValues = httpClient.Request.Headers.GetValues("branch");
@@ -355,7 +346,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services
             parameter.Add("limit", 10);
             parameter.Add("include", new List<string>() { "1", "2", "3" });
 
-            var contentstackService = new ContentstackService(serializer, collection: parameter);
+            var contentstackService = new ContentstackService(serializerOptions, collection: parameter);
             contentstackService.HttpMethod = HttpMethod.Post.ToString();
             contentstackService.UseQueryString = true;
 

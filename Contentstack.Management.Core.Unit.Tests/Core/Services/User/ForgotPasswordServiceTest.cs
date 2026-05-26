@@ -3,14 +3,14 @@ using System.Text;
 using AutoFixture;
 using Contentstack.Management.Core.Services.User;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
 {
     [TestClass]
     public class ForgotPasswordServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture();
 
         [TestMethod]
@@ -22,13 +22,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Throw_On_Null_Email()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ForgotPasswordService(serializer, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new ForgotPasswordService(serializerOptions, null));
         }
 
         [TestMethod]
         public void Should_Initialize_With_Proper_ResourcePath_And_Method()
         {
-            ForgotPasswordService forgotPasswordService = new ForgotPasswordService(serializer, _fixture.Create<string>());
+            ForgotPasswordService forgotPasswordService = new ForgotPasswordService(serializerOptions, _fixture.Create<string>());
             Assert.IsNotNull(forgotPasswordService);
 
             Assert.AreEqual("POST", forgotPasswordService.HttpMethod);
@@ -39,7 +39,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         public void Should_Return_Null_Content_On_ContentBody_Call()
         {
             string _email = _fixture.Create<string>();
-            ForgotPasswordService forgotPasswordService = new ForgotPasswordService(serializer, _email);
+            ForgotPasswordService forgotPasswordService = new ForgotPasswordService(serializerOptions, _email);
             forgotPasswordService.ContentBody();
 
             Assert.IsNotNull(forgotPasswordService);

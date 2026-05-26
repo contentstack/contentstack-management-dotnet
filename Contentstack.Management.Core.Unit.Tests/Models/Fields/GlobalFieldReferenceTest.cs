@@ -2,7 +2,7 @@ using System;
 using AutoFixture;
 using Contentstack.Management.Core.Models.Fields;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
 {
@@ -14,7 +14,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Create_GlobalFieldReference_With_All_Properties()
         {
-            
+
             var displayName = _fixture.Create<string>();
             var uid = _fixture.Create<string>();
             var referenceTo = _fixture.Create<string>();
@@ -23,7 +23,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 Description = "Test description"
             };
 
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = displayName,
@@ -51,7 +51,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Serialize_GlobalFieldReference_Correctly()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Test Global Field Reference",
@@ -68,8 +68,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 NonLocalizable = false
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+
+            var json = JsonSerializer.Serialize(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"display_name\":\"Test Global Field Reference\""));
             Assert.IsTrue(json.Contains("\"uid\":\"test_global_field_ref\""));
@@ -84,7 +84,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Deserialize_GlobalFieldReference_Correctly()
         {
-            
+
             var json = @"{
                 ""display_name"": ""Test Global Field Reference"",
                 ""uid"": ""test_global_field_ref"",
@@ -99,8 +99,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 ""non_localizable"": false
             }";
 
-            
-            var globalFieldRef = JsonConvert.DeserializeObject<GlobalFieldReference>(json);
+
+            var globalFieldRef = JsonSerializer.Deserialize<GlobalFieldReference>(json);
 
             Assert.AreEqual("Test Global Field Reference", globalFieldRef.DisplayName);
             Assert.AreEqual("test_global_field_ref", globalFieldRef.Uid);
@@ -122,4 +122,4 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
             Assert.IsInstanceOfType(globalFieldRef, typeof(Field));
         }
     }
-} 
+}

@@ -4,14 +4,14 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Stack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
 {
     [TestClass]
     public class StackCreateUpdateServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture()
        .Customize(new AutoMoqCustomization());
 
@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Throw_On_API_Key_And_Organization_Uid_Null()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new StackCreateUpdateService(
-                serializer,
+                serializerOptions,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<string>(),
                 _fixture.Create<string>(),
@@ -43,7 +43,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Throw_On_Null_Name()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new StackCreateUpdateService(
-                serializer,
+                serializerOptions,
                 new Management.Core.Models.Stack(null),
                 null,
                 _fixture.Create<string>(),
@@ -55,7 +55,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Throw_On_Master_Locale_Null_Exception_On_Stack_Creation()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new StackCreateUpdateService(
-                serializer,
+                serializerOptions,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<string>(),
                 null,
@@ -69,7 +69,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             var name = _fixture.Create<string>();
             var masterLocale = _fixture.Create<string>();
             var orgUID = _fixture.Create<string>();
-            var service = new StackCreateUpdateService(serializer, new Management.Core.Models.Stack(null), name, masterLocale, organizationUid: orgUID);
+            var service = new StackCreateUpdateService(serializerOptions, new Management.Core.Models.Stack(null), name, masterLocale, organizationUid: orgUID);
             service.ContentBody();
 
             Assert.IsNotNull(service);
@@ -85,7 +85,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             var masterLocale = _fixture.Create<string>();
             var desc = _fixture.Create<string>();
             var orgUID = _fixture.Create<string>();
-            var service = new StackCreateUpdateService(serializer, new Management.Core.Models.Stack(null), name, masterLocale, desc, organizationUid: orgUID);
+            var service = new StackCreateUpdateService(serializerOptions, new Management.Core.Models.Stack(null), name, masterLocale, desc, organizationUid: orgUID);
             service.ContentBody();
 
             Assert.IsNotNull(service);
@@ -99,7 +99,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var name = _fixture.Create<string>();
             var apiKey = _fixture.Create<string>();
-            var service = new StackCreateUpdateService(serializer, new Management.Core.Models.Stack(null, apiKey), name);
+            var service = new StackCreateUpdateService(serializerOptions, new Management.Core.Models.Stack(null, apiKey), name);
             service.ContentBody();
 
             Assert.IsNotNull(service);
@@ -114,7 +114,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             var name = _fixture.Create<string>();
             var desc = _fixture.Create<string>();
             var apiKey = _fixture.Create<string>();
-            var service = new StackCreateUpdateService(serializer, new Management.Core.Models.Stack(null, apiKey), name, description: desc);
+            var service = new StackCreateUpdateService(serializerOptions, new Management.Core.Models.Stack(null, apiKey), name, description: desc);
             service.ContentBody();
 
             Assert.IsNotNull(service);

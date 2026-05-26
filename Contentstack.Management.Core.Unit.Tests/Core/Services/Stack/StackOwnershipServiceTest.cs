@@ -1,37 +1,36 @@
-﻿using System;
+using System;
 using System.Text;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Stack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
 {
     [TestClass]
     public class StackOwnershipServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
         .Customize(new AutoMoqCustomization());
 
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(null, new Management.Core.Models.Stack(null, _fixture.Create<string>()), _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(new Management.Core.Models.Stack(null), _fixture.Create<string>()));
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(serializer, new Management.Core.Models.Stack(null), _fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(new Management.Core.Models.Stack(null), _fixture.Create<string>()));
 
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_Email()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(serializer, new Management.Core.Models.Stack(null, _fixture.Create<string>()), null));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackOwnershipService(new Management.Core.Models.Stack(null, _fixture.Create<string>()), null));
         }
 
         [TestMethod]
@@ -39,7 +38,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var apiKey = _fixture.Create<string>();
             var email = _fixture.Create<string>();
-            var service = new StackOwnershipService(serializer, new Management.Core.Models.Stack(null, apiKey), email);
+            var service = new StackOwnershipService(new Management.Core.Models.Stack(null, apiKey), email);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
@@ -52,7 +51,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var apiKey = _fixture.Create<string>();
             var email = _fixture.Create<string>();
-            var service = new StackOwnershipService(serializer, new Management.Core.Models.Stack(null, apiKey), email);
+            var service = new StackOwnershipService(new Management.Core.Models.Stack(null, apiKey), email);
 
             service.ContentBody();
 

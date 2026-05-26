@@ -5,13 +5,13 @@ using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
 {
     [TestClass]
     public class LocaleServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializer = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture()
        .Customize(new AutoMoqCustomization());
 
