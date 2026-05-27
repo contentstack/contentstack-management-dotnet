@@ -10,8 +10,7 @@ using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
@@ -110,8 +109,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse workflowResponse = _stack.Workflow().FindAll();
                 if (workflowResponse.IsSuccessStatusCode)
                 {
-                    var jObject = workflowResponse.OpenJObjectResponse();
-                    var workflowsArray = jObject["workflows"] as JArray;
+                    var jObject = workflowResponse.OpenJsonObjectResponse();
+                    var workflowsArray = jObject["workflows"] as JsonArray;
                     
                     if (workflowsArray != null && workflowsArray.Count > 0)
                     {
@@ -131,8 +130,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse publishRulesResponse = _stack.Workflow().PublishRule().FindAll();
                 if (publishRulesResponse.IsSuccessStatusCode)
                 {
-                    var jObject = publishRulesResponse.OpenJObjectResponse();
-                    var publishRulesArray = jObject["publishing_rules"] as JArray;
+                    var jObject = publishRulesResponse.OpenJsonObjectResponse();
+                    var publishRulesArray = jObject["publishing_rules"] as JsonArray;
                     
                     if (publishRulesArray != null && publishRulesArray.Count > 0)
                     {
@@ -280,8 +279,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse response = _stack.Workflow(workflowUid).Fetch();
                 if (response.IsSuccessStatusCode)
                 {
-                    var workflowJson = response.OpenJObjectResponse();
-                    var contentTypesArray = workflowJson["workflow"]?["content_types"] as JArray;
+                    var workflowJson = response.OpenJsonObjectResponse();
+                    var contentTypesArray = workflowJson["workflow"]?["content_types"] as JsonArray;
                     
                     if (contentTypesArray != null)
                     {
@@ -316,8 +315,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse envResponse = _stack.Environment().Query().Find();
                 if (envResponse.IsSuccessStatusCode)
                 {
-                    var envJson = envResponse.OpenJObjectResponse();
-                    var environments = envJson["environments"] as JArray;
+                    var envJson = envResponse.OpenJsonObjectResponse();
+                    var environments = envJson["environments"] as JsonArray;
                     if (environments != null && environments.Count > 0)
                     {
                         _testEnvironmentUid = environments[0]["uid"]?.ToString();
@@ -342,7 +341,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse response = _stack.Environment().Create(environmentModel);
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseJson = response.OpenJObjectResponse();
+                    var responseJson = response.OpenJsonObjectResponse();
                     _testEnvironmentUid = responseJson["environment"]?["uid"]?.ToString();
                 }
             }
@@ -590,8 +589,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!response.IsSuccessStatusCode)
                     return;
 
-                var jObject = response.OpenJObjectResponse();
-                var contentTypesArray = jObject["content_types"] as JArray;
+                var jObject = response.OpenJsonObjectResponse();
+                var contentTypesArray = jObject["content_types"] as JsonArray;
 
                 if (contentTypesArray != null)
                 {
@@ -640,8 +639,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!response.IsSuccessStatusCode)
                     return; // Ignore cleanup failures
 
-                var jObject = response.OpenJObjectResponse();
-                var workflowsArray = jObject["workflows"] as JArray;
+                var jObject = response.OpenJsonObjectResponse();
+                var workflowsArray = jObject["workflows"] as JsonArray;
                 
                 if (workflowsArray != null)
                 {
@@ -690,8 +689,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (!response.IsSuccessStatusCode)
                     return;
 
-                var jObject = response.OpenJObjectResponse();
-                var publishRulesArray = jObject["publishing_rules"] as JArray;
+                var jObject = response.OpenJsonObjectResponse();
+                var publishRulesArray = jObject["publishing_rules"] as JsonArray;
 
                 if (publishRulesArray != null)
                 {
@@ -1172,7 +1171,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Act
                 ContentstackResponse response = _stack.Workflow().Create(workflowModel);
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "workflowCreateResponse");
@@ -1184,7 +1183,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 _createdWorkflowUids.Add(workflowUid);
                 TestOutputLogger.LogContext("WorkflowUid", workflowUid);
                 
-                var stages = responseJson["workflow"]["workflow_stages"] as JArray;
+                var stages = responseJson["workflow"]["workflow_stages"] as JsonArray;
                 AssertLogger.AreEqual(2, stages?.Count, "Expected exactly 2 stages (API minimum)", "stageCount");
                 AssertLogger.AreEqual(workflowName, responseJson["workflow"]["name"]?.ToString(), "workflowName");
             }
@@ -1207,7 +1206,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Act
                 ContentstackResponse response = _stack.Workflow().Create(workflowModel);
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "workflowCreateResponse");
@@ -1218,7 +1217,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 _createdWorkflowUids.Add(workflowUid);
                 TestOutputLogger.LogContext("WorkflowUid", workflowUid);
                 
-                var stages = responseJson["workflow"]["workflow_stages"] as JArray;
+                var stages = responseJson["workflow"]["workflow_stages"] as JsonArray;
                 AssertLogger.AreEqual(3, stages?.Count, "Expected exactly 3 stages", "stageCount");
                 
                 // Verify all stages were created with correct names
@@ -1245,13 +1244,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(workflowName, 2);
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
                 // Act
                 ContentstackResponse response = _stack.Workflow(workflowUid).Fetch();
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "workflowFetchResponse");
@@ -1260,7 +1259,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.AreEqual(workflowUid, responseJson["workflow"]["uid"]?.ToString(), "workflowUid");
                 AssertLogger.AreEqual(workflowName, responseJson["workflow"]["name"]?.ToString(), "workflowName");
                 
-                var stages = responseJson["workflow"]["workflow_stages"] as JArray;
+                var stages = responseJson["workflow"]["workflow_stages"] as JsonArray;
                 AssertLogger.AreEqual(2, stages?.Count, "Expected 2 stages", "stageCount");
                 TestOutputLogger.LogContext("FetchedWorkflowUid", workflowUid);
             }
@@ -1279,14 +1278,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 // Act
                 ContentstackResponse response = _stack.Workflow().FindAll();
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "workflowFindAllResponse");
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Workflow FindAll failed with status {(int)response.StatusCode}", "workflowFindAllSuccess");
                 
                 // Response should contain workflows array (even if empty)
-                var workflows = (responseJson["workflows"] as JArray) ?? (responseJson["workflow"] as JArray);
+                var workflows = (responseJson["workflows"] as JsonArray) ?? (responseJson["workflow"] as JsonArray);
                 AssertLogger.IsNotNull(workflows, "workflowsArray");
                 
                 TestOutputLogger.LogContext("WorkflowCount", workflows.Count.ToString());
@@ -1309,7 +1308,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(originalName, 2);
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
@@ -1320,7 +1319,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Act
                 ContentstackResponse response = _stack.Workflow(workflowUid).Update(workflowModel);
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "workflowUpdateResponse");
@@ -1349,7 +1348,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(workflowName, 2);
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
@@ -1357,13 +1356,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Act
                 ContentstackResponse response = _stack.Workflow(workflowUid).Update(workflowModel);
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "workflowUpdateResponse");
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Workflow update failed with status {(int)response.StatusCode}", "workflowUpdateSuccess");
                 
-                var stages = responseJson["workflow"]["workflow_stages"] as JArray;
+                var stages = responseJson["workflow"]["workflow_stages"] as JsonArray;
                 AssertLogger.AreEqual(3, stages?.Count, "Expected 3 stages after update", "stageCount");
                 
                 TestOutputLogger.LogContext("WorkflowWithNewStageUid", workflowUid);
@@ -1387,7 +1386,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.Enabled = false;
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
@@ -1419,7 +1418,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.Enabled = true;
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
@@ -1453,11 +1452,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(workflowName, 2);
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[1]["uid"].ToString(); // Use second stage
 
                 // Create publish rule
@@ -1465,7 +1464,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Act
                 ContentstackResponse response = _stack.Workflow().PublishRule().Create(publishRuleModel);
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "publishRuleCreateResponse");
@@ -1495,14 +1494,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 // Act
                 ContentstackResponse response = _stack.Workflow().PublishRule().FindAll();
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "publishRuleFindAllResponse");
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Publish rule FindAll failed with status {(int)response.StatusCode}", "publishRuleFindAllSuccess");
                 
                 // Response should contain publishing_rules array (even if empty)
-                var rules = (responseJson["publishing_rules"] as JArray) ?? (responseJson["publishing_rule"] as JArray);
+                var rules = (responseJson["publishing_rules"] as JsonArray) ?? (responseJson["publishing_rule"] as JsonArray);
                 AssertLogger.IsNotNull(rules, "publishingRulesArray");
                 
                 TestOutputLogger.LogContext("PublishRuleCount", rules.Count.ToString());
@@ -1531,18 +1530,18 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(workflowName, 2);
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[0]["uid"].ToString();
 
                 var publishRuleModel = CreateTestPublishRuleModel(workflowUid, stageUid, _testEnvironmentUid);
                 publishRuleModel.ContentTypes = new List<string> { contentTypeUid };
 
                 ContentstackResponse ruleResponse = _stack.Workflow().PublishRule().Create(publishRuleModel);
-                var ruleJson = ruleResponse.OpenJObjectResponse();
+                var ruleJson = ruleResponse.OpenJsonObjectResponse();
                 string publishRuleUid = ruleJson["publishing_rule"]["uid"].ToString();
                 _createdPublishRuleUids.Add(publishRuleUid);
 
@@ -1577,16 +1576,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(workflowName, 2);
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[0]["uid"].ToString();
 
                 var publishRuleModel = CreateTestPublishRuleModel(workflowUid, stageUid, _testEnvironmentUid);
                 ContentstackResponse ruleResponse = _stack.Workflow().PublishRule().Create(publishRuleModel);
-                var ruleJson = ruleResponse.OpenJObjectResponse();
+                var ruleJson = ruleResponse.OpenJsonObjectResponse();
                 string publishRuleUid = ruleJson["publishing_rule"]["uid"].ToString();
                 _createdPublishRuleUids.Add(publishRuleUid);
 
@@ -1596,7 +1595,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 // Act
                 ContentstackResponse response = _stack.Workflow().PublishRule(publishRuleUid).Update(publishRuleModel);
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "publishRuleUpdateResponse");
@@ -1624,13 +1623,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 collection.Add("include_publish_details", "true");
                 
                 ContentstackResponse response = _stack.Workflow().FindAll(collection);
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "workflowFindAllWithIncludeResponse");
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Workflow FindAll with include failed with status {(int)response.StatusCode}", "workflowFindAllWithIncludeSuccess");
                 
-                var workflows = (responseJson["workflows"] as JArray) ?? (responseJson["workflow"] as JArray);
+                var workflows = (responseJson["workflows"] as JsonArray) ?? (responseJson["workflow"] as JsonArray);
                 AssertLogger.IsNotNull(workflows, "workflowsArray");
                 
                 TestOutputLogger.LogContext("IncludeParameters", "include_count,include_publish_details");
@@ -1654,13 +1653,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 collection.Add("skip", "0");
                 
                 ContentstackResponse response = _stack.Workflow().FindAll(collection);
-                var responseJson = response.OpenJObjectResponse();
+                var responseJson = response.OpenJsonObjectResponse();
 
                 // Assert
                 AssertLogger.IsNotNull(response, "workflowPaginationResponse");
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Workflow FindAll with pagination failed with status {(int)response.StatusCode}", "workflowPaginationSuccess");
                 
-                var workflows = (responseJson["workflows"] as JArray) ?? (responseJson["workflow"] as JArray);
+                var workflows = (responseJson["workflows"] as JsonArray) ?? (responseJson["workflow"] as JsonArray);
                 AssertLogger.IsNotNull(workflows, "workflowsArray");
                 
                 TestOutputLogger.LogContext("PaginationParams", "limit=5,skip=0");
@@ -1686,16 +1685,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(workflowName, 2);
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[0]["uid"].ToString();
 
                 var publishRuleModel = CreateTestPublishRuleModel(workflowUid, stageUid, _testEnvironmentUid);
                 ContentstackResponse ruleResponse = _stack.Workflow().PublishRule().Create(publishRuleModel);
-                var ruleJson = ruleResponse.OpenJObjectResponse();
+                var ruleJson = ruleResponse.OpenJsonObjectResponse();
                 string publishRuleUid = ruleJson["publishing_rule"]["uid"].ToString();
 
                 // Act
@@ -1823,7 +1822,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse response1 = _stack.Workflow().Create(workflowModel1);
                 AssertLogger.IsTrue(response1.IsSuccessStatusCode, "First workflow creation should succeed", "firstWorkflowCreated");
                 
-                var responseJson1 = response1.OpenJObjectResponse();
+                var responseJson1 = response1.OpenJsonObjectResponse();
                 string workflowUid1 = responseJson1["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid1);
 
@@ -1995,16 +1994,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(workflowName, 2);
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[0]["uid"].ToString();
 
                 var publishRuleModel = CreateTestPublishRuleModel(workflowUid, stageUid, _testEnvironmentUid);
                 ContentstackResponse ruleResponse = _stack.Workflow().PublishRule().Create(publishRuleModel);
-                var ruleJson = ruleResponse.OpenJObjectResponse();
+                var ruleJson = ruleResponse.OpenJsonObjectResponse();
                 string publishRuleUid = ruleJson["publishing_rule"]["uid"].ToString();
                 _createdPublishRuleUids.Add(publishRuleUid);
 
@@ -2061,7 +2060,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(workflowName, 2);
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
 
                 // Act
@@ -2139,7 +2138,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseJson = response.OpenJObjectResponse();
+                    var responseJson = response.OpenJsonObjectResponse();
                     string workflowUid = responseJson["workflow"]["uid"].ToString();
                     _createdWorkflowUids.Add(workflowUid);
                 }
@@ -2197,7 +2196,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var workflowUid = response.OpenJObjectResponse()["workflow"]?["uid"]?.ToString();
+                    var workflowUid = response.OpenJsonObjectResponse()["workflow"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(workflowUid))
                     {
                         TrackWorkflowForCleanup(workflowUid, workflowModel.Name);
@@ -2332,7 +2331,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseJson = response.OpenJObjectResponse();
+                    var responseJson = response.OpenJsonObjectResponse();
                     string workflowUid = responseJson["workflow"]["uid"].ToString();
                     _createdWorkflowUids.Add(workflowUid);
                 }
@@ -2439,7 +2438,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var workflowUid = response.OpenJObjectResponse()["workflow"]?["uid"]?.ToString();
+                    var workflowUid = response.OpenJsonObjectResponse()["workflow"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(workflowUid))
                     {
                         _createdWorkflowUids.Add(workflowUid);
@@ -2605,11 +2604,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.ContentTypes = new List<string> { GetValidContentTypeUid() }; // Use real content type UID
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[0]["uid"].ToString();
 
                 var publishRuleModel = CreateInvalidPublishRuleModel("missing_environment", workflowUid, stageUid);
@@ -2642,11 +2641,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.ContentTypes = new List<string> { GetValidContentTypeUid() }; // Use real content type UID
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[0]["uid"].ToString();
 
                 var publishRuleModel = CreateInvalidPublishRuleModel("invalid_environment", workflowUid, stageUid);
@@ -2733,11 +2732,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.ContentTypes = new List<string> { GetValidContentTypeUid() }; // Use real content type UID
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[0]["uid"].ToString();
 
                 var publishRuleModel = CreateInvalidPublishRuleModel("invalid_content_types", workflowUid, stageUid, _testEnvironmentUid);
@@ -2773,11 +2772,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.ContentTypes = new List<string> { GetValidContentTypeUid() }; // Use real content type UID
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[0]["uid"].ToString();
 
                 var publishRuleModel = CreateInvalidPublishRuleModel("invalid_locales", workflowUid, stageUid, _testEnvironmentUid);
@@ -2813,11 +2812,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.ContentTypes = new List<string> { GetValidContentTypeUid() }; // Use real content type UID
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[0]["uid"].ToString();
 
                 var publishRuleModel = CreateInvalidPublishRuleModel("empty_branches", workflowUid, stageUid, _testEnvironmentUid);
@@ -2929,7 +2928,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 else
                 {
                     // Clean up if it succeeded
-                    var responseJson = response.OpenJObjectResponse();
+                    var responseJson = response.OpenJsonObjectResponse();
                     string workflowUid = responseJson["workflow"]["uid"].ToString();
                     _createdWorkflowUids.Add(workflowUid);
                 }
@@ -2966,7 +2965,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.Enabled = true; // Already enabled
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
@@ -3012,7 +3011,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.Enabled = false; // Already disabled
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
@@ -3057,7 +3056,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(workflowName, 2);
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
@@ -3306,7 +3305,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.ContentTypes = new List<string> { GetValidContentTypeUid() }; // Use real content type UID
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
@@ -3355,7 +3354,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.ContentTypes = new List<string> { GetValidContentTypeUid() }; // Use real content type UID
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
@@ -3431,7 +3430,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseJson = response.OpenJObjectResponse();
+                    var responseJson = response.OpenJsonObjectResponse();
                     string workflowUid = responseJson["workflow"]["uid"].ToString();
                     _createdWorkflowUids.Add(workflowUid);
                     AssertLogger.IsTrue(true, "Large workflow creation succeeded", "timeoutGracefulSuccess");
@@ -3483,7 +3482,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     // If it succeeds unexpectedly, clean up and note the behavior
-                    var responseJson = response.OpenJObjectResponse();
+                    var responseJson = response.OpenJsonObjectResponse();
                     string workflowUid = responseJson["workflow"]["uid"].ToString();
                     _createdWorkflowUids.Add(workflowUid);
                     AssertLogger.IsTrue(true, "API unexpectedly accepted invalid admin_users configuration", "adminUsersAccepted");
@@ -3535,17 +3534,17 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 workflowModel.ContentTypes = new List<string> { GetValidContentTypeUid() }; // Use real content type UID
                 
                 ContentstackResponse workflowResponse = _stack.Workflow().Create(workflowModel);
-                var workflowJson = workflowResponse.OpenJObjectResponse();
+                var workflowJson = workflowResponse.OpenJsonObjectResponse();
                 string workflowUid = workflowJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
-                var stages = workflowJson["workflow"]["workflow_stages"] as JArray;
+                var stages = workflowJson["workflow"]["workflow_stages"] as JsonArray;
                 string stageUid = stages[0]["uid"].ToString();
 
                 // Create first publish rule
                 var publishRuleModel1 = CreateTestPublishRuleModel(workflowUid, stageUid, _testEnvironmentUid);
                 ContentstackResponse ruleResponse1 = _stack.Workflow().PublishRule().Create(publishRuleModel1);
-                var ruleJson1 = ruleResponse1.OpenJObjectResponse();
+                var ruleJson1 = ruleResponse1.OpenJsonObjectResponse();
                 string publishRuleUid1 = ruleJson1["publishing_rule"]["uid"].ToString();
                 _createdPublishRuleUids.Add(publishRuleUid1);
 
@@ -3565,7 +3564,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 else
                 {
                     // API allowed duplicate - add to cleanup
-                    var ruleJson2 = ruleResponse2.OpenJObjectResponse();
+                    var ruleJson2 = ruleResponse2.OpenJsonObjectResponse();
                     string publishRuleUid2 = ruleJson2["publishing_rule"]["uid"].ToString();
                     _createdPublishRuleUids.Add(publishRuleUid2);
                     AssertLogger.IsTrue(true, "API allows duplicate publish rule conditions", "duplicateRuleAllowed");
@@ -3599,7 +3598,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var workflowModel = CreateTestWorkflowModel(workflowName, 3);
                 
                 ContentstackResponse createResponse = _stack.Workflow().Create(workflowModel);
-                var createJson = createResponse.OpenJObjectResponse();
+                var createJson = createResponse.OpenJsonObjectResponse();
                 string workflowUid = createJson["workflow"]["uid"].ToString();
                 _createdWorkflowUids.Add(workflowUid);
 
@@ -3704,7 +3703,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
                 else
                 {
-                    var responseJson = response.OpenJObjectResponse();
+                    var responseJson = response.OpenJsonObjectResponse();
                     string workflowUid = responseJson["workflow"]["uid"].ToString();
                     _createdWorkflowUids.Add(workflowUid);
                     AssertLogger.IsTrue(true, "API accepts malformed JSON structure", "malformedJSONAccepted");
