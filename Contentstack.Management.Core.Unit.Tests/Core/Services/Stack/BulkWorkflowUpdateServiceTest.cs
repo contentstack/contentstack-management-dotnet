@@ -224,7 +224,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Verify_Service_Can_Be_Instantiated_With_Different_Serializers()
         {
             var updateBody = new BulkWorkflowUpdateBody();
-            var customSerializer = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+            var customSerializer = new JsonSerializerOptions
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
             
             var service = new BulkWorkflowUpdateService(customSerializer, new Management.Core.Models.Stack(null), updateBody);
             
