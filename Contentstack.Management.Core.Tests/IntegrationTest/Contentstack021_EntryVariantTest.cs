@@ -1905,8 +1905,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
             TestOutputLogger.LogContext("TestScenario", "Test048_Should_Fail_Delete_Variant_With_Active_Dependencies_Sync");
 
-            string createdVariantEntryUid = null;
-
             try
             {
                 // First create a variant to establish dependency

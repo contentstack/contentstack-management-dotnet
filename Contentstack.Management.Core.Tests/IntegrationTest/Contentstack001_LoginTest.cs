@@ -1514,7 +1514,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     client.Login(credentials, token);
                 }
-                catch (ArgumentException ex) when (token.Length != 6 || token.Any(c => !char.IsDigit(c)))
+                catch (ArgumentException) when (token.Length != 6 || token.Any(c => !char.IsDigit(c)))
                 {
                     AssertLogger.IsTrue(true, $"ArgumentException for invalid token format: '{token}'");
                 }

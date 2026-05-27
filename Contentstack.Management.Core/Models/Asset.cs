@@ -8,10 +8,10 @@ namespace Contentstack.Management.Core.Models
 {
     public class Asset
     {
-        internal Stack stack;
-        public string Uid { get; set; }
+        internal Stack stack = null!;
+        public string? Uid { get; set; }
 
-        internal string resourcePath;
+        internal string resourcePath = null!;
 
         internal Asset(Stack stack, string? uid = null)
         {

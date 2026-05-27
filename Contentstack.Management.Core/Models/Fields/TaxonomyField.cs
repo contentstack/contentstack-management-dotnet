@@ -9,7 +9,7 @@ namespace Contentstack.Management.Core.Models.Fields
     public class TaxonomyField : Field
     {
         [JsonPropertyName("taxonomies")]
-        public List<TaxonomyFieldBinding> Taxonomies { get; set; }
+        public List<TaxonomyFieldBinding>? Taxonomies { get; set; }
     }
 
     /// <summary>
@@ -18,7 +18,7 @@ namespace Contentstack.Management.Core.Models.Fields
     public class TaxonomyFieldBinding
     {
         [JsonPropertyName("taxonomy_uid")]
-        public string TaxonomyUid { get; set; }
+        public string? TaxonomyUid { get; set; }
 
         [JsonPropertyName("max_terms")]
         public int? MaxTerms { get; set; }

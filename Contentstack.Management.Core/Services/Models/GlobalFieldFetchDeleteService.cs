@@ -10,15 +10,15 @@ namespace Contentstack.Management.Core.Services.Models
     /// </summary>
     internal class GlobalFieldFetchDeleteService : ContentstackService
     {
-        private readonly string _apiVersion;
+        private readonly string? _apiVersion;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalFieldFetchDeleteService"/> class.
         /// </summary>
-        internal GlobalFieldFetchDeleteService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, string apiVersion, string httpMethod = "GET", ParameterCollection collection = null)
+        internal GlobalFieldFetchDeleteService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, string? apiVersion, string httpMethod = "GET", ParameterCollection? collection = null)
             : base(serializerOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }

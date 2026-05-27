@@ -20,25 +20,25 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
         #endregion
 
         #region Public
-        public ILogManager LogManager { get; set; }
-        public IPipelineHandler InnerHandler { get; set; }
+        public ILogManager LogManager { get; set; } = null!;
+        public IPipelineHandler InnerHandler { get; set; } = null!;
 
-        public async System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public async System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
-            IHttpRequest httpRequest = null;
+            IHttpRequest? httpRequest = null;
             try
             {
                 var requestContext = executionContext.RequestContext;
 
-                httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config, addAcceptMediaHeader, apiVersion);
+                httpRequest = requestContext.service!.CreateHttpRequest(_httpClient, requestContext.config!, addAcceptMediaHeader, apiVersion);
 
                 if (requestContext.service.HasRequestBody() && requestContext.service.Content != null)
                 {
-                    httpRequest.WriteToRequestBody(requestContext.service.Content, requestContext.service.Headers);
+                    httpRequest!.WriteToRequestBody(requestContext.service.Content, requestContext.service.Headers);
                 }
 
-                executionContext.ResponseContext.httpResponse = await httpRequest.GetResponseAsync().ConfigureAwait(false);
-                executionContext.RequestContext.service.OnResponse(executionContext.ResponseContext.httpResponse, requestContext.config);
+                executionContext.ResponseContext.httpResponse = await httpRequest!.GetResponseAsync().ConfigureAwait(false);
+                executionContext.RequestContext.service!.OnResponse(executionContext.ResponseContext.httpResponse, requestContext.config!);
 
                 return await System.Threading.Tasks.Task.FromResult<T>((T)executionContext.ResponseContext.httpResponse);
             }
@@ -57,23 +57,23 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
             }
         }
 
-        public void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
-            IHttpRequest httpRequest = null;
+            IHttpRequest? httpRequest = null;
             try
             {
                 var requestContext = executionContext.RequestContext;
 
-                httpRequest = requestContext.service.CreateHttpRequest(_httpClient, requestContext.config, addAcceptMediaHeader, apiVersion: apiVersion);
+                httpRequest = requestContext.service!.CreateHttpRequest(_httpClient, requestContext.config!, addAcceptMediaHeader, apiVersion: apiVersion);
 
                 if (requestContext.service.HasRequestBody() && requestContext.service.Content != null)
                 {
-                    httpRequest.WriteToRequestBody(requestContext.service.Content, requestContext.service.Headers);
+                    httpRequest!.WriteToRequestBody(requestContext.service.Content, requestContext.service.Headers);
                 }
 
-                executionContext.ResponseContext.httpResponse =  httpRequest.GetResponse();
+                executionContext.ResponseContext.httpResponse = httpRequest!.GetResponse();
 
-                executionContext.RequestContext.service.OnResponse(executionContext.ResponseContext.httpResponse, requestContext.config);
+                executionContext.RequestContext.service!.OnResponse(executionContext.ResponseContext.httpResponse, requestContext.config!);
             }
             catch (Exception e)
             {

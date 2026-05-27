@@ -11,10 +11,10 @@ namespace Contentstack.Management.Core.Services.Models
         internal string fieldName;
         internal T model;
 
-        internal DeleteService(Core.Models.Stack stack, string resourcePath, string fieldName, T model, ParameterCollection collection = null, JsonSerializerOptions stjOptions = null)
+        internal DeleteService(Core.Models.Stack stack, string resourcePath, string fieldName, T model, ParameterCollection? collection = null, JsonSerializerOptions? stjOptions = null)
             : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection: collection)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
@@ -39,7 +39,7 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            var requestData = new Dictionary<string, object>
+            var requestData = new Dictionary<string, object?>
             {
                 { fieldName, model }
             };

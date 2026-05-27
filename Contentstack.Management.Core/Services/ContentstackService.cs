@@ -29,7 +29,7 @@ namespace Contentstack.Management.Core.Services
         #endregion
 
         #region Constructor
-        internal ContentstackService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack stack = null, ParameterCollection collection = null)
+        internal ContentstackService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack? stack = null, ParameterCollection? collection = null)
         {
             if (serializerOptions == null)
             {
@@ -115,11 +115,11 @@ namespace Contentstack.Management.Core.Services
             }
         }
 
-        public string ResourcePath { get; set; }
-        public byte[] ByteContent { get; set; }
-        public HttpContent Content { get; set; }
+        public string ResourcePath { get; set; } = null!;
+        public byte[]? ByteContent { get; set; }
+        public HttpContent? Content { get; set; }
         public string HttpMethod { get; set; } = "GET";
-        public string ManagementToken { get; set; }
+        public string? ManagementToken { get; set; }
 
         public void AddQueryResource(string queryResource, string value)
         {
@@ -138,7 +138,7 @@ namespace Contentstack.Management.Core.Services
         {
             ThrowIfDisposed();
 
-            string headerValue;
+            string? headerValue;
             if (headers.TryGetValue(headerName, out headerValue))
                 return headerValue;
 
@@ -163,7 +163,7 @@ namespace Contentstack.Management.Core.Services
             return true;
         }
 
-        public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             ThrowIfDisposed();
 

@@ -9,10 +9,10 @@ namespace Contentstack.Management.Core.Services.Models
     {
         #region Internal
 
-        internal FetchDeleteService(Core.Models.Stack stack, string resourcePath, string httpMethod = "GET", ParameterCollection collection = null, JsonSerializerOptions stjOptions = null)
+        internal FetchDeleteService(Core.Models.Stack stack, string resourcePath, string httpMethod = "GET", ParameterCollection? collection = null, JsonSerializerOptions? stjOptions = null)
             : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection: collection)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }

@@ -7,7 +7,7 @@ namespace Contentstack.Management.Core.Services.Models
 {
     internal class ImportExportService : ContentstackService
     {
-        internal ImportExportService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, bool isImport = false, string httpMethod = "GET", ParameterCollection collection = null)
+        internal ImportExportService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, bool isImport = false, string httpMethod = "GET", ParameterCollection? collection = null)
             : base(serializerOptions, stack: stack, collection: collection)
         {
             if (stack.APIKey == null)

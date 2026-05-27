@@ -9,7 +9,7 @@ namespace Contentstack.Management.Core.Services.Models
     internal class VariantContentTypeLinkService : ContentstackService
     {
         private readonly List<string> _contentTypeUids;
-        private readonly string _variantGroupUid;
+        private readonly string? _variantGroupUid;
         private readonly bool _isLink;
 
         internal VariantContentTypeLinkService(
@@ -17,9 +17,9 @@ namespace Contentstack.Management.Core.Services.Models
             Core.Models.Stack stack,
             string resourcePath,
             List<string> contentTypeUids,
-            string variantGroupUid,
+            string? variantGroupUid,
             bool isLink,
-            ParameterCollection collection = null
+            ParameterCollection? collection = null
         )
             : base(serializerOptions, stack, collection)
         {

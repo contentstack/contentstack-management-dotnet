@@ -9,13 +9,13 @@ namespace Contentstack.Management.Core.Services.Models
 {
     internal class PublishUnpublishService : ContentstackService
     {
-        internal string locale;
-        internal string fieldName;
-        internal PublishUnpublishDetails details;
-        internal PublishUnpublishService(Core.Models.Stack stack, PublishUnpublishDetails details, string resourcePath, string fieldName, string locale = null, JsonSerializerOptions stjOptions = null)
+        internal string? locale;
+        internal string fieldName = null!;
+        internal PublishUnpublishDetails details = null!;
+        internal PublishUnpublishService(Core.Models.Stack stack, PublishUnpublishDetails details, string resourcePath, string fieldName, string? locale = null, JsonSerializerOptions? stjOptions = null)
            : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }

@@ -26,7 +26,7 @@ namespace Contentstack.Management.Core.Http
         /// Returns the HTTP response.
         /// </summary>
         /// <returns></returns>
-        HttpContent GetRequestContent();
+        HttpContent? GetRequestContent();
 
         /// <summary>
         /// Returns the HTTP response.

@@ -7,10 +7,10 @@ namespace Contentstack.Management.Core.Models
     public class LabelModel
     {
         [JsonProperty(propertyName: "name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [JsonProperty(propertyName: "parent")]
-        public List<string> Parent { get; set; }
+        public List<string>? Parent { get; set; }
         [JsonProperty(propertyName: "content_types")]
-        public List<string> ContentTypes { get; set; }
+        public List<string>? ContentTypes { get; set; }
     }
 }

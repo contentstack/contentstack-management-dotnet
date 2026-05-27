@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Services.Organization
     {
       
         #region Internal
-        internal ResendInvitationService(JsonSerializerOptions serializerOptions, string uid, string shareUid) : base(serializerOptions)
+        internal ResendInvitationService(JsonSerializerOptions serializerOptions, string? uid, string shareUid) : base(serializerOptions)
         {
             if (string.IsNullOrEmpty(uid))
             {

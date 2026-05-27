@@ -24,7 +24,6 @@
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.18.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,10 +53,11 @@
 
   <ItemGroup>
     <!-- Exclude out-of-scope integration tests (still use Newtonsoft or depend on excluded SDK types) -->
+    <!-- Contentstack015 depends on Stack.Workflow() and Stack.Release() which are not yet migrated -->
+    <!-- <Compile Remove="IntegrationTest\Contentstack015_BulkOperationTest.cs" /> -->
     <Compile Remove="IntegrationTest\Contentstack004_ReleaseTest.cs" />
     <Compile Remove="IntegrationTest\Contentstack012b_ContentTypeExpandedIntegrationTest.cs" />
 
-    <Compile Remove="IntegrationTest\Contentstack015_BulkOperationTest.cs" />
     <Compile Remove="IntegrationTest\Contentstack016_DeliveryTokenTest.cs" />
     <Compile Remove="IntegrationTest\Contentstack017_TaxonomyTest.cs" />
     <Compile Remove="IntegrationTest\Contentstack019_RoleTest.cs" />

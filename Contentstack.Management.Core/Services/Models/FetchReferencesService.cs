@@ -7,10 +7,10 @@ namespace Contentstack.Management.Core.Services.Models
 {
     internal class FetchReferencesService : ContentstackService
     {
-        internal FetchReferencesService(Core.Models.Stack stack, string resourcePath = null, ParameterCollection collection = null, JsonSerializerOptions stjOptions = null)
+        internal FetchReferencesService(Core.Models.Stack stack, string? resourcePath = null, ParameterCollection? collection = null, JsonSerializerOptions? stjOptions = null)
            : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }

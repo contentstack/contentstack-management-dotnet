@@ -9,19 +9,19 @@ namespace Contentstack.Management.Core.Models
     public class OAuthTokens
     {
  
-        public string AccessToken { get; set; }
+        public string? AccessToken { get; set; }
 
-        public string RefreshToken { get; set; }
+        public string? RefreshToken { get; set; }
 
         public DateTime ExpiresAt { get; set; }
 
-        public string OrganizationUid { get; set; }
+        public string? OrganizationUid { get; set; }
 
-        public string UserUid { get; set; }
+        public string? UserUid { get; set; }
 
-        public string ClientId { get; set; }
+        public string? ClientId { get; set; }
 
-        public string AppId { get; set; }
+        public string? AppId { get; set; }
 
         public bool IsExpired => ExpiresAt == DateTime.MinValue || DateTime.UtcNow >= ExpiresAt;
 
@@ -48,6 +48,7 @@ namespace Contentstack.Management.Core.Models
         }
 
         public bool IsValid => !string.IsNullOrEmpty(AccessToken) && !IsExpired;
+
     }
 }
 

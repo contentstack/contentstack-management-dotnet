@@ -11,9 +11,9 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
     public partial class DefaultRetryPolicy : RetryPolicy
     {
         protected TimeSpan retryDelay { get; set; }
-        protected RetryConfiguration retryConfiguration;
-        protected NetworkErrorDetector networkErrorDetector;
-        protected RetryDelayCalculator delayCalculator;
+        protected RetryConfiguration retryConfiguration = null!;
+        protected NetworkErrorDetector networkErrorDetector = null!;
+        protected RetryDelayCalculator delayCalculator = null!;
 
         protected ICollection<HttpStatusCode> statusCodesToRetryOn = new HashSet<HttpStatusCode>
         {
@@ -187,7 +187,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         /// <summary>
         /// Gets the retry delay for an HTTP error.
         /// </summary>
-        public TimeSpan GetHttpRetryDelay(IRequestContext requestContext, Exception exception, HttpResponseHeaders? responseHeaders = null)
+        public TimeSpan GetHttpRetryDelay(IRequestContext requestContext, Exception? exception, HttpResponseHeaders? responseHeaders = null)
         {
             if (retryConfiguration == null)
             {

@@ -8,13 +8,13 @@ namespace Contentstack.Management.Core.Models
 {
     public class Folder
     {
-        internal Stack stack;
-        internal string resourcePath;
+        internal Stack stack = null!;
+        internal string resourcePath = null!;
 
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
 
-        internal Folder(Stack stack, string uid = null)
+        internal Folder(Stack stack, string? uid = null)
         {
             stack.ThrowIfAPIKeyEmpty();
 
@@ -36,7 +36,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Create(string name, string parentUid = null)
+        public virtual ContentstackResponse Create(string name, string? parentUid = null)
         {
             ThrowIfUidNotEmpty();
 
@@ -56,7 +56,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public virtual Task<ContentstackResponse> CreateAsync(string name, string parentUid = null)
+        public virtual Task<ContentstackResponse> CreateAsync(string name, string? parentUid = null)
         {
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
@@ -77,7 +77,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Update(string name, string parentUid = null)
+        public virtual ContentstackResponse Update(string name, string? parentUid = null)
         {
             ThrowIfUidEmpty();
 
@@ -97,7 +97,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> UpdateAsync(string name, string parentUid = null)
+        public virtual Task<ContentstackResponse> UpdateAsync(string name, string? parentUid = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -117,7 +117,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
+        public virtual ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -137,7 +137,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();

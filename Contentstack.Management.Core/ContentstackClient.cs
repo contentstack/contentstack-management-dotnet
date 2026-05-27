@@ -28,11 +28,11 @@ namespace Contentstack.Management.Core
     /// </summary>
     public class ContentstackClient : IContentstackClient
     {
-        internal ContentstackRuntimePipeline ContentstackPipeline { get; set; }
+        internal ContentstackRuntimePipeline? ContentstackPipeline { get; set; }
         internal ContentstackClientOptions contentstackOptions;
 
         #region Private
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
         private bool _disposed = false;
 
         private string Version => "0.5.0";
@@ -41,13 +41,12 @@ namespace Contentstack.Management.Core
         // OAuth token storage
         // private readonly Dictionary<string, OAuthTokens> _oauthTokens = new Dictionary<string, OAuthTokens>();
         
-        private bool _isRefreshingToken = false;
         #endregion
 
 
         #region Public
 
-        public LogManager LogManager { get; set; }
+        public LogManager? LogManager { get; set; }
         /// <summary>
         /// Get and Set method for deserialization.
         /// </summary>
@@ -226,7 +225,7 @@ namespace Contentstack.Management.Core
             {
                 httpClientHandler,
                 new RetryHandler(retryPolicy)
-            }, LogManager);
+            }, LogManager!);
         }
 
         internal ContentstackResponse InvokeSync<TRequest>(TRequest request, bool addAcceptMediaHeader = false, string? apiVersion = null) where TRequest : IContentstackService
@@ -243,7 +242,7 @@ namespace Contentstack.Management.Core
                 },
                 new ResponseContext());
 
-            return (ContentstackResponse)ContentstackPipeline.InvokeSync(context, addAcceptMediaHeader, apiVersion).httpResponse;
+            return (ContentstackResponse)ContentstackPipeline!.InvokeSync(context, addAcceptMediaHeader, apiVersion).httpResponse!;
         }
 
         internal async Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string? apiVersion = null)
@@ -267,7 +266,7 @@ namespace Contentstack.Management.Core
                   service = request
               },
               new ResponseContext());
-            return await ContentstackPipeline.InvokeAsync<TResponse>(context, addAcceptMediaHeader, apiVersion);
+            return await ContentstackPipeline!.InvokeAsync<TResponse>(context, addAcceptMediaHeader, apiVersion);
         }
 
         #region Dispose methods
@@ -436,8 +435,8 @@ namespace Contentstack.Management.Core
         /// <returns>The <see cref="ContentstackResponse" /></returns>
         public ContentstackResponse Logout(string? authtoken = null)
         {
-            string token = authtoken ?? contentstackOptions.Authtoken;
-            LogoutService logout = new LogoutService(SerializerOptions, token);
+            string? token = authtoken ?? contentstackOptions.Authtoken;
+            LogoutService logout = new LogoutService(SerializerOptions, token!);
 
             return InvokeSync(logout);
         }
@@ -454,8 +453,8 @@ namespace Contentstack.Management.Core
         /// <returns>The Task.</returns>
         public Task<ContentstackResponse> LogoutAsync(string? authtoken = null)
         {
-            string token = authtoken ?? contentstackOptions.Authtoken;
-            LogoutService logout = new LogoutService(SerializerOptions, token);
+            string? token = authtoken ?? contentstackOptions.Authtoken;
+            LogoutService logout = new LogoutService(SerializerOptions, token!);
 
             return InvokeAsync<LogoutService, ContentstackResponse>(logout);
         }

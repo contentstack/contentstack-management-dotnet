@@ -12,10 +12,10 @@ namespace Contentstack.Management.Core.Services.Models
         private readonly string fieldName;
         #region Internal
 
-        internal CreateUpdateService(Core.Models.Stack stack, string resourcePath, T dataModel, string fieldName, string httpMethod = "POST", ParameterCollection collection = null, JsonSerializerOptions stjOptions = null)
+        internal CreateUpdateService(Core.Models.Stack stack, string resourcePath, T dataModel, string fieldName, string httpMethod = "POST", ParameterCollection? collection = null, JsonSerializerOptions? stjOptions = null)
             : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection: collection)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
@@ -44,7 +44,7 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            var requestData = new Dictionary<string, object>
+            var requestData = new Dictionary<string, object?>
             {
                 { fieldName, _typedModel }
             };

@@ -1031,7 +1031,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertValidationError(ex.StatusCode, "InvalidParameterTypesException");
                 Console.WriteLine($"✅ API properly handled invalid parameter types: {ex.ErrorMessage}");
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 AssertLogger.IsTrue(true, "SDK validation caught invalid parameter types as expected", "InvalidParameterTypes");
             }
@@ -1237,7 +1237,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertValidationError(ex.StatusCode, "EmptyStringUIDsException");
                 Console.WriteLine($"✅ API properly handled empty string UIDs: {ex.ErrorMessage}");
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 AssertLogger.IsTrue(true, "SDK validation caught empty string UIDs as expected", "EmptyStringUIDs");
             }

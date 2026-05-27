@@ -11,12 +11,12 @@ namespace Contentstack.Management.Core.Models
 {
     public class Entry: BaseModel<IEntry>
     {
-        internal string contentTypeUid;
+        internal string contentTypeUid = null!;
 
-        internal Entry(Stack stack, string contentTyppe, string uid)
+        internal Entry(Stack stack, string? contentTyppe, string? uid)
             : base(stack, "entry", uid)
         {
-            contentTypeUid = contentTyppe;
+            contentTypeUid = contentTyppe!;
             resourcePath = uid == null ? $"/content_types/{contentTyppe}/entries" : $"/content_types/{contentTyppe}/entries/{uid}";
         }
 
@@ -41,7 +41,7 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="uid">The UID of the variant.</param>
         /// <returns>The <see cref="EntryVariant"/></returns>
-        public EntryVariant Variant(string uid = null)
+        public EntryVariant Variant(string? uid = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -77,7 +77,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IEntry for createing Entry.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Create(IEntry model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(IEntry model, ParameterCollection? collection = null)
         {
             return base.Create(model, collection);
         }
@@ -94,7 +94,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IEntry for createing Entry.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> CreateAsync(IEntry model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(IEntry model, ParameterCollection? collection = null)
         {
             return base.CreateAsync(model, collection);
         }
@@ -111,7 +111,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IEntry for updating entry.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Update(IEntry model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(IEntry model, ParameterCollection? collection = null)
         {
             return base.Update(model, collection);
         }
@@ -128,7 +128,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IEntry for updating entry.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> UpdateAsync(IEntry model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(IEntry model, ParameterCollection? collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
@@ -143,7 +143,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             return base.Fetch(collection);
         }
@@ -158,7 +158,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             return base.FetchAsync(collection);
         }
@@ -173,7 +173,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             return base.Delete(collection);
         }
@@ -188,7 +188,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             return base.DeleteAsync(collection);
         }
@@ -389,7 +389,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse References(ParameterCollection collection = null)
+        public ContentstackResponse References(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -408,7 +408,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> ReferencesAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> ReferencesAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -429,7 +429,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string? locale = null, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -450,7 +450,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The Task</returns>
-        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string? locale = null, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -471,7 +471,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string? locale = null, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -492,7 +492,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The Task</returns>
-        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string? locale = null, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -514,7 +514,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="filePath">Path to file you want to import</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Import(string filePath, ParameterCollection collection = null)
+        public ContentstackResponse Import(string filePath, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
 
@@ -538,7 +538,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="filePath">Path to file you want to import</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> ImportAsync(string filePath, ParameterCollection collection = null)
+        public Task<ContentstackResponse> ImportAsync(string filePath, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -561,7 +561,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="filePath">Path to file you want to export entry.</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Export(string filePath, ParameterCollection collection = null)
+        public ContentstackResponse Export(string filePath, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -597,7 +597,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model"><see cref="EntryWorkflowStage"/> object.</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse SetWorkflow(EntryWorkflowStage model, ParameterCollection collection = null)
+        public ContentstackResponse SetWorkflow(EntryWorkflowStage model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -622,7 +622,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model"><see cref="EntryWorkflowStage"/> object.</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> SetWorkflowAsync(EntryWorkflowStage model, ParameterCollection collection = null)
+        public Task<ContentstackResponse> SetWorkflowAsync(EntryWorkflowStage model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -647,7 +647,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="publishAction"><see cref="EntryPublishAction"/> object.</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns></returns>
-        public ContentstackResponse PublishRequest(EntryPublishAction publishAction, ParameterCollection collection = null)
+        public ContentstackResponse PublishRequest(EntryPublishAction publishAction, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -671,7 +671,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="publishAction"><see cref="EntryPublishAction"/> object.</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns></returns>
-        public Task<ContentstackResponse> PublishRequestAsync(EntryPublishAction publishAction, ParameterCollection collection = null)
+        public Task<ContentstackResponse> PublishRequestAsync(EntryPublishAction publishAction, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();

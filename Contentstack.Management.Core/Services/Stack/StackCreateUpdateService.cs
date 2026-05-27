@@ -8,17 +8,17 @@ namespace Contentstack.Management.Core.Services.Stack
     internal class StackCreateUpdateService : ContentstackService
     {
         private readonly string _name;
-        private readonly string _masterLocale;
-        private readonly string _description;
+        private readonly string? _masterLocale;
+        private readonly string? _description;
 
         #region Internal
         internal StackCreateUpdateService(
             JsonSerializerOptions serializerOptions,
             Core.Models.Stack stack,
             string name,
-            string masterLocale = null,
-            string description = null,
-            string organizationUid = null)
+            string? masterLocale = null,
+            string? description = null,
+            string? organizationUid = null)
             : base(serializerOptions, stack)
         {
             this.ResourcePath = "/stacks";

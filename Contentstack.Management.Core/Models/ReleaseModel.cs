@@ -6,10 +6,10 @@ namespace Contentstack.Management.Core.Models
     public class ReleaseModel
     {
         [JsonProperty(propertyName: "name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonProperty(propertyName: "description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [JsonProperty(propertyName: "locked")]
         public bool Locked { get; set; }
@@ -23,16 +23,16 @@ namespace Contentstack.Management.Core.Models
     public class DeployModel
     {
         [JsonProperty(propertyName: "environments")]
-        public List<string> Environments { get; set; }
+        public List<string>? Environments { get; set; }
 
         [JsonProperty(propertyName: "locales")]
-        public List<string> Locales { get; set; }
+        public List<string>? Locales { get; set; }
 
         [JsonProperty(propertyName: "scheduledAt")]
-        public string ScheduledAt { get; set; }
+        public string? ScheduledAt { get; set; }
 
         [JsonProperty(propertyName: "action")]
-        public string Action { get; set; }
+        public string? Action { get; set; }
 
     }
 
@@ -40,18 +40,18 @@ namespace Contentstack.Management.Core.Models
     public class ReleaseItemModel
     {
         [JsonProperty(propertyName: "uid")]
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
         [JsonProperty(propertyName: "version")]
         public int Version { get; set; }
 
         [JsonProperty(propertyName: "locale")]
-        public string Locale { get; set; }
+        public string? Locale { get; set; }
 
         [JsonProperty(propertyName: "content_type_uid")]
-        public string ContentTypeUID { get; set; }
+        public string? ContentTypeUID { get; set; }
 
         [JsonProperty(propertyName: "action")]
-        public string Action { get; set; }
+        public string? Action { get; set; }
     }
 }

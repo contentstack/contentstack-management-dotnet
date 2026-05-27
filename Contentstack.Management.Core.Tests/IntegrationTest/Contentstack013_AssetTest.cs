@@ -476,7 +476,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -511,7 +511,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -546,7 +546,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -584,7 +584,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -680,7 +680,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -791,7 +791,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -826,7 +826,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -861,7 +861,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -896,7 +896,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -932,7 +932,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // First create a folder if we don't have one
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -968,7 +968,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // First create a folder if we don't have one
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -1236,7 +1236,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -1273,7 +1273,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -1343,7 +1343,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (string.IsNullOrEmpty(_testAssetUid))
