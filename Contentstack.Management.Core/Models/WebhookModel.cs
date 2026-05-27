@@ -1,36 +1,34 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 namespace Contentstack.Management.Core.Models
 {
-    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class WebhookModel
     {
-        [JsonProperty(propertyName: "name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty(propertyName: "destinations")]
+        [JsonPropertyName("destinations")]
         public List<WebhookTarget> destinations { get; set; }
-        [JsonProperty(propertyName: "channels")]
+        [JsonPropertyName("channels")]
         public List<string> Channels { get; set; }
-        [JsonProperty(propertyName: "branches")]
+        [JsonPropertyName("branches")]
         public List<string> Branches { get; set; }
-        [JsonProperty(propertyName: "retry_policy")]
+        [JsonPropertyName("retry_policy")]
         public string RetryPolicy { get; set; }
-        [JsonProperty(propertyName: "disabled")]
+        [JsonPropertyName("disabled")]
         public bool Disabled { get; set; } = false;
-        [JsonProperty(propertyName: "concise_payload")]
+        [JsonPropertyName("concise_payload")]
         public bool ConcisePayload { get; set; } = true;
     }
 
-    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class WebhookTarget
     {
-        [JsonProperty(propertyName: "target_url")]
+        [JsonPropertyName("target_url")]
         public string TargetUrl { get; set; }
-        [JsonProperty(propertyName: "http_basic_auth")]
+        [JsonPropertyName("http_basic_auth")]
         public string HttpBasicAuth { get; set; }
-        [JsonProperty(propertyName: "http_basic_password")]
+        [JsonPropertyName("http_basic_password")]
         public string HttpBasicPassword { get; set; }
-        [JsonProperty(propertyName: "custom_header")]
+        [JsonPropertyName("custom_header")]
         public List<Dictionary<string, object>> CustomHeader { get; set; }
     }
 }
