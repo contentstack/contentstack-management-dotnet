@@ -9,13 +9,13 @@ namespace Contentstack.Management.Core.Models
     {
         [JsonPropertyName("stack_variables")]
         [JsonConverter(typeof(NativeDictionaryConverter))]
-        public Dictionary<string, object> StackVariables { get; set; }
+        public Dictionary<string, object>? StackVariables { get; set; }
         [JsonPropertyName("discrete_variables")]
         [JsonConverter(typeof(NativeDictionaryConverter))]
-        public Dictionary<string, object> DiscreteVariables { get; set; }
+        public Dictionary<string, object>? DiscreteVariables { get; set; }
         [JsonPropertyName("rte")]
         [JsonConverter(typeof(NativeDictionaryConverter))]
-        public Dictionary<string, object> Rte { get; set; }
+        public Dictionary<string, object>? Rte { get; set; }
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ namespace Contentstack.Management.Core.Models
     /// </summary>
     internal sealed class NativeDictionaryConverter : JsonConverter<Dictionary<string, object>>
     {
-        public override Dictionary<string, object> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Dictionary<string, object>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType == JsonTokenType.Null)
                 return null;
@@ -33,15 +33,16 @@ namespace Contentstack.Management.Core.Models
             reader.Read(); // StartObject
             while (reader.TokenType != JsonTokenType.EndObject)
             {
-                string key = reader.GetString();
+                string? key = reader.GetString();
                 reader.Read();
-                dict[key] = ReadValue(ref reader);
+                if (key != null)
+                    dict[key] = ReadValue(ref reader)!;
                 reader.Read();
             }
             return dict;
         }
 
-        private static object ReadValue(ref Utf8JsonReader reader) => reader.TokenType switch
+        private static object? ReadValue(ref Utf8JsonReader reader) => reader.TokenType switch
         {
             JsonTokenType.True => true,
             JsonTokenType.False => false,

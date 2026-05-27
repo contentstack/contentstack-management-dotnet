@@ -19,7 +19,15 @@
      - Reduced Newtonsoft.Json dependency while maintaining backward compatibility for non-migrated functionality
      - Added comprehensive STJ migration testing and validation infrastructure
      - Added/updated unit and integration test coverage for all migrated modules including Client, User, Organization, Stack, ContentType, Assets, Environment, Global Field, Entry, Entry Variant, and Variant Group
-     - **Note**: This is a beta release and APIs/modules may continue evolving during migration stabilization
+     - Migrated Locale and Bulk Operations modules to System.Text.Json
+     - Re-enabled `Stack.Locale()` and `Stack.BulkOperation()` methods
+     - Migrated all Bulk Operation services (Publish, Unpublish, Delete, AddItems, UpdateItems, ReleaseItems, WorkflowUpdate) to STJ
+     - Migrated `LocaleModel` and `BulkOperationModels` to use `System.Text.Json` attributes
+     - Added/updated unit and integration test coverage for Locale and Bulk Operations
+     - Upgraded target framework to .NET 10 and removed all build warnings
+     - **Note**:
+       - This is a beta release and APIs/modules may continue evolving during migration stabilization
+       - Release and Workflow setup within Bulk Operations module are currently commented out and will be uncommented once the Release and Workflow modules are migrated to System.Text.Json
 
 ## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
  - Feat

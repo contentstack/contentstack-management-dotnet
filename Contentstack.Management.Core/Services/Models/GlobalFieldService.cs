@@ -14,15 +14,15 @@ namespace Contentstack.Management.Core.Services.Models
     {
         private readonly ContentModelling _typedModel;
         private readonly string fieldName;
-        private readonly string _apiVersion;
+        private readonly string? _apiVersion;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalFieldService"/> class.
         /// </summary>
-        internal GlobalFieldService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, ContentModelling dataModel, string fieldName, string apiVersion, string httpMethod = "POST", ParameterCollection collection = null)
+        internal GlobalFieldService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, ContentModelling dataModel, string fieldName, string? apiVersion, string httpMethod = "POST", ParameterCollection? collection = null)
             : base(serializerOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
@@ -59,7 +59,7 @@ namespace Contentstack.Management.Core.Services.Models
 
         public override void ContentBody()
         {
-            var requestData = new Dictionary<string, object>
+            var requestData = new Dictionary<string, object?>
             {
                 { fieldName, _typedModel }
             };

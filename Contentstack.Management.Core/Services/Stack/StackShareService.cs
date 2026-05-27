@@ -9,11 +9,11 @@ namespace Contentstack.Management.Core.Services.Stack
 {
     internal class StackShareService : ContentstackService
     {
-        private List<UserInvitation> _invitations;
+        private List<UserInvitation>? _invitations;
 
-        private string _removeUser;
+        private string? _removeUser;
 
-        internal StackShareService(Core.Models.Stack stack, JsonSerializerOptions stjOptions = null) : base(stjOptions ?? new JsonSerializerOptions(), stack)
+        internal StackShareService(Core.Models.Stack stack, JsonSerializerOptions? stjOptions = null) : base(stjOptions ?? new JsonSerializerOptions(), stack)
         {
             if (string.IsNullOrEmpty(stack.APIKey))
             {
@@ -44,8 +44,8 @@ namespace Contentstack.Management.Core.Services.Stack
                 {
                     emails = _invitations.Select(u => u.Email).ToArray(),
                     roles = _invitations.ToDictionary(
-                        invitation => invitation.Email,
-                        invitation => invitation.Roles.ToArray()
+                        invitation => invitation.Email!,
+                        invitation => invitation.Roles!.ToArray()
                     )
                 };
             }

@@ -10,7 +10,7 @@ namespace Contentstack.Management.Core.Services.Organization
         private readonly string _email;
 
         #region Internal
-        internal TransferOwnershipService(JsonSerializerOptions serializerOptions, string uid, string email) : base(serializerOptions)
+        internal TransferOwnershipService(JsonSerializerOptions serializerOptions, string? uid, string email) : base(serializerOptions)
         {
             if (string.IsNullOrEmpty(uid))
             {

@@ -21,7 +21,7 @@ namespace Contentstack.Management.Core.Services
         /// <summary>
         /// Management Tokens are tokens that provide you with read-write access to the content of your stack.
         /// </summary>
-        string ManagementToken { get; set; }
+        string? ManagementToken { get; set; }
 
         /// <summary>
         /// Returns a dictionary of the parameters included in this request.
@@ -86,7 +86,7 @@ namespace Contentstack.Management.Core.Services
         /// <summary>
         /// Gets and Sets the content for this request.
         /// </summary>
-        HttpContent Content
+        HttpContent? Content
         {
             get;
             set;
@@ -97,7 +97,7 @@ namespace Contentstack.Management.Core.Services
         /// </summary>
         string GetHeaderValue(string headerName);
 
-        IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null);
+        IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string? apiVersion = null);
         void OnResponse(IResponse httpResponse, ContentstackClientOptions config);
         bool HasRequestBody();
     }

@@ -13,7 +13,7 @@ namespace Contentstack.Management.Core.Services.Stack
         #region Internal
         private readonly List<UserInvitation> _users;
 
-        internal UpdateUserRoleService(Core.Models.Stack stack, List<UserInvitation> userInvitation, JsonSerializerOptions stjOptions = null)
+        internal UpdateUserRoleService(Core.Models.Stack stack, List<UserInvitation> userInvitation, JsonSerializerOptions? stjOptions = null)
             : base(stjOptions ?? new JsonSerializerOptions(), stack)
         {
             if (userInvitation == null)
@@ -35,8 +35,8 @@ namespace Contentstack.Management.Core.Services.Stack
             var requestData = new
             {
                 users = _users.ToDictionary(
-                    invitation => invitation.Uid,
-                    invitation => invitation.Roles.ToArray()
+                    invitation => invitation.Uid!,
+                    invitation => invitation.Roles!.ToArray()
                 )
             };
 

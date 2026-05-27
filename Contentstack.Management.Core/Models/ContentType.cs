@@ -5,7 +5,7 @@ namespace Contentstack.Management.Core.Models
 {
     public class ContentType: BaseModel<ContentModelling>
     {
-        internal ContentType(Stack stack, string uid) 
+        internal ContentType(Stack stack, string? uid)
             : base(stack, "content_type", uid)
         {
             resourcePath = uid == null ? "/content_types" : $"/content_types/{uid}";
@@ -171,7 +171,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="uid">Optional entry uid for performing entry specific operation</param>
         /// <returns></returns>
-        public Entry Entry(string uid = null)
+        public Entry Entry(string? uid = null)
         {
             ThrowIfUidEmpty();
             return new Entry(stack, Uid, uid);

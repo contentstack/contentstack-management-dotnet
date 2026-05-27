@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Models.Fields
     public class SelectField : Field
     {
         [JsonPropertyName("enum")]
-        public SelectEnum Enum { get; set; }
+        public SelectEnum? Enum { get; set; }
 
     }
 
@@ -18,7 +18,7 @@ namespace Contentstack.Management.Core.Models.Fields
         public bool Advanced { get; set; }
 
         [JsonPropertyName("choices")]
-        public List<Dictionary<string, JsonElement>> Choices { get; set; }
+        public List<Dictionary<string, JsonElement>>? Choices { get; set; }
 
     }
 }

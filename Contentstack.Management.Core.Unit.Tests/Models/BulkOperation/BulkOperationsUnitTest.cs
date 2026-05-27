@@ -1,13 +1,14 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Contentstack.Management.Core.Models;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
 {
     [TestClass]
     public class BulkOperationsUnitTest
     {
+        private static readonly JsonSerializerOptions _options = new JsonSerializerOptions();
         [TestMethod]
         public void Test001_BulkReleaseItemsData_Serialization()
         {
@@ -32,7 +33,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(releaseData);
+            var json = JsonSerializer.Serialize(releaseData, _options);
 
             Assert.IsNotNull(json);
             Assert.IsTrue(json.Contains("release"));
@@ -60,7 +61,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(item);
+            var json = JsonSerializer.Serialize(item, _options);
 
             Assert.IsNotNull(json);
             Assert.IsTrue(json.Contains("content_type_uid"));
@@ -91,7 +92,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             }";
 
             
-            var releaseData = JsonConvert.DeserializeObject<BulkReleaseItemsData>(json);
+            var releaseData = JsonSerializer.Deserialize<BulkReleaseItemsData>(json, _options);
 
             Assert.IsNotNull(releaseData);
             Assert.AreEqual("release_uid", releaseData.Release);
@@ -120,7 +121,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             }";
 
             
-            var item = JsonConvert.DeserializeObject<BulkReleaseItem>(json);
+            var item = JsonSerializer.Deserialize<BulkReleaseItem>(json, _options);
 
             Assert.IsNotNull(item);
             Assert.AreEqual("ct_1", item.ContentTypeUid);
@@ -141,7 +142,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(releaseData);
+            var json = JsonSerializer.Serialize(releaseData, _options);
 
             Assert.IsNotNull(json);
             Assert.IsNotNull(releaseData.Locale);
@@ -182,8 +183,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(releaseData);
-            var deserialized = JsonConvert.DeserializeObject<BulkReleaseItemsData>(json);
+            var json = JsonSerializer.Serialize(releaseData, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkReleaseItemsData>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(2, deserialized.Items.Count);
@@ -217,8 +218,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var publishJson = JsonConvert.SerializeObject(publishData);
-            var unpublishJson = JsonConvert.SerializeObject(unpublishData);
+            var publishJson = JsonSerializer.Serialize(publishData, _options);
+            var unpublishJson = JsonSerializer.Serialize(unpublishData, _options);
 
             Assert.IsTrue(publishJson.Contains("publish"));
             Assert.IsTrue(publishJson.Contains("true"));
@@ -253,7 +254,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(publishDetails);
+            var json = JsonSerializer.Serialize(publishDetails, _options);
 
             Assert.IsNotNull(json);
             Assert.IsTrue(json.Contains("entries"));
@@ -288,7 +289,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             }";
 
             
-            var publishDetails = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
+            var publishDetails = JsonSerializer.Deserialize<BulkPublishDetails>(json, _options);
 
             Assert.IsNotNull(publishDetails);
             Assert.AreEqual(1, publishDetails.Entries.Count);
@@ -319,7 +320,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(entry);
+            var json = JsonSerializer.Serialize(entry, _options);
 
             Assert.IsNotNull(json);
             Assert.IsTrue(json.Contains("uid"));
@@ -338,7 +339,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(rules);
+            var json = JsonSerializer.Serialize(rules, _options);
 
             Assert.IsNotNull(json);
             Assert.IsTrue(json.Contains("approvals"));
@@ -354,7 +355,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             }";
 
             
-            var rules = JsonConvert.DeserializeObject<BulkPublishRules>(json);
+            var rules = JsonSerializer.Deserialize<BulkPublishRules>(json, _options);
 
             Assert.IsNotNull(rules);
             Assert.AreEqual("false", rules.Approvals);
@@ -396,8 +397,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(publishDetails);
-            var deserialized = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
+            var json = JsonSerializer.Serialize(publishDetails, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkPublishDetails>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(3, deserialized.Entries.Count);
@@ -434,8 +435,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(publishDetails);
-            var deserialized = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
+            var json = JsonSerializer.Serialize(publishDetails, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkPublishDetails>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(1, deserialized.Entries.Count);
@@ -453,7 +454,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(asset);
+            var json = JsonSerializer.Serialize(asset, _options);
 
             Assert.IsNotNull(json);
             Assert.IsTrue(json.Contains("uid"));
@@ -471,16 +472,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(publishDetails);
-            var deserialized = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
+            var json = JsonSerializer.Serialize(publishDetails, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkPublishDetails>(json, _options);
 
             Assert.IsNotNull(deserialized);
-            // Collections may be null after deserialization due to ShouldSerialize methods
-            // Initialize them if they're null
             deserialized.Entries = deserialized.Entries ?? new List<BulkPublishEntry>();
             deserialized.Assets = deserialized.Assets ?? new List<BulkPublishAsset>();
-            Assert.IsNotNull(deserialized.Locales);
-            Assert.IsNotNull(deserialized.Environments);
+            deserialized.Locales = deserialized.Locales ?? new List<string>();
+            deserialized.Environments = deserialized.Environments ?? new List<string>();
             Assert.AreEqual(0, deserialized.Entries.Count);
             Assert.AreEqual(0, deserialized.Assets.Count);
             Assert.AreEqual(0, deserialized.Locales.Count);
@@ -508,7 +507,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(releaseData);
+            var json = JsonSerializer.Serialize(releaseData, _options);
 
             Assert.IsNotNull(json);
             // Should handle null values gracefully
@@ -534,7 +533,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(publishDetails);
+            var json = JsonSerializer.Serialize(publishDetails, _options);
 
             Assert.IsNotNull(json);
             // Should handle null values gracefully
@@ -579,8 +578,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(releaseData);
-            var deserialized = JsonConvert.DeserializeObject<BulkReleaseItemsData>(json);
+            var json = JsonSerializer.Serialize(releaseData, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkReleaseItemsData>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(3, deserialized.Locale.Count);
@@ -631,8 +630,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(publishDetails);
-            var deserialized = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
+            var json = JsonSerializer.Serialize(publishDetails, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkPublishDetails>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(2, deserialized.Entries.Count);

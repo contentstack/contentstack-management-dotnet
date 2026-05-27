@@ -11,9 +11,9 @@ namespace Contentstack.Management.Core.Services.Stack
     {
         #region Internal
 
-        private readonly StackSettings _settings;
+        private readonly StackSettings? _settings;
 
-        internal StackSettingsService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string method = "GET", StackSettings settings = null) : base(serializerOptions, stack)
+        internal StackSettingsService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string method = "GET", StackSettings? settings = null) : base(serializerOptions, stack)
         {
             if (stack.APIKey == null)
             {

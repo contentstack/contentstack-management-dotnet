@@ -3,7 +3,7 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Stack.BulkOperation;
 using Contentstack.Management.Core;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.Text;
 
 namespace Contentstack.Management.Core.Unit.Tests.Services
@@ -11,13 +11,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Services
     [TestClass]
     public class BulkOperationServicesTest
     {
-        private JsonSerializer _serializer;
+        private JsonSerializerOptions _serializer;
         private Stack _stack;
 
         [TestInitialize]
         public void Setup()
         {
-            _serializer = new JsonSerializer();
+            _serializer = new JsonSerializerOptions();
             var client = new ContentstackClient("test_token", "test_host");
             _stack = client.Stack("test_api_key");
         }

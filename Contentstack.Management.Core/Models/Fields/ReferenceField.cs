@@ -10,6 +10,6 @@ namespace Contentstack.Management.Core.Models.Fields
         [JsonPropertyName("reference_to")]
         public JsonElement? ReferenceTo { get; set; }
         [JsonPropertyName("plugins")]
-        public List<string> Plugins { get; set; }
+        public List<string>? Plugins { get; set; }
     }
 }

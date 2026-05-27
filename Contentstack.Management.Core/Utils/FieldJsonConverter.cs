@@ -10,7 +10,7 @@ namespace Contentstack.Management.Core.Utils
     /// </summary>
     public class FieldJsonConverter : JsonConverter<Field>
     {
-        public override Field Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Field? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType == JsonTokenType.Null)
                 return null;
@@ -19,7 +19,7 @@ namespace Contentstack.Management.Core.Utils
             var root = doc.RootElement;
             var targetType = ResolveConcreteType(root);
             var innerOpts = options.WithoutConverter<FieldJsonConverter>();
-            return (Field)JsonSerializer.Deserialize(root.GetRawText(), targetType, innerOpts);
+            return (Field?)JsonSerializer.Deserialize(root.GetRawText(), targetType, innerOpts);
         }
 
         public override void Write(Utf8JsonWriter writer, Field value, JsonSerializerOptions options)

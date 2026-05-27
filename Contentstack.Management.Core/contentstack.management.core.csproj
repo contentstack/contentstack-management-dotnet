@@ -66,7 +66,6 @@
   <ItemGroup>
     <PackageReference Include="Otp.NET" Version="1.4.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
-    <PackageReference Include="System.Text.Json" Version="9.0.5" />
     <!-- Temporary backward compatibility - will be removed after full migration -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
@@ -86,7 +85,7 @@
     <!-- Folder.cs - RE-ENABLED for Assets module -->
     <!-- GlobalField.cs - RE-ENABLED for Global Field module STJ migration -->
     <Compile Remove="Models\Label.cs" />
-    <Compile Remove="Models\Locale.cs" />
+    <!-- Locale.cs - RE-ENABLED for Locale module STJ migration -->
     <!-- Organization.cs - RE-ENABLED -->
     <Compile Remove="Models\PublishQueue.cs" />
 

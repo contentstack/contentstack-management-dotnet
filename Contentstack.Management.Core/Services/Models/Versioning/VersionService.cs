@@ -10,16 +10,16 @@ namespace Contentstack.Management.Core.Services.Models.Versioning
     internal class VersionService : ContentstackService
     {
         #region Internal
-        internal string fieldName;
+        internal string fieldName = null!;
 
-        internal string name;
-        internal string locale;
+        internal string? name;
+        internal string? locale;
         internal bool force;
 
-        internal VersionService(Core.Models.Stack stack, string resourcePath, string httpMethod, string fieldName, ParameterCollection collection = null, JsonSerializerOptions stjOptions = null)
+        internal VersionService(Core.Models.Stack stack, string resourcePath, string httpMethod, string fieldName, ParameterCollection? collection = null, JsonSerializerOptions? stjOptions = null)
             : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }

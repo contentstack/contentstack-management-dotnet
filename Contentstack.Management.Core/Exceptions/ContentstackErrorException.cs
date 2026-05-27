@@ -26,17 +26,17 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// This is http response Header of REST request to Contentstack.
         /// </summary>
-        public HttpResponseHeaders Header { get; set; }
+        public HttpResponseHeaders? Header { get; set; }
 
         /// <summary>
         /// This is http response phrase code of REST request to Contentstack.
         /// </summary>
-        public string ReasonPhrase { get; set; }
+        public string? ReasonPhrase { get; set; }
 
         /// <summary>
         /// This is error message.
         /// </summary>
-        public new string Message { get; set; }
+        public new string? Message { get; set; }
 
         /// <summary>
         /// This is error message.
@@ -66,7 +66,7 @@ namespace Contentstack.Management.Core.Exceptions
         /// Set of errors in detail.
         /// </summary>
         [JsonPropertyName("errors")]
-        public Dictionary<string, object> Errors { get; set; }
+        public Dictionary<string, object>? Errors { get; set; }
 
         /// <summary>
         /// Number of retry attempts made before this exception was thrown.
@@ -76,7 +76,7 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// The original exception that caused this error, if this is a network error wrapped in an HTTP exception.
         /// </summary>
-        public Exception OriginalError { get; set; }
+        public Exception? OriginalError { get; set; }
 
         /// <summary>
         /// Indicates whether this error originated from a network failure.
@@ -86,12 +86,12 @@ namespace Contentstack.Management.Core.Exceptions
         public static ContentstackErrorException CreateException(HttpResponseMessage response)
         {
             var stringResponse = response.Content.ReadAsStringAsync().Result;
-            ContentstackErrorException exception = null;
+            ContentstackErrorException? exception = null;
             if (!string.IsNullOrEmpty(stringResponse))
             {
                 try
                 {
-                    exception = JsonSerializer.Deserialize<ContentstackErrorException>(stringResponse);
+                    exception = JsonSerializer.Deserialize<ContentstackErrorException>(stringResponse) ?? new ContentstackErrorException();
                 }
                 catch (JsonException)
                 {
@@ -131,7 +131,7 @@ namespace Contentstack.Management.Core.Exceptions
                 exception = new ContentstackErrorException();
             }
 
-            exception.StatusCode = response.StatusCode;
+            exception!.StatusCode = response.StatusCode;
             exception.Header = response.Headers;
             exception.ReasonPhrase = response.ReasonPhrase;
             return exception;

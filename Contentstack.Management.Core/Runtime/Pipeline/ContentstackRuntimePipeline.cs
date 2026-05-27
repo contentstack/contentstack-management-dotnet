@@ -15,7 +15,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
         readonly ILogManager _logManager;
 
         // The top-most handler in the pipeline.
-        IPipelineHandler _handler;
+        IPipelineHandler _handler = null!;
 
         /// <summary>
         /// The top-most handler in the pipeline.
@@ -83,14 +83,14 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
             _handler = currentHanler;
         }
 
-        public System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public System.Threading.Tasks.Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             ThrowIfDisposed();
 
             return _handler.InvokeAsync<T>(executionContext, addAcceptMediaHeader, apiVersion);
         }
 
-        public IResponseContext InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public IResponseContext InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             ThrowIfDisposed();
 

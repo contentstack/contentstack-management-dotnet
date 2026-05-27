@@ -17,12 +17,12 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             this.networkErrorDetector = new NetworkErrorDetector();
         }
 
-        public override async Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public override async Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             var requestContext = executionContext.RequestContext;
             var responseContext = executionContext.ResponseContext;
             bool shouldRetry = false;
-            Exception lastException = null;
+            Exception? lastException = null;
 
             do
             {
@@ -98,11 +98,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             throw new ContentstackException("No response was return nor exception was thrown");
         }
 
-        public override void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public override void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             var requestContext = executionContext.RequestContext;
             bool shouldRetry = false;
-            Exception lastException = null;
+            Exception? lastException = null;
 
             do
             {
@@ -180,11 +180,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         private void LogForError(IRequestContext requestContext, Exception exception)
         {
             var totalAttempts = requestContext.NetworkRetryCount + requestContext.HttpRetryCount + requestContext.Retries + 1;
-            LogManager.InfoFormat(
+            LogManager!.InfoFormat(
                 "[RequestId: {0}] {1} making request {2}. Final attempt {3} failed. Network retries: {4}, HTTP retries: {5}.",
                 requestContext.RequestId,
                 exception.GetType().Name,
-                requestContext.service.ResourcePath,
+                requestContext.service!.ResourcePath,
                 totalAttempts,
                 requestContext.NetworkRetryCount,
                 requestContext.HttpRetryCount);
@@ -193,11 +193,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         private void LogForRetry(IRequestContext requestContext, Exception exception)
         {
             var totalAttempts = requestContext.NetworkRetryCount + requestContext.HttpRetryCount + requestContext.Retries;
-            LogManager.InfoFormat(
+            LogManager!.InfoFormat(
                 "[RequestId: {0}] {1} making request {2}. Retrying (attempt {3}). Network retries: {4}, HTTP retries: {5}.",
                 requestContext.RequestId,
                 exception.GetType().Name,
-                requestContext.service.ResourcePath,
+                requestContext.service!.ResourcePath,
                 totalAttempts,
                 requestContext.NetworkRetryCount,
                 requestContext.HttpRetryCount);
@@ -206,11 +206,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         private void LogForNetworkRetry(IRequestContext requestContext, Exception exception, NetworkErrorInfo errorInfo)
         {
             var totalAttempts = requestContext.NetworkRetryCount + requestContext.HttpRetryCount + requestContext.Retries;
-            LogManager.InfoFormat(
+            LogManager!.InfoFormat(
                 "[RequestId: {0}] Network error ({1}) making request {2}. Retrying (attempt {3}, network retry {4}).",
                 requestContext.RequestId,
                 errorInfo.ErrorType,
-                requestContext.service.ResourcePath,
+                requestContext.service!.ResourcePath,
                 totalAttempts,
                 requestContext.NetworkRetryCount);
         }
@@ -218,11 +218,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
         private void LogForHttpRetry(IRequestContext requestContext, System.Net.HttpStatusCode statusCode)
         {
             var totalAttempts = requestContext.NetworkRetryCount + requestContext.HttpRetryCount + requestContext.Retries;
-            LogManager.InfoFormat(
+            LogManager!.InfoFormat(
                 "[RequestId: {0}] HTTP error ({1}) making request {2}. Retrying (attempt {3}, HTTP retry {4}).",
                 requestContext.RequestId,
                 statusCode,
-                requestContext.service.ResourcePath,
+                requestContext.service!.ResourcePath,
                 totalAttempts,
                 requestContext.HttpRetryCount);
         }

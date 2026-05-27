@@ -8,9 +8,9 @@ namespace Contentstack.Management.Core.Models
 {
     public class Version
     {
-        internal Stack stack;
-        internal string resourcePath;
-        internal string fieldName;
+        internal Stack stack = null!;
+        internal string resourcePath = null!;
+        internal string fieldName = null!;
 
         public int? Number { get; set; }
 
@@ -22,7 +22,7 @@ namespace Contentstack.Management.Core.Models
             this.fieldName = fieldName;
         }
 
-        public virtual ContentstackResponse GetAll(ParameterCollection collection = null)
+        public virtual ContentstackResponse GetAll(ParameterCollection? collection = null)
         {
             ThrowIfVersionNumberNotEmpty();
 
@@ -30,7 +30,7 @@ namespace Contentstack.Management.Core.Models
             return stack.client.InvokeSync(service);
         }
 
-        public virtual Task<ContentstackResponse> GetAllAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> GetAllAsync(ParameterCollection? collection = null)
         {
             ThrowIfVersionNumberNotEmpty();
 
@@ -38,7 +38,7 @@ namespace Contentstack.Management.Core.Models
             return stack.client.InvokeAsync<VersionService, ContentstackResponse>(service);
         }
 
-        public virtual ContentstackResponse Delete(string locale = null)
+        public virtual ContentstackResponse Delete(string? locale = null)
         {
             ThrowIfVersionNumberEmpty();
 
@@ -46,7 +46,7 @@ namespace Contentstack.Management.Core.Models
             return stack.client.InvokeSync(service);
         }
 
-        public virtual Task<ContentstackResponse> DeleteAsync(string locale = null)
+        public virtual Task<ContentstackResponse> DeleteAsync(string? locale = null)
         {
             ThrowIfVersionNumberEmpty();
 
@@ -54,7 +54,7 @@ namespace Contentstack.Management.Core.Models
             return stack.client.InvokeAsync<VersionService, ContentstackResponse>(service);
         }
 
-        public virtual ContentstackResponse SetName(string name, string locale = null, bool force = false)
+        public virtual ContentstackResponse SetName(string name, string? locale = null, bool force = false)
         {
             ThrowIfVersionNumberEmpty();
 
@@ -66,7 +66,7 @@ namespace Contentstack.Management.Core.Models
             return stack.client.InvokeSync(service);
         }
 
-        public virtual Task<ContentstackResponse> SetNameAsync(string name, string locale = null, bool force = false)
+        public virtual Task<ContentstackResponse> SetNameAsync(string name, string? locale = null, bool force = false)
         {
             ThrowIfVersionNumberEmpty();
 

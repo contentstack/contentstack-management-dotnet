@@ -20,7 +20,7 @@ namespace Contentstack.Management.Core.Models
         #endregion
 
         #region Public
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
         /// <summary>
         /// The Get all/single organizations call lists all organizations related to the system user in the order that they were created.

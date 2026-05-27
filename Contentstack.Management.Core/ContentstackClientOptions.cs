@@ -15,7 +15,7 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// An Authtoken is a read-write token used to make authorized CMA requests.
         /// </summary>
-        public string Authtoken { get; set; }
+        public string? Authtoken { get; set; }
 
         /// <summary>
         /// Indicates whether the current authtoken is an OAuth Bearer token.
@@ -32,7 +32,7 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// The EarlyAccess used to set early access headers for the Contentstack Management API.
         /// </summary>
-        public string[] EarlyAccess { get; set; }
+        public string[]? EarlyAccess { get; set; }
 
         /// <summary>
         /// The Host used to set host url for the Contentstack Management API.
@@ -86,7 +86,7 @@ namespace Contentstack.Management.Core
         /// The retry policy which specifies when 
         /// a retry should be performed.
         /// </summary>
-        public RetryPolicy RetryPolicy { get; set; }
+        public RetryPolicy? RetryPolicy { get; set; }
 
         /// <summary>
         /// When set to true, the client will retry on network failures.
@@ -139,12 +139,12 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// Options for retry delay calculation.
         /// </summary>
-        public RetryDelayOptions RetryDelayOptions { get; set; }
+        public RetryDelayOptions? RetryDelayOptions { get; set; }
 
         /// <summary>
         /// Host for the Proxy.
         /// </summary>
-        public string ProxyHost { get; set; }
+        public string? ProxyHost { get; set; }
 
         /// <summary>
         /// Port for the Proxy.
@@ -154,18 +154,18 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// Credentials to use with a proxy.
         /// </summary>
-        public ICredentials ProxyCredentials { get; set; }
+        public ICredentials? ProxyCredentials { get; set; }
 
         /// <summary>
         /// Returns a WebProxy instance configured to match the proxy settings
         /// in the configuration.
         /// </summary>
         /// <returns></returns>
-        public IWebProxy GetWebProxy()
+        public IWebProxy? GetWebProxy()
         {
             const string httpPrefix = "http://";
 
-            WebProxy webProxy = null;
+            WebProxy? webProxy = null;
             if (!string.IsNullOrEmpty(ProxyHost) && ProxyPort != -1)
             {
                 var host = ProxyHost.StartsWith(httpPrefix, StringComparison.OrdinalIgnoreCase)

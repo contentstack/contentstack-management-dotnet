@@ -7,20 +7,20 @@ namespace Contentstack.Management.Core.Models.Fields
     public class ModularBlockField : Field
     {
         [JsonPropertyName("blocks")]
-        public List<Block> blocks { get; set; }
+        public List<Block>? blocks { get; set; }
     }
 
     public class Block
     {
         [JsonPropertyName("title")]
-        public string Title { get; set; }
+        public string? Title { get; set; }
         [JsonPropertyName("uid")]
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
         [JsonPropertyName("autoEdit")]
         public bool AutoEdit { get; set; }
         [JsonPropertyName("blockType")]
         public bool BlockType { get; set; }
         [JsonPropertyName("schema")]
-        public List<Field> Schema { get; set; }
+        public List<Field>? Schema { get; set; }
     }
 }

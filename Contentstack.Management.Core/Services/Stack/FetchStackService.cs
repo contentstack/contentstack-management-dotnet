@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Services.Stack
     {
         #region Internal
 
-        internal FetchStackService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, ParameterCollection collection = null)
+        internal FetchStackService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, ParameterCollection? collection = null)
             : base(serializerOptions, stack, collection)
         {
             this.ResourcePath = "stacks";

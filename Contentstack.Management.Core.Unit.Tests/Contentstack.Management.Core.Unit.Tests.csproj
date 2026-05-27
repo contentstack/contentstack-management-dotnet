@@ -20,7 +20,6 @@
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.18.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,8 +55,6 @@
 
   <ItemGroup>
     <!-- Out-of-scope model tests (not in the 12-module migration) -->
-    <Compile Remove="Models\LocaleTest.cs" />
-
     <Compile Remove="Models\AuditLogTest.cs" />
     <Compile Remove="Models\BaseModelTest.cs" />
     <Compile Remove="Models\ExtensionTest.cs" />
@@ -68,16 +65,6 @@
     <Compile Remove="Models\ReleaseItemTest.cs" />
     <Compile Remove="Models\RoleTest.cs" />
     <Compile Remove="Models\CustomExtensionTest.cs" />
-
-    <!-- Bulk Operations excluded from migration scope -->
-    <Compile Remove="Core\Services\Stack\BulkAddItemsServiceTest.cs" />
-    <Compile Remove="Core\Services\Stack\BulkDeleteServiceTest.cs" />
-    <Compile Remove="Core\Services\Stack\BulkJobStatusServiceTest.cs" />
-    <Compile Remove="Core\Services\Stack\BulkPublishServiceTest.cs" />
-    <Compile Remove="Core\Services\Stack\BulkReleaseItemsServiceTest.cs" />
-    <Compile Remove="Core\Services\Stack\BulkUnpublishServiceTest.cs" />
-    <Compile Remove="Core\Services\Stack\BulkUpdateItemsServiceTest.cs" />
-    <Compile Remove="Services\BulkOperationServicesTest.cs" />
 
     <!-- OAuth tests (out of scope) -->
     <Compile Remove="OAuth\**\*.cs" />

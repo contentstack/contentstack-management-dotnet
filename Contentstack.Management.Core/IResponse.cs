@@ -11,7 +11,7 @@ namespace Contentstack.Management.Core
     public interface IResponse
     {
         long ContentLength { get; }
-        string ContentType { get; }
+        string? ContentType { get; }
         HttpStatusCode StatusCode { get; }
         bool IsSuccessStatusCode { get; }
         string[] GetHeaderNames();
@@ -28,6 +28,6 @@ namespace Contentstack.Management.Core
         [Obsolete("Use OpenJsonObjectResponse() instead. This method will be removed in future versions.")]
         JObject OpenJObjectResponse();
 
-        TResponse OpenTResponse<TResponse>();
+        TResponse? OpenTResponse<TResponse>();
     }
 }

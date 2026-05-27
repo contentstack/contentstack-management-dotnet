@@ -11,10 +11,10 @@ namespace Contentstack.Management.Core.Models
 {
     public class Stack
     {
-        internal ContentstackClient client;
-        public string APIKey { get; private set; }
-        public string ManagementToken { get; private set; }
-        public string BranchUid { get; private set; }
+        internal ContentstackClient client = null!;
+        public string? APIKey { get; private set; }
+        public string? ManagementToken { get; private set; }
+        public string? BranchUid { get; private set; }
 
         #region Constructor
         public Stack(ContentstackClient contentstackClient, string? apiKey = null, string? managementToken = null, string? branchUid = null)
@@ -594,15 +594,13 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="code">Locale code fot language</param>
         /// <returns>The <see cref="Models.Locale"/></returns>
-        /*
-        public Locale Locale(string code = null)
+        public Locale Locale(string? code = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new Locale(this, code);
         }
-        */
 
         /// <summary>
         /// <see cref="Models.ContentType" /> defines the structure or schema of a page or a section of your web or mobile property.
@@ -637,7 +635,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Asset"/></returns>
-        public Asset Asset(string uid = null)
+        public Asset Asset(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -657,7 +655,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.GlobalField" /></returns>
-        public GlobalField GlobalField(string uid = null, string apiVersion = null)
+        public GlobalField GlobalField(string? uid = null, string? apiVersion = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -740,7 +738,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Environment" /></returns>
-        public Environment Environment(string uid = null)
+        public Environment Environment(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -930,7 +928,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.VariantGroup" /></returns>
-        public VariantGroup VariantGroup(string uid = null)
+        public VariantGroup VariantGroup(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();

@@ -983,7 +983,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 AssertStackValidationError(ex, "Stack_UpdateUserRole_Empty");
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 AssertLogger.IsTrue(true, "SDK or API rejected empty list", "Stack_UpdateUserRole_Empty_Argument");
             }
