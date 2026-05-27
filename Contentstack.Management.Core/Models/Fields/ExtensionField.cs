@@ -8,8 +8,8 @@ namespace Contentstack.Management.Core.Models.Fields
     public class ExtensionField : Field
     {
         [JsonPropertyName("extension_uid")]
-        public string extension_uid { get; set; }
+        public string? extension_uid { get; set; }
         [JsonPropertyName("config")]
-        public Dictionary<string, JsonElement> config { get; set; }
+        public Dictionary<string, JsonElement>? config { get; set; }
     }
 }

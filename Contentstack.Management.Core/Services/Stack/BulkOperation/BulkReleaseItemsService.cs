@@ -11,7 +11,7 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
     internal class BulkReleaseItemsService : ContentstackService
     {
         private readonly BulkReleaseItemsData _data;
-        private readonly string _bulkVersion;
+        private readonly string? _bulkVersion;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BulkReleaseItemsService"/> class.
@@ -20,7 +20,7 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
         /// <param name="stack">The stack instance.</param>
         /// <param name="data">The release items data.</param>
         /// <param name="bulkVersion">The bulk version.</param>
-        public BulkReleaseItemsService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack stack, BulkReleaseItemsData data, string bulkVersion = null)
+        public BulkReleaseItemsService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack stack, BulkReleaseItemsData data, string? bulkVersion = null)
             : base(serializerOptions, stack)
         {
             _data = data ?? throw new ArgumentNullException(nameof(data));

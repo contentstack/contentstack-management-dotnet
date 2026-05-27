@@ -8,11 +8,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
 {
     public class PipelineHandler : IPipelineHandler
     {
-        public ILogManager LogManager { get; set; }
+        public ILogManager LogManager { get; set; } = null!;
 
-        public IPipelineHandler InnerHandler { get; set; }
+        public IPipelineHandler InnerHandler { get; set; } = null!;
 
-        public virtual Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public virtual Task<T> InvokeAsync<T>(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             if (InnerHandler != null)
             {
@@ -21,7 +21,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline
             throw new InvalidOperationException(CSConstants.InnerHandlerNotSet);
         }
 
-        public virtual void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public virtual void InvokeSync(IExecutionContext executionContext, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             if (this.InnerHandler != null)
             {

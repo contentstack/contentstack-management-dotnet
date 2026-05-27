@@ -9,16 +9,16 @@ namespace Contentstack.Management.Core.Models
     public class TermModel
     {
         [JsonPropertyName("uid")]
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonPropertyName("taxonomy_uid")]
-        public string TaxonomyUid { get; set; }
+        public string? TaxonomyUid { get; set; }
 
         [JsonPropertyName("parent_uid")]
-        public string ParentUid { get; set; }
+        public string? ParentUid { get; set; }
 
         [JsonPropertyName("depth")]
         public int? Depth { get; set; }
@@ -30,16 +30,16 @@ namespace Contentstack.Management.Core.Models
         public int? ReferencedEntriesCount { get; set; }
 
         [JsonPropertyName("ancestors")]
-        public List<TermAncestorDescendant> Ancestors { get; set; }
+        public List<TermAncestorDescendant>? Ancestors { get; set; }
 
         [JsonPropertyName("descendants")]
-        public List<TermAncestorDescendant> Descendants { get; set; }
+        public List<TermAncestorDescendant>? Descendants { get; set; }
 
         [JsonPropertyName("created_at")]
-        public string CreatedAt { get; set; }
+        public string? CreatedAt { get; set; }
 
         [JsonPropertyName("updated_at")]
-        public string UpdatedAt { get; set; }
+        public string? UpdatedAt { get; set; }
     }
 
     /// <summary>
@@ -48,13 +48,13 @@ namespace Contentstack.Management.Core.Models
     public class TermAncestorDescendant
     {
         [JsonPropertyName("uid")]
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonPropertyName("parent_uid")]
-        public string ParentUid { get; set; }
+        public string? ParentUid { get; set; }
 
         [JsonPropertyName("depth")]
         public int? Depth { get; set; }
@@ -72,7 +72,7 @@ namespace Contentstack.Management.Core.Models
     public class TermMoveModel
     {
         [JsonPropertyName("parent_uid")]
-        public string ParentUid { get; set; }
+        public string? ParentUid { get; set; }
 
         [JsonPropertyName("order")]
         public int? Order { get; set; }

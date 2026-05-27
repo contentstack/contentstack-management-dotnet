@@ -10,7 +10,7 @@ namespace Contentstack.Management.Core.Models
     {
         
         [JsonProperty("data")]
-        public OAuthAppAuthorizationData[] Data { get; set; }
+        public OAuthAppAuthorizationData[]? Data { get; set; }
     }
 
     /// <summary>
@@ -20,11 +20,11 @@ namespace Contentstack.Management.Core.Models
     {
         
         [JsonProperty("authorization_uid")]
-        public string AuthorizationUid { get; set; }
+        public string? AuthorizationUid { get; set; }
 
-        
+
         [JsonProperty("user")]
-        public OAuthUser User { get; set; }
+        public OAuthUser? User { get; set; }
     }
 
     
@@ -32,7 +32,7 @@ namespace Contentstack.Management.Core.Models
     {
         
         [JsonProperty("uid")]
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
     }
 }
 

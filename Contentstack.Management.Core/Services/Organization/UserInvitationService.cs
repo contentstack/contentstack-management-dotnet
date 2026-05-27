@@ -10,12 +10,12 @@ namespace Contentstack.Management.Core.Services.Organization
 {
     internal class UserInvitationService : ContentstackService
     {
-        private List<UserInvitation> _organizationInvite;
-        private Dictionary<string, List<UserInvitation>> _stackInvite;
-        private List<string> _removeUsers;
+        private List<UserInvitation>? _organizationInvite;
+        private Dictionary<string, List<UserInvitation>>? _stackInvite;
+        private List<string>? _removeUsers;
 
         #region Internal
-        internal UserInvitationService(JsonSerializerOptions serializerOptions, string uid, string httpMethod = "GET", ParameterCollection collection = null) : base(serializerOptions, collection: collection)
+        internal UserInvitationService(JsonSerializerOptions serializerOptions, string? uid, string httpMethod = "GET", ParameterCollection? collection = null) : base(serializerOptions, collection: collection)
         {
             if (string.IsNullOrEmpty(uid))
             {
@@ -100,9 +100,9 @@ namespace Contentstack.Management.Core.Services.Organization
                     writer.WriteStartObject();
                     foreach (UserInvitation invitation in this._organizationInvite)
                     {
-                        writer.WritePropertyName(invitation.Email);
+                        writer.WritePropertyName(invitation.Email!);
                         writer.WriteStartArray();
-                        foreach (string role in invitation.Roles)
+                        foreach (string role in invitation.Roles!)
                             writer.WriteStringValue(role);
                         writer.WriteEndArray();
                     }
@@ -127,13 +127,13 @@ namespace Contentstack.Management.Core.Services.Organization
 
         private void WriteStackInvites(Utf8JsonWriter writer, string key)
         {
-            foreach (UserInvitation invitation in this._stackInvite[key])
+            foreach (UserInvitation invitation in this._stackInvite![key])
             {
-                writer.WritePropertyName(invitation.Email);
+                writer.WritePropertyName(invitation.Email!);
                 writer.WriteStartObject();
                 writer.WritePropertyName(key);
                 writer.WriteStartArray();
-                foreach (string role in invitation.Roles)
+                foreach (string role in invitation.Roles!)
                     writer.WriteStringValue(role);
                 writer.WriteEndArray();
                 writer.WriteEndObject();

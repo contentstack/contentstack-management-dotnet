@@ -6,10 +6,10 @@ namespace Contentstack.Management.Core.Services.Models
 {
     internal class LocaleService: ContentstackService
     {
-        internal LocaleService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath = null)
+        internal LocaleService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string? resourcePath = null)
            : base(serializerOptions, stack: stack)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }

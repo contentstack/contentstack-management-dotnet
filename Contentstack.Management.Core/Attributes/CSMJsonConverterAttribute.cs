@@ -71,7 +71,7 @@ namespace Contentstack.Management.Core.Attributes
                 {
                     foreach (var attr in type.GetCustomAttributes(typeof(CsmJsonConverterAttribute)))
                     {
-                        CsmJsonConverterAttribute ctdAttr = attr as CsmJsonConverterAttribute;
+                        CsmJsonConverterAttribute? ctdAttr = attr as CsmJsonConverterAttribute;
                         Trace.Assert(ctdAttr != null, "cast is null");
                         if (ctdAttr.isAutoloadEnable)
                         {

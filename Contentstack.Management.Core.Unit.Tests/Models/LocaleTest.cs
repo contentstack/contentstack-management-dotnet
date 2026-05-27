@@ -31,12 +31,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.IsNull(locale.Uid);
             Assert.AreEqual($"/locales", locale.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => locale.Fetch());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => locale.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => locale.Update(_fixture.Create<LocaleModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => locale.UpdateAsync(_fixture.Create<LocaleModel>()));
-            Assert.ThrowsException<InvalidOperationException>(() => locale.Delete());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => locale.DeleteAsync());
+            Assert.ThrowsException<ArgumentException>(() => locale.Fetch());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => locale.FetchAsync());
+            Assert.ThrowsException<ArgumentException>(() => locale.Update(_fixture.Create<LocaleModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => locale.UpdateAsync(_fixture.Create<LocaleModel>()));
+            Assert.ThrowsException<ArgumentException>(() => locale.Delete());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => locale.DeleteAsync());
             Assert.AreEqual(locale.Query().GetType(), typeof(Query));
         }
 

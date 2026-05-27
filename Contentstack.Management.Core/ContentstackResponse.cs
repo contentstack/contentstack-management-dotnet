@@ -17,9 +17,9 @@ namespace Contentstack.Management.Core
     {
         private bool _disposed = false;
 
-        string[] _headerNames;
-        Dictionary<string, string> _headers;
-        HashSet<string> _headerNamesSet;
+        string[] _headerNames = null!;
+        Dictionary<string, string> _headers = null!;
+        HashSet<string> _headerNamesSet = null!;
         private readonly HttpResponseMessage _response;
         private readonly JsonSerializerOptions _serializerOptions;
 
@@ -32,7 +32,7 @@ namespace Contentstack.Management.Core
         /// <summary>
         /// Gets the property ContentType. 
         /// </summary>
-        public string ContentType { get; private set; }
+        public string? ContentType { get; private set; }
 
         /// <summary>
         /// The HTTP status code from the HTTP response.
@@ -70,7 +70,7 @@ namespace Contentstack.Management.Core
         /// <returns>The string</returns>
         public string GetHeaderValue(string headerName)
         {
-            string headerValue;
+            string? headerValue;
             if (_headers.TryGetValue(headerName, out headerValue))
                 return headerValue;
 
@@ -89,9 +89,9 @@ namespace Contentstack.Management.Core
         #endregion
 
         #region Private
-        private string GetFirstHeaderValue(HttpHeaders headers, string key)
+        private string? GetFirstHeaderValue(HttpHeaders headers, string key)
         {
-            IEnumerable<string> headerValues = null;
+            IEnumerable<string>? headerValues = null;
             if (headers.TryGetValues(key, out headerValues))
                 return headerValues.FirstOrDefault();
 
@@ -107,7 +107,7 @@ namespace Contentstack.Management.Core
             {
                 headerNames.Add(key);
                 var headerValue = GetFirstHeaderValue(response.Headers, key);
-                _headers.Add(key, headerValue);
+                _headers.Add(key, headerValue ?? string.Empty);
             }
 
             if (response.Content != null)
@@ -118,7 +118,7 @@ namespace Contentstack.Management.Core
                     {
                         headerNames.Add(key);
                         var headerValue = GetFirstHeaderValue(response.Content.Headers, key);
-                        _headers.Add(key, headerValue);
+                        _headers.Add(key, headerValue ?? string.Empty);
                     }
                 }
             }
@@ -138,7 +138,7 @@ namespace Contentstack.Management.Core
 
             if (response.Content.Headers.ContentType != null)
             {
-                this.ContentType = response.Content.Headers.ContentType.MediaType;
+                this.ContentType = response.Content.Headers.ContentType.MediaType ?? string.Empty;
             }
             CopyHeaderValues(response);
             
@@ -180,7 +180,7 @@ namespace Contentstack.Management.Core
         /// </summary>
         /// <typeparam name="TResponse">The type to serialize the response into.</typeparam>
         /// <returns></returns>
-        public TResponse OpenTResponse<TResponse>()
+        public TResponse? OpenTResponse<TResponse>()
         {
             ThrowIfDisposed();
             string json = OpenResponse();

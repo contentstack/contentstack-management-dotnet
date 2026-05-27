@@ -12,12 +12,12 @@ namespace Contentstack.Management.Core.Services.User
     internal class LoginService : ContentstackService
     {
         #region Private
-        private readonly ICredentials _credentials;
-        private readonly string _token;
+        private readonly ICredentials _credentials = null!;
+        private readonly string? _token;
         #endregion
 
         #region Constructor
-        internal LoginService(JsonSerializerOptions serializerOptions, ICredentials credentials, string token = null, string mfaSecret = null): base(serializerOptions)
+        internal LoginService(JsonSerializerOptions serializerOptions, ICredentials credentials, string? token = null, string? mfaSecret = null): base(serializerOptions)
         {
             this.HttpMethod = "POST";
             this.ResourcePath = "user-session";
@@ -45,7 +45,7 @@ namespace Contentstack.Management.Core.Services.User
 
         public override void ContentBody()
         {
-            var credential = _credentials as NetworkCredential;
+            var credential = (_credentials as NetworkCredential)!;
             using var ms = new MemoryStream();
             using (var writer = new Utf8JsonWriter(ms))
             {

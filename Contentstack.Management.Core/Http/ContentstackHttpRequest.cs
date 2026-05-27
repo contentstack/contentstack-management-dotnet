@@ -33,7 +33,7 @@ namespace Contentstack.Management.Core.Http
         /// <summary>
         /// The request URI.
         /// </summary>
-        public Uri RequestUri { get; set; }
+        public Uri RequestUri { get; set; } = null!;
 
         /// <summary>
         /// The underlying HttpClient
@@ -106,7 +106,7 @@ namespace Contentstack.Management.Core.Http
             }
             catch (AggregateException e)
             {
-                throw e.InnerException;
+                throw e.InnerException!;
             }
         }
 
@@ -171,7 +171,7 @@ namespace Contentstack.Management.Core.Http
         /// Gets a handle to the request content.
         /// </summary>
         /// <returns>The <see cref="HttpContent"/>.</returns>
-        public HttpContent GetRequestContent()
+        public HttpContent? GetRequestContent()
         {
             ThrowIfDisposed();
             return System.Threading.Tasks.Task.FromResult(_request.Content).Result;
@@ -191,7 +191,7 @@ namespace Contentstack.Management.Core.Http
 
         private void WriteContentHeaders(IDictionary<string, string> contentHeaders)
         {
-            _request.Content.Headers.ContentType =
+            _request.Content!.Headers.ContentType =
                 MediaTypeHeaderValue.Parse(contentHeaders[HeadersKey.ContentTypeHeader]);
         }
     }

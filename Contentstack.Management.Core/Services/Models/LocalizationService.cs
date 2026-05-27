@@ -6,14 +6,14 @@ using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
 {
-    internal class LocalizationService<T> : ContentstackService
+    internal class LocalizationService<T> : ContentstackService where T : class
     {
-        private readonly T _typedModel;
+        private readonly T? _typedModel;
         private readonly string _fieldName;
         private readonly bool _shouldUnlocalize;
         #region Internal
 
-        internal LocalizationService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, T dataModel, string fieldName, ParameterCollection collection = null, bool shouldUnlocalize = false)
+        internal LocalizationService(JsonSerializerOptions serializerOptions, Core.Models.Stack stack, string resourcePath, T? dataModel, string fieldName, ParameterCollection? collection = null, bool shouldUnlocalize = false)
             : base(serializerOptions, stack: stack, collection)
         {
             if (stack.APIKey == null)
@@ -48,7 +48,7 @@ namespace Contentstack.Management.Core.Services.Models
         {
             if (!_shouldUnlocalize)
             {
-                var wrapper = new Dictionary<string, T> { { _fieldName, _typedModel } };
+                var wrapper = new Dictionary<string, T> { { _fieldName, _typedModel! } };
                 this.ByteContent = JsonSerializer.SerializeToUtf8Bytes(wrapper, SerializerOptions);
             }
         }

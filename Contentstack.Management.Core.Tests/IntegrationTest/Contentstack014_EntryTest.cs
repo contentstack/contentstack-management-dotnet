@@ -924,7 +924,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     Console.WriteLine($"✅ SDK validation caught malformed UID: {ex.Message}");
                 }
-                catch (System.Text.Json.JsonException ex)
+                catch (System.Text.Json.JsonException)
                 {
                     // API returned HTML error page instead of JSON for path traversal/malicious UIDs
                     Console.WriteLine($"✅ API blocked malicious entry UID with HTML response: {invalidUID}");
@@ -1118,7 +1118,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     Console.WriteLine($"✅ SDK caught invalid content type: {ex.Message}");
                 }
-                catch (System.Text.Json.JsonException ex)
+                catch (System.Text.Json.JsonException)
                 {
                     // API returned HTML error page instead of JSON for special characters/malicious content types
                     Console.WriteLine($"✅ API blocked malicious content type UID with HTML response: {invalidContentType}");
@@ -2298,7 +2298,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 {
                     Console.WriteLine($"✅ SDK caught malformed token: {ex.Message}");
                 }
-                catch (System.Text.Json.JsonException ex)
+                catch (System.Text.Json.JsonException)
                 {
                     // API returned HTML error page instead of JSON for malformed tokens
                     Console.WriteLine($"✅ API blocked malformed token with HTML response: {malformedToken.Substring(0, Math.Min(20, malformedToken.Length))}...");

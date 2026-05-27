@@ -9,7 +9,7 @@ namespace Contentstack.Management.Core.Services.Stack
         private readonly string _email;
 
         #region Internal
-        internal StackOwnershipService(Core.Models.Stack stack, string email, JsonSerializerOptions stjOptions = null)
+        internal StackOwnershipService(Core.Models.Stack stack, string email, JsonSerializerOptions? stjOptions = null)
             : base(stjOptions ?? new JsonSerializerOptions(), stack)
         {
             if (string.IsNullOrEmpty(stack.APIKey))

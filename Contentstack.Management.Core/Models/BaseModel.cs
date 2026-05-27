@@ -8,11 +8,11 @@ namespace Contentstack.Management.Core.Models
 {
     public class BaseModel<T>
     {
-        internal Stack stack;
-        internal string fieldName;
-        internal string resourcePath;
+        internal Stack stack = null!;
+        internal string fieldName = null!;
+        internal string resourcePath = null!;
 
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
 
         public BaseModel(Stack stack, string fieldName, string? uid = null)

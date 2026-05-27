@@ -8,16 +8,16 @@ namespace Contentstack.Management.Core.Models
     public class TaxonomyModel
     {
         [JsonPropertyName("uid")]
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonPropertyName("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [JsonPropertyName("locale")]
-        public string Locale { get; set; }
+        public string? Locale { get; set; }
 
         [JsonPropertyName("terms_count")]
         public int? TermsCount { get; set; }
@@ -32,12 +32,12 @@ namespace Contentstack.Management.Core.Models
         public int? ReferencedContentTypeCount { get; set; }
 
         [JsonPropertyName("created_at")]
-        public string CreatedAt { get; set; }
+        public string? CreatedAt { get; set; }
 
         [JsonPropertyName("updated_at")]
-        public string UpdatedAt { get; set; }
+        public string? UpdatedAt { get; set; }
 
         [JsonPropertyName("uuid")]
-        public string Uuid { get; set; }
+        public string? Uuid { get; set; }
     }
 }

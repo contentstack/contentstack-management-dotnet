@@ -7,9 +7,9 @@ namespace Contentstack.Management.Core.Models.Fields
     public class TextboxField : Field
     {
         [JsonPropertyName("format")]
-        public string Format { get; set; }
+        public string? Format { get; set; }
 
         [JsonPropertyName("error_messages")]
-        public Dictionary<string, string> ErrorMessages { get; set; }
+        public Dictionary<string, string>? ErrorMessages { get; set; }
     }
 }

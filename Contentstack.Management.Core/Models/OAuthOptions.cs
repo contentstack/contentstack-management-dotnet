@@ -26,7 +26,7 @@ namespace Contentstack.Management.Core.Models
         /// The OAuth client secret. If provided, PKCE flow will be skipped.
         /// If null or empty, PKCE flow will be used for enhanced security.
         /// </summary>
-        public string ClientSecret { get; set; }
+        public string? ClientSecret { get; set; }
 
         /// <summary>
         /// The OAuth response type. Defaults to "code" for authorization code flow.
@@ -36,7 +36,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The OAuth scopes to request. Optional array of permission scopes.
         /// </summary>
-        public string[] Scope { get; set; }
+        public string[]? Scope { get; set; }
 
         /// <summary>
         /// Indicates whether PKCE (Proof Key for Code Exchange) flow should be used.
@@ -58,7 +58,7 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="errorMessage">The validation error message if validation fails.</param>
         /// <returns>True if the configuration is valid, false otherwise.</returns>
-        public bool IsValid(out string errorMessage)
+        public bool IsValid(out string? errorMessage)
         {
             errorMessage = null;
 
@@ -122,7 +122,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (!IsValid(out var errorMessage))
             {
-                throw new Exceptions.OAuthConfigurationException(errorMessage);
+                throw new Exceptions.OAuthConfigurationException(errorMessage!);
             }
         }
 

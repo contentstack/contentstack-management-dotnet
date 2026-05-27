@@ -9,7 +9,7 @@ namespace Contentstack.Management.Core.Services.Organization
     {
         #region Internal
 
-        internal OrganizationRolesService(string uid, ParameterCollection collection, JsonSerializerOptions stjOptions = null) : base(stjOptions ?? new JsonSerializerOptions(), collection: collection)
+        internal OrganizationRolesService(string? uid, ParameterCollection? collection, JsonSerializerOptions? stjOptions = null) : base(stjOptions ?? new JsonSerializerOptions(), collection: collection)
         {
             if (string.IsNullOrEmpty(uid))
             {

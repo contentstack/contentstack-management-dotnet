@@ -12,16 +12,16 @@ namespace Contentstack.Management.Core.Models
     /// </summary>
     public class VariantGroup
     {
-        internal Stack stack;
-        internal string resourcePath;
+        internal Stack stack = null!;
+        internal string resourcePath = null!;
 
         /// <summary>
         /// Gets the UID of the variant group.
         /// </summary>
-        public string Uid { get; private set; }
+        public string? Uid { get; private set; }
 
         #region Constructor
-        internal VariantGroup(Stack stack, string uid = null)
+        internal VariantGroup(Stack stack, string? uid = null)
         {
             if (stack == null)
             {
@@ -49,7 +49,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Find(ParameterCollection collection = null)
+        public ContentstackResponse Find(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -73,7 +73,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> FindAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> FindAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -101,7 +101,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public ContentstackResponse LinkContentTypes(
             List<string> contentTypeUids,
-            ParameterCollection collection = null
+            ParameterCollection? collection = null
         )
         {
             stack.ThrowIfNotLoggedIn();
@@ -135,7 +135,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task.</returns>
         public Task<ContentstackResponse> LinkContentTypesAsync(
             List<string> contentTypeUids,
-            ParameterCollection collection = null
+            ParameterCollection? collection = null
         )
         {
             stack.ThrowIfNotLoggedIn();
@@ -171,7 +171,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
         public ContentstackResponse UnlinkContentTypes(
             List<string> contentTypeUids,
-            ParameterCollection collection = null
+            ParameterCollection? collection = null
         )
         {
             stack.ThrowIfNotLoggedIn();
@@ -205,7 +205,7 @@ namespace Contentstack.Management.Core.Models
         /// <returns>The Task.</returns>
         public Task<ContentstackResponse> UnlinkContentTypesAsync(
             List<string> contentTypeUids,
-            ParameterCollection collection = null
+            ParameterCollection? collection = null
         )
         {
             stack.ThrowIfNotLoggedIn();

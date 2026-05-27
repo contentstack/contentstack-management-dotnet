@@ -9,18 +9,18 @@ namespace Contentstack.Management.Core.Services.Models
     internal class CreateUpdateFolderService : ContentstackService
     {
         private readonly string _name;
-        private readonly string _parentUId;
+        private readonly string? _parentUId;
 
         #region Internal
         internal CreateUpdateFolderService(
             Core.Models.Stack stack,
             string name,
-            string folderUid = null,
-            string parentUId = null,
-            JsonSerializerOptions stjOptions = null)
+            string? folderUid = null,
+            string? parentUId = null,
+            JsonSerializerOptions? stjOptions = null)
             : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }

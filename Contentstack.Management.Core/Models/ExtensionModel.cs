@@ -7,28 +7,28 @@ namespace Contentstack.Management.Core.Models
     public class ExtensionModel
     {
         [JsonProperty(propertyName: "title")]
-        public string Title { get; set; }
+        public string? Title { get; set; }
         [JsonProperty(propertyName: "data_type")]
-        public string DataType { get; set; }
+        public string? DataType { get; set; }
         [JsonProperty(propertyName: "tags")]
-        public List<string> Tags { get; set; }
+        public List<string>? Tags { get; set; }
         [JsonProperty(propertyName: "src")]
-        public string Src { get; set; }
+        public string? Src { get; set; }
         [JsonProperty(propertyName: "srcdoc")]
-        public string Srcdoc { get; set; }
+        public string? Srcdoc { get; set; }
         [JsonProperty(propertyName: "type")]
-        public string Type { get; set; }
+        public string? Type { get; set; }
         [JsonProperty(propertyName: "config")]
-        public string Config { get; set; }
+        public string? Config { get; set; }
         [JsonProperty(propertyName: "multiple")]
         public bool Multiple { get; set; }
         [JsonProperty(propertyName: "scope")]
-        public ExtensionScope Scope { get; set; }
+        public ExtensionScope? Scope { get; set; }
     }
 
     public class ExtensionScope
     {
         [JsonProperty(propertyName: "content_types")]
-        public List<string> ContentTypes { get; set; }
+        public List<string>? ContentTypes { get; set; }
     }
 }

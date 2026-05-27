@@ -6,14 +6,14 @@ namespace Contentstack.Management.Core.Models
     {
         [JsonPropertyName("name")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonPropertyName("code")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         [JsonPropertyName("fallback_locale")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string FallbackLocale { get; set; }
+        public string? FallbackLocale { get; set; }
     }
 }

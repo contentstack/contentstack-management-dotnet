@@ -11,7 +11,7 @@ namespace Contentstack.Management.Core.Queryable
         private readonly Stack _stack;
         private readonly string _resourcePath;
         private readonly ParameterCollection _collection = new ParameterCollection();
-        private readonly string _apiVersion;
+        private readonly string? _apiVersion;
 
         internal Query(Stack stack, string resourcePath, string? apiVersion = null)
         {
@@ -83,7 +83,7 @@ namespace Contentstack.Management.Core.Queryable
         /// The Find all object call fetches the list of all objects owned by a particular user account.
         /// </summary>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse Find(ParameterCollection collection = null)
+        public ContentstackResponse Find(ParameterCollection? collection = null)
         {
             _stack.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
@@ -103,7 +103,7 @@ namespace Contentstack.Management.Core.Queryable
         /// The Find all object call fetches the list of all objects owned by a particular user account.
         /// </summary>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> FindAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> FindAsync(ParameterCollection? collection = null)
         {
             _stack.ThrowIfNotLoggedIn();
             this.ThrowIfAPIKeyEmpty();
