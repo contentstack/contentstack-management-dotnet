@@ -60,19 +60,13 @@
 
     <Compile Remove="Models\AuditLogTest.cs" />
     <Compile Remove="Models\BaseModelTest.cs" />
-    <Compile Remove="Models\DeliveryTokenTest.cs" />
     <Compile Remove="Models\ExtensionTest.cs" />
     <Compile Remove="Models\ExtensionModelTest.cs" />
     <Compile Remove="Models\LabelTest.cs" />
     <Compile Remove="Models\PublishQueueTest.cs" />
-    <Compile Remove="Models\PublishRuleTest.cs" />
     <Compile Remove="Models\ReleaseTest.cs" />
     <Compile Remove="Models\ReleaseItemTest.cs" />
     <Compile Remove="Models\RoleTest.cs" />
-    <Compile Remove="Models\TaxonomyTest.cs" />
-    <Compile Remove="Models\TermTest.cs" />
-    <Compile Remove="Models\WebhookTest.cs" />
-    <Compile Remove="Models\WorkflowTest.cs" />
     <Compile Remove="Models\CustomExtensionTest.cs" />
 
     <!-- Bulk Operations excluded from migration scope -->
@@ -83,7 +77,6 @@
     <Compile Remove="Core\Services\Stack\BulkReleaseItemsServiceTest.cs" />
     <Compile Remove="Core\Services\Stack\BulkUnpublishServiceTest.cs" />
     <Compile Remove="Core\Services\Stack\BulkUpdateItemsServiceTest.cs" />
-    <Compile Remove="Core\Services\Stack\BulkWorkflowUpdateServiceTest.cs" />
     <Compile Remove="Services\BulkOperationServicesTest.cs" />
 
     <!-- OAuth tests (out of scope) -->

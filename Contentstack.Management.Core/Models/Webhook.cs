@@ -171,7 +171,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, $"{resourcePath}/executions", collection: collection);
+            var service = new FetchDeleteService(stack, $"{resourcePath}/executions", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -190,7 +190,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, $"{resourcePath}/executions", collection: collection);
+            var service = new FetchDeleteService(stack, $"{resourcePath}/executions", collection: collection);
 
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
@@ -211,7 +211,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, $"/webhooks/{executionUid}/retry", httpMethod: "POST");
+            var service = new FetchDeleteService(stack, $"/webhooks/{executionUid}/retry", httpMethod: "POST");
             return stack.client.InvokeSync(service);
         }
 
@@ -231,7 +231,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, $"/webhooks/{executionUid}/retry", httpMethod: "POST");
+            var service = new FetchDeleteService(stack, $"/webhooks/{executionUid}/retry", httpMethod: "POST");
 
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
@@ -252,7 +252,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, $"/webhooks/{executionUid}/logs");
+            var service = new FetchDeleteService(stack, $"/webhooks/{executionUid}/logs");
             return stack.client.InvokeSync(service);
         }
 
@@ -272,7 +272,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, $"/webhooks/{executionUid}/logs");
+            var service = new FetchDeleteService(stack, $"/webhooks/{executionUid}/logs");
 
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }

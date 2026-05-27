@@ -29,12 +29,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.IsNull(workflow.Uid);
             Assert.AreEqual($"/workflows", workflow.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => workflow.Fetch());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => workflow.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => workflow.Update(_fixture.Create<WorkflowModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => workflow.UpdateAsync(_fixture.Create<WorkflowModel>()));
-            Assert.ThrowsException<InvalidOperationException>(() => workflow.Delete());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => workflow.DeleteAsync());
+            Assert.ThrowsException<ArgumentException>(() => workflow.Fetch());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => workflow.FetchAsync());
+            Assert.ThrowsException<ArgumentException>(() => workflow.Update(_fixture.Create<WorkflowModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => workflow.UpdateAsync(_fixture.Create<WorkflowModel>()));
+            Assert.ThrowsException<ArgumentException>(() => workflow.Delete());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => workflow.DeleteAsync());
             Assert.AreEqual(workflow.PublishRule().GetType(), typeof(PublishRule));
         }
 

@@ -89,17 +89,17 @@
     <Compile Remove="Models\Locale.cs" />
     <!-- Organization.cs - RE-ENABLED -->
     <Compile Remove="Models\PublishQueue.cs" />
-    <Compile Remove="Models\PublishRule.cs" />
+
     <Compile Remove="Models\Release.cs" />
     <Compile Remove="Models\ReleaseItem.cs" />
     <Compile Remove="Models\Role.cs" />
-    <Compile Remove="Models\Taxonomy.cs" />
-    <Compile Remove="Models\Term.cs" />
+
+
     <!-- User.cs - RE-ENABLED -->
     <!-- Models\VariantGroup.cs - RE-ENABLED for VariantGroup module STJ migration -->
     <!-- Version.cs - RE-ENABLED for Assets module -->
-    <Compile Remove="Models\Webhook.cs" />
-    <Compile Remove="Models\Workflow.cs" />
+
+
     <Compile Remove="Models\CustomExtension\**\*.cs" />
     <!-- Re-enable core Field models for ContentType support -->
     <!-- Phase 1 field types - RE-ENABLED and converted to STJ -->
@@ -111,7 +111,7 @@
     <!-- Phase 4 field types - RE-ENABLED and converted to STJ -->
     <!-- GroupField.cs, ModularBlockField.cs (includes Block) - RE-ENABLED -->
     <!-- FieldMetadata.cs, Field.cs, FieldRules.cs - RE-ENABLED for ContentType -->
-    <Compile Remove="Models\Token\**\*.cs" />
+
     
     <!-- Re-enable core services for Client, User, Organization, Stack modules -->
     <Compile Remove="Services\DeleteReleaseItemService.cs" />
