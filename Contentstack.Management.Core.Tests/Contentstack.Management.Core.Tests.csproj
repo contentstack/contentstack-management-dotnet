@@ -58,9 +58,6 @@
     <Compile Remove="IntegrationTest\Contentstack004_ReleaseTest.cs" />
     <Compile Remove="IntegrationTest\Contentstack012b_ContentTypeExpandedIntegrationTest.cs" />
 
-    <Compile Remove="IntegrationTest\Contentstack016_DeliveryTokenTest.cs" />
-    <Compile Remove="IntegrationTest\Contentstack017_TaxonomyTest.cs" />
     <Compile Remove="IntegrationTest\Contentstack019_RoleTest.cs" />
-    <Compile Remove="IntegrationTest\Contentstack020_WorkflowTest.cs" />
   </ItemGroup>
 </Project>
