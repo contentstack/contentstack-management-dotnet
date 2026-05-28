@@ -1326,7 +1326,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Workflow update failed with status {(int)response.StatusCode}", "workflowUpdateSuccess");
                 AssertLogger.IsNotNull(responseJson["workflow"], "workflowObject");
                 AssertLogger.AreEqual(updatedName, responseJson["workflow"]["name"]?.ToString(), "updatedWorkflowName");
-                AssertLogger.AreEqual(false, responseJson["workflow"]["enabled"]?.Value<bool>(), "updatedEnabledStatus");
+                AssertLogger.AreEqual(false, responseJson["workflow"]["enabled"]?.GetValue<bool>(), "updatedEnabledStatus");
                 
                 TestOutputLogger.LogContext("UpdatedWorkflowUid", workflowUid);
             }
@@ -1600,7 +1600,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // Assert
                 AssertLogger.IsNotNull(response, "publishRuleUpdateResponse");
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Publish rule update failed with status {(int)response.StatusCode}", "publishRuleUpdateSuccess");
-                AssertLogger.AreEqual(true, responseJson["publishing_rule"]["disable_approver_publishing"]?.Value<bool>(), "updatedDisableApproval");
+                AssertLogger.AreEqual(true, responseJson["publishing_rule"]["disable_approver_publishing"]?.GetValue<bool>(), "updatedDisableApproval");
                 
                 TestOutputLogger.LogContext("UpdatedPublishRuleUid", publishRuleUid);
             }

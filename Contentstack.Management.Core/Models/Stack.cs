@@ -822,7 +822,6 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Release" /></returns>
-        /*
         public Release Release(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -830,7 +829,6 @@ namespace Contentstack.Management.Core.Models
 
             return new Release(this, uid);
         }
-        */
 
 
         /// <summary>
@@ -845,7 +843,6 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Workflow" /></returns>
-        /*
         public Workflow Workflow(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -853,7 +850,6 @@ namespace Contentstack.Management.Core.Models
 
             return new Workflow(this, uid);
         }
-        */
 
         /// <summary>
         /// A <see cref="Models.PublishQueue" /> displays the historical and current details of activities such as publish, unpublish, or delete that can be performed on entries and/or assets.
@@ -868,7 +864,6 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.PublishQueue" /></returns>
-        /*
         public PublishQueue PublishQueue(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -876,7 +871,6 @@ namespace Contentstack.Management.Core.Models
 
             return new PublishQueue(this, uid);
         }
-        */
         /// <summary>
         /// A <see cref="Models.Webhook" /> a mechanism that sends real-time information to any third-party app or service to keep your application in sync with your Contentstack account. 
         /// </summary>

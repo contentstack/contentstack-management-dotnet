@@ -61,15 +61,15 @@
     <Compile Remove="Models\ExtensionTest.cs" />
     <Compile Remove="Models\ExtensionModelTest.cs" />
     <Compile Remove="Models\LabelTest.cs" />
-    <Compile Remove="Models\PublishQueueTest.cs" />
-    <Compile Remove="Models\PublishRuleTest.cs" />
-    <Compile Remove="Models\ReleaseTest.cs" />
-    <Compile Remove="Models\ReleaseItemTest.cs" />
+    <!-- PublishQueueTest.cs - RE-ENABLED for PublishQueue module STJ migration -->
+    <!-- PublishRuleTest.cs - RE-ENABLED for Workflow module STJ migration -->
+    <!-- ReleaseTest.cs - RE-ENABLED for Release module STJ migration -->
+    <!-- ReleaseItemTest.cs - RE-ENABLED for Release module STJ migration -->
     <Compile Remove="Models\RoleTest.cs" />
     <Compile Remove="Models\TaxonomyTest.cs" />
     <Compile Remove="Models\TermTest.cs" />
     <Compile Remove="Models\WebhookTest.cs" />
-    <Compile Remove="Models\WorkflowTest.cs" />
+    <!-- WorkflowTest.cs - RE-ENABLED for Workflow module STJ migration -->
     <Compile Remove="Models\CustomExtensionTest.cs" />
 
     <!-- OAuth tests (out of scope) -->

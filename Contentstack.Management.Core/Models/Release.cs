@@ -196,7 +196,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<DeployModel>(stack.client.serializer, stack, $"{resourcePath}/deploy", model, "release");
+            var service = new CreateUpdateService<DeployModel>(stack, $"{resourcePath}/deploy", model, "release");
             return stack.client.InvokeSync(service);
         }
 
@@ -217,7 +217,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
             stack.ThrowIfNotLoggedIn();
 
-            var service = new CreateUpdateService<DeployModel>(stack.client.serializer, stack, $"{resourcePath}/deploy", model, "release");
+            var service = new CreateUpdateService<DeployModel>(stack, $"{resourcePath}/deploy", model, "release");
 
             return stack.client.InvokeAsync<CreateUpdateService<DeployModel>, ContentstackResponse>(service);
         }
@@ -249,7 +249,7 @@ namespace Contentstack.Management.Core.Models
             {
                 model.Add("desctiption", description);
             }
-            var service = new CreateUpdateService<Dictionary<string, string>>(stack.client.serializer, stack, $"{resourcePath}/clone", model, "release");
+            var service = new CreateUpdateService<Dictionary<string, string>>(stack, $"{resourcePath}/clone", model, "release");
             return stack.client.InvokeSync(service);
         }
 
@@ -280,7 +280,7 @@ namespace Contentstack.Management.Core.Models
             {
                 model.Add("desctiption", description);
             }
-            var service = new CreateUpdateService<Dictionary<string, string>>(stack.client.serializer, stack, $"{resourcePath}/clone", model, "release");
+            var service = new CreateUpdateService<Dictionary<string, string>>(stack, $"{resourcePath}/clone", model, "release");
 
             return stack.client.InvokeAsync<CreateUpdateService<Dictionary<string, string>>, ContentstackResponse>(service);
         }
