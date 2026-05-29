@@ -746,7 +746,38 @@ namespace Contentstack.Management.Core.Models
             return new Environment(this, uid);
         }
 
+        /// <summary>
+        /// Branches allow you to isolate and easily manage your “in-progress” work from your stable, live work.
+        /// </summary>
+        /// <param name="uid">Optional, branch uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse response = stack.Branch().Query().Limit(2).Skip(2).Find();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Branch" /></returns>
+        public Branch Branch(string? uid = null)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new Branch(this, uid);
+        }
+
         /*
+        /// <summary>
+        /// Branches allow you to isolate and easily manage your “in-progress” work from your stable work.
+        /// </summary>
+        /// <param name="uid">Optional, branch uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse response = stack.Branch().Query().Limit(2).Skip(2).Find();
+        /// </code></pre>
+        /// </example>
         /// <summary>
         /// You can use <see cref="Models.Token.DeliveryToken" /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
         /// </summary>
