@@ -6,7 +6,7 @@ namespace Contentstack.Management.Core.Models
 {
     public class PublishRule: BaseModel<PublishRuleModel>
     {
-        internal PublishRule(Stack stack, string uid)
+        internal PublishRule(Stack stack, string? uid)
             : base(stack, "publishing_rule", uid)
         {
             resourcePath = uid == null ? "/workflows/publishing_rules" : $"/workflows/publishing_rules/{uid}";
@@ -23,7 +23,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse FindAll(ParameterCollection collection = null)
+        public virtual ContentstackResponse FindAll(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -43,7 +43,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> FindAllAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> FindAllAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -64,7 +64,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">PublishRule Model for creating workflow.</param>
         /// <returns></returns>
-        public override ContentstackResponse Create(PublishRuleModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(PublishRuleModel model, ParameterCollection? collection = null)
         {
             return base.Create(model, collection);
         }
@@ -81,7 +81,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">PublishRule Model for creating workflow.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> CreateAsync(PublishRuleModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(PublishRuleModel model, ParameterCollection? collection = null)
         {
             return base.CreateAsync(model, collection);
         }
@@ -98,7 +98,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">PublishRule Model for updating Content Type.</param>
         /// <returns></returns>
-        public override ContentstackResponse Update(PublishRuleModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(PublishRuleModel model, ParameterCollection? collection = null)
         {
             return base.Update(model, collection);
         }
@@ -115,7 +115,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">PublishRule Model for updating Content Type.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> UpdateAsync(PublishRuleModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(PublishRuleModel model, ParameterCollection? collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
@@ -130,7 +130,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             return base.Fetch(collection);
         }
@@ -145,7 +145,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             return base.FetchAsync(collection);
         }
@@ -160,7 +160,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             return base.Delete(collection);
         }
@@ -175,7 +175,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             return base.DeleteAsync(collection);
         }

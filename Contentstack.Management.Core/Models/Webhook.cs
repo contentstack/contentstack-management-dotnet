@@ -6,7 +6,7 @@ namespace Contentstack.Management.Core.Models
 {
     public class Webhook : BaseModel<WebhookModel>
     {
-        internal Webhook(Stack stack, string uid = null)
+        internal Webhook(Stack stack, string? uid = null)
            : base(stack, "webhook", uid)
         {
             resourcePath = uid == null ? "/webhooks" : $"/webhooks/{uid}";
@@ -40,7 +40,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Webhook Model for creating Webhook.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Create(WebhookModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(WebhookModel model, ParameterCollection? collection = null)
         {
             return base.Create(model, collection);
         }
@@ -57,7 +57,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Webhook Model for creating Webhook.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> CreateAsync(WebhookModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(WebhookModel model, ParameterCollection? collection = null)
         {
             return base.CreateAsync(model, collection);
         }
@@ -74,7 +74,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Webhook Model for creating Webhook.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Update(WebhookModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(WebhookModel model, ParameterCollection? collection = null)
         {
             return base.Update(model, collection);
         }
@@ -91,7 +91,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Webhook Model for creating Webhook.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> UpdateAsync(WebhookModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(WebhookModel model, ParameterCollection? collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
@@ -106,7 +106,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             return base.Fetch(collection);
         }
@@ -121,7 +121,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             return base.FetchAsync(collection);
         }
@@ -136,7 +136,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             return base.Delete(collection);
         }
@@ -151,7 +151,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             return base.DeleteAsync(collection);
         }
@@ -166,7 +166,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Executions(ParameterCollection collection = null)
+        public ContentstackResponse Executions(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -185,7 +185,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> ExecutionsAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> ExecutionsAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();

@@ -718,7 +718,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Taxonomy" /></returns>
-        public Taxonomy Taxonomy(string uid = null)
+        public Taxonomy Taxonomy(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -758,7 +758,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Token.DeliveryToken" /></returns>
-        public DeliveryToken DeliveryToken(string uid = null)
+        public DeliveryToken DeliveryToken(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -778,7 +778,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Token.ManagementToken" /></returns>
-        public ManagementToken ManagementTokens(string uid = null)
+        public ManagementToken ManagementTokens(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -843,7 +843,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Workflow" /></returns>
-        public Workflow Workflow(string uid = null)
+        public Workflow Workflow(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -885,7 +885,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>
-        public Webhook Webhook(string uid = null)
+        public Webhook Webhook(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
