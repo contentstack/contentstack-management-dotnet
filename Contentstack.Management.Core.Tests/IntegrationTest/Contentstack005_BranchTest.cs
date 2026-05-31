@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
+using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,9 +20,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private static string _createdBranchUidAsync;
 
         private const string SourceBranch = "main";
-        private const string TestBranchUid = "dotnet-sdk-int-test-branch";
-        private const string TestBranchUidAsync = "dotnet-sdk-int-test-branch-async";
-        private const string NonExistentBranchUid = "blt00000000nonexistent00";
+        private const string TestBranchUid = "dotnet_int_br";       // max 15 chars, alphanumeric+underscore
+        private const string TestBranchUidAsync = "dotnet_int_br_a"; // max 15 chars, alphanumeric+underscore
+        private const string NonExistentBranchUid = "dotnet_no_br";
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
@@ -48,7 +49,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private static void TryDeleteBranch(string uid)
         {
             if (string.IsNullOrEmpty(uid)) return;
-            try { _stack.Branch(uid).Delete(); } catch { }
+            var force = new ParameterCollection();
+            force.Add("force", true);
+            try { _stack.Branch(uid).Delete(force); } catch { }
         }
 
         // ---- Query tests -------------------------------------------------------
@@ -230,7 +233,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.Inconclusive("Test004 did not create branch — skipping.");
             try
             {
-                ContentstackResponse response = _stack.Branch(_createdBranchUid).Delete();
+                var force = new ParameterCollection();
+                force.Add("force", true);
+                ContentstackResponse response = _stack.Branch(_createdBranchUid).Delete(force);
                 var json = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(json, "response");
                 _createdBranchUid = null;
@@ -250,7 +255,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.Inconclusive("Test005 did not create branch — skipping.");
             try
             {
-                ContentstackResponse response = await _stack.Branch(_createdBranchUidAsync).DeleteAsync();
+                var force = new ParameterCollection();
+                force.Add("force", true);
+                ContentstackResponse response = await _stack.Branch(_createdBranchUidAsync).DeleteAsync(force);
                 var json = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(json, "response");
                 _createdBranchUidAsync = null;
@@ -399,7 +406,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Branch_Create_InvalidSource_Sync");
             var model = new BranchModel
             {
-                Uid = "dotnet-sdk-invalid-src-test",
+                Uid = "dotnet_inv_src",
                 Source = "non_existent_source_branch_99999"
             };
             try
@@ -420,7 +427,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Branch_Create_InvalidSource_Async");
             var model = new BranchModel
             {
-                Uid = "dotnet-sdk-invalid-src-async",
+                Uid = "dotnet_inv_a",
                 Source = "non_existent_source_branch_88888"
             };
             try
