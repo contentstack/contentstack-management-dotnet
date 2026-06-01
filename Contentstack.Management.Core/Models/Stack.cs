@@ -747,6 +747,38 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
+        /// Branches allow you to isolate and easily manage your “in-progress” work from your stable, live work.
+        /// </summary>
+        /// <param name="uid">Optional, branch uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse response = stack.Branch().Query().Limit(2).Skip(2).Find();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Branch" /></returns>
+        public Branch Branch(string? uid = null)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new Branch(this, uid);
+        }
+
+        /*
+        /// <summary>
+        /// Branches allow you to isolate and easily manage your “in-progress” work from your stable work.
+        /// </summary>
+        /// <param name="uid">Optional, branch uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse response = stack.Branch().Query().Limit(2).Skip(2).Find();
+        /// </code></pre>
+        /// </example>
+        /// <summary>
         /// You can use <see cref="Models.Token.DeliveryToken" /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
         /// </summary>
         /// <param name="uid">Optional, delivery token uid.</param>
@@ -820,15 +852,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Release" /></returns>
-        /*
-        public Release Release(string uid = null)
+        public Release Release(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new Release(this, uid);
         }
-        */
 
 
         /// <summary>
@@ -864,15 +894,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.PublishQueue" /></returns>
-        /*
-        public PublishQueue PublishQueue(string uid = null)
+        public PublishQueue PublishQueue(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new PublishQueue(this, uid);
         }
-        */
         /// <summary>
         /// A <see cref="Models.Webhook" /> a mechanism that sends real-time information to any third-party app or service to keep your application in sync with your Contentstack account. 
         /// </summary>

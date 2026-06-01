@@ -230,21 +230,20 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Console.WriteLine($"[Initialize] CreateTestEnvironment skipped: HTTP {(int)ex.StatusCode} ({ex.StatusCode}). ErrorCode: {ex.ErrorCode}. Message: {ex.ErrorMessage ?? ex.Message}");
             }
 
-            // Stack.Release() not yet migrated — commented out
-            //try
-            //{
-            //    await CreateTestRelease();
-            //}
-            //catch (ContentstackErrorException ex)
-            //{
-            //    Console.WriteLine($"[Initialize] CreateTestRelease skipped: HTTP {(int)ex.StatusCode} ({ex.StatusCode}). ErrorCode: {ex.ErrorCode}. Message: {ex.ErrorMessage ?? ex.Message}");
-            //}
+            try
+            {
+                await CreateTestRelease();
+            }
+            catch (ContentstackErrorException ex)
+            {
+                Console.WriteLine($"[Initialize] CreateTestRelease skipped: HTTP {(int)ex.StatusCode} ({ex.StatusCode}). ErrorCode: {ex.ErrorCode}. Message: {ex.ErrorMessage ?? ex.Message}");
+            }
 
             if (string.IsNullOrEmpty(_bulkTestWorkflowUid))
             {
                 try
                 {
-                    await EnsureBulkTestWorkflowAndPublishingRuleAsync(_stack);
+                    EnsureBulkTestWorkflowAndPublishingRuleAsync(_stack).GetAwaiter().GetResult();
                 }
                 catch (Exception ex)
                 {
@@ -1132,24 +1131,24 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
                 }
 
-                // 3. Stack.Workflow() not yet migrated — commented out
-                //CleanupBulkTestWorkflowAndPublishingRule(_stack);
-                //Console.WriteLine("[Cleanup] Workflow and publishing rule cleanup done.");
+                // 3. Cleanup workflow and publishing rule
+                CleanupBulkTestWorkflowAndPublishingRule(_stack);
+                Console.WriteLine("[Cleanup] Workflow and publishing rule cleanup done.");
 
-                // 4. Stack.Release() not yet migrated — commented out
-                //if (!string.IsNullOrEmpty(_testReleaseUid))
-                //{
-                //    try
-                //    {
-                //        _stack.Release(_testReleaseUid).Delete();
-                //        Console.WriteLine($"[Cleanup] Deleted release: {_testReleaseUid}");
-                //        _testReleaseUid = null;
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Console.WriteLine($"[Cleanup] Failed to delete release {_testReleaseUid}: {ex.Message}");
-                //    }
-                //}
+                // 4. Cleanup release
+                if (!string.IsNullOrEmpty(_testReleaseUid))
+                {
+                    try
+                    {
+                        _stack.Release(_testReleaseUid).Delete();
+                        Console.WriteLine($"[Cleanup] Deleted release: {_testReleaseUid}");
+                        _testReleaseUid = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[Cleanup] Failed to delete release {_testReleaseUid}: {ex.Message}");
+                    }
+                }
 
                 // 5. Delete the test environment
                 if (!string.IsNullOrEmpty(_testEnvironmentUid))
@@ -3652,22 +3651,21 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         private async Task CreateTestRelease()
         {
-            // Stack.Release() not yet migrated — commented out
-            //try
-            //{
-            //    var releaseModel = new ReleaseModel
-            //    {
-            //        Name = "bulk_test_release",
-            //        Description = "Release for testing bulk operations",
-            //        Locked = false,
-            //        Archived = false
-            //    };
-            //    ContentstackResponse response = _stack.Release().Create(releaseModel);
-            //    var responseJson = response.OpenJsonObjectResponse();
-            //    if (response.IsSuccessStatusCode && responseJson["release"] != null)
-            //        _testReleaseUid = responseJson["release"]["uid"].ToString();
-            //}
-            //catch (Exception e) { }
+            try
+            {
+                var releaseModel = new ReleaseModel
+                {
+                    Name = "bulk_test_release",
+                    Description = "Release for testing bulk operations",
+                    Locked = false,
+                    Archived = false
+                };
+                ContentstackResponse response = _stack.Release().Create(releaseModel);
+                var responseJson = response.OpenJsonObjectResponse();
+                if (response.IsSuccessStatusCode && responseJson["release"] != null)
+                    _testReleaseUid = responseJson["release"]["uid"].ToString();
+            }
+            catch (Exception e) { }
             await Task.CompletedTask;
         }
 
@@ -3927,18 +3925,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         /// </summary>
         private static async Task EnsureBulkTestWorkflowAndPublishingRuleAsync(Stack stack)
         {
-            // Step 1: ensure we have an environment
-            await EnsureBulkTestEnvironmentAsync(stack);
+            if (string.IsNullOrEmpty(_bulkTestEnvironmentUid))
+                await EnsureBulkTestEnvironmentAsync(stack);
 
-            // Step 2: find or create workflow "workflow_test" with 2 stages
             const string workflowName = "workflow_test";
+
+            // Try to find an existing workflow with the same name
             try
             {
                 ContentstackResponse listResponse = stack.Workflow().FindAll();
                 if (listResponse.IsSuccessStatusCode)
                 {
                     var listJson = listResponse.OpenJsonObjectResponse();
-                    var existing = (listJson["workflows"]?.AsArray()) ?? (listJson["workflow"]?.AsArray());
+                    var existing = listJson["workflows"]?.AsArray() ?? listJson["workflow"]?.AsArray();
                     if (existing != null)
                     {
                         foreach (var wf in existing)
@@ -3959,7 +3958,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
                 }
             }
-            catch { /* proceed to create */ }
+            catch { /* If listing fails, proceed to create */ }
 
             if (string.IsNullOrEmpty(_bulkTestWorkflowUid))
             {
@@ -4030,54 +4029,57 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 }
             }
 
-            // Step 3: find or create publish rule for stage 2
-            if (!string.IsNullOrEmpty(_bulkTestWorkflowUid) && !string.IsNullOrEmpty(_bulkTestWorkflowStage2Uid) && !string.IsNullOrEmpty(_bulkTestEnvironmentUid))
+            if (string.IsNullOrEmpty(_bulkTestWorkflowUid) || string.IsNullOrEmpty(_bulkTestEnvironmentUid))
+                return;
+
+            // Try to find an existing matching publish rule
+            try
             {
-                try
+                ContentstackResponse listResponse = stack.Workflow().PublishRule().FindAll();
+                if (listResponse.IsSuccessStatusCode)
                 {
-                    ContentstackResponse listResponse = stack.Workflow().PublishRule().FindAll();
-                    if (listResponse.IsSuccessStatusCode)
+                    var listJson = listResponse.OpenJsonObjectResponse();
+                    var rules = listJson["publishing_rules"]?.AsArray() ?? listJson["publishing_rule"]?.AsArray();
+                    if (rules != null)
                     {
-                        var listJson = listResponse.OpenJsonObjectResponse();
-                        var rules = (listJson["publishing_rules"]?.AsArray()) ?? (listJson["publishing_rule"]?.AsArray());
-                        if (rules != null)
+                        foreach (var rule in rules)
                         {
-                            foreach (var rule in rules)
+                            if (rule["workflow"]?.ToString() == _bulkTestWorkflowUid
+                                && rule["workflow_stage"]?.ToString() == _bulkTestWorkflowStage2Uid
+                                && rule["environment"]?.ToString() == _bulkTestEnvironmentUid
+                                && rule["uid"] != null)
                             {
-                                if (rule["workflow"]?.ToString() == _bulkTestWorkflowUid
-                                    && rule["workflow_stage"]?.ToString() == _bulkTestWorkflowStage2Uid
-                                    && rule["uid"] != null)
-                                {
-                                    _bulkTestPublishRuleUid = rule["uid"].ToString();
-                                    break;
-                                }
+                                _bulkTestPublishRuleUid = rule["uid"].ToString();
+                                return;
                             }
                         }
                     }
                 }
-                catch { /* proceed to create */ }
+            }
+            catch { /* If listing fails, proceed to create */ }
 
-                if (string.IsNullOrEmpty(_bulkTestPublishRuleUid))
+            if (!string.IsNullOrEmpty(_bulkTestWorkflowStage2Uid))
+            {
+                var publishRuleModel = new PublishRuleModel
                 {
-                    var publishRuleModel = new PublishRuleModel
-                    {
-                        WorkflowUid = _bulkTestWorkflowUid,
-                        WorkflowStageUid = _bulkTestWorkflowStage2Uid,
-                        Environment = _bulkTestEnvironmentUid,
-                        Branches = new List<string> { "main" },
-                        ContentTypes = new List<string> { "$all" },
-                        Locales = new List<string> { "en-us" },
-                        Actions = new List<string>(),
-                        Approvers = new Approvals { Users = new List<string>(), Roles = new List<string>() },
-                        DisableApproval = false
-                    };
+                    WorkflowUid = _bulkTestWorkflowUid,
+                    WorkflowStageUid = _bulkTestWorkflowStage2Uid,
+                    Environment = _bulkTestEnvironmentUid,
+                    Branches = new List<string> { "main" },
+                    ContentTypes = new List<string> { "$all" },
+                    Locales = new List<string> { "en-us" },
+                    Actions = new List<string>(),
+                    Approvers = new Approvals { Users = new List<string>(), Roles = new List<string>() },
+                    DisableApproval = false
+                };
 
-                    ContentstackResponse response = stack.Workflow().PublishRule().Create(publishRuleModel);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var responseJson = response.OpenJsonObjectResponse();
-                        _bulkTestPublishRuleUid = responseJson["publishing_rule"]?["uid"]?.ToString();
-                    }
+                ContentstackResponse response = stack.Workflow().PublishRule().Create(publishRuleModel);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseJson = response.OpenJsonObjectResponse();
+                    var ruleObj = responseJson["publishing_rule"];
+                    if (ruleObj?["uid"] != null)
+                        _bulkTestPublishRuleUid = ruleObj["uid"].ToString();
                 }
             }
         }

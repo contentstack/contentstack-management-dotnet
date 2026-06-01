@@ -87,10 +87,10 @@
     <Compile Remove="Models\Label.cs" />
     <!-- Locale.cs - RE-ENABLED for Locale module STJ migration -->
     <!-- Organization.cs - RE-ENABLED -->
-    <Compile Remove="Models\PublishQueue.cs" />
-
-    <Compile Remove="Models\Release.cs" />
-    <Compile Remove="Models\ReleaseItem.cs" />
+    <!-- PublishQueue.cs - RE-ENABLED for PublishQueue module STJ migration -->
+    <!-- PublishRule.cs - RE-ENABLED for Workflow module STJ migration -->
+    <!-- Release.cs - RE-ENABLED for Release module STJ migration -->
+    <!-- ReleaseItem.cs - RE-ENABLED for Release module STJ migration -->
     <Compile Remove="Models\Role.cs" />
 
 
@@ -113,7 +113,7 @@
 
     
     <!-- Re-enable core services for Client, User, Organization, Stack modules -->
-    <Compile Remove="Services\DeleteReleaseItemService.cs" />
+    <!-- DeleteReleaseItemService.cs - RE-ENABLED for Release module STJ migration -->
     <!-- QueryService.cs - RE-ENABLED for ContentType listing -->
     <!-- Re-enable essential model services for ContentType -->
     <!-- GlobalFieldService.cs, GlobalFieldFetchDeleteService.cs - RE-ENABLED for Global Field module STJ migration -->

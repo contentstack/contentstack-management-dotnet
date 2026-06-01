@@ -30,7 +30,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
 
-            var service = new FetchDeleteService(stack,resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -50,7 +50,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
 
-            var service = new FetchDeleteService(stack,resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -197,7 +197,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack,$"{resourcePath}/disable");
+            var service = new FetchDeleteService(stack, $"{resourcePath}/disable");
             return stack.client.InvokeSync(service);
         }
 
@@ -216,7 +216,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack,$"{resourcePath}/disable");
+            var service = new FetchDeleteService(stack, $"{resourcePath}/disable");
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -235,7 +235,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack,$"{resourcePath}/enable");
+            var service = new FetchDeleteService(stack, $"{resourcePath}/enable");
             return stack.client.InvokeSync(service);
         }
 
@@ -254,7 +254,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack,$"{resourcePath}/enable");
+            var service = new FetchDeleteService(stack, $"{resourcePath}/enable");
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -292,7 +292,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("contentType", CSConstants.ContentTypeRequired);
             }
 
-            var service = new FetchDeleteService(stack,$"/workflows/content_type/{contentType}", collection: collection);
+            var service = new FetchDeleteService(stack, $"/workflows/content_type/{contentType}", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -313,7 +313,7 @@ namespace Contentstack.Management.Core.Models
             {
                 throw new ArgumentNullException("contentType", CSConstants.ContentTypeRequired);
             }
-            var service = new FetchDeleteService(stack,$"/workflows/content_type/{contentType}", collection: collection);
+            var service = new FetchDeleteService(stack, $"/workflows/content_type/{contentType}", collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
     }
