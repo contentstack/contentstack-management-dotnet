@@ -864,7 +864,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.PublishQueue" /></returns>
-        public PublishQueue PublishQueue(string uid = null)
+        public PublishQueue PublishQueue(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
