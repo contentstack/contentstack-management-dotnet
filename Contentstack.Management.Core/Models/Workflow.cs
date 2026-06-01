@@ -25,12 +25,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse FindAll(ParameterCollection collection = null)
+        public virtual ContentstackResponse FindAll(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack,resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -45,12 +45,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> FindAllAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> FindAllAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack,resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -66,7 +66,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Workflow Model for creating workflow.</param>
         /// <returns></returns>
-        public override ContentstackResponse Create(WorkflowModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(WorkflowModel model, ParameterCollection? collection = null)
         {
             return base.Create(model, collection);
         }
@@ -83,7 +83,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Workflow Model for creating workflow.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> CreateAsync(WorkflowModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(WorkflowModel model, ParameterCollection? collection = null)
         {
             return base.CreateAsync(model, collection);
         }
@@ -100,7 +100,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Workflow Model for updating Content Type.</param>
         /// <returns></returns>
-        public override ContentstackResponse Update(WorkflowModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(WorkflowModel model, ParameterCollection? collection = null)
         {
             return base.Update(model, collection);
         }
@@ -117,7 +117,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Workflow Model for updating Content Type.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> UpdateAsync(WorkflowModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(WorkflowModel model, ParameterCollection? collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
@@ -132,7 +132,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             return base.Fetch(collection);
         }
@@ -147,7 +147,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             return base.FetchAsync(collection);
         }
@@ -162,7 +162,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             return base.Delete(collection);
         }
@@ -177,7 +177,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             return base.DeleteAsync(collection);
         }
@@ -197,7 +197,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack,$"{resourcePath}/disable");
+            var service = new FetchDeleteService(stack, $"{resourcePath}/disable");
             return stack.client.InvokeSync(service);
         }
 
@@ -216,7 +216,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack,$"{resourcePath}/disable");
+            var service = new FetchDeleteService(stack, $"{resourcePath}/disable");
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -235,7 +235,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack,$"{resourcePath}/enable");
+            var service = new FetchDeleteService(stack, $"{resourcePath}/enable");
             return stack.client.InvokeSync(service);
         }
 
@@ -254,7 +254,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack,$"{resourcePath}/enable");
+            var service = new FetchDeleteService(stack, $"{resourcePath}/enable");
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -269,7 +269,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="uid">Optional Publish rule uid for performing rule specific operation</param>
         /// <returns></returns>
-        public PublishRule PublishRule(string uid = null)
+        public PublishRule PublishRule(string? uid = null)
         {
             return new PublishRule(stack, uid);
         }
@@ -292,7 +292,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("contentType", CSConstants.ContentTypeRequired);
             }
 
-            var service = new FetchDeleteService(stack.client.serializer, stack,$"/workflows/content_type/{contentType}", collection: collection);
+            var service = new FetchDeleteService(stack, $"/workflows/content_type/{contentType}", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -313,7 +313,7 @@ namespace Contentstack.Management.Core.Models
             {
                 throw new ArgumentNullException("contentType", CSConstants.ContentTypeRequired);
             }
-            var service = new FetchDeleteService(stack.client.serializer, stack,$"/workflows/content_type/{contentType}", collection: collection);
+            var service = new FetchDeleteService(stack, $"/workflows/content_type/{contentType}", collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
     }

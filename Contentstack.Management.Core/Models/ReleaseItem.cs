@@ -31,12 +31,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse GetAll(ParameterCollection parameters = null)
+        public ContentstackResponse GetAll(ParameterCollection? parameters = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, this.stack, resourcePath, collection: parameters);
+            var service = new FetchDeleteService(this.stack, resourcePath, collection: parameters);
 
             return stack.client.InvokeSync(service);
         }
@@ -52,12 +52,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> GetAllAsync(ParameterCollection parameters = null)
+        public Task<ContentstackResponse> GetAllAsync(ParameterCollection? parameters = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, this.stack, resourcePath, collection: parameters);
+            var service = new FetchDeleteService(this.stack, resourcePath, collection: parameters);
 
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
@@ -75,12 +75,12 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">ReleaseItem Model for creating ReleaseItem.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Create(ReleaseItemModel model, ParameterCollection collection = null)
+        public ContentstackResponse Create(ReleaseItemModel model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<ReleaseItemModel>(stack.client.serializer, stack, resourcePath, model, "item", collection: collection);
+            var service = new CreateUpdateService<ReleaseItemModel>(stack, resourcePath, model, "item", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -97,12 +97,12 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">ReleaseItem Model for creating ReleaseItem.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> CreateAsync(ReleaseItemModel model, ParameterCollection collection = null)
+        public Task<ContentstackResponse> CreateAsync(ReleaseItemModel model, ParameterCollection? collection = null)
         {
             ThrowIfUidEmpty();
             stack.ThrowIfNotLoggedIn();
 
-            var service = new CreateUpdateService<ReleaseItemModel>(stack.client.serializer, stack, resourcePath, model, "item", collection: collection);
+            var service = new CreateUpdateService<ReleaseItemModel>(stack, resourcePath, model, "item", collection: collection);
 
             return stack.client.InvokeAsync<CreateUpdateService<ReleaseItemModel>, ContentstackResponse>(service);
         }
@@ -124,12 +124,12 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">ReleaseItem Model for creating ReleaseItem.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse CreateMultiple(List<ReleaseItemModel> models, ParameterCollection collection = null)
+        public ContentstackResponse CreateMultiple(List<ReleaseItemModel> models, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<List<ReleaseItemModel>>(stack.client.serializer, stack, resourcePath, models, "items", collection: collection);
+            var service = new CreateUpdateService<List<ReleaseItemModel>>(stack, resourcePath, models, "items", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -150,12 +150,12 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">ReleaseItem Model for creating ReleaseItem.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> CreateMultipleAsync(List<ReleaseItemModel> model, ParameterCollection collection = null)
+        public Task<ContentstackResponse> CreateMultipleAsync(List<ReleaseItemModel> model, ParameterCollection? collection = null)
         {
             ThrowIfUidEmpty();
             stack.ThrowIfNotLoggedIn();
 
-            var service = new CreateUpdateService<List<ReleaseItemModel>>(stack.client.serializer, stack, resourcePath, model, "items", collection: collection);
+            var service = new CreateUpdateService<List<ReleaseItemModel>>(stack, resourcePath, model, "items", collection: collection);
 
             return stack.client.InvokeAsync<CreateUpdateService<List<ReleaseItemModel>>, ContentstackResponse>(service);
         }
@@ -178,7 +178,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new CreateUpdateService<List<string>>(stack.client.serializer, stack, $"/releases/{releaseUID}/update_items", items, "items", "PUT");
+            var service = new CreateUpdateService<List<string>>(stack, $"/releases/{releaseUID}/update_items", items, "items", "PUT");
             return stack.client.InvokeSync(service);
         }
 
@@ -200,7 +200,7 @@ namespace Contentstack.Management.Core.Models
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new CreateUpdateService<List<string>>(stack.client.serializer, stack, $"/releases/{releaseUID}/update_items", items, "items", "PUT");
+            var service = new CreateUpdateService<List<string>>(stack, $"/releases/{releaseUID}/update_items", items, "items", "PUT");
             return stack.client.InvokeAsync<CreateUpdateService<List<string>>, ContentstackResponse>(service);
         }
 
@@ -219,12 +219,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Delete(List<ReleaseItemModel> models, ParameterCollection collection = null)
+        public ContentstackResponse Delete(List<ReleaseItemModel> models, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new DeleteService<List<ReleaseItemModel>>(stack.client.serializer, stack, resourcePath, "items", models, collection);
+            var service = new DeleteService<List<ReleaseItemModel>>(stack, resourcePath, "items", models, collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -243,12 +243,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> DeleteAsync(List<ReleaseItemModel> models, ParameterCollection collection = null)
+        public Task<ContentstackResponse> DeleteAsync(List<ReleaseItemModel> models, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new DeleteService<List<ReleaseItemModel>>(stack.client.serializer, stack, resourcePath, "items", models, collection);
+            var service = new DeleteService<List<ReleaseItemModel>>(stack, resourcePath, "items", models, collection);
 
             return stack.client.InvokeAsync<DeleteService<List<ReleaseItemModel>>, ContentstackResponse>(service);
         }

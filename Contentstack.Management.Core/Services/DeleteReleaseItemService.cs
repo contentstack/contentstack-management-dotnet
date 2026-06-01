@@ -1,48 +1,34 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Utils;
+
 namespace Contentstack.Management.Core.Services
 {
     internal class DeleteReleaseItemService : ContentstackService
     {
-        #region Internal
         internal List<string> _items;
 
-        internal DeleteReleaseItemService(JsonSerializer serializer, Core.Models.Stack stack, string releaseUID, List<string> items)
-            : base(serializer, stack: stack)
+        internal DeleteReleaseItemService(Core.Models.Stack stack, string releaseUID, List<string> items, JsonSerializerOptions? stjOptions = null)
+            : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack)
         {
             if (stack.APIKey == null)
-            {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
-            }
             if (releaseUID == null)
-            {
                 throw new ArgumentNullException("releaseUID", CSConstants.ReleaseUIDRequired);
-            }
             if (items == null)
-            {
                 throw new ArgumentNullException("items", CSConstants.ReleaseItemsRequired);
-            }
+
             this.ResourcePath = $"/releases/{releaseUID}/item";
             this.HttpMethod = "DELETE";
             _items = items;
         }
-        #endregion
 
         public override void ContentBody()
         {
-            using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
-            {
-                JsonWriter writer = new JsonTextWriter(stringWriter);
-
-                Serializer.Serialize(writer, _items);
-                string snippet = $"{{\"items\": {stringWriter.ToString()}}}";
-                this.ByteContent = System.Text.Encoding.UTF8.GetBytes(snippet);
-            }
+            var requestData = new Dictionary<string, object> { { "items", _items } };
+            string jsonString = JsonSerializer.Serialize(requestData, SerializerOptions);
+            this.ByteContent = System.Text.Encoding.UTF8.GetBytes(jsonString);
         }
     }
 }

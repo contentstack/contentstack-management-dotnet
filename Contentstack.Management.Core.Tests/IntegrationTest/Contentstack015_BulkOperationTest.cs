@@ -194,16 +194,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public static void ClassInitialize(TestContext context)
         {
             _client = Contentstack.CreateAuthenticatedClient();
-            // Stack.Workflow() not yet migrated — commented out
-            //try
-            //{
-            //    Stack stack = GetStack();
-            //    EnsureBulkTestWorkflowAndPublishingRuleAsync(stack).GetAwaiter().GetResult();
-            //}
-            //catch (Exception)
-            //{
-            //    // Workflow/publish rule setup failed (e.g. auth, plan limits); tests can still run without them
-            //}
+            try
+            {
+                Stack stack = GetStack();
+                EnsureBulkTestWorkflowAndPublishingRuleAsync(stack).GetAwaiter().GetResult();
+            }
+            catch (Exception)
+            {
+                // Workflow/publish rule setup failed (e.g. auth, plan limits); tests can still run without them
+            }
         }
 
         [ClassCleanup]
@@ -231,31 +230,29 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Console.WriteLine($"[Initialize] CreateTestEnvironment skipped: HTTP {(int)ex.StatusCode} ({ex.StatusCode}). ErrorCode: {ex.ErrorCode}. Message: {ex.ErrorMessage ?? ex.Message}");
             }
 
-            // Stack.Release() not yet migrated — commented out
-            //try
-            //{
-            //    await CreateTestRelease();
-            //}
-            //catch (ContentstackErrorException ex)
-            //{
-            //    Console.WriteLine($"[Initialize] CreateTestRelease skipped: HTTP {(int)ex.StatusCode} ({ex.StatusCode}). ErrorCode: {ex.ErrorCode}. Message: {ex.ErrorMessage ?? ex.Message}");
-            //}
+            try
+            {
+                await CreateTestRelease();
+            }
+            catch (ContentstackErrorException ex)
+            {
+                Console.WriteLine($"[Initialize] CreateTestRelease skipped: HTTP {(int)ex.StatusCode} ({ex.StatusCode}). ErrorCode: {ex.ErrorCode}. Message: {ex.ErrorMessage ?? ex.Message}");
+            }
 
-            // Stack.Workflow() not yet migrated — commented out
-            //if (string.IsNullOrEmpty(_bulkTestWorkflowUid))
-            //{
-            //    try
-            //    {
-            //        EnsureBulkTestWorkflowAndPublishingRuleAsync(_stack).GetAwaiter().GetResult();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        _bulkTestWorkflowSetupError = ex is ContentstackErrorException cex
-            //            ? $"HTTP {(int)cex.StatusCode} ({cex.StatusCode}). ErrorCode: {cex.ErrorCode}. Message: {cex.ErrorMessage ?? cex.Message}"
-            //            : ex.Message;
-            //        Console.WriteLine($"[Initialize] Workflow setup failed: {_bulkTestWorkflowSetupError}");
-            //    }
-            //}
+            if (string.IsNullOrEmpty(_bulkTestWorkflowUid))
+            {
+                try
+                {
+                    EnsureBulkTestWorkflowAndPublishingRuleAsync(_stack).GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    _bulkTestWorkflowSetupError = ex is ContentstackErrorException cex
+                        ? $"HTTP {(int)cex.StatusCode} ({cex.StatusCode}). ErrorCode: {cex.ErrorCode}. Message: {cex.ErrorMessage ?? cex.Message}"
+                        : ex.Message;
+                    Console.WriteLine($"[Initialize] Workflow setup failed: {_bulkTestWorkflowSetupError}");
+                }
+            }
         }
 
         // Stack.Workflow() not yet migrated — Test000a commented out
@@ -1134,24 +1131,24 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     }
                 }
 
-                // 3. Stack.Workflow() not yet migrated — commented out
-                //CleanupBulkTestWorkflowAndPublishingRule(_stack);
-                //Console.WriteLine("[Cleanup] Workflow and publishing rule cleanup done.");
+                // 3. Cleanup workflow and publishing rule
+                CleanupBulkTestWorkflowAndPublishingRule(_stack);
+                Console.WriteLine("[Cleanup] Workflow and publishing rule cleanup done.");
 
-                // 4. Stack.Release() not yet migrated — commented out
-                //if (!string.IsNullOrEmpty(_testReleaseUid))
-                //{
-                //    try
-                //    {
-                //        _stack.Release(_testReleaseUid).Delete();
-                //        Console.WriteLine($"[Cleanup] Deleted release: {_testReleaseUid}");
-                //        _testReleaseUid = null;
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Console.WriteLine($"[Cleanup] Failed to delete release {_testReleaseUid}: {ex.Message}");
-                //    }
-                //}
+                // 4. Cleanup release
+                if (!string.IsNullOrEmpty(_testReleaseUid))
+                {
+                    try
+                    {
+                        _stack.Release(_testReleaseUid).Delete();
+                        Console.WriteLine($"[Cleanup] Deleted release: {_testReleaseUid}");
+                        _testReleaseUid = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[Cleanup] Failed to delete release {_testReleaseUid}: {ex.Message}");
+                    }
+                }
 
                 // 5. Delete the test environment
                 if (!string.IsNullOrEmpty(_testEnvironmentUid))
@@ -3653,22 +3650,21 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         private async Task CreateTestRelease()
         {
-            // Stack.Release() not yet migrated — commented out
-            //try
-            //{
-            //    var releaseModel = new ReleaseModel
-            //    {
-            //        Name = "bulk_test_release",
-            //        Description = "Release for testing bulk operations",
-            //        Locked = false,
-            //        Archived = false
-            //    };
-            //    ContentstackResponse response = _stack.Release().Create(releaseModel);
-            //    var responseJson = response.OpenJsonObjectResponse();
-            //    if (response.IsSuccessStatusCode && responseJson["release"] != null)
-            //        _testReleaseUid = responseJson["release"]["uid"].ToString();
-            //}
-            //catch (Exception e) { }
+            try
+            {
+                var releaseModel = new ReleaseModel
+                {
+                    Name = "bulk_test_release",
+                    Description = "Release for testing bulk operations",
+                    Locked = false,
+                    Archived = false
+                };
+                ContentstackResponse response = _stack.Release().Create(releaseModel);
+                var responseJson = response.OpenJsonObjectResponse();
+                if (response.IsSuccessStatusCode && responseJson["release"] != null)
+                    _testReleaseUid = responseJson["release"]["uid"].ToString();
+            }
+            catch (Exception e) { }
             await Task.CompletedTask;
         }
 
@@ -3928,8 +3924,163 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         /// </summary>
         private static async Task EnsureBulkTestWorkflowAndPublishingRuleAsync(Stack stack)
         {
-            // Stack.Workflow() not yet migrated — commented out
-            await Task.CompletedTask;
+            if (string.IsNullOrEmpty(_bulkTestEnvironmentUid))
+                await EnsureBulkTestEnvironmentAsync(stack);
+
+            const string workflowName = "workflow_test";
+
+            // Try to find an existing workflow with the same name
+            try
+            {
+                ContentstackResponse listResponse = stack.Workflow().FindAll();
+                if (listResponse.IsSuccessStatusCode)
+                {
+                    var listJson = listResponse.OpenJsonObjectResponse();
+                    var existing = listJson["workflows"]?.AsArray() ?? listJson["workflow"]?.AsArray();
+                    if (existing != null)
+                    {
+                        foreach (var wf in existing)
+                        {
+                            if (wf["name"]?.ToString() == workflowName && wf["uid"] != null)
+                            {
+                                _bulkTestWorkflowUid = wf["uid"].ToString();
+                                var existingStages = wf["workflow_stages"]?.AsArray();
+                                if (existingStages != null && existingStages.Count >= 2)
+                                {
+                                    _bulkTestWorkflowStage1Uid = existingStages[0]["uid"]?.ToString();
+                                    _bulkTestWorkflowStage2Uid = existingStages[1]["uid"]?.ToString();
+                                    _bulkTestWorkflowStageUid = _bulkTestWorkflowStage2Uid;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch { /* If listing fails, proceed to create */ }
+
+            if (string.IsNullOrEmpty(_bulkTestWorkflowUid))
+            {
+                var sysAcl = new Dictionary<string, object>
+                {
+                    ["roles"] = new Dictionary<string, object> { ["uids"] = new List<string>() },
+                    ["users"] = new Dictionary<string, object> { ["uids"] = new List<string> { "$all" } },
+                    ["others"] = new Dictionary<string, object>()
+                };
+
+                var workflowModel = new WorkflowModel
+                {
+                    Name = workflowName,
+                    Enabled = true,
+                    Branches = new List<string> { "main" },
+                    ContentTypes = new List<string> { "$all" },
+                    AdminUsers = new Dictionary<string, object> { ["users"] = new List<object>() },
+                    WorkflowStages = new List<WorkflowStage>
+                    {
+                        new WorkflowStage
+                        {
+                            Name = "New stage 1",
+                            Color = "#fe5cfb",
+                            SystemACL = sysAcl,
+                            NextAvailableStages = new List<string> { "$all" },
+                            AllStages = true,
+                            AllUsers = true,
+                            SpecificStages = false,
+                            SpecificUsers = false,
+                            EntryLock = "$none"
+                        },
+                        new WorkflowStage
+                        {
+                            Name = "New stage 2",
+                            Color = "#3688bf",
+                            SystemACL = new Dictionary<string, object>
+                            {
+                                ["roles"] = new Dictionary<string, object> { ["uids"] = new List<string>() },
+                                ["users"] = new Dictionary<string, object> { ["uids"] = new List<string> { "$all" } },
+                                ["others"] = new Dictionary<string, object>()
+                            },
+                            NextAvailableStages = new List<string> { "$all" },
+                            AllStages = true,
+                            AllUsers = true,
+                            SpecificStages = false,
+                            SpecificUsers = false,
+                            EntryLock = "$none"
+                        }
+                    }
+                };
+
+                ContentstackResponse response = stack.Workflow().Create(workflowModel);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseJson = response.OpenJsonObjectResponse();
+                    var workflowObj = responseJson["workflow"];
+                    if (workflowObj?["uid"] != null)
+                    {
+                        _bulkTestWorkflowUid = workflowObj["uid"].ToString();
+                        var stages = workflowObj["workflow_stages"]?.AsArray();
+                        if (stages != null && stages.Count >= 2)
+                        {
+                            _bulkTestWorkflowStage1Uid = stages[0]["uid"]?.ToString();
+                            _bulkTestWorkflowStage2Uid = stages[1]["uid"]?.ToString();
+                            _bulkTestWorkflowStageUid = _bulkTestWorkflowStage2Uid;
+                        }
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(_bulkTestWorkflowUid) || string.IsNullOrEmpty(_bulkTestEnvironmentUid))
+                return;
+
+            // Try to find an existing matching publish rule
+            try
+            {
+                ContentstackResponse listResponse = stack.Workflow().PublishRule().FindAll();
+                if (listResponse.IsSuccessStatusCode)
+                {
+                    var listJson = listResponse.OpenJsonObjectResponse();
+                    var rules = listJson["publishing_rules"]?.AsArray() ?? listJson["publishing_rule"]?.AsArray();
+                    if (rules != null)
+                    {
+                        foreach (var rule in rules)
+                        {
+                            if (rule["workflow"]?.ToString() == _bulkTestWorkflowUid
+                                && rule["workflow_stage"]?.ToString() == _bulkTestWorkflowStage2Uid
+                                && rule["environment"]?.ToString() == _bulkTestEnvironmentUid
+                                && rule["uid"] != null)
+                            {
+                                _bulkTestPublishRuleUid = rule["uid"].ToString();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            catch { /* If listing fails, proceed to create */ }
+
+            if (!string.IsNullOrEmpty(_bulkTestWorkflowStage2Uid))
+            {
+                var publishRuleModel = new PublishRuleModel
+                {
+                    WorkflowUid = _bulkTestWorkflowUid,
+                    WorkflowStageUid = _bulkTestWorkflowStage2Uid,
+                    Environment = _bulkTestEnvironmentUid,
+                    Branches = new List<string> { "main" },
+                    ContentTypes = new List<string> { "$all" },
+                    Locales = new List<string> { "en-us" },
+                    Actions = new List<string>(),
+                    Approvers = new Approvals { Users = new List<string>(), Roles = new List<string>() },
+                    DisableApproval = false
+                };
+
+                ContentstackResponse response = stack.Workflow().PublishRule().Create(publishRuleModel);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseJson = response.OpenJsonObjectResponse();
+                    var ruleObj = responseJson["publishing_rule"];
+                    if (ruleObj?["uid"] != null)
+                        _bulkTestPublishRuleUid = ruleObj["uid"].ToString();
+                }
+            }
         }
 
         /// <summary>
@@ -3937,20 +4088,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         /// </summary>
         private static void CleanupBulkTestWorkflowAndPublishingRule(Stack stack)
         {
-            // Stack.Workflow() not yet migrated — commented out
-            //if (!string.IsNullOrEmpty(_bulkTestPublishRuleUid))
-            //{
-            //    try { stack.Workflow().PublishRule(_bulkTestPublishRuleUid).Delete(); } catch { }
-            //    _bulkTestPublishRuleUid = null;
-            //}
-            //if (!string.IsNullOrEmpty(_bulkTestWorkflowUid))
-            //{
-            //    try { stack.Workflow(_bulkTestWorkflowUid).Delete(); } catch { }
-            //    _bulkTestWorkflowUid = null;
-            //}
-            //_bulkTestWorkflowStageUid = null;
-            //_bulkTestWorkflowStage1Uid = null;
-            //_bulkTestWorkflowStage2Uid = null;
+            if (!string.IsNullOrEmpty(_bulkTestPublishRuleUid))
+            {
+                try { stack.Workflow().PublishRule(_bulkTestPublishRuleUid).Delete(); } catch { }
+                _bulkTestPublishRuleUid = null;
+            }
+            if (!string.IsNullOrEmpty(_bulkTestWorkflowUid))
+            {
+                try { stack.Workflow(_bulkTestWorkflowUid).Delete(); } catch { }
+                _bulkTestWorkflowUid = null;
+            }
+            _bulkTestWorkflowStageUid = null;
+            _bulkTestWorkflowStage1Uid = null;
+            _bulkTestWorkflowStage2Uid = null;
         }
 
         /// <summary>
