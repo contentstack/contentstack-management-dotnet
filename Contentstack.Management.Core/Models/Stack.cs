@@ -843,7 +843,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Workflow" /></returns>
-        public Workflow Workflow(string uid = null)
+        public Workflow Workflow(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
