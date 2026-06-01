@@ -9,11 +9,11 @@ namespace Contentstack.Management.Core.Models
     public class PublishQueue
     {
         internal Stack stack;
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
         internal string resourcePath;
 
-        internal PublishQueue(Stack stack, string uid = null)
+        internal PublishQueue(Stack stack, string? uid = null)
         {
             stack.ThrowIfAPIKeyEmpty();
 
