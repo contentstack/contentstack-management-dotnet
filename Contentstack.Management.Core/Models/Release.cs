@@ -9,7 +9,7 @@ namespace Contentstack.Management.Core.Models
 {
     public class Release : BaseModel<ReleaseModel>
     {
-        internal Release(Stack stack, string uid = null)
+        internal Release(Stack stack, string? uid = null)
            : base(stack, "release", uid)
         {
             resourcePath = uid == null ? "/releases" : $"/releases/{uid}";
@@ -44,7 +44,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Release Model for creating ReleaseModel.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Create(ReleaseModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(ReleaseModel model, ParameterCollection? collection = null)
         {
             return base.Create(model, collection);
         }
@@ -62,7 +62,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Release Model Model for creating ReleaseModel.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> CreateAsync(ReleaseModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(ReleaseModel model, ParameterCollection? collection = null)
         {
             return base.CreateAsync(model, collection);
         }
@@ -79,7 +79,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Release Model for creating ReleaseModel.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Update(ReleaseModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(ReleaseModel model, ParameterCollection? collection = null)
         {
             return base.Update(model, collection);
         }
@@ -96,7 +96,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Release Model for creating ReleaseModel.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> UpdateAsync(ReleaseModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(ReleaseModel model, ParameterCollection? collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
@@ -111,7 +111,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             return base.Fetch(collection);
         }
@@ -126,7 +126,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             return base.FetchAsync(collection);
         }
@@ -141,7 +141,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             return base.Delete(collection);
         }
@@ -156,7 +156,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             return base.DeleteAsync(collection);
         }

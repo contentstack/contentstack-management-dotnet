@@ -34,7 +34,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse FindAll(ParameterCollection collection = null)
+        public virtual ContentstackResponse FindAll(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -55,7 +55,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> FindAllAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> FindAllAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -76,7 +76,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
+        public virtual ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -97,7 +97,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -117,7 +117,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Cancel(ParameterCollection collection = null)
+        public virtual ContentstackResponse Cancel(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -137,7 +137,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> CancelAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> CancelAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
