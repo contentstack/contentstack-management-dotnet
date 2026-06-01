@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse GetAll(ParameterCollection parameters = null)
+        public ContentstackResponse GetAll(ParameterCollection? parameters = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -52,7 +52,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> GetAllAsync(ParameterCollection parameters = null)
+        public Task<ContentstackResponse> GetAllAsync(ParameterCollection? parameters = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -75,7 +75,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">ReleaseItem Model for creating ReleaseItem.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Create(ReleaseItemModel model, ParameterCollection collection = null)
+        public ContentstackResponse Create(ReleaseItemModel model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -97,7 +97,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">ReleaseItem Model for creating ReleaseItem.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> CreateAsync(ReleaseItemModel model, ParameterCollection collection = null)
+        public Task<ContentstackResponse> CreateAsync(ReleaseItemModel model, ParameterCollection? collection = null)
         {
             ThrowIfUidEmpty();
             stack.ThrowIfNotLoggedIn();
@@ -124,7 +124,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">ReleaseItem Model for creating ReleaseItem.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse CreateMultiple(List<ReleaseItemModel> models, ParameterCollection collection = null)
+        public ContentstackResponse CreateMultiple(List<ReleaseItemModel> models, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -150,7 +150,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">ReleaseItem Model for creating ReleaseItem.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> CreateMultipleAsync(List<ReleaseItemModel> model, ParameterCollection collection = null)
+        public Task<ContentstackResponse> CreateMultipleAsync(List<ReleaseItemModel> model, ParameterCollection? collection = null)
         {
             ThrowIfUidEmpty();
             stack.ThrowIfNotLoggedIn();
@@ -219,7 +219,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Delete(List<ReleaseItemModel> models, ParameterCollection collection = null)
+        public ContentstackResponse Delete(List<ReleaseItemModel> models, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -243,7 +243,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> DeleteAsync(List<ReleaseItemModel> models, ParameterCollection collection = null)
+        public Task<ContentstackResponse> DeleteAsync(List<ReleaseItemModel> models, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
