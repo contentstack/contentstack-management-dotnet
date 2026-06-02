@@ -1,5 +1,5 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Http;
 
 namespace Contentstack.Management.Core.Services.OAuth
@@ -20,7 +20,7 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="appId">The OAuth app ID.</param>
         /// <param name="authorizationId">The authorization ID to revoke.</param>
         /// <param name="organizationUid">The organization UID for OAuth operations.</param>
-        internal OAuthAppRevocationService(JsonSerializer serializer, string appId, string authorizationId, string organizationUid = null)
+        internal OAuthAppRevocationService(JsonSerializerOptions serializer, string appId, string authorizationId, string organizationUid = null)
             : base(serializer)
         {
             if (string.IsNullOrEmpty(appId))

@@ -55,7 +55,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidNotEmpty();
 
-            var service = new UploadService(stack.client.serializer, stack, resourcePath, model);
+            var service = new UploadService(stack, resourcePath, model);
             return stack.client.InvokeSync(service);
         }
 
@@ -76,7 +76,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
 
-            var service = new UploadService(stack.client.serializer, stack, resourcePath, model);
+            var service = new UploadService(stack, resourcePath, model);
             return stack.client.InvokeAsync<UploadService, ContentstackResponse>(service);
         }
 
@@ -96,7 +96,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidNotEmpty();
 
-            var service = new CreateUpdateService<ExtensionModel>(stack.client.serializer, stack, resourcePath, model, "extension");
+            var service = new CreateUpdateService<ExtensionModel>(stack, resourcePath, model, "extension");
             return stack.client.InvokeSync(service);
         }
 
@@ -117,7 +117,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
 
-            var service = new CreateUpdateService<ExtensionModel>(stack.client.serializer, stack, resourcePath, model, "extension");
+            var service = new CreateUpdateService<ExtensionModel>(stack, resourcePath, model, "extension");
             return stack.client.InvokeAsync<CreateUpdateService<ExtensionModel>, ContentstackResponse>(service);
         }
 
@@ -137,7 +137,7 @@ namespace Contentstack.Management.Core.Models
         {
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<ExtensionModel>(stack.client.serializer, stack, resourcePath, model, "extension", "PUT");
+            var service = new CreateUpdateService<ExtensionModel>(stack, resourcePath, model, "extension", "PUT");
             return stack.client.InvokeSync(service);
         }
 
@@ -158,7 +158,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<ExtensionModel>(stack.client.serializer, stack, resourcePath, model, "extension", "PUT");
+            var service = new CreateUpdateService<ExtensionModel>(stack, resourcePath, model, "extension", "PUT");
             return stack.client.InvokeAsync<CreateUpdateService<ExtensionModel>, ContentstackResponse>(service);
         }
 
@@ -178,7 +178,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -198,7 +198,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -218,7 +218,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE");
             return stack.client.InvokeSync(service);
         }
 
@@ -238,7 +238,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE");
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
         #region Throw Error

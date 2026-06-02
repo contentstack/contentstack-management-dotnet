@@ -5,6 +5,7 @@ using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Stack;
 using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Models;
+using Contentstack.Management.Core.Models.Token;
 // using Contentstack.Management.Core.Models.Token; // Excluded for now
 
 namespace Contentstack.Management.Core.Models
@@ -663,9 +664,8 @@ namespace Contentstack.Management.Core.Models
             return new GlobalField(this, uid, apiVersion);
         }
 
-        /*
         /// <summary>
-        /// <see cref="Models.Extension" /> let you create custom fields and custom widgets that lets you customize Contentstack's default UI and behavior. 
+        /// <see cref="Models.Extension" /> let you create custom fields and custom widgets that lets you customize Contentstack's default UI and behavior.
         /// </summary>
         /// <param name="uid">Optional, extension uid.</param>
         /// <example>
@@ -724,7 +724,6 @@ namespace Contentstack.Management.Core.Models
 
             return new Taxonomy(this, uid);
         }
-        */
 
         /// <summary>
         /// A publishing <see cref="Models.Environment" /> corresponds to one or more deployment servers or a content delivery destination where the entries need to be published.
@@ -746,7 +745,6 @@ namespace Contentstack.Management.Core.Models
             return new Environment(this, uid);
         }
 
-        /*
         /// <summary>
         /// You can use <see cref="Models.Token.DeliveryToken" /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
         /// </summary>
@@ -786,7 +784,6 @@ namespace Contentstack.Management.Core.Models
 
             return new ManagementToken(this, uid);
         }
-        */
 
         /// <summary>
         /// A <see cref="Models.Role" /> collection of permissions that will be applicable to all the users who are assigned this role.
@@ -799,8 +796,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = stack.Role("<ROLE_UID>").Fetch();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Models.Release" /></returns>
-        /*
+        /// <returns>The <see cref="Models.Role" /></returns>
         public Role Role(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -808,7 +804,6 @@ namespace Contentstack.Management.Core.Models
 
             return new Role(this, uid);
         }
-        */
 
         /// <summary>
         /// A <see cref="Models.Release" /> is a set of entries and assets that needs to be deployed (published or unpublished) all at once to a particular environment.
@@ -882,8 +877,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = stack.Webhook("<WEBHOOK_UID>").Fetch();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Models.AuditLog" /></returns>
-        /*
+        /// <returns>The <see cref="Models.Webhook" /></returns>
         public Webhook Webhook(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -891,7 +885,6 @@ namespace Contentstack.Management.Core.Models
 
             return new Webhook(this, uid);
         }
-        */
 
         /// <summary>
         /// A <see cref="Models.AuditLog" /> displays a record of all the activities performed in a stack and helps you keep a track of all published items, updates, deletes, and current status of the existing content.
@@ -905,7 +898,6 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>
-        /*
         public AuditLog AuditLog(string uid = null)
         {
             ThrowIfNotLoggedIn();
@@ -913,7 +905,6 @@ namespace Contentstack.Management.Core.Models
 
             return new AuditLog(this, uid);
         }
-        */
 
         /// <summary>
         /// A <see cref="Models.VariantGroup" /> allows you to manage variant groups and their associated content types.

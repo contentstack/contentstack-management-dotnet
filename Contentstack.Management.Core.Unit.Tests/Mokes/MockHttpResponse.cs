@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Newtonsoft.Json.Linq;
 using Contentstack.Management.Core;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes
@@ -65,12 +63,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
                 // Return empty JsonObject if parsing fails
                 return new JsonObject();
             }
-        }
-
-        [Obsolete("Use OpenJsonObjectResponse() instead.")]
-        public JObject OpenJObjectResponse()
-        {
-            return null;
         }
 
         public string OpenResponse()

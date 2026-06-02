@@ -3664,7 +3664,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode && responseJson["release"] != null)
                     _testReleaseUid = responseJson["release"]["uid"].ToString();
             }
-            catch (Exception e) { }
+            catch (Exception) { }
             await Task.CompletedTask;
         }
 

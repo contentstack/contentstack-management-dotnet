@@ -39,7 +39,8 @@ namespace Contentstack.Management.Core
         private string xUserAgent => $"contentstack-management-dotnet/{Version}";
         
         // OAuth token storage
-        // private readonly Dictionary<string, OAuthTokens> _oauthTokens = new Dictionary<string, OAuthTokens>();
+        private readonly Dictionary<string, OAuthTokens> _oauthTokens = new Dictionary<string, OAuthTokens>();
+        private bool _isRefreshingToken = false;
         
         #endregion
 
@@ -251,13 +252,11 @@ namespace Contentstack.Management.Core
         {
             ThrowIfDisposed();
 
-            /*
             // Check and refresh OAuth tokens if needed before making API calls
             if (contentstackOptions.IsOAuthToken && !string.IsNullOrEmpty(contentstackOptions.Authtoken))
             {
                 await EnsureOAuthTokenIsValidAsync();
             }
-            */
 
             ExecutionContext context = new ExecutionContext(
               new RequestContext()
@@ -460,7 +459,6 @@ namespace Contentstack.Management.Core
         }
         #endregion
 
-        /*
         #region OAuth Methods
         /// <summary>
         /// Creates an OAuth handler for OAuth 2.0 authentication flow.
@@ -493,9 +491,7 @@ namespace Contentstack.Management.Core
 
             return new OAuthHandler(this, options);
         }
-        */
 
-        /*
         /// <summary>
         /// Creates an OAuth handler with default OAuth options.
         /// Uses the default AppId, ClientId, and RedirectUri.
@@ -504,7 +500,7 @@ namespace Contentstack.Management.Core
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient();
         /// OAuthHandler oauthHandler = client.OAuth();
-        /// 
+        ///
         /// // Get authorization URL with default options
         /// string authUrl = oauthHandler.GetAuthorizationUrl();
         /// </code></pre>
@@ -515,9 +511,7 @@ namespace Contentstack.Management.Core
             var defaultOptions = new OAuthOptions();
             return new OAuthHandler(this, defaultOptions);
         }
-        */
 
-        /*
         /// <summary>
         /// Sets OAuth tokens for the client to use for authenticated requests.
         /// This method is called internally by the OAuthHandler after successful token exchange or refresh.
@@ -669,7 +663,6 @@ namespace Contentstack.Management.Core
             _oauthTokens.Clear();
         }
         #endregion
-        */
 
         /// <summary>
         /// The Get user call returns comprehensive information of an existing user account.
@@ -709,7 +702,6 @@ namespace Contentstack.Management.Core
             return InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
         }
 
-        /*
         /// <summary>
         /// Ensures that the current OAuth token is valid and refreshes it if needed.
         /// This method is called before each API request to automatically handle token refresh.
@@ -777,7 +769,6 @@ namespace Contentstack.Management.Core
                     $"OAuth token validation failed: {ex.Message}", ex);
             }
         }
-        */
     }
 }
 

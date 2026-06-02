@@ -51,14 +51,4 @@
     <ProjectReference Include="..\Contentstack.Management.Core\contentstack.management.core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- Exclude out-of-scope integration tests (still use Newtonsoft or depend on excluded SDK types) -->
-    <!-- Contentstack004_ReleaseTest.cs - RE-ENABLED for Release module STJ migration -->
-    <!-- Contentstack015_BulkOperationTest.cs - RE-ENABLED (Stack.Release() and Stack.Workflow() now active) -->
-    <!-- Contentstack020_WorkflowTest.cs - RE-ENABLED for Workflow module STJ migration -->
-    <Compile Remove="IntegrationTest\Contentstack012b_ContentTypeExpandedIntegrationTest.cs" />
-    <Compile Remove="IntegrationTest\Contentstack016_DeliveryTokenTest.cs" />
-    <Compile Remove="IntegrationTest\Contentstack017_TaxonomyTest.cs" />
-    <Compile Remove="IntegrationTest\Contentstack019_RoleTest.cs" />
-  </ItemGroup>
 </Project>

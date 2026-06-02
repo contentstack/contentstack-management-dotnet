@@ -25,9 +25,13 @@
      - Migrated `LocaleModel` and `BulkOperationModels` to use `System.Text.Json` attributes
      - Added/updated unit and integration test coverage for Locale and Bulk Operations
      - Upgraded target framework to .NET 10 and removed all build warnings
-     - **Note**:
-       - This is a beta release and APIs/modules may continue evolving during migration stabilization
-       - Release and Workflow setup within Bulk Operations module are currently commented out and will be uncommented once the Release and Workflow modules are migrated to System.Text.Json
+   - Remaining modules migrated and re-enabled — `AuditLog`, `Extension`, `Label`, `Role`, `Taxonomy`, `Term`, `Webhook`, `DeliveryToken`, `ManagementToken`, and `CustomExtension` fully re-enabled with STJ attributes; all corresponding `Stack.*()` accessor methods restored
+   - All `[JsonProperty]` replaced with `[JsonPropertyName]` across all model classes; `[JsonObject(ItemNullValueHandling)]` removed in favour of global `DefaultIgnoreCondition = WhenWritingNull`
+   - OAuth module enabled — `OAuthHandler`, `OAuthTokenService`, `OAuthAppAuthorizationService`, and `OAuthAppRevocationService` now active; auto token refresh wired into `InvokeAsync` pipeline via `EnsureOAuthTokenIsValidAsync`
+   - CustomWidgetModel scope serialization migrated from `JsonTextWriter` to `System.Text.Json.JsonSerializer.Serialize()`
+   - Asset extension upload tests — 3 previously skipped tests (`Test002_Should_Create_Dashboard`, `Test003_Should_Create_Custom_Widget`, `Test004_Should_Create_Custom_field`) now have real implementations
+   - Unit test coverage expanded — 991 → 1,242 passing tests; 24 previously excluded test files re-enabled covering AuditLog, Extension, Label, Role, Taxonomy, Term, Webhook, DeliveryToken, CustomExtension, and all infrastructure tests (HTTP pipeline, converters, runtime contexts, utilities)
+   - Integration test coverage expanded — 4 previously excluded integration test files re-enabled: ContentType Expanded (`Contentstack012b`), DeliveryToken (`Contentstack016`), Taxonomy (`Contentstack017`), Role (`Contentstack019`)
 
 ## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
  - Feat
