@@ -59,6 +59,6 @@
     <Compile Remove="IntegrationTest\Contentstack012b_ContentTypeExpandedIntegrationTest.cs" />
     <Compile Remove="IntegrationTest\Contentstack016_DeliveryTokenTest.cs" />
     <Compile Remove="IntegrationTest\Contentstack017_TaxonomyTest.cs" />
-    <Compile Remove="IntegrationTest\Contentstack019_RoleTest.cs" />
+    <!-- Contentstack019_RoleTest.cs - RE-ENABLED for Role module STJ migration -->
   </ItemGroup>
 </Project>
