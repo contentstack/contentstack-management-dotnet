@@ -410,11 +410,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test002_Should_Create_Dashboard()
         {
             TestOutputLogger.LogContext("TestScenario", "CreateDashboardWidget");
-            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/extension.html");
             try
             {
                 DashboardWidgetModel dashboard = new DashboardWidgetModel(
-                    path, "application/json", "Integration Test Dashboard",
+                    path, "text/html", "Integration Test Dashboard",
                     isEnable: true, defaultWidth: "half", tags: "dashboard,test");
                 ContentstackResponse response = await _stack.Extension().UploadAsync(dashboard);
                 TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
@@ -439,12 +439,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test003_Should_Create_Custom_Widget()
         {
             TestOutputLogger.LogContext("TestScenario", "CreateCustomWidget");
-            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/extension.html");
             try
             {
                 var scope = new ExtensionScope { ContentTypes = new List<string> { "$all" } };
                 CustomWidgetModel widget = new CustomWidgetModel(
-                    path, "application/json", "Integration Test Widget",
+                    path, "text/html", "Integration Test Widget",
                     tags: "widget,test", scope: scope);
                 ContentstackResponse response = await _stack.Extension().UploadAsync(widget);
                 TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
@@ -469,11 +469,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test004_Should_Create_Custom_field()
         {
             TestOutputLogger.LogContext("TestScenario", "CreateCustomField");
-            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/extension.html");
             try
             {
                 CustomFieldModel field = new CustomFieldModel(
-                    path, "application/json", "Integration Test Field",
+                    path, "text/html", "Integration Test Field",
                     dataType: "text", isMultiple: false, tags: "field,test");
                 ContentstackResponse response = await _stack.Extension().UploadAsync(field);
                 TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");

@@ -203,6 +203,7 @@ namespace Contentstack.Management.Core
             SerializerOptions.Converters.Add(new FieldJsonConverter()); // Re-enabled for ContentType support
             SerializerOptions.Converters.Add(new NodeJsonConverter());
             SerializerOptions.Converters.Add(new TextNodeJsonConverter());
+            SerializerOptions.Converters.Add(new RuleJsonConverter());
         }
 
         protected void BuildPipeline()
