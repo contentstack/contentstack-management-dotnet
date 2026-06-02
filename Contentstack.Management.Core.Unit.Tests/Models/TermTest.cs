@@ -32,8 +32,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.IsNull(term.Uid);
             Assert.AreEqual($"/taxonomies/{taxonomyUid}/terms", term.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => term.Fetch());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => term.FetchAsync());
+            Assert.ThrowsException<ArgumentException>(() => term.Fetch());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => term.FetchAsync());
             Assert.AreEqual(typeof(Query), term.Query().GetType());
         }
 
@@ -139,40 +139,40 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public void Ancestors_Throws_When_Term_Uid_Is_Empty()
         {
             string taxonomyUid = _fixture.Create<string>();
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy(taxonomyUid).Terms().Ancestors());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy(taxonomyUid).Terms().AncestorsAsync());
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().Ancestors());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().AncestorsAsync());
         }
 
         [TestMethod]
         public void Descendants_Throws_When_Term_Uid_Is_Empty()
         {
             string taxonomyUid = _fixture.Create<string>();
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy(taxonomyUid).Terms().Descendants());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy(taxonomyUid).Terms().DescendantsAsync());
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().Descendants());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().DescendantsAsync());
         }
 
         [TestMethod]
         public void Move_Throws_When_Term_Uid_Is_Empty()
         {
             string taxonomyUid = _fixture.Create<string>();
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy(taxonomyUid).Terms().Move(_fixture.Create<TermMoveModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy(taxonomyUid).Terms().MoveAsync(_fixture.Create<TermMoveModel>()));
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().Move(_fixture.Create<TermMoveModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().MoveAsync(_fixture.Create<TermMoveModel>()));
         }
 
         [TestMethod]
         public void Locales_Throws_When_Term_Uid_Is_Empty()
         {
             string taxonomyUid = _fixture.Create<string>();
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy(taxonomyUid).Terms().Locales());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy(taxonomyUid).Terms().LocalesAsync());
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().Locales());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().LocalesAsync());
         }
 
         [TestMethod]
         public void Localize_Throws_When_Term_Uid_Is_Empty()
         {
             string taxonomyUid = _fixture.Create<string>();
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy(taxonomyUid).Terms().Localize(_fixture.Create<TermModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy(taxonomyUid).Terms().LocalizeAsync(_fixture.Create<TermModel>()));
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().Localize(_fixture.Create<TermModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().LocalizeAsync(_fixture.Create<TermModel>()));
         }
     }
 }
