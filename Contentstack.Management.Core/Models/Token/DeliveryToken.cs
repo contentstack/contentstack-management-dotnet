@@ -6,7 +6,7 @@ namespace Contentstack.Management.Core.Models.Token
 {
     public class DeliveryToken : BaseModel<DeliveryTokenModel>
     {
-        internal DeliveryToken(Stack stack, string uid = null)
+        internal DeliveryToken(Stack stack, string? uid = null)
            : base(stack, "token", uid)
         {
             resourcePath = uid == null ? "stacks/delivery_tokens" : $"stacks/delivery_tokens/{uid}";
@@ -40,7 +40,7 @@ namespace Contentstack.Management.Core.Models.Token
         /// </example>
         /// <param name="model">DeliveryToken Model for creating DeliveryToken.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Create(DeliveryTokenModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(DeliveryTokenModel model, ParameterCollection? collection = null)
         {
             return base.Create(model, collection);
         }
@@ -57,7 +57,7 @@ namespace Contentstack.Management.Core.Models.Token
         /// </example>
         /// <param name="model">DeliveryToken Model for creating DeliveryToken.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> CreateAsync(DeliveryTokenModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(DeliveryTokenModel model, ParameterCollection? collection = null)
         {
             return base.CreateAsync(model, collection);
         }
@@ -74,7 +74,7 @@ namespace Contentstack.Management.Core.Models.Token
         /// </example>
         /// <param name="model">DeliveryToken Model for creating DeliveryToken.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Update(DeliveryTokenModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(DeliveryTokenModel model, ParameterCollection? collection = null)
         {
             return base.Update(model, collection);
         }
@@ -91,7 +91,7 @@ namespace Contentstack.Management.Core.Models.Token
         /// </example>
         /// <param name="model">DeliveryToken Model for creating DeliveryToken.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> UpdateAsync(DeliveryTokenModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(DeliveryTokenModel model, ParameterCollection? collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
@@ -106,7 +106,7 @@ namespace Contentstack.Management.Core.Models.Token
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             return base.Fetch(collection);
         }
@@ -121,7 +121,7 @@ namespace Contentstack.Management.Core.Models.Token
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             return base.FetchAsync(collection);
         }
@@ -136,7 +136,7 @@ namespace Contentstack.Management.Core.Models.Token
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             return base.Delete(collection);
         }
@@ -151,7 +151,7 @@ namespace Contentstack.Management.Core.Models.Token
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             return base.DeleteAsync(collection);
         }

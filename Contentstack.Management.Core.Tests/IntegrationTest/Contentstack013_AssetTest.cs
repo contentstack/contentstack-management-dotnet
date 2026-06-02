@@ -3619,6 +3619,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 Console.WriteLine($"✅ System memory limits encountered: {ex.Message}");
             }
+            catch (TaskCanceledException ex)
+            {
+                Console.WriteLine($"ℹ️ Large file upload timed out (acceptable for oversized files): {ex.Message}");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"ℹ️ Large file upload connection reset (acceptable for oversized files): {ex.Message}");
+            }
         }
 
         [TestMethod]

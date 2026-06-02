@@ -32,12 +32,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             DeliveryToken token = new DeliveryToken(_stack);
             Assert.IsNull(token.Uid);
             Assert.AreEqual("stacks/delivery_tokens", token.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => token.Fetch());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => token.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => token.Update(_fixture.Create<DeliveryTokenModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => token.UpdateAsync(_fixture.Create<DeliveryTokenModel>()));
-            Assert.ThrowsException<InvalidOperationException>(() => token.Delete());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => token.DeleteAsync());
+            Assert.ThrowsException<ArgumentException>(() => token.Fetch());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => token.FetchAsync());
+            Assert.ThrowsException<ArgumentException>(() => token.Update(_fixture.Create<DeliveryTokenModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => token.UpdateAsync(_fixture.Create<DeliveryTokenModel>()));
+            Assert.ThrowsException<ArgumentException>(() => token.Delete());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => token.DeleteAsync());
             Assert.AreEqual(token.Query().GetType(), typeof(Query));
         }
 

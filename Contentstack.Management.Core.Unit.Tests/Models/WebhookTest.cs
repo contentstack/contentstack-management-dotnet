@@ -30,18 +30,18 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.IsNull(webhook.Uid);
             Assert.AreEqual($"/webhooks", webhook.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => webhook.Fetch());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => webhook.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => webhook.Update(_fixture.Create<WebhookModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => webhook.UpdateAsync(_fixture.Create<WebhookModel>()));
-            Assert.ThrowsException<InvalidOperationException>(() => webhook.Delete());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => webhook.DeleteAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => webhook.Executions());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => webhook.ExecutionsAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => webhook.Retry(_fixture.Create<string>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => webhook.RetryAsync(_fixture.Create<string>()));
-            Assert.ThrowsException<InvalidOperationException>(() => webhook.Logs(_fixture.Create<string>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => webhook.LogsAsync(_fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentException>(() => webhook.Fetch());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => webhook.FetchAsync());
+            Assert.ThrowsException<ArgumentException>(() => webhook.Update(_fixture.Create<WebhookModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => webhook.UpdateAsync(_fixture.Create<WebhookModel>()));
+            Assert.ThrowsException<ArgumentException>(() => webhook.Delete());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => webhook.DeleteAsync());
+            Assert.ThrowsException<ArgumentException>(() => webhook.Executions());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => webhook.ExecutionsAsync());
+            Assert.ThrowsException<ArgumentException>(() => webhook.Retry(_fixture.Create<string>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => webhook.RetryAsync(_fixture.Create<string>()));
+            Assert.ThrowsException<ArgumentException>(() => webhook.Logs(_fixture.Create<string>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => webhook.LogsAsync(_fixture.Create<string>()));
             Assert.AreEqual(webhook.Query().GetType(), typeof(Query));
         }
 

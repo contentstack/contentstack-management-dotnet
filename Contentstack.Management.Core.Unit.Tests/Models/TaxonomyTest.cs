@@ -33,13 +33,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.IsNull(taxonomy.Uid);
             Assert.AreEqual("/taxonomies", taxonomy.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => taxonomy.Fetch());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => taxonomy.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => taxonomy.Update(_fixture.Create<TaxonomyModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => taxonomy.UpdateAsync(_fixture.Create<TaxonomyModel>()));
-            Assert.ThrowsException<InvalidOperationException>(() => taxonomy.Delete());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => taxonomy.DeleteAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => taxonomy.Terms());
+            Assert.ThrowsException<ArgumentException>(() => taxonomy.Fetch());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => taxonomy.FetchAsync());
+            Assert.ThrowsException<ArgumentException>(() => taxonomy.Update(_fixture.Create<TaxonomyModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => taxonomy.UpdateAsync(_fixture.Create<TaxonomyModel>()));
+            Assert.ThrowsException<ArgumentException>(() => taxonomy.Delete());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => taxonomy.DeleteAsync());
+            Assert.ThrowsException<ArgumentException>(() => taxonomy.Terms());
             Assert.AreEqual(typeof(Query), taxonomy.Query().GetType());
         }
 
@@ -136,22 +136,22 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Export_Throws_When_Uid_Is_Empty()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy().Export());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy().ExportAsync());
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy().Export());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy().ExportAsync());
         }
 
         [TestMethod]
         public void Locales_Throws_When_Uid_Is_Empty()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy().Locales());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy().LocalesAsync());
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy().Locales());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy().LocalesAsync());
         }
 
         [TestMethod]
         public void Localize_Throws_When_Uid_Is_Empty()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy().Localize(_fixture.Create<TaxonomyModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy().LocalizeAsync(_fixture.Create<TaxonomyModel>()));
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy().Localize(_fixture.Create<TaxonomyModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy().LocalizeAsync(_fixture.Create<TaxonomyModel>()));
         }
 
         [TestMethod]

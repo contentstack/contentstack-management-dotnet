@@ -5,7 +5,7 @@ using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Stack;
 using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Models;
-// using Contentstack.Management.Core.Models.Token; // Excluded for now
+using Contentstack.Management.Core.Models.Token;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -665,7 +665,7 @@ namespace Contentstack.Management.Core.Models
 
         /*
         /// <summary>
-        /// <see cref="Models.Extension" /> let you create custom fields and custom widgets that lets you customize Contentstack's default UI and behavior. 
+        /// <see cref="Models.Extension" /> let you create custom fields and custom widgets that lets you customize Contentstack's default UI and behavior.
         /// </summary>
         /// <param name="uid">Optional, extension uid.</param>
         /// <example>
@@ -685,7 +685,7 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// <see cref="Models.Label" /> allow you to group a collection of content within a stack. Using labels you can group content types that need to work together. 
+        /// <see cref="Models.Label" /> allow you to group a collection of content within a stack. Using labels you can group content types that need to work together.
         /// </summary>
         /// <param name="uid">Optional, label uid.</param>
         /// <example>
@@ -703,6 +703,7 @@ namespace Contentstack.Management.Core.Models
 
             return new Label(this, uid);
         }
+        */
 
         /// <summary>
         /// <see cref="Models.Taxonomy" /> allows you to organize and categorize content using a hierarchical structure of terms.
@@ -717,14 +718,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Taxonomy" /></returns>
-        public Taxonomy Taxonomy(string uid = null)
+        public Taxonomy Taxonomy(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new Taxonomy(this, uid);
         }
-        */
 
         /// <summary>
         /// A publishing <see cref="Models.Environment" /> corresponds to one or more deployment servers or a content delivery destination where the entries need to be published.
@@ -766,20 +766,8 @@ namespace Contentstack.Management.Core.Models
             return new Branch(this, uid);
         }
 
-        /*
         /// <summary>
-        /// Branches allow you to isolate and easily manage your “in-progress” work from your stable work.
-        /// </summary>
-        /// <param name="uid">Optional, branch uid.</param>
-        /// <example>
-        /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
-        /// Stack stack = client.Stack("<API_KEY>");
-        /// ContentstackResponse response = stack.Branch().Query().Limit(2).Skip(2).Find();
-        /// </code></pre>
-        /// </example>
-        /// <summary>
-        /// You can use <see cref="Models.Token.DeliveryToken" /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
+        /// You can use <see cref=”Models.Token.DeliveryToken” /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
         /// </summary>
         /// <param name="uid">Optional, delivery token uid.</param>
         /// <example>
@@ -790,7 +778,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Token.DeliveryToken" /></returns>
-        public DeliveryToken DeliveryToken(string uid = null)
+        public DeliveryToken DeliveryToken(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -810,14 +798,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Token.ManagementToken" /></returns>
-        public ManagementToken ManagementTokens(string uid = null)
+        public ManagementToken ManagementTokens(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new ManagementToken(this, uid);
         }
-        */
 
         /// <summary>
         /// A <see cref="Models.Role" /> collection of permissions that will be applicable to all the users who are assigned this role.
@@ -914,15 +901,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>
-        /*
-        public Webhook Webhook(string uid = null)
+        public Webhook Webhook(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new Webhook(this, uid);
         }
-        */
 
         /// <summary>
         /// A <see cref="Models.AuditLog" /> displays a record of all the activities performed in a stack and helps you keep a track of all published items, updates, deletes, and current status of the existing content.

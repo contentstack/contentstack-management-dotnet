@@ -6,7 +6,7 @@ namespace Contentstack.Management.Core.Models
 {
     public class PublishRule: BaseModel<PublishRuleModel>
     {
-        internal PublishRule(Stack stack, string uid)
+        internal PublishRule(Stack stack, string? uid)
             : base(stack, "publishing_rule", uid)
         {
             resourcePath = uid == null ? "/workflows/publishing_rules" : $"/workflows/publishing_rules/{uid}";
