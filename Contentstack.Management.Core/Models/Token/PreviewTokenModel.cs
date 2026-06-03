@@ -13,12 +13,12 @@ namespace Contentstack.Management.Core.Models.Token
         /// The name of the preview token.
         /// </summary>
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// The description of the preview token.
         /// </summary>
         [JsonPropertyName("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }
