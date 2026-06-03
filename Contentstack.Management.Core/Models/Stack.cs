@@ -807,6 +807,32 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
+        /// Preview Tokens provide access to retrieve website details within the Live Preview panel.
+        /// They are scoped to a specific Delivery Token and are compatible only with the rest-preview.contentstack.com endpoint.
+        /// Both Create and Delete operate on the same endpoint — no separate preview token uid is required.
+        /// </summary>
+        /// <param name="deliveryTokenUid">The UID of the Delivery Token this Preview Token is associated with.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// // Create a preview token
+        /// PreviewTokenModel model = new PreviewTokenModel() { Name = "My Preview Token" };
+        /// ContentstackResponse createResponse = stack.PreviewToken("<DELIVERY_TOKEN_UID>").Create(model);
+        /// // Delete the preview token
+        /// ContentstackResponse deleteResponse = stack.PreviewToken("<DELIVERY_TOKEN_UID>").Delete();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Token.PreviewToken" /></returns>
+        public PreviewToken PreviewToken(string deliveryTokenUid)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new PreviewToken(this, deliveryTokenUid);
+        }
+
+        /// <summary>
         /// A <see cref="Models.Role" /> collection of permissions that will be applicable to all the users who are assigned this role.
         /// </summary>
         /// <param name="uid">Optional, role uid.</param>
