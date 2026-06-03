@@ -58,6 +58,5 @@
     <!-- Contentstack020_WorkflowTest.cs - RE-ENABLED for Workflow module STJ migration -->
     <Compile Remove="IntegrationTest\Contentstack012b_ContentTypeExpandedIntegrationTest.cs" />
 
-    <Compile Remove="IntegrationTest\Contentstack019_RoleTest.cs" />
   </ItemGroup>
 </Project>

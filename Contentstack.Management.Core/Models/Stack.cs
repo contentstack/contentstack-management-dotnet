@@ -818,15 +818,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Release" /></returns>
-        /*
-        public Role Role(string uid = null)
+        public Role Role(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new Role(this, uid);
         }
-        */
 
         /// <summary>
         /// A <see cref="Models.Release" /> is a set of entries and assets that needs to be deployed (published or unpublished) all at once to a particular environment.

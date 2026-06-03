@@ -91,7 +91,7 @@
     <!-- PublishRule.cs - RE-ENABLED for Workflow module STJ migration -->
     <!-- Release.cs - RE-ENABLED for Release module STJ migration -->
     <!-- ReleaseItem.cs - RE-ENABLED for Release module STJ migration -->
-    <Compile Remove="Models\Role.cs" />
+    <!-- Role.cs - RE-ENABLED for Role module STJ migration -->
 
 
     <!-- User.cs - RE-ENABLED -->
