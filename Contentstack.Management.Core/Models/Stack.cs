@@ -675,7 +675,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Extension" /></returns>
-        public Extension Extension(string uid = null)
+        public Extension Extension(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -917,7 +917,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>
-        public AuditLog AuditLog(string uid = null)
+        public AuditLog AuditLog(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();

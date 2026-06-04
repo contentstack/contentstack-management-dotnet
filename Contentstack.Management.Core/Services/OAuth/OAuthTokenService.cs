@@ -68,7 +68,7 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="addAcceptMediaHeader">Whether to add accept media headers.</param>
         /// <param name="apiVersion">The API version to use.</param>
         /// <returns>The HTTP request for OAuth token operations.</returns>
-        public override IHttpRequest CreateHttpRequest(System.Net.Http.HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public override IHttpRequest CreateHttpRequest(System.Net.Http.HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             // Create a custom config with Developer Hub hostname for OAuth token operations
             // OAuth token endpoints don't use API versioning, so we set Version to empty
@@ -151,8 +151,8 @@ namespace Contentstack.Management.Core.Services.OAuth
             string authorizationCode,
             string clientId,
             string redirectUri,
-            string clientSecret = null,
-            string codeVerifier = null)
+            string? clientSecret = null,
+            string? codeVerifier = null)
         {
             if (string.IsNullOrEmpty(authorizationCode))
                 throw new ArgumentException("Authorization code cannot be null or empty.", nameof(authorizationCode));
@@ -231,7 +231,7 @@ namespace Contentstack.Management.Core.Services.OAuth
             JsonSerializerOptions serializer,
             string refreshToken,
             string clientId,
-            string clientSecret = null)
+            string? clientSecret = null)
         {
             if (string.IsNullOrEmpty(refreshToken))
                 throw new ArgumentException("Refresh token cannot be null or empty.", nameof(refreshToken));

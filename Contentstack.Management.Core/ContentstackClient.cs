@@ -581,7 +581,7 @@ namespace Contentstack.Management.Core
         /// This method should be called when logging out or switching authentication methods.
         /// </summary>
         /// <param name="clientId">The OAuth client ID to clear tokens for.</param>
-        public void ClearOAuthTokens(string clientId = null)
+        public void ClearOAuthTokens(string? clientId = null)
         {
             if (!string.IsNullOrEmpty(clientId))
             {

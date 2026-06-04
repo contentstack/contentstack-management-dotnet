@@ -10,11 +10,11 @@ namespace Contentstack.Management.Core.Models
     public class Extension
     {
         internal Stack stack;
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
         internal string resourcePath;
 
-        internal Extension(Stack stack, string uid = null)
+        internal Extension(Stack stack, string? uid = null)
         {
             stack.ThrowIfAPIKeyEmpty();
 
@@ -153,7 +153,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> UpdateAsync(ExtensionModel model, ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> UpdateAsync(ExtensionModel model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -173,7 +173,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
+        public virtual ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -193,7 +193,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
