@@ -695,14 +695,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Label" /></returns>
-        public Label Label(string uid = null)
+        public Label Label(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new Label(this, uid);
         }
-        */
 
         /// <summary>
         /// <see cref="Models.Taxonomy" /> allows you to organize and categorize content using a hierarchical structure of terms.
