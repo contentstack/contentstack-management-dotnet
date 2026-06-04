@@ -10,7 +10,7 @@ namespace Contentstack.Management.Core.Models
     /// </summary>
     public class Taxonomy : BaseModel<TaxonomyModel>
     {
-        internal Taxonomy(Stack stack, string uid = null)
+        internal Taxonomy(Stack stack, string? uid = null)
             : base(stack, "taxonomy", uid)
         {
             resourcePath = uid == null ? "/taxonomies" : $"/taxonomies/{uid}";
@@ -33,7 +33,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Create a taxonomy.
         /// </summary>
-        public override ContentstackResponse Create(TaxonomyModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(TaxonomyModel model, ParameterCollection? collection = null)
         {
             return base.Create(model, collection);
         }
@@ -41,7 +41,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Create a taxonomy asynchronously.
         /// </summary>
-        public override Task<ContentstackResponse> CreateAsync(TaxonomyModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(TaxonomyModel model, ParameterCollection? collection = null)
         {
             return base.CreateAsync(model, collection);
         }
@@ -49,7 +49,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Update an existing taxonomy.
         /// </summary>
-        public override ContentstackResponse Update(TaxonomyModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(TaxonomyModel model, ParameterCollection? collection = null)
         {
             return base.Update(model, collection);
         }
@@ -57,7 +57,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Update an existing taxonomy asynchronously.
         /// </summary>
-        public override Task<ContentstackResponse> UpdateAsync(TaxonomyModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(TaxonomyModel model, ParameterCollection? collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
@@ -65,7 +65,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Fetch a single taxonomy.
         /// </summary>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             return base.Fetch(collection);
         }
@@ -73,7 +73,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Fetch a single taxonomy asynchronously.
         /// </summary>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             return base.FetchAsync(collection);
         }
@@ -81,7 +81,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Delete a taxonomy.
         /// </summary>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             return base.Delete(collection);
         }
@@ -89,7 +89,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Delete a taxonomy asynchronously.
         /// </summary>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             return base.DeleteAsync(collection);
         }
@@ -97,7 +97,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Export taxonomy. GET {resourcePath}/export with optional query parameters.
         /// </summary>
-        public ContentstackResponse Export(ParameterCollection collection = null)
+        public ContentstackResponse Export(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -108,7 +108,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Export taxonomy asynchronously.
         /// </summary>
-        public Task<ContentstackResponse> ExportAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> ExportAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -119,7 +119,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Get taxonomy locales. GET {resourcePath}/locales.
         /// </summary>
-        public ContentstackResponse Locales(ParameterCollection collection = null)
+        public ContentstackResponse Locales(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -130,7 +130,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Get taxonomy locales asynchronously.
         /// </summary>
-        public Task<ContentstackResponse> LocalesAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> LocalesAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -141,7 +141,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Localize taxonomy. POST to resourcePath with body { taxonomy: model } and query params (e.g. locale).
         /// </summary>
-        public ContentstackResponse Localize(TaxonomyModel model, ParameterCollection collection = null)
+        public ContentstackResponse Localize(TaxonomyModel model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -152,7 +152,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Localize taxonomy asynchronously.
         /// </summary>
-        public Task<ContentstackResponse> LocalizeAsync(TaxonomyModel model, ParameterCollection collection = null)
+        public Task<ContentstackResponse> LocalizeAsync(TaxonomyModel model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -163,7 +163,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Import taxonomy. POST /taxonomies/import with multipart form (taxonomy file).
         /// </summary>
-        public ContentstackResponse Import(TaxonomyImportModel model, ParameterCollection collection = null)
+        public ContentstackResponse Import(TaxonomyImportModel model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -175,7 +175,7 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// Import taxonomy asynchronously.
         /// </summary>
-        public Task<ContentstackResponse> ImportAsync(TaxonomyImportModel model, ParameterCollection collection = null)
+        public Task<ContentstackResponse> ImportAsync(TaxonomyImportModel model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -194,7 +194,7 @@ namespace Contentstack.Management.Core.Models
         /// stack.Taxonomy("taxonomy_uid").Terms("term_uid").Fetch();
         /// </code>
         /// </example>
-        public Term Terms(string termUid = null)
+        public Term Terms(string? termUid = null)
         {
             ThrowIfUidEmpty();
             return new Term(stack, Uid, termUid);

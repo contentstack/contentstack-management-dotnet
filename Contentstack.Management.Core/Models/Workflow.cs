@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Models
 {
     public class Workflow: BaseModel<WorkflowModel>
     {
-        internal Workflow(Stack stack, string uid)
+        internal Workflow(Stack stack, string? uid)
             : base(stack, "workflow", uid)
         {
             resourcePath = uid == null ? "/workflows" : $"/workflows/{uid}";

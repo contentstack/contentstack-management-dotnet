@@ -6,7 +6,6 @@ using Contentstack.Management.Core.Services.Stack;
 using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Models.Token;
-// using Contentstack.Management.Core.Models.Token; // Excluded for now
 
 namespace Contentstack.Management.Core.Models
 {
@@ -685,7 +684,7 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// <see cref="Models.Label" /> allow you to group a collection of content within a stack. Using labels you can group content types that need to work together. 
+        /// <see cref="Models.Label" /> allow you to group a collection of content within a stack. Using labels you can group content types that need to work together.
         /// </summary>
         /// <param name="uid">Optional, label uid.</param>
         /// <example>
@@ -703,6 +702,7 @@ namespace Contentstack.Management.Core.Models
 
             return new Label(this, uid);
         }
+        */
 
         /// <summary>
         /// <see cref="Models.Taxonomy" /> allows you to organize and categorize content using a hierarchical structure of terms.
@@ -717,7 +717,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Taxonomy" /></returns>
-        public Taxonomy Taxonomy(string uid = null)
+        public Taxonomy Taxonomy(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -746,7 +746,27 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// You can use <see cref="Models.Token.DeliveryToken" /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
+        /// Branches allow you to isolate and easily manage your “in-progress” work from your stable, live work.
+        /// </summary>
+        /// <param name="uid">Optional, branch uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse response = stack.Branch().Query().Limit(2).Skip(2).Find();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Branch" /></returns>
+        public Branch Branch(string? uid = null)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new Branch(this, uid);
+        }
+
+        /// <summary>
+        /// You can use <see cref=”Models.Token.DeliveryToken” /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
         /// </summary>
         /// <param name="uid">Optional, delivery token uid.</param>
         /// <example>
@@ -757,7 +777,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Token.DeliveryToken" /></returns>
-        public DeliveryToken DeliveryToken(string uid = null)
+        public DeliveryToken DeliveryToken(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -777,7 +797,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Token.ManagementToken" /></returns>
-        public ManagementToken ManagementTokens(string uid = null)
+        public ManagementToken ManagementTokens(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -796,8 +816,8 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = stack.Role("<ROLE_UID>").Fetch();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Models.Role" /></returns>
-        public Role Role(string uid = null)
+        /// <returns>The <see cref="Models.Release" /></returns>
+        public Role Role(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -877,8 +897,8 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse contentstackResponse = stack.Webhook("<WEBHOOK_UID>").Fetch();
         /// </code></pre>
         /// </example>
-        /// <returns>The <see cref="Models.Webhook" /></returns>
-        public Webhook Webhook(string uid = null)
+        /// <returns>The <see cref="Models.AuditLog" /></returns>
+        public Webhook Webhook(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();

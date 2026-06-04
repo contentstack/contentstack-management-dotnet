@@ -1,6 +1,17 @@
 # Changelog
 
 ## [v1.0.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.1)
+ - **Feat**
+   - **Branch support**
+     - Added `Branch` model with `Create`, `CreateAsync`, `Fetch`, `FetchAsync`, `Delete`, `DeleteAsync`, and `Query` operations
+     - Added `BranchModel` and `BranchAliasModel` with System.Text.Json serialization
+     - `Stack.Branch(uid?)` accessor follows the same pattern as other stack resources
+     - Added unit tests (`BranchTest`) covering resource path, SDK guard conditions, and query parameter construction
+     - Added integration tests (`Contentstack005_BranchTest`) covering CRUD lifecycle, query with pagination, SDK validation errors, and API error scenarios
+   - **Webhook migration to System.Text.Json**
+     - Migrated `WebhookModel` to use `System.Text.Json` attributes
+   - **Workflow migration to System.Text.Json**
+     - Migrated `WorkflowModel` to use `System.Text.Json` attributes
  - **Breaking Change**
    - **System.Text.Json Migration (Beta)**
      - Migrated core serialization from Newtonsoft.Json to System.Text.Json
