@@ -1,36 +1,35 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using Contentstack.Management.Core.Abstractions;
 using Contentstack.Management.Core.Utils;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models.CustomExtension
 {
     public class CustomWidgetModel : IExtensionInterface
     {
         public string Title { get; set; }
-        public string Tags { get; set; }
-        public ExtensionScope Scope { get; set; }
+        public string? Tags { get; set; }
+        public ExtensionScope? Scope { get; set; }
         public string ContentType { get; set; }
 
         internal ByteArrayContent byteArray;
 
-        public CustomWidgetModel(string filePath, string contentType, string title, string tags = null, ExtensionScope scope = null) :
+        public CustomWidgetModel(string filePath, string contentType, string title, string? tags = null, ExtensionScope? scope = null) :
             this(File.OpenRead(filePath), contentType, title, tags, scope)
         { }
 
-        public CustomWidgetModel(Stream stream, string contentType, string title, string tags = null, ExtensionScope scope = null) :
+        public CustomWidgetModel(Stream stream, string contentType, string title, string? tags = null, ExtensionScope? scope = null) :
             this(getBytes(stream), contentType, title, tags, scope)
         { }
 
-        public CustomWidgetModel(byte[] bytes, string contentType, string title, string tags = null, ExtensionScope scope = null) :
+        public CustomWidgetModel(byte[] bytes, string contentType, string title, string? tags = null, ExtensionScope? scope = null) :
             this(getByteArray(bytes), contentType, title, tags, scope)
         { }
 
-        public CustomWidgetModel(ByteArrayContent byteArray, string contentType, string title, string tags = null, ExtensionScope scope = null)
+        public CustomWidgetModel(ByteArrayContent byteArray, string contentType, string title, string? tags = null, ExtensionScope? scope = null)
         {
             if (byteArray == null)
             {
@@ -74,18 +73,11 @@ namespace Contentstack.Management.Core.Models.CustomExtension
             }
             if (Scope != null)
             {
-                using (StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture))
-                {
-                    JsonWriter writer = new JsonTextWriter(stringWriter);
-
-                    JsonSerializer.Create().Serialize(writer, Scope);
-                    string snippet = stringWriter.ToString();
-                    StringContent jsonPart = new StringContent(snippet);
-                    jsonPart.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                    jsonPart.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-                    content.Add(jsonPart, "extension[scope]", snippet);
-                }
+                string snippet = JsonSerializer.Serialize(Scope);
+                StringContent jsonPart = new StringContent(snippet);
+                jsonPart.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                jsonPart.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                content.Add(jsonPart, "extension[scope]", snippet);
             }
             content.Add(new StringContent("widget"), "extension[type]");
             return content;

@@ -31,12 +31,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.IsNull(role.Uid);
             Assert.AreEqual("/roles", role.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => role.Fetch());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => role.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => role.Update(_fixture.Create<RoleModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => role.UpdateAsync(_fixture.Create<RoleModel>()));
-            Assert.ThrowsException<InvalidOperationException>(() => role.Delete());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => role.DeleteAsync());
+            Assert.ThrowsException<ArgumentException>(() => role.Fetch());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => role.FetchAsync());
+            Assert.ThrowsException<ArgumentException>(() => role.Update(_fixture.Create<RoleModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => role.UpdateAsync(_fixture.Create<RoleModel>()));
+            Assert.ThrowsException<ArgumentException>(() => role.Delete());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => role.DeleteAsync());
             Assert.AreEqual(role.Query().GetType(), typeof(Query));
         }
 

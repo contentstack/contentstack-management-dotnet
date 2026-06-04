@@ -9,26 +9,26 @@ namespace Contentstack.Management.Core.Models.CustomExtension
     public class DashboardWidgetModel : IExtensionInterface
     {
         public string Title { get; set; }
-        public string Tags { get; set; }
+        public string? Tags { get; set; }
         public string ContentType { get; set; }
-        public string DefaultWidth { get; set; }
+        public string? DefaultWidth { get; set; }
         public bool Enable { get; set; }
         
         internal ByteArrayContent byteArray;
 
-        public DashboardWidgetModel(string filePath, string contentType, string title, bool isEnable = false, string defaultWidth = null, string tags = null) :
+        public DashboardWidgetModel(string filePath, string contentType, string title, bool isEnable = false, string? defaultWidth = null, string? tags = null) :
             this(File.OpenRead(filePath), contentType, title, isEnable, defaultWidth, tags)
         { }
 
-        public DashboardWidgetModel(Stream stream, string contentType, string title, bool isEnable = false, string defaultWidth = null, string tags = null) :
+        public DashboardWidgetModel(Stream stream, string contentType, string title, bool isEnable = false, string? defaultWidth = null, string? tags = null) :
             this(getBytes(stream), contentType, title, isEnable, defaultWidth, tags)
         { }
 
-        public DashboardWidgetModel(byte[] bytes, string contentType, string title, bool isEnable = false, string defaultWidth = null, string tags = null) :
+        public DashboardWidgetModel(byte[] bytes, string contentType, string title, bool isEnable = false, string? defaultWidth = null, string? tags = null) :
             this(getByteArray(bytes), contentType, title, isEnable, defaultWidth, tags)
         { }
 
-        public DashboardWidgetModel(ByteArrayContent byteArray, string contentType, string title, bool isEnable = false, string defaultWidth = null, string tags = null)
+        public DashboardWidgetModel(ByteArrayContent byteArray, string contentType, string title, bool isEnable = false, string? defaultWidth = null, string? tags = null)
         {
 
             if (byteArray == null)

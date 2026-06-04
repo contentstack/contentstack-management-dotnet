@@ -663,7 +663,6 @@ namespace Contentstack.Management.Core.Models
             return new GlobalField(this, uid, apiVersion);
         }
 
-        /*
         /// <summary>
         /// <see cref="Models.Extension" /> let you create custom fields and custom widgets that lets you customize Contentstack's default UI and behavior.
         /// </summary>
@@ -676,7 +675,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Extension" /></returns>
-        public Extension Extension(string uid = null)
+        public Extension Extension(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -696,14 +695,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Label" /></returns>
-        public Label Label(string uid = null)
+        public Label Label(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new Label(this, uid);
         }
-        */
 
         /// <summary>
         /// <see cref="Models.Taxonomy" /> allows you to organize and categorize content using a hierarchical structure of terms.
@@ -919,15 +917,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>
-        /*
-        public AuditLog AuditLog(string uid = null)
+        public AuditLog AuditLog(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new AuditLog(this, uid);
         }
-        */
 
         /// <summary>
         /// A <see cref="Models.VariantGroup" /> allows you to manage variant groups and their associated content types.

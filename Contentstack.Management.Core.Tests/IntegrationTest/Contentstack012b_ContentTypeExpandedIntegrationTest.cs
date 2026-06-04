@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Models;
+using Contentstack.Management.Core.Models.CustomExtension;
 using Contentstack.Management.Core.Models.Fields;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;

@@ -54,36 +54,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Out-of-scope model tests (not in the 12-module migration) -->
-    <Compile Remove="Models\AuditLogTest.cs" />
-    <Compile Remove="Models\BaseModelTest.cs" />
-    <Compile Remove="Models\ExtensionTest.cs" />
-    <Compile Remove="Models\ExtensionModelTest.cs" />
-    <Compile Remove="Models\LabelTest.cs" />
-    <!-- PublishQueueTest.cs - RE-ENABLED for PublishQueue module STJ migration -->
-    <!-- PublishRuleTest.cs - RE-ENABLED for Workflow module STJ migration -->
-    <!-- ReleaseTest.cs - RE-ENABLED for Release module STJ migration -->
-    <!-- ReleaseItemTest.cs - RE-ENABLED for Release module STJ migration -->
-    <Compile Remove="Models\RoleTest.cs" />
-    <Compile Remove="Models\CustomExtensionTest.cs" />
-
-    <!-- OAuth tests (out of scope) -->
+    <!-- OAuth tests excluded: OAuth is a separate feature, not part of STJ migration -->
     <Compile Remove="OAuth\**\*.cs" />
-
-    <!-- Infrastructure tests not yet migrated -->
-    <Compile Remove="Queryable\QueryTest.cs" />
-    <Compile Remove="Utils\TextNodeJsonConverterTest.cs" />
-    <Compile Remove="Utils\NodeJsonConverterTest.cs" />
-    <Compile Remove="Http\ContentstackHttpRequestTest.cs" />
-    <Compile Remove="Http\ContentstackHttpResponseTest.cs" />
-    <Compile Remove="Http\ContentstackErrorExceptionTest.cs" />
-    <Compile Remove="Utils\ContentstackUtilitiesTest.cs" />
-    <Compile Remove="Runtime\Pipeline\RetryHandler\RetryHandlerTest.cs" />
-    <Compile Remove="Runtime\Pipeline\ContentstackRuntimePipelineTest.cs" />
-    <Compile Remove="Runtime\Pipeline\RetryHandler\RetryHandlerIntegrationTest.cs" />
-    <Compile Remove="Runtime\Pipeline\HttpHandler\HttpHandlerTest.cs" />
-    <Compile Remove="Runtime\Pipeline\RetryHandler\DefaultRetryPolicyTest.cs" />
-    <Compile Remove="Runtime\Contexts\ContextTest.cs" />
   </ItemGroup>
 
   <ItemGroup>

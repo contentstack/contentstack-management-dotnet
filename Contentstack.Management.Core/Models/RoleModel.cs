@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
+
 namespace Contentstack.Management.Core.Models
 {
     public class RoleModel
@@ -26,7 +27,7 @@ namespace Contentstack.Management.Core.Models
         public bool Restrict { get; }
     }
 
-    public class ContentTypeRules: Rule
+    public class ContentTypeRules : Rule
     {
         [JsonPropertyName("module")]
         public string Module { get; } = "content_type";

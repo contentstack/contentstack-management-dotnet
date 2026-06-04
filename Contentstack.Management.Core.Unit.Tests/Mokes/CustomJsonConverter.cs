@@ -1,42 +1,33 @@
-﻿using System;
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Contentstack.Management.Core.Attributes;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes
 {
     [CsmJsonConverter("CustomAutoload")]
-    public class CustomJsonConverter : JsonConverter
+    public class CustomJsonConverter : JsonConverter<object>
     {
-        public override bool CanConvert(Type objectType)
-        {
-            return false; // Mock converter - not actually used for conversion
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }
     }
 
     [CsmJsonConverter("CustomManualLoad", false)]
-    public class CustomConverter : JsonConverter
+    public class CustomConverter : JsonConverter<object>
     {
-        public override bool CanConvert(Type objectType)
-        {
-            return false; // Mock converter - not actually used for conversion
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }

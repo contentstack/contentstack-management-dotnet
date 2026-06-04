@@ -66,51 +66,10 @@
   <ItemGroup>
     <PackageReference Include="Otp.NET" Version="1.4.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
-    <!-- Temporary backward compatibility - will be removed after full migration -->
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   
   <ItemGroup>
-    <!-- Re-enable core models for Client, User, Organization, Stack modules -->
-    <!-- Keep other models excluded until later migration phases -->
-    <!-- Asset.cs, AssetModel.cs - RE-ENABLED for Assets module -->
-    <Compile Remove="Models\AuditLog.cs" />
-    <!-- BaseModel.cs - RE-ENABLED for ContentType -->
-    <!-- BulkOperation.cs - RE-ENABLED -->
-    <!-- ContentModelling.cs - RE-ENABLED for ContentType -->
-    <!-- ContentType.cs - RE-ENABLED -->
-    <!-- Entry.cs, EntryVariant.cs - RE-ENABLED for Entry module STJ migration -->
-    <!-- Environment.cs - RE-ENABLED for Environment module STJ migration -->
-    <Compile Remove="Models\Extension.cs" />
-    <!-- Folder.cs - RE-ENABLED for Assets module -->
-    <!-- GlobalField.cs - RE-ENABLED for Global Field module STJ migration -->
-    <Compile Remove="Models\Label.cs" />
-    <!-- Locale.cs - RE-ENABLED for Locale module STJ migration -->
-    <!-- Organization.cs - RE-ENABLED -->
-    <!-- PublishQueue.cs - RE-ENABLED for PublishQueue module STJ migration -->
-    <!-- PublishRule.cs - RE-ENABLED for Workflow module STJ migration -->
-    <!-- Release.cs - RE-ENABLED for Release module STJ migration -->
-    <!-- ReleaseItem.cs - RE-ENABLED for Release module STJ migration -->
-    <!-- Role.cs - RE-ENABLED for Role module STJ migration -->
-
-
-    <!-- User.cs - RE-ENABLED -->
-    <!-- Models\VariantGroup.cs - RE-ENABLED for VariantGroup module STJ migration -->
-    <!-- Version.cs - RE-ENABLED for Assets module -->
-
-
-    <Compile Remove="Models\CustomExtension\**\*.cs" />
-    <!-- Re-enable core Field models for ContentType support -->
-    <!-- Phase 1 field types - RE-ENABLED and converted to STJ -->
-    <!-- DateField.cs, NumberField.cs, TextboxField.cs, ExtensionField.cs, ReferenceField.cs, GlobalFieldReference.cs - RE-ENABLED -->
-    <!-- Phase 2 field types - RE-ENABLED and converted to STJ -->
-    <!-- FileField.cs (includes ImageField and Dimension), JsonField.cs - RE-ENABLED -->
-    <!-- Phase 3 field types - RE-ENABLED and converted to STJ -->
-    <!-- SelectField.cs (includes SelectEnum), TaxonomyField.cs (includes TaxonomyFieldBinding) - RE-ENABLED -->
-    <!-- Phase 4 field types - RE-ENABLED and converted to STJ -->
-    <!-- GroupField.cs, ModularBlockField.cs (includes Block) - RE-ENABLED -->
-    <!-- FieldMetadata.cs, Field.cs, FieldRules.cs - RE-ENABLED for ContentType -->
-
+    <!-- All model files re-enabled: STJ migration complete, no Newtonsoft references remain -->
     
     <!-- Re-enable core services for Client, User, Organization, Stack modules -->
     <!-- DeleteReleaseItemService.cs - RE-ENABLED for Release module STJ migration -->
@@ -123,15 +82,11 @@
     <!-- Versioning services - RE-ENABLED for Assets module -->
     <!-- <Compile Remove="Services\Models\Versioning\**\*.cs" /> -->
     <!-- CreateUpdateService, FetchDeleteService, DeleteService - RE-ENABLED for ContentType -->
-    <Compile Remove="Services\OAuth\**\*.cs" />
     <!-- StackOwnershipService.cs, StackShareService.cs, UpdateUserRoleService.cs - RE-ENABLED -->
     <!-- OrgRoles.cs - RE-ENABLED -->
-    
+
     <!-- Re-enable Stack services for Stack module -->
     <!-- Services\Stack\**\*.cs - RE-ENABLED -->
-    
-    <!-- Keep OAuth handler excluded -->
-    <Compile Remove="OAuthHandler.cs" />
     
     <!-- FieldJsonConverter.cs - RE-ENABLED for ContentType Field support -->
     

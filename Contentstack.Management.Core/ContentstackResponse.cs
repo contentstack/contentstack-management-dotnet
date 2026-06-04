@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core
 {
@@ -152,17 +151,6 @@ namespace Contentstack.Management.Core
         {
             ThrowIfDisposed();
             return JsonNode.Parse(OpenResponse())!.AsObject();
-        }
-
-        /// <summary>
-        /// Backward compatibility method for non-migrated models. Will be removed in future versions.
-        /// </summary>
-        /// <returns>The JObject (Newtonsoft.Json).</returns>
-        [Obsolete("Use OpenJsonObjectResponse() instead. This method will be removed in future versions.")]
-        public JObject OpenJObjectResponse()
-        {
-            ThrowIfDisposed();
-            return JObject.Parse(OpenResponse());
         }
 
         /// <summary>

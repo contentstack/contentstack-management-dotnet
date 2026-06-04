@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
 using Contentstack.Management.Core.Models;
+using Contentstack.Management.Core.Models.CustomExtension;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Exceptions;
@@ -404,32 +405,92 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
-        // Tests 002-004 depend on Extension/CustomExtension SDK module (excluded from current scope)
         [TestMethod]
         [DoNotParallelize]
-        [Ignore("Requires Extension SDK module (Models/CustomExtension) which is out of current scope")]
         public async Task Test002_Should_Create_Dashboard()
         {
-            Assert.Inconclusive("Extension SDK module not available in current scope.");
-            await System.Threading.Tasks.Task.CompletedTask;
+            TestOutputLogger.LogContext("TestScenario", "CreateDashboardWidget");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/extension.html");
+            try
+            {
+                DashboardWidgetModel dashboard = new DashboardWidgetModel(
+                    path, "text/html", "Integration Test Dashboard",
+                    isEnable: true, defaultWidth: "half", tags: "dashboard,test");
+                ContentstackResponse response = await _stack.Extension().UploadAsync(dashboard);
+                TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.IsNotNull(response.OpenJsonObjectResponse()["extension"], "CreateDashboard_ResponseContainsExtension");
+                }
+                else
+                {
+                    AssertLogger.Fail("Dashboard Widget Creation Failed", response.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Dashboard Widget Creation Failed", e.Message);
+            }
         }
 
         [TestMethod]
         [DoNotParallelize]
-        [Ignore("Requires Extension SDK module (Models/CustomExtension) which is out of current scope")]
         public async Task Test003_Should_Create_Custom_Widget()
         {
-            Assert.Inconclusive("Extension SDK module not available in current scope.");
-            await System.Threading.Tasks.Task.CompletedTask;
+            TestOutputLogger.LogContext("TestScenario", "CreateCustomWidget");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/extension.html");
+            try
+            {
+                var scope = new ExtensionScope { ContentTypes = new List<string> { "$all" } };
+                CustomWidgetModel widget = new CustomWidgetModel(
+                    path, "text/html", "Integration Test Widget",
+                    tags: "widget,test", scope: scope);
+                ContentstackResponse response = await _stack.Extension().UploadAsync(widget);
+                TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.IsNotNull(response.OpenJsonObjectResponse()["extension"], "CreateCustomWidget_ResponseContainsExtension");
+                }
+                else
+                {
+                    AssertLogger.Fail("Custom Widget Creation Failed", response.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Custom Widget Creation Failed", e.Message);
+            }
         }
 
         [TestMethod]
         [DoNotParallelize]
-        [Ignore("Requires Extension SDK module (Models/CustomExtension) which is out of current scope")]
         public async Task Test004_Should_Create_Custom_field()
         {
-            Assert.Inconclusive("Extension SDK module not available in current scope.");
-            await System.Threading.Tasks.Task.CompletedTask;
+            TestOutputLogger.LogContext("TestScenario", "CreateCustomField");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/extension.html");
+            try
+            {
+                CustomFieldModel field = new CustomFieldModel(
+                    path, "text/html", "Integration Test Field",
+                    dataType: "text", isMultiple: false, tags: "field,test");
+                ContentstackResponse response = await _stack.Extension().UploadAsync(field);
+                TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.IsNotNull(response.OpenJsonObjectResponse()["extension"], "CreateCustomField_ResponseContainsExtension");
+                }
+                else
+                {
+                    AssertLogger.Fail("Custom Field Creation Failed", response.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Custom Field Creation Failed", e.Message);
+            }
         }
 
         private string _testAssetUid;

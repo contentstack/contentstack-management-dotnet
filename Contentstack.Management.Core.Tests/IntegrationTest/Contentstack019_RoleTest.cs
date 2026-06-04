@@ -94,7 +94,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 return false;
             }
 
-            return roles.Any(r => r["uid"]?.ToString() == uid);
+            return roles.Any(r => r?["uid"]?.ToString() == uid);
         }
 
         /// <summary>

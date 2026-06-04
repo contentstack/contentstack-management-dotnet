@@ -10,25 +10,25 @@ namespace Contentstack.Management.Core.Models.CustomExtension
     {
         public string Title { get; set; }
         public string DataType { get; set; }
-        public string Tags { get; set; }
+        public string? Tags { get; set; }
         public bool Multiple { get; set; }
         public string ContentType { get; set; }
 
         internal ByteArrayContent byteArray;
 
-        public CustomFieldModel(string filePath, string contentType, string title, string dataType, bool isMultiple = false, string tags = null) :
+        public CustomFieldModel(string filePath, string contentType, string title, string dataType, bool isMultiple = false, string? tags = null) :
             this(File.OpenRead(filePath), contentType, title, dataType, isMultiple, tags)
         { }
 
-        public CustomFieldModel(Stream stream, string contentType, string title, string dataType, bool isMultiple = false, string tags = null) :
+        public CustomFieldModel(Stream stream, string contentType, string title, string dataType, bool isMultiple = false, string? tags = null) :
             this(getBytes(stream), contentType, title, dataType, isMultiple, tags)
         { }
 
-        public CustomFieldModel(byte[] bytes, string contentType, string title, string dataType, bool isMultiple = false, string tags = null) :
+        public CustomFieldModel(byte[] bytes, string contentType, string title, string dataType, bool isMultiple = false, string? tags = null) :
             this(getByteArray(bytes), contentType, title, dataType, isMultiple, tags)
         { }
 
-        public CustomFieldModel(ByteArrayContent byteArray, string contentType, string title, string dataType, bool isMultiple = false, string tags = null)
+        public CustomFieldModel(ByteArrayContent byteArray, string contentType, string title, string dataType, bool isMultiple = false, string? tags = null)
         {
 
             if (byteArray == null)
