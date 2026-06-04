@@ -11,25 +11,25 @@ namespace Contentstack.Management.Core.Models.CustomExtension
     public class CustomWidgetModel : IExtensionInterface
     {
         public string Title { get; set; }
-        public string Tags { get; set; }
-        public ExtensionScope Scope { get; set; }
+        public string? Tags { get; set; }
+        public ExtensionScope? Scope { get; set; }
         public string ContentType { get; set; }
 
         internal ByteArrayContent byteArray;
 
-        public CustomWidgetModel(string filePath, string contentType, string title, string tags = null, ExtensionScope scope = null) :
+        public CustomWidgetModel(string filePath, string contentType, string title, string? tags = null, ExtensionScope? scope = null) :
             this(File.OpenRead(filePath), contentType, title, tags, scope)
         { }
 
-        public CustomWidgetModel(Stream stream, string contentType, string title, string tags = null, ExtensionScope scope = null) :
+        public CustomWidgetModel(Stream stream, string contentType, string title, string? tags = null, ExtensionScope? scope = null) :
             this(getBytes(stream), contentType, title, tags, scope)
         { }
 
-        public CustomWidgetModel(byte[] bytes, string contentType, string title, string tags = null, ExtensionScope scope = null) :
+        public CustomWidgetModel(byte[] bytes, string contentType, string title, string? tags = null, ExtensionScope? scope = null) :
             this(getByteArray(bytes), contentType, title, tags, scope)
         { }
 
-        public CustomWidgetModel(ByteArrayContent byteArray, string contentType, string title, string tags = null, ExtensionScope scope = null)
+        public CustomWidgetModel(ByteArrayContent byteArray, string contentType, string title, string? tags = null, ExtensionScope? scope = null)
         {
             if (byteArray == null)
             {

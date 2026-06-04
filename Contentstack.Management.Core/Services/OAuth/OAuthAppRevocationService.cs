@@ -52,7 +52,7 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="addAcceptMediaHeader">Whether to add accept media headers.</param>
         /// <param name="apiVersion">The API version to use.</param>
         /// <returns>The HTTP request for OAuth app revocation operations.</returns>
-        public override IHttpRequest CreateHttpRequest(System.Net.Http.HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public override IHttpRequest CreateHttpRequest(System.Net.Http.HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             // Create a custom config with Developer Hub hostname for OAuth app revocation operations
             // OAuth endpoints don't use API versioning, so we set Version to empty
