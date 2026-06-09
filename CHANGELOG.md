@@ -1,50 +1,22 @@
 # Changelog
 
-## [v1.0.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.1)
+## [v1.0.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.1)(2026-06-15)
  - **Feat**
    - **Branch support**
      - Added `Branch` model with `Create`, `CreateAsync`, `Fetch`, `FetchAsync`, `Delete`, `DeleteAsync`, and `Query` operations
-     - Added `BranchModel` and `BranchAliasModel` with System.Text.Json serialization
      - `Stack.Branch(uid?)` accessor follows the same pattern as other stack resources
-     - Added unit tests (`BranchTest`) covering resource path, SDK guard conditions, and query parameter construction
-     - Added integration tests (`Contentstack005_BranchTest`) covering CRUD lifecycle, query with pagination, SDK validation errors, and API error scenarios
-   - **Webhook migration to System.Text.Json**
-     - Migrated `WebhookModel` to use `System.Text.Json` attributes
-   - **Workflow migration to System.Text.Json**
-     - Migrated `WorkflowModel` to use `System.Text.Json` attributes
  - **Breaking Change**
-   - **System.Text.Json Migration (Beta)**
-     - Migrated core serialization from Newtonsoft.Json to System.Text.Json
-     - Updated ContentstackClient, ContentstackResponse, and core HTTP handling
-     - Added backward compatibility for IResponse interface with both JsonObject and JObject support
-     - Migrated core modules including Client, User, Organization, Stack, ContentType, Assets, Environment, Global Field, Entry, Entry Variant, and Variant Group to System.Text.Json
-     - Re-enabled previously excluded modules and Stack methods including Asset(), Environment(), GlobalField(), and VariantGroup()
-     - Migrated QueryService and related service layers to use JsonSerializerOptions and Utf8JsonWriter
-     - Updated constructors, response handling, and serialization services across modules
-     - Migrated field system models, content modelling classes, and variant group integrations
-     - Enhanced variant group API integration with proper content type linking
-     - Added OpenJsonObjectResponse() support for STJ-based JSON parsing
-     - Improved error handling with enhanced API validation messages
-     - Added schema validation improvements including default Title field handling
-     - Improved JSON serialization performance and reduced memory footprint
-     - Reduced Newtonsoft.Json dependency while maintaining backward compatibility for non-migrated functionality
-     - Added comprehensive STJ migration testing and validation infrastructure
-     - Added/updated unit and integration test coverage for all migrated modules including Client, User, Organization, Stack, ContentType, Assets, Environment, Global Field, Entry, Entry Variant, and Variant Group
-     - Migrated Locale and Bulk Operations modules to System.Text.Json
-     - Re-enabled `Stack.Locale()` and `Stack.BulkOperation()` methods
-     - Migrated all Bulk Operation services (Publish, Unpublish, Delete, AddItems, UpdateItems, ReleaseItems, WorkflowUpdate) to STJ
-     - Migrated `LocaleModel` and `BulkOperationModels` to use `System.Text.Json` attributes
-     - Added/updated unit and integration test coverage for Locale and Bulk Operations
-     - Upgraded target framework to .NET 10 and removed all build warnings
-   - Remaining modules migrated and re-enabled — `AuditLog`, `Extension`, `Label`, `Role`, `Taxonomy`, `Term`, `Webhook`, `DeliveryToken`, `ManagementToken`, and `CustomExtension` fully re-enabled with STJ attributes; all corresponding `Stack.*()` accessor methods restored
-   - All `[JsonProperty]` replaced with `[JsonPropertyName]` across all model classes; `[JsonObject(ItemNullValueHandling)]` removed in favour of global `DefaultIgnoreCondition = WhenWritingNull`
-   - OAuth module enabled — `OAuthHandler`, `OAuthTokenService`, `OAuthAppAuthorizationService`, and `OAuthAppRevocationService` now active; auto token refresh wired into `InvokeAsync` pipeline via `EnsureOAuthTokenIsValidAsync`
-   - CustomWidgetModel scope serialization migrated from `JsonTextWriter` to `System.Text.Json.JsonSerializer.Serialize()`
-   - Asset extension upload tests — 3 previously skipped tests (`Test002_Should_Create_Dashboard`, `Test003_Should_Create_Custom_Widget`, `Test004_Should_Create_Custom_field`) now have real implementations
-   - Unit test coverage expanded — 991 → 1,242 passing tests; 24 previously excluded test files re-enabled covering AuditLog, Extension, Label, Role, Taxonomy, Term, Webhook, DeliveryToken, CustomExtension, and all infrastructure tests (HTTP pipeline, converters, runtime contexts, utilities)
-   - Integration test coverage expanded — 4 previously excluded integration test files re-enabled: ContentType Expanded (`Contentstack012b`), DeliveryToken (`Contentstack016`), Taxonomy (`Contentstack017`), Role (`Contentstack019`)
+   - **Complete migration from Newtonsoft.Json to System.Text.Json**
+     - `Newtonsoft.Json` is no longer a dependency — remove it from your project once your own code no longer references it directly
+     - `client.SerializerSettings` (`JsonSerializerSettings`) replaced by `client.SerializerOptions` (`JsonSerializerOptions`)
+     - `response.OpenJObjectResponse()` removed — use `response.OpenJsonObjectResponse()` (`JsonObject`) or `response.OpenTResponse<T>()` instead
+     - `JObjectParameterValue` now accepts `System.Text.Json.Nodes.JsonNode` instead of `Newtonsoft.Json.Linq.JObject`
+     - All `[JsonProperty]` attributes replaced with `[JsonPropertyName]`; `[JsonObject(ItemNullValueHandling)]` removed in favour of `DefaultIgnoreCondition = WhenWritingNull` on `SerializerOptions`
+     - All modules fully migrated to System.Text.Json: AuditLog, Branch, BulkOperation, ContentType, DeliveryToken, Entry, EntryVariant, Environment, Extension, GlobalField, Label, Locale, ManagementToken, Organization, Release, Role, Stack, Taxonomy, Term, User, VariantGroup, Webhook, and Workflow
+     - OAuth auto token refresh wired into the request pipeline
+     - Upgraded target framework to .NET 10
 
-## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
+## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.10.0)
  - Feat
    - **Enhanced Error Handling and Test Coverage (DX-5436)**
      - Added comprehensive error handling across all models with enhanced `ContentstackErrorException`
