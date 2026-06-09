@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.0.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.1)
+## [v1.0.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.1)(2026-06-15)
  - **Feat**
    - **Branch support**
      - Added `Branch` model with `Create`, `CreateAsync`, `Fetch`, `FetchAsync`, `Delete`, `DeleteAsync`, and `Query` operations
