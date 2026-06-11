@@ -15,6 +15,11 @@
      - All modules fully migrated to System.Text.Json: AuditLog, Branch, BulkOperation, ContentType, DeliveryToken, Entry, EntryVariant, Environment, Extension, GlobalField, Label, Locale, ManagementToken, Organization, Release, Role, Stack, Taxonomy, Term, User, VariantGroup, Webhook, and Workflow
      - OAuth auto token refresh wired into the request pipeline
      - Upgraded target framework to .NET 10
+ - **New:** Multi-region endpoint resolution via `Endpoint.GetContentstackEndpoint(region, service)` — resolves Contentstack service URLs for all 7 supported regions (NA, EU, AU, Azure-NA, Azure-EU, GCP-NA, GCP-EU) and 18 service keys (contentManagement, contentDelivery, auth, graphqlDelivery, preview, images, assets, automate, launch, developerHub, brandKit, genAI, personalizeManagement, personalizeEdge, composableStudio, assetManagement, and more).
+ - **New:** `omitHttps` flag strips the `https://` scheme from returned URLs — pass directly to `ContentstackClientOptions.Host` (e.g. `new ContentstackClientOptions { Host = Endpoint.GetContentstackEndpoint("eu", "contentManagement", omitHttps: true) }`).
+ - **New:** Case-insensitive region alias support — `"us"`, `"NA"`, `"AWS-NA"`, `"azure_na"` all resolve correctly to the same region.
+ - **New:** `regions.json` registry auto-downloaded from `artifacts.contentstack.com` on first use and cached on disk — no setup required. The SDK self-heals if the file is missing.
+ - **New:** `Scripts/refresh-region.cs` bundled inside the NuGet package — automatically placed in your project's `Scripts/` folder on first `dotnet build`. Run `dotnet run Scripts/refresh-region.cs` anytime to pull the latest regions from CDN.
 
 ## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.10.0)
  - Feat
