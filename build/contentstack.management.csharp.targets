@@ -1,0 +1,19 @@
+<Project>
+  <!--
+    Copies refresh-region.cs into the consuming project's Scripts/ folder
+    on first build. Customer then runs:
+      dotnet run Scripts/refresh-region.cs
+  -->
+  <PropertyGroup>
+    <_RefreshScriptDest>$(MSBuildProjectDirectory)/Scripts/refresh-region.cs</_RefreshScriptDest>
+    <_RefreshScriptSrc>$(MSBuildThisFileDirectory)../contentFiles/cs/any/Scripts/refresh-region.cs</_RefreshScriptSrc>
+  </PropertyGroup>
+
+  <Target Name="ContentstackManagement_PlaceRefreshScript"
+          AfterTargets="ResolvePackageDependenciesForBuild"
+          Condition="!Exists('$(_RefreshScriptDest)')">
+    <MakeDir Directories="$(MSBuildProjectDirectory)/Scripts" />
+    <Copy SourceFiles="$(_RefreshScriptSrc)" DestinationFiles="$(_RefreshScriptDest)" />
+    <Message Text="contentstack.management.csharp: Scripts/refresh-region.cs added to your project. Run 'dotnet run Scripts/refresh-region.cs' to refresh regions." Importance="High" />
+  </Target>
+</Project>
