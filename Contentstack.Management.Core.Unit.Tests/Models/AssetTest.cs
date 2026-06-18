@@ -206,5 +206,91 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
         }
+
+        // Image format upload tests
+
+        [TestMethod]
+        public void Should_Create_JPG_Image_Asset()
+        {
+            var jpgModel = new AssetModel("london.jpg", new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 }, "image/jpeg",
+                title: "London", description: "JPG image", parentUID: null, tags: "image,jpeg");
+
+            ContentstackResponse response = _stack.Asset().Create(jpgModel);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public void Should_Create_JPEG_Extension_Image_Asset()
+        {
+            var jpegModel = new AssetModel("tokyo.jpeg", new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 }, "image/jpeg",
+                title: "Tokyo", description: "JPEG image", parentUID: null, tags: "image,jpeg");
+
+            ContentstackResponse response = _stack.Asset().Create(jpegModel);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public void Should_Create_AVIF_Image_Asset()
+        {
+            var avifModel = new AssetModel("dubai.avif", new byte[] { 0x00, 0x00, 0x00, 0x1C, 0x66, 0x74, 0x79, 0x70 }, "image/avif",
+                title: "Dubai", description: "AVIF image", parentUID: null, tags: "image,avif");
+
+            ContentstackResponse response = _stack.Asset().Create(avifModel);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Create_JPG_Image_Asset_Async()
+        {
+            var jpgModel = new AssetModel("london.jpg", new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 }, "image/jpeg",
+                title: "London Async", description: "JPG image async", parentUID: null, tags: "image,jpeg,async");
+
+            ContentstackResponse response = await _stack.Asset().CreateAsync(jpgModel);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Create_AVIF_Image_Asset_Async()
+        {
+            var avifModel = new AssetModel("dubai.avif", new byte[] { 0x00, 0x00, 0x00, 0x1C, 0x66, 0x74, 0x79, 0x70 }, "image/avif",
+                title: "Dubai Async", description: "AVIF image async", parentUID: null, tags: "image,avif,async");
+
+            ContentstackResponse response = await _stack.Asset().CreateAsync(avifModel);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public void Should_Update_Image_Asset_With_JPG()
+        {
+            var jpgModel = new AssetModel("london_updated.jpg", new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 }, "image/jpeg",
+                title: "London Updated", description: "Updated JPG", parentUID: null, tags: "image,jpeg,updated");
+
+            ContentstackResponse response = _stack.Asset(_fixture.Create<string>()).Update(jpgModel);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Update_Image_Asset_With_JPG_Async()
+        {
+            var jpgModel = new AssetModel("tokyo_updated.jpeg", new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 }, "image/jpeg",
+                title: "Tokyo Updated Async", description: "Updated JPEG async", parentUID: null, tags: "image,jpeg,async,updated");
+
+            ContentstackResponse response = await _stack.Asset(_fixture.Create<string>()).UpdateAsync(jpgModel);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
     }
 }

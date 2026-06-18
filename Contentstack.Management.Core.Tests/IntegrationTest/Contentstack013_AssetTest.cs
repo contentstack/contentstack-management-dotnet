@@ -4171,5 +4171,267 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         #endregion
 
+        #region Image Format Upload Tests
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test100_Should_Upload_JPEG_Image_Asset()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadJpegImage");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/london.jpg");
+            try
+            {
+                AssetModel asset = new AssetModel("london.jpg", path, "image/jpeg", title: "London JPEG", description: "JPEG image upload test", parentUID: null, tags: "image,jpeg,london");
+                ContentstackResponse response = _stack.Asset().Create(asset);
+                TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "UploadJpegImage_StatusCode");
+                    var responseObject = response.OpenJsonObjectResponse();
+                    AssertLogger.IsNotNull(responseObject["asset"], "UploadJpegImage_ResponseContainsAsset");
+                    var assetUID = responseObject["asset"]?["uid"]?.ToString();
+                    if (!string.IsNullOrEmpty(assetUID))
+                    {
+                        _testAssetUIDs.Add(assetUID);
+                        TestOutputLogger.LogContext("AssetUID", assetUID);
+                    }
+                    var contentType = responseObject["asset"]?["content_type"]?.ToString();
+                    AssertLogger.IsTrue(
+                        contentType == "image/jpeg" || contentType == "image/jpg",
+                        $"Expected image/jpeg content type, got: {contentType}",
+                        "UploadJpegImage_ContentType");
+                }
+                else
+                {
+                    AssertLogger.Fail("JPEG Image Upload Failed", response.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("JPEG Image Upload Failed", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test101_Should_Upload_JPEG_Extension_Image_Asset()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadJpegExtensionImage");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/tokyo.jpeg");
+            try
+            {
+                AssetModel asset = new AssetModel("tokyo.jpeg", path, "image/jpeg", title: "Tokyo JPEG", description: "JPEG (.jpeg extension) image upload test", parentUID: null, tags: "image,jpeg,tokyo");
+                ContentstackResponse response = _stack.Asset().Create(asset);
+                TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "UploadJpegExtImage_StatusCode");
+                    var responseObject = response.OpenJsonObjectResponse();
+                    AssertLogger.IsNotNull(responseObject["asset"], "UploadJpegExtImage_ResponseContainsAsset");
+                    var assetUID = responseObject["asset"]?["uid"]?.ToString();
+                    if (!string.IsNullOrEmpty(assetUID))
+                    {
+                        _testAssetUIDs.Add(assetUID);
+                        TestOutputLogger.LogContext("AssetUID", assetUID);
+                    }
+                    var contentType = responseObject["asset"]?["content_type"]?.ToString();
+                    AssertLogger.IsTrue(
+                        contentType == "image/jpeg" || contentType == "image/jpg",
+                        $"Expected image/jpeg content type, got: {contentType}",
+                        "UploadJpegExtImage_ContentType");
+                }
+                else
+                {
+                    AssertLogger.Fail("JPEG (.jpeg) Image Upload Failed", response.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("JPEG (.jpeg) Image Upload Failed", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test102_Should_Upload_AVIF_Image_Asset()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadAvifImage");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/dubai.avif");
+            try
+            {
+                AssetModel asset = new AssetModel("dubai.avif", path, "image/avif", title: "Dubai AVIF", description: "AVIF image upload test", parentUID: null, tags: "image,avif,dubai");
+                ContentstackResponse response = _stack.Asset().Create(asset);
+                TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "UploadAvifImage_StatusCode");
+                    var responseObject = response.OpenJsonObjectResponse();
+                    AssertLogger.IsNotNull(responseObject["asset"], "UploadAvifImage_ResponseContainsAsset");
+                    var assetUID = responseObject["asset"]?["uid"]?.ToString();
+                    if (!string.IsNullOrEmpty(assetUID))
+                    {
+                        _testAssetUIDs.Add(assetUID);
+                        TestOutputLogger.LogContext("AssetUID", assetUID);
+                    }
+                    var contentType = responseObject["asset"]?["content_type"]?.ToString();
+                    AssertLogger.IsTrue(
+                        contentType == "image/avif" || contentType == "application/octet-stream",
+                        $"Expected image/avif content type, got: {contentType}",
+                        "UploadAvifImage_ContentType");
+                }
+                else
+                {
+                    AssertLogger.Fail("AVIF Image Upload Failed", response.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("AVIF Image Upload Failed", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test103_Should_Upload_Multiple_Image_Formats_Sequentially()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadMultipleImageFormats");
+
+            var imageAssets = new[]
+            {
+                ("london.jpg",  "image/jpeg", "London JPG"),
+                ("tokyo.jpeg",  "image/jpeg", "Tokyo JPEG"),
+                ("dubai.avif",  "image/avif", "Dubai AVIF"),
+            };
+
+            foreach (var (fileName, mimeType, title) in imageAssets)
+            {
+                var path = Path.Combine(System.Environment.CurrentDirectory, $"../../../Mock/assets/{fileName}");
+                try
+                {
+                    AssetModel asset = new AssetModel(fileName, path, mimeType, title: title, description: $"Multi-format test: {fileName}", parentUID: null, tags: $"image,multi-format,{Path.GetExtension(fileName).TrimStart('.')}");
+                    ContentstackResponse response = _stack.Asset().Create(asset);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, $"MultiFormat_{fileName}_StatusCode");
+                        var responseObject = response.OpenJsonObjectResponse();
+                        AssertLogger.IsNotNull(responseObject["asset"], $"MultiFormat_{fileName}_ResponseContainsAsset");
+                        var assetUID = responseObject["asset"]?["uid"]?.ToString();
+                        if (!string.IsNullOrEmpty(assetUID))
+                        {
+                            _testAssetUIDs.Add(assetUID);
+                        }
+                        Console.WriteLine($"✅ Uploaded {fileName} ({mimeType}) successfully");
+                    }
+                    else
+                    {
+                        AssertLogger.Fail($"Upload failed for {fileName}", response.OpenResponse());
+                    }
+                }
+                catch (Exception e)
+                {
+                    AssertLogger.Fail($"Upload failed for {fileName}", e.Message);
+                }
+
+                await Task.Delay(200);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test104_Should_Fetch_Uploaded_Image_Asset_Metadata()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FetchUploadedImageAssetMetadata");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/london.jpg");
+            try
+            {
+                AssetModel asset = new AssetModel("london_meta_test.jpg", path, "image/jpeg", title: "London Meta Test", description: "Image metadata fetch test", parentUID: null, tags: "image,metadata");
+                ContentstackResponse createResponse = _stack.Asset().Create(asset);
+
+                if (!createResponse.IsSuccessStatusCode)
+                {
+                    AssertLogger.Fail("Could not create image asset for metadata fetch test", createResponse.OpenResponse());
+                    return;
+                }
+
+                var createdObj = createResponse.OpenJsonObjectResponse();
+                var assetUID = createdObj["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "FetchImageMeta_CreatedAssetUID");
+                _testAssetUIDs.Add(assetUID);
+
+                ContentstackResponse fetchResponse = _stack.Asset(assetUID).Fetch();
+
+                if (fetchResponse.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, fetchResponse.StatusCode, "FetchImageMeta_StatusCode");
+                    var responseObject = fetchResponse.OpenJsonObjectResponse();
+                    var fetchedAsset = responseObject["asset"];
+                    AssertLogger.IsNotNull(fetchedAsset, "FetchImageMeta_AssetNotNull");
+                    AssertLogger.IsNotNull(fetchedAsset["uid"]?.ToString(), "FetchImageMeta_HasUID");
+                    AssertLogger.IsNotNull(fetchedAsset["filename"]?.ToString(), "FetchImageMeta_HasFilename");
+                    AssertLogger.IsNotNull(fetchedAsset["content_type"]?.ToString(), "FetchImageMeta_HasContentType");
+                    AssertLogger.IsNotNull(fetchedAsset["file_size"]?.ToString(), "FetchImageMeta_HasFileSize");
+                    Console.WriteLine($"✅ Image metadata verified: uid={fetchedAsset["uid"]}, content_type={fetchedAsset["content_type"]}, size={fetchedAsset["file_size"]}");
+                }
+                else
+                {
+                    AssertLogger.Fail("Fetch image asset metadata failed", fetchResponse.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Fetch image asset metadata failed", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test105_Should_Update_Uploaded_Image_Asset()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UpdateUploadedImageAsset");
+            var createPath = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/london.jpg");
+            var updatePath = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/tokyo.jpeg");
+            try
+            {
+                AssetModel createAsset = new AssetModel("london_update_test.jpg", createPath, "image/jpeg", title: "London Update Test", description: "Original image", parentUID: null, tags: "image,update,original");
+                ContentstackResponse createResponse = _stack.Asset().Create(createAsset);
+
+                if (!createResponse.IsSuccessStatusCode)
+                {
+                    AssertLogger.Fail("Could not create image asset for update test", createResponse.OpenResponse());
+                    return;
+                }
+
+                var createdObj = createResponse.OpenJsonObjectResponse();
+                var assetUID = createdObj["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "UpdateImage_CreatedAssetUID");
+                _testAssetUIDs.Add(assetUID);
+
+                AssetModel updateAsset = new AssetModel("tokyo_update_test.jpeg", updatePath, "image/jpeg", title: "Tokyo Updated Image", description: "Updated image asset", parentUID: null, tags: "image,update,updated");
+                ContentstackResponse updateResponse = _stack.Asset(assetUID).Update(updateAsset);
+
+                if (updateResponse.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, updateResponse.StatusCode, "UpdateImage_StatusCode");
+                    var responseObject = updateResponse.OpenJsonObjectResponse();
+                    AssertLogger.IsNotNull(responseObject["asset"], "UpdateImage_ResponseContainsAsset");
+                    Console.WriteLine($"✅ Image asset updated successfully: {assetUID}");
+                }
+                else
+                {
+                    AssertLogger.Fail("Update image asset failed", updateResponse.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Update image asset failed", e.Message);
+            }
+        }
+
+        #endregion
+
     }
 }
