@@ -1,5 +1,16 @@
 # Changelog
 
+## [v1.0.0-beta.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.2)(2026-06-17)
+ - **Test**
+   - **Image format upload coverage**
+     - Added `Test100_Should_Upload_JPEG_Image_Asset` — uploads `london.jpg` via `image/jpeg` MIME type and verifies `Created` status and `content_type` in response
+     - Added `Test101_Should_Upload_JPEG_Extension_Image_Asset` — uploads `tokyo.jpeg` (`.jpeg` extension) and asserts `image/jpeg` content type
+     - Added `Test102_Should_Upload_AVIF_Image_Asset` — uploads `dubai.avif` via `image/avif` MIME type and accepts `image/avif` or `application/octet-stream` content type
+     - Added `Test103_Should_Upload_Multiple_Image_Formats_Sequentially` — uploads all three images in sequence and asserts `Created` on each
+     - Added `Test104_Should_Fetch_Uploaded_Image_Asset_Metadata` — creates a JPEG asset and fetches it back, asserting `uid`, `filename`, `content_type`, and `file_size` fields are present
+     - Added `Test105_Should_Update_Uploaded_Image_Asset` — creates a JPEG asset then replaces it with a different JPEG and verifies the `200 OK` update response
+     - Test image files (`london.jpg`, `tokyo.jpeg`, `dubai.avif`) live under `Contentstack.Management.Core.Tests/Mock/assets/`
+
 ## [v1.0.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.1)(2026-06-15)
  - **Feat**
    - **Branch support**
