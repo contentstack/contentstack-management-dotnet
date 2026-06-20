@@ -69,13 +69,10 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
   </ItemGroup>
   
-  <!-- Ship refresh-region.cs inside the NuGet package.
-       The .targets file copies it into the consumer's Scripts/ folder on first build.
-       Customer runs:  dotnet run Scripts/refresh-region.cs                -->
   <ItemGroup>
-    <Content Include="..\Scripts\refresh-region.cs">
+    <Content Include="..\Scripts\refresh-region.py">
       <Pack>true</Pack>
-      <PackagePath>contentFiles/cs/any/Scripts/refresh-region.cs</PackagePath>
+      <PackagePath>contentFiles/cs/any/Scripts/refresh-region.py</PackagePath>
       <BuildAction>Content</BuildAction>
       <CopyToOutput>false</CopyToOutput>
     </Content>
