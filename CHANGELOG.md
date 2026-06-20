@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.0.0-beta.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.2)(2026-06-17)
+## [v1.0.0-beta.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.2)(2026-06-22)
 
  - **Chore**
    - Replaced `Scripts/refresh-region.cs` with `Scripts/refresh-region.py` — prevents MSBuild from compiling the script as source code
