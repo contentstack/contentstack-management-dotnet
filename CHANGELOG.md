@@ -2,10 +2,6 @@
 
 ## [v1.0.0-beta.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.2)(2026-06-22)
 
- - **Security**
-   - Centralized all hardcoded mock/test credentials into dedicated `TestCredentials` and `TestConstants` helper classes, resolving 86 Snyk Code `NoHardcodedCredentials` findings across `Contentstack001_LoginTest`, `Contentstack003_StackTest`, `Contentstack011_GlobalFieldTest`, `UserTest`, all Bulk service tests, and OAuth/Configuration unit tests
-   - Mock values are now read from environment variables with intentionally fake fallbacks, making the test credential surface auditable from a single location per test project
-
  - **Chore**
    - Replaced `Scripts/refresh-region.cs` with `Scripts/refresh-region.py` — prevents MSBuild from compiling the script as source code
    - Added SSL fallback in `refresh-region.py` for macOS certificate verification failures
