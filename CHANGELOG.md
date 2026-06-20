@@ -1,6 +1,14 @@
 # Changelog
 
 ## [v1.0.0-beta.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.2)(2026-06-17)
+
+ - **Chore**
+   - Replaced `Scripts/refresh-region.cs` with `Scripts/refresh-region.py` — prevents MSBuild from compiling the script as source code
+   - Added SSL fallback in `refresh-region.py` for macOS certificate verification failures
+   - Updated `contentstack.management.csharp.targets` and `contentstack.management.core.csproj` to package and deliver the `.py` script
+ - **Fix**
+   - Bulk operation tests: accept `401 Unauthorized` alongside `404/400` for invalid/expired job ID assertions
+   - Bulk operation tests: made workflow stage assignment non-fatal in `Test002` to prevent failures when workflow API is unavailable
  - **Test**
    - **Image format upload coverage**
      - Added `Test100_Should_Upload_JPEG_Image_Asset` — uploads `london.jpg` via `image/jpeg` MIME type and verifies `Created` status and `content_type` in response
