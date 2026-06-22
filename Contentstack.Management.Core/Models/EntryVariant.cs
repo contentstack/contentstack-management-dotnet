@@ -13,6 +13,9 @@ namespace Contentstack.Management.Core.Models
     {
         internal Stack stack;
         internal string resourcePath;
+        internal string contentTypeUid;
+        internal string entryUid;
+        internal string branchUid;
 
         /// <summary>
         /// Gets the UID of the variant.
@@ -20,7 +23,7 @@ namespace Contentstack.Management.Core.Models
         public string Uid { get; private set; }
 
         #region Constructor
-        internal EntryVariant(Stack stack, string contentTypeUid, string entryUid, string uid = null)
+        internal EntryVariant(Stack stack, string contentTypeUid, string entryUid, string uid = null, string branchUid = null)
         {
             if (stack == null)
             {
@@ -31,6 +34,9 @@ namespace Contentstack.Management.Core.Models
 
             this.stack = stack;
             this.Uid = uid;
+            this.contentTypeUid = contentTypeUid;
+            this.entryUid = entryUid;
+            this.branchUid = branchUid;
 
             string basePath = $"/content_types/{contentTypeUid}/entries/{entryUid}/variants";
             this.resourcePath = uid == null ? basePath : $"{basePath}/{uid}";
@@ -54,6 +60,7 @@ namespace Contentstack.Management.Core.Models
                 collection ?? new ParameterCollection(),
                 resourcePath
             );
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
             return stack.client.InvokeSync(service);
         }
 
@@ -72,6 +79,7 @@ namespace Contentstack.Management.Core.Models
                 collection ?? new ParameterCollection(),
                 resourcePath
             );
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
             return stack.client.InvokeAsync<QueryService, ContentstackResponse>(service);
         }
 
@@ -87,6 +95,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new CreateUpdateService<object>(stack.client.serializer, stack, resourcePath, model, "entry", "PUT", collection: collection);
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
             return stack.client.InvokeSync(service);
         }
 
@@ -102,6 +111,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new CreateUpdateService<object>(stack.client.serializer, stack, resourcePath, model, "entry", "PUT", collection: collection);
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
             return stack.client.InvokeAsync<CreateUpdateService<object>, ContentstackResponse>(service);
         }
 
@@ -138,6 +148,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
             return stack.client.InvokeSync(service);
         }
 
@@ -152,6 +163,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -166,6 +178,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE", collection: collection);
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
             return stack.client.InvokeSync(service);
         }
 
@@ -180,6 +193,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfUidEmpty();
 
             var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE", collection: collection);
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -197,6 +211,130 @@ namespace Contentstack.Management.Core.Models
             {
                 throw new InvalidOperationException("UID is required for this operation.");
             }
+        }
+
+        /// <summary>
+        /// The Publish an entry variant request lets you publish an entry variant either immediately or schedule it for a later date/time.
+        /// </summary>
+        /// <param name="details">Publish/Unpublish details.</param>
+        /// <param name="locale">Locale for entry to be publish</param>
+        /// <param name="apiVersion">API version</param>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            if (details != null)
+            {
+                if (details.Variants == null)
+                {
+                    details.Variants = new System.Collections.Generic.List<PublishVariant>();
+                }
+
+                if (!details.Variants.Exists(v => v.Uid == this.Uid))
+                {
+                    details.Variants.Add(new PublishVariant { Uid = this.Uid, Version = details.Version });
+                }
+            }
+
+            string publishPath = $"/content_types/{this.contentTypeUid}/entries/{this.entryUid}/publish";
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, publishPath, "entry", locale);
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
+            return stack.client.InvokeSync(service, apiVersion: apiVersion);
+        }
+
+        /// <summary>
+        /// The Publish an entry variant request lets you publish an entry variant either immediately or schedule it for a later date/time.
+        /// </summary>
+        /// <param name="details">Publish/Unpublish details.</param>
+        /// <param name="locale">Locale for entry to be publish</param>
+        /// <param name="apiVersion">API version</param>
+        /// <returns>The Task.</returns>
+        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            if (details != null)
+            {
+                if (details.Variants == null)
+                {
+                    details.Variants = new System.Collections.Generic.List<PublishVariant>();
+                }
+
+                if (!details.Variants.Exists(v => v.Uid == this.Uid))
+                {
+                    details.Variants.Add(new PublishVariant { Uid = this.Uid, Version = details.Version });
+                }
+            }
+
+            string publishPath = $"/content_types/{this.contentTypeUid}/entries/{this.entryUid}/publish";
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, publishPath, "entry", locale);
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
+            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
+        }
+
+        /// <summary>
+        /// The Unpublish an entry variant call will unpublish an entry variant at once, and also, gives you the provision to unpublish an entry variant automatically at a later date/time.
+        /// </summary>
+        /// <param name="details">Publish/Unpublish details.</param>
+        /// <param name="locale">Locale for entry to be publish</param>
+        /// <param name="apiVersion">API version</param>
+        /// <returns>The <see cref="ContentstackResponse"/>.</returns>
+        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            if (details != null)
+            {
+                if (details.Variants == null)
+                {
+                    details.Variants = new System.Collections.Generic.List<PublishVariant>();
+                }
+
+                if (!details.Variants.Exists(v => v.Uid == this.Uid))
+                {
+                    details.Variants.Add(new PublishVariant { Uid = this.Uid, Version = details.Version });
+                }
+            }
+
+            string unpublishPath = $"/content_types/{this.contentTypeUid}/entries/{this.entryUid}/unpublish";
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, unpublishPath, "entry", locale);
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
+            return stack.client.InvokeSync(service, apiVersion: apiVersion);
+        }
+
+        /// <summary>
+        /// The Unpublish an entry variant call will unpublish an entry variant at once, and also, gives you the provision to unpublish an entry variant automatically at a later date/time.
+        /// </summary>
+        /// <param name="details">Publish/Unpublish details.</param>
+        /// <param name="locale">Locale for entry to be publish</param>
+        /// <param name="apiVersion">API version</param>
+        /// <returns>The Task.</returns>
+        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+
+            if (details != null)
+            {
+                if (details.Variants == null)
+                {
+                    details.Variants = new System.Collections.Generic.List<PublishVariant>();
+                }
+
+                if (!details.Variants.Exists(v => v.Uid == this.Uid))
+                {
+                    details.Variants.Add(new PublishVariant { Uid = this.Uid, Version = details.Version });
+                }
+            }
+
+            string unpublishPath = $"/content_types/{this.contentTypeUid}/entries/{this.entryUid}/unpublish";
+            var service = new PublishUnpublishService(stack.client.serializer, stack, details, unpublishPath, "entry", locale);
+            if (!string.IsNullOrWhiteSpace(this.branchUid)) { service.Headers["branch"] = this.branchUid; }
+            return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
         #endregion
     }

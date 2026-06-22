@@ -42,12 +42,12 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="uid">The UID of the variant.</param>
         /// <returns>The <see cref="EntryVariant"/></returns>
-        public EntryVariant Variant(string uid = null)
+        public EntryVariant Variant(string uid = null, string branchUid = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            return new EntryVariant(stack, contentTypeUid, Uid, uid);
+            return new EntryVariant(stack, contentTypeUid, Uid, uid, branchUid);
         }
 
         /// <summary>
