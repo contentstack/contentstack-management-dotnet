@@ -292,5 +292,108 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
             Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
         }
+
+        // ── Asset Scanning Tests ──────────────────────────────────────────────────────
+        // These tests verify that the SDK accepts _asset_scan_status param and api_version header
+        // without throwing. MockHttpHandler returns a fixed response for all requests so we only
+        // assert that the SDK wires up the call and returns the expected response object.
+
+        [TestMethod]
+        public void Should_Fetch_Asset_With_ScanStatus_Param()
+        {
+            // Example: asset.add_param("_asset_scan_status", true) → asset.fetch()
+            var collection = new ParameterCollection();
+            collection.Add("_asset_scan_status", true);
+
+            ContentstackResponse response = _stack.Asset(_fixture.Create<string>()).Fetch(collection);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Fetch_Asset_With_ScanStatus_Param_Async()
+        {
+            // Example: asset.add_param("_asset_scan_status", true) → await asset.fetch_async()
+            var collection = new ParameterCollection();
+            collection.Add("_asset_scan_status", true);
+
+            ContentstackResponse response = await _stack.Asset(_fixture.Create<string>()).FetchAsync(collection);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public void Should_Create_Asset_With_ScanStatus_Param()
+        {
+            // Example: asset.add_param("_asset_scan_status", true) → asset.upload(file)
+            var collection = new ParameterCollection();
+            collection.Add("_asset_scan_status", true);
+
+            ContentstackResponse response = _stack.Asset().Create(_assetModel, collection);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Create_Asset_With_ScanStatus_Param_Async()
+        {
+            // Example: asset.add_param("_asset_scan_status", true) → await asset.upload_async(file)
+            var collection = new ParameterCollection();
+            collection.Add("_asset_scan_status", true);
+
+            ContentstackResponse response = await _stack.Asset().CreateAsync(_assetModel, collection);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public void Should_Update_Asset_With_ScanStatus_Param()
+        {
+            // Example: asset.add_param("_asset_scan_status", true) → asset.update(model)
+            var collection = new ParameterCollection();
+            collection.Add("_asset_scan_status", true);
+
+            ContentstackResponse response = _stack.Asset(_fixture.Create<string>()).Update(_assetModel, collection);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public void Should_Publish_Asset_With_ApiVersion_Header()
+        {
+            // Example: asset.add_header("api_version", "3.2") → asset.publish(details)
+            ContentstackResponse response = _stack.Asset(_fixture.Create<string>())
+                .Publish(_fixture.Create<PublishUnpublishDetails>(), "3.2");
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Publish_Asset_With_ApiVersion_Header_Async()
+        {
+            // Example: asset.add_header("api_version", "3.2") → await asset.publish_async(details)
+            ContentstackResponse response = await _stack.Asset(_fixture.Create<string>())
+                .PublishAsync(_fixture.Create<PublishUnpublishDetails>(), "3.2");
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
+
+        [TestMethod]
+        public void Should_Publish_Asset_Without_ApiVersion_Header()
+        {
+            // Example: asset.publish(details)  — no api_version header, default SDK behavior
+            ContentstackResponse response = _stack.Asset(_fixture.Create<string>())
+                .Publish(_fixture.Create<PublishUnpublishDetails>());
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToJsonString(), response.OpenJsonObjectResponse().ToJsonString());
+        }
     }
 }
