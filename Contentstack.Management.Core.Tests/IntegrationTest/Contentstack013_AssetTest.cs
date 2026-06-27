@@ -4471,7 +4471,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         #endregion
 
         #region Asset Scanning Tests
-        // These tests validate the _asset_scan_status query param and api_version header.
+        // These tests validate the include_asset_scan_status query param and api_version header.
         // Assets created here are intentionally NOT added to _testAssetUIDs so they remain
         // visible in the Contentstack stack UI after the test run for manual verification.
         // The shared publish environment (_scanTestPublishEnvUid) is created in ClassInitialize
@@ -4480,10 +4480,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         // ── Happy Path ─────────────────────────────────────────────────────────────────
 
         /// <summary>
-        /// Happy path: GET /v3/assets?_asset_scan_status=true
+        /// Happy path: GET /v3/assets?include_asset_scan_status=true
         /// Verifies the SDK sends the param and the API accepts it.
-        /// If the response contains assets, each _asset_scan_status value must be a valid enum.
-        /// Example (Python equiv): asset.add_param("_asset_scan_status", True); asset.find()
+        /// If the response contains assets, each include_asset_scan_status value must be a valid enum.
+        /// Example (Python equiv): asset.add_param("include_asset_scan_status", True); asset.find()
         /// </summary>
         [TestMethod]
         [DoNotParallelize]
@@ -4493,12 +4493,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var collection = new ParameterCollection();
-                collection.Add("_asset_scan_status", true);
+                collection.Add("include_asset_scan_status", true);
 
                 ContentstackResponse response = _stack.Asset().Query().Find(collection);
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "FindAssets_ScanStatus_Success", "FindAssets_ScanStatus_Success");
-                Console.WriteLine($"✅ Find assets with _asset_scan_status param: HTTP {(int)response.StatusCode}");
+                Console.WriteLine($"✅ Find assets with include_asset_scan_status param: HTTP {(int)response.StatusCode}");
 
                 var responseObject = response.OpenJsonObjectResponse();
                 var assets = responseObject["assets"];
@@ -4525,10 +4525,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         }
 
         /// <summary>
-        /// Happy path: GET /v3/assets/{uid}?_asset_scan_status=true
+        /// Happy path: GET /v3/assets/{uid}?include_asset_scan_status=true
         /// Creates an asset, fetches it with the scan param, validates the scan status field.
         /// Asset is NOT cleaned up — remains in stack UI for verification.
-        /// Example (Python equiv): asset.add_param("_asset_scan_status", True); asset.fetch()
+        /// Example (Python equiv): asset.add_param("include_asset_scan_status", True); asset.fetch()
         /// </summary>
         [TestMethod]
         [DoNotParallelize]
@@ -4547,13 +4547,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsNotNull(assetUID, "FetchScan_AssetUID");
                 Console.WriteLine($"✅ Asset created (not in cleanup list): uid={assetUID}");
 
-                // Step 2: Fetch with _asset_scan_status=true
+                // Step 2: Fetch with include_asset_scan_status=true
                 var collection = new ParameterCollection();
-                collection.Add("_asset_scan_status", true);
+                collection.Add("include_asset_scan_status", true);
                 ContentstackResponse fetchResponse = _stack.Asset(assetUID).Fetch(collection);
 
                 AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "FetchScan_Success", "FetchScan_Success");
-                Console.WriteLine($"✅ Fetch with _asset_scan_status param: HTTP {(int)fetchResponse.StatusCode}");
+                Console.WriteLine($"✅ Fetch with include_asset_scan_status param: HTTP {(int)fetchResponse.StatusCode}");
 
                 var scanStatus = fetchResponse.OpenJsonObjectResponse()["asset"]?["_asset_scan_status"]?.ToString();
                 if (scanStatus != null)
@@ -4572,9 +4572,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         }
 
         /// <summary>
-        /// Happy path: POST /v3/assets with ParameterCollection containing _asset_scan_status.
+        /// Happy path: POST /v3/assets with ParameterCollection containing include_asset_scan_status.
         /// SDK must accept the param without throwing. Asset is NOT cleaned up.
-        /// Example (Python equiv): asset.add_param("_asset_scan_status", True); asset.upload(file)
+        /// Example (Python equiv): asset.add_param("include_asset_scan_status", True); asset.upload(file)
         /// </summary>
         [TestMethod]
         [DoNotParallelize]
@@ -4585,7 +4585,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var collection = new ParameterCollection();
-                collection.Add("_asset_scan_status", true);
+                collection.Add("include_asset_scan_status", true);
 
                 var asset = new AssetModel("scanUploadTest.json", path, "application/json",
                     title: "Scan Upload Test", description: "scan status upload test", parentUID: null, tags: "scan,upload");
@@ -4594,7 +4594,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "UploadScan_Created", "UploadScan_Created");
                 var assetUID = response.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
                 AssertLogger.IsNotNull(assetUID, "UploadScan_AssetUID");
-                Console.WriteLine($"✅ Upload with _asset_scan_status param accepted by SDK: uid={assetUID}");
+                Console.WriteLine($"✅ Upload with include_asset_scan_status param accepted by SDK: uid={assetUID}");
             }
             catch (Exception e)
             {
@@ -4695,7 +4695,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         // ── Negative Path ──────────────────────────────────────────────────────────────
 
         /// <summary>
-        /// Negative path: GET /v3/assets/{uid} WITHOUT _asset_scan_status param.
+        /// Negative path: GET /v3/assets/{uid} WITHOUT include_asset_scan_status param.
         /// Verifies the field is absent from the response when param is not sent.
         /// Example (Python equiv): asset.fetch()  — no add_param call
         /// </summary>
@@ -4715,7 +4715,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var assetUID = createResponse.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
                 AssertLogger.IsNotNull(assetUID, "FetchNoParam_AssetUID");
 
-                // Step 2: Fetch WITHOUT _asset_scan_status param — field must be absent
+                // Step 2: Fetch WITHOUT include_asset_scan_status param — field must be absent
                 ContentstackResponse fetchResponse = _stack.Asset(assetUID).Fetch();
 
                 AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "FetchNoParam_Success", "FetchNoParam_Success");
@@ -4733,7 +4733,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         }
 
         /// <summary>
-        /// Negative path: GET /v3/assets WITHOUT _asset_scan_status param.
+        /// Negative path: GET /v3/assets WITHOUT include_asset_scan_status param.
         /// Verifies the field is absent from every asset in the list response.
         /// Example (Python equiv): stack.assets().find()  — no add_param call
         /// </summary>
@@ -4744,7 +4744,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "FindAssetsWithoutScanStatusParamFieldAbsent");
             try
             {
-                // No ParameterCollection — _asset_scan_status must not appear in any asset
+                // No ParameterCollection — include_asset_scan_status must not appear in any asset
                 ContentstackResponse response = _stack.Asset().Query().Find();
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "FindNoParam_Success", "FindNoParam_Success");
@@ -4770,7 +4770,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         /// <summary>
         /// Negative path: POST /v3/assets WITHOUT ParameterCollection.
-        /// Verifies _asset_scan_status is absent from the create response when param is not sent.
+        /// Verifies include_asset_scan_status is absent from the create response when param is not sent.
         /// Asset is NOT cleaned up — remains in stack UI for verification.
         /// Example (Python equiv): stack.assets().upload(file)  — no add_param call
         /// </summary>
@@ -4782,7 +4782,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
             try
             {
-                // No ParameterCollection — _asset_scan_status must not appear in response
+                // No ParameterCollection — include_asset_scan_status must not appear in response
                 var asset = new AssetModel("scanUploadNegativeTest.json", path, "application/json",
                     title: "Scan Upload Negative Test", description: "no scan param upload test", parentUID: null, tags: "scan,upload,negative");
                 ContentstackResponse response = _stack.Asset().Create(asset);
