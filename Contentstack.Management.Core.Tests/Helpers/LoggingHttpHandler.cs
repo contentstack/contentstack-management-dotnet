@@ -16,9 +16,11 @@ namespace Contentstack.Management.Core.Tests.Helpers
         protected override async Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            DateTime requestedAt = DateTime.UtcNow;
+
             try
             {
-                await CaptureRequest(request);
+                await CaptureRequest(request, requestedAt);
             }
             catch
             {
@@ -26,10 +28,11 @@ namespace Contentstack.Management.Core.Tests.Helpers
             }
 
             var response = await base.SendAsync(request, cancellationToken);
+            DateTime respondedAt = DateTime.UtcNow;
 
             try
             {
-                await CaptureResponse(response);
+                await CaptureResponse(response, requestedAt, respondedAt);
             }
             catch
             {
@@ -39,7 +42,7 @@ namespace Contentstack.Management.Core.Tests.Helpers
             return response;
         }
 
-        private async Task CaptureRequest(HttpRequestMessage request)
+        private async Task CaptureRequest(HttpRequestMessage request, DateTime requestedAt)
         {
             var headers = new Dictionary<string, string>();
             foreach (var h in request.Headers)
@@ -63,11 +66,12 @@ namespace Contentstack.Management.Core.Tests.Helpers
                 headers: headers,
                 body: body ?? "",
                 curlCommand: curl,
-                sdkMethod: ""
+                sdkMethod: "",
+                timestamp: requestedAt
             );
         }
 
-        private async Task CaptureResponse(HttpResponseMessage response)
+        private async Task CaptureResponse(HttpResponseMessage response, DateTime requestedAt, DateTime respondedAt)
         {
             var headers = new Dictionary<string, string>();
             foreach (var h in response.Headers)
@@ -87,7 +91,9 @@ namespace Contentstack.Management.Core.Tests.Helpers
                 statusCode: (int)response.StatusCode,
                 statusText: response.ReasonPhrase ?? response.StatusCode.ToString(),
                 headers: headers,
-                body: body ?? ""
+                body: body ?? "",
+                timestamp: respondedAt,
+                durationMs: (long)(respondedAt - requestedAt).TotalMilliseconds
             );
         }
 

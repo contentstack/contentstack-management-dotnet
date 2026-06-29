@@ -22,7 +22,9 @@ packages/
 */TestResults/*
 */app.config
 */mono**
-*/appSettings.json
+*/appsettings.json
+*/appsettings.template.json
+SDK_METHOD_COVERAGE_MAP.md
 api_referece/*
 .sonarqube/
 *.html

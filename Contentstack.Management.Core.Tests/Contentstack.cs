@@ -16,6 +16,14 @@ using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Tests
 {
+    /// <summary>Holds OAuth credentials from appsettings.json Contentstack:OAuth section.</summary>
+    public class OAuthConfig
+    {
+        public string ClientId { get; set; }
+        public string AppId { get; set; }
+        public string RedirectUri { get; set; }
+    }
+
     public class Contentstack
     {
         private static readonly Lazy<IConfigurationRoot>
@@ -43,10 +51,74 @@ namespace Contentstack.Management.Core.Tests
             return Config.GetSection("Contentstack:MfaSecret").Value;
         });
 
-        public static IConfigurationRoot Config{ get { return config.Value; } }
+        // ── New optional config keys ─────────────────────────────────────────
+
+        private static readonly Lazy<string> memberEmail =
+            new Lazy<string>(() => Config.GetSection("Contentstack:MemberEmail").Value);
+
+        private static readonly Lazy<string> tfaEmail =
+            new Lazy<string>(() => Config.GetSection("Contentstack:TfaEmail").Value);
+
+        private static readonly Lazy<string> tfaPassword =
+            new Lazy<string>(() => Config.GetSection("Contentstack:TfaPassword").Value);
+
+        private static readonly Lazy<OAuthConfig> oAuthConfig =
+            new Lazy<OAuthConfig>(() =>
+                Config.GetSection("Contentstack:OAuth").Get<OAuthConfig>() ?? new OAuthConfig());
+
+        private static readonly Lazy<string> personalizeHost =
+            new Lazy<string>(() =>
+                Config.GetSection("Contentstack:PersonalizeHost").Value
+                ?? "personalize-api.contentstack.com");
+
+        private static readonly Lazy<bool> deleteDynamicResources =
+            new Lazy<bool>(() =>
+                !string.Equals(
+                    Config.GetSection("Contentstack:DeleteDynamicResources").Value,
+                    "false", StringComparison.OrdinalIgnoreCase));
+
+        private static readonly Lazy<bool> damV2Enabled =
+            new Lazy<bool>(() =>
+                string.Equals(
+                    Config.GetSection("Contentstack:DamV2Enabled").Value,
+                    "true", StringComparison.OrdinalIgnoreCase));
+
+        private static readonly Lazy<string> amOrgUid =
+            new Lazy<string>(() => Config.GetSection("Contentstack:AmOrgUid").Value);
+
+        // ── Public accessors ─────────────────────────────────────────────────
+
+        public static IConfigurationRoot Config { get { return config.Value; } }
         public static NetworkCredential Credential { get { return credential.Value; } }
         public static OrganizationModel Organization { get { return organization.Value; } }
         public static string MfaSecret { get { return mfaSecret.Value; } }
+
+        /// <summary>Secondary user email for team / stack-sharing tests.</summary>
+        public static string MemberEmail => memberEmail.Value;
+
+        /// <summary>Email of a 2FA-enabled account for testing the TFA login flow.</summary>
+        public static string TfaEmail => tfaEmail.Value;
+
+        /// <summary>Password matching TfaEmail.</summary>
+        public static string TfaPassword => tfaPassword.Value;
+
+        /// <summary>OAuth app credentials (ClientId, AppId, RedirectUri).</summary>
+        public static OAuthConfig OAuth => oAuthConfig.Value;
+
+        /// <summary>Personalize API host; defaults to personalize-api.contentstack.com.</summary>
+        public static string PersonalizeHost => personalizeHost.Value;
+
+        /// <summary>
+        /// When true (default) the dynamically created test stack is deleted after the run.
+        /// Set Contentstack:DeleteDynamicResources=false in appsettings.json to preserve it.
+        /// </summary>
+        public static bool DeleteDynamicResources => deleteDynamicResources.Value;
+
+        /// <summary>Enables DAM 2.0 / asset-scan-status tests.</summary>
+        public static bool DamV2Enabled => damV2Enabled.Value;
+
+        /// <summary>Org UID for AM (Advanced Managed) org tests.</summary>
+        public static string AmOrgUid => amOrgUid.Value;
 
         public static StackModel Stack { get; set; }
 
