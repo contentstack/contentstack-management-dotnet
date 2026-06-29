@@ -8,7 +8,7 @@ namespace Contentstack.Management.Core.Models.Token
         internal ManagementToken(Stack stack, string uid = null)
           : base(stack, "token", uid)
         {
-            resourcePath = uid == null ? "/delivery_tokens" : $"/delivery_tokens/{uid}";
+            resourcePath = uid == null ? "/management_tokens" : $"/management_tokens/{uid}";
         }
 
         /// <summary>
