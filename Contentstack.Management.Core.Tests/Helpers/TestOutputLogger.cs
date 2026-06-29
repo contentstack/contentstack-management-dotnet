@@ -23,7 +23,8 @@ namespace Contentstack.Management.Core.Tests.Helpers
 
         public static void LogHttpRequest(string method, string url,
             IDictionary<string, string> headers, string body,
-            string curlCommand, string sdkMethod)
+            string curlCommand, string sdkMethod,
+            DateTime? timestamp = null)
         {
             Emit(new Dictionary<string, object>
             {
@@ -33,12 +34,14 @@ namespace Contentstack.Management.Core.Tests.Helpers
                 { "headers", headers ?? new Dictionary<string, string>() },
                 { "body", body ?? "" },
                 { "curlCommand", curlCommand ?? "" },
-                { "sdkMethod", sdkMethod ?? "" }
+                { "sdkMethod", sdkMethod ?? "" },
+                { "timestamp", (timestamp ?? DateTime.UtcNow).ToString("yyyy-MM-ddTHH:mm:ss.fffZ") }
             });
         }
 
         public static void LogHttpResponse(int statusCode, string statusText,
-            IDictionary<string, string> headers, string body)
+            IDictionary<string, string> headers, string body,
+            DateTime? timestamp = null, long durationMs = 0)
         {
             Emit(new Dictionary<string, object>
             {
@@ -46,7 +49,9 @@ namespace Contentstack.Management.Core.Tests.Helpers
                 { "statusCode", statusCode },
                 { "statusText", statusText ?? "" },
                 { "headers", headers ?? new Dictionary<string, string>() },
-                { "body", body ?? "" }
+                { "body", body ?? "" },
+                { "timestamp", (timestamp ?? DateTime.UtcNow).ToString("yyyy-MM-ddTHH:mm:ss.fffZ") },
+                { "durationMs", durationMs }
             });
         }
 

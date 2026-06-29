@@ -364,14 +364,17 @@ class IntegrationTestReportGenerator:
                         'headers': obj.get('headers', {}),
                         'body': obj.get('body', ''),
                         'curl': obj.get('curlCommand', ''),
-                        'sdkMethod': obj.get('sdkMethod', '')
+                        'sdkMethod': obj.get('sdkMethod', ''),
+                        'timestamp': obj.get('timestamp', '')
                     })
                 elif t == 'HTTP_RESPONSE':
                     data['responses'].append({
                         'statusCode': obj.get('statusCode', 0),
                         'statusText': obj.get('statusText', ''),
                         'headers': obj.get('headers', {}),
-                        'body': obj.get('body', '')
+                        'body': obj.get('body', ''),
+                        'timestamp': obj.get('timestamp', ''),
+                        'durationMs': obj.get('durationMs', 0)
                     })
                 elif t == 'CONTEXT':
                     data['context'].append({
@@ -577,6 +580,8 @@ class IntegrationTestReportGenerator:
             margin-top: 10px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-break: break-all;
         }}
         .curl-section {{ background: #f0f7ff; border-left: 3px solid #007bff; }}
+        .ts-label {{ font-size: 0.78em; color: #888; margin-left: 10px; white-space: nowrap; font-family: 'Consolas', 'Monaco', monospace; }}
+        .dur-label {{ font-size: 0.82em; font-weight: 600; margin-left: 10px; color: #6f42c1; white-space: nowrap; }}
         .copy-btn {{ background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-top: 5px; transition: background 0.2s; }}
         .copy-btn:hover {{ background: #0056b3; }}
         .show-more-btn {{ background: #6c757d; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8em; margin-top: 5px; }}
@@ -833,10 +838,13 @@ class IntegrationTestReportGenerator:
                     sdk_badge = ''
                     if req.get('sdkMethod'):
                         sdk_badge = f'<div class="sdk-method-badge">SDK Method: <code>{self._esc(req["sdkMethod"])}</code></div>'
+                    ts_badge = ''
+                    if req.get('timestamp'):
+                        ts_badge = f'<span class="ts-label">&#128336; {self._esc(req["timestamp"])}</span>'
                     html += f"""
 <div class="request-block">
     {sdk_badge}
-    <div class="request-summary"><span class="http-method">{self._esc(req['method'])}</span><span class="http-url">{self._esc(req['url'])}</span></div>"""
+    <div class="request-summary"><span class="http-method">{self._esc(req['method'])}</span><span class="http-url">{self._esc(req['url'])}</span>{ts_badge}</div>"""
                     if req.get('headers'):
                         hdr_text = '\n'.join(f"{k}: {v}" for k, v in req['headers'].items())
                         html += f"""
@@ -856,9 +864,12 @@ class IntegrationTestReportGenerator:
                 if res:
                     sc = res.get('statusCode', 0)
                     status_cls = 'rs-success' if 200 <= sc < 300 else 'rs-error'
+                    dur_ms = res.get('durationMs', 0)
+                    dur_badge = f'<span class="dur-label">&#9201; {dur_ms}ms</span>' if dur_ms else ''
+                    ts_badge = f'<span class="ts-label">&#128336; {self._esc(res["timestamp"])}</span>' if res.get('timestamp') else ''
                     html += f"""
 <div class="response-block">
-    <div class="response-summary {status_cls}"><span class="http-status">{sc} {self._esc(res.get('statusText', ''))}</span></div>"""
+    <div class="response-summary {status_cls}"><span class="http-status">{sc} {self._esc(res.get('statusText', ''))}</span>{dur_badge}{ts_badge}</div>"""
                     if res.get('headers'):
                         hdr_text = '\n'.join(f"{k}: {v}" for k, v in res['headers'].items())
                         html += f"""
