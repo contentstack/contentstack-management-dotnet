@@ -16,7 +16,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --file=Contentstack.Management.Core/obj/project.assets.json --fail-on=all
+          args: --file=Contentstack.Management.Core/contentstack.management.core.csproj --fail-on=all
           json: true
         continue-on-error: true
       - uses: contentstack/sca-policy@main
