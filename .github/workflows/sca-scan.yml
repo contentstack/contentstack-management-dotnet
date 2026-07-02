@@ -8,15 +8,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
-      - name: Run Dotnet Restore
-        run: |
-          dotnet restore
+      - uses: snyk/actions/setup@master
+        id: snyk
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/dotnet@master
+        run: snyk test --all-projects --fail-on=all --json > results.json
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --all-projects --fail-on=all --skip-unresolved
-          json: true
         continue-on-error: true
       - uses: contentstack/sca-policy@main
