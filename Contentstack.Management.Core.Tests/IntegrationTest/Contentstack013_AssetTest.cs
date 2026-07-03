@@ -26,11 +26,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private static List<string> _testAssetUIDs = new List<string>();
         private static List<string> _testFolderUIDs = new List<string>();
         private static List<string> _testTemporaryFiles = new List<string>();
+        private static string _scanTestPublishEnvUid;
+        private static readonly string[] ValidScanStatuses = { "pending", "clean", "quarantined", "not_scanned" };
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
             _client = Contentstack.CreateAuthenticatedClient();
+            try
+            {
+                var stack = _client.Stack(StackResponse.getStack(_client.serializer).Stack.APIKey);
+                EnsureScanTestPublishEnvironment(stack);
+            }
+            catch { /* non-fatal — publish scan tests will skip gracefully if env is null */ }
         }
 
         [ClassCleanup]
@@ -38,6 +46,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             CleanupTestAssets(_testAssetUIDs);
             CleanupTemporaryFiles();
+            if (!string.IsNullOrEmpty(_scanTestPublishEnvUid))
+            {
+                try
+                {
+                    var stack = _client.Stack(StackResponse.getStack(_client.serializer).Stack.APIKey);
+                    stack.Environment(_scanTestPublishEnvUid).Delete();
+                }
+                catch { }
+            }
             try { _client?.Logout(); } catch { }
             _client = null;
         }
@@ -301,6 +318,26 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         /// <summary>
         /// Cleans up test assets to avoid polluting the stack
         /// </summary>
+        /// <summary>
+        /// Creates a shared environment used by asset scan publish tests (Test109, Test110).
+        /// Called once from ClassInitialize; result stored in _scanTestPublishEnvUid.
+        /// Mirrors the EnsureBulkTestEnvironment() pattern in Contentstack015_BulkOperationTest.
+        /// </summary>
+        private static void EnsureScanTestPublishEnvironment(Stack stack)
+        {
+            var model = new EnvironmentModel
+            {
+                Name = "asset_scan_test_env",
+                Urls = new List<LocalesUrl>
+                {
+                    new LocalesUrl { Url = "https://asset-scan-test.example.com", Locale = "en-us" }
+                }
+            };
+            ContentstackResponse response = stack.Environment().Create(model);
+            if (response.IsSuccessStatusCode)
+                _scanTestPublishEnvUid = response.OpenJsonObjectResponse()["environment"]?["uid"]?.ToString();
+        }
+
         private static void CleanupTestAssets(List<string> assetUIDs)
         {
             if (_client == null) return;
@@ -4428,6 +4465,341 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             catch (Exception e)
             {
                 AssertLogger.Fail("Update image asset failed", e.Message);
+            }
+        }
+
+        #endregion
+
+        #region Asset Scanning Tests
+        // These tests validate the include_asset_scan_status query param and api_version header.
+        // Assets created here are intentionally NOT added to _testAssetUIDs so they remain
+        // visible in the Contentstack stack UI after the test run for manual verification.
+        // The shared publish environment (_scanTestPublishEnvUid) is created in ClassInitialize
+        // and deleted in ClassCleanup.
+
+        // ── Happy Path ─────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Happy path: GET /v3/assets?include_asset_scan_status=true
+        /// Verifies the SDK sends the param and the API accepts it.
+        /// If the response contains assets, each include_asset_scan_status value must be a valid enum.
+        /// Example (Python equiv): asset.add_param("include_asset_scan_status", True); asset.find()
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test106_Should_Find_Assets_With_ScanStatus_Param()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FindAssetsWithScanStatusParam");
+            try
+            {
+                var collection = new ParameterCollection();
+                collection.Add("include_asset_scan_status", true);
+
+                ContentstackResponse response = _stack.Asset().Query().Find(collection);
+
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "FindAssets_ScanStatus_Success", "FindAssets_ScanStatus_Success");
+                Console.WriteLine($"✅ Find assets with include_asset_scan_status param: HTTP {(int)response.StatusCode}");
+
+                var responseObject = response.OpenJsonObjectResponse();
+                var assets = responseObject["assets"];
+                if (assets != null)
+                {
+                    foreach (var asset in assets.AsArray())
+                    {
+                        var scanStatus = asset?["_asset_scan_status"]?.ToString();
+                        if (scanStatus != null)
+                        {
+                            AssertLogger.IsTrue(
+                                Array.Exists(ValidScanStatuses, s => s == scanStatus),
+                                $"Expected valid scan status, got: {scanStatus}",
+                                "FindAssets_ScanStatus_ValidEnum");
+                        }
+                    }
+                    Console.WriteLine($"✅ All _asset_scan_status values are valid enums");
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Find assets with scan status param failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Happy path: GET /v3/assets/{uid}?include_asset_scan_status=true
+        /// Creates an asset, fetches it with the scan param, validates the scan status field.
+        /// Asset is NOT cleaned up — remains in stack UI for verification.
+        /// Example (Python equiv): asset.add_param("include_asset_scan_status", True); asset.fetch()
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test107_Should_Fetch_Asset_With_ScanStatus_Param()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FetchAssetWithScanStatusParam");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                // Step 1: Create asset
+                var asset = new AssetModel("scanFetchTest.json", path, "application/json",
+                    title: "Scan Fetch Test", description: "scan status fetch test", parentUID: null, tags: "scan,fetch");
+                ContentstackResponse createResponse = _stack.Asset().Create(asset);
+                AssertLogger.IsTrue(createResponse.IsSuccessStatusCode, "FetchScan_AssetCreated", "FetchScan_AssetCreated");
+                var assetUID = createResponse.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "FetchScan_AssetUID");
+                Console.WriteLine($"✅ Asset created (not in cleanup list): uid={assetUID}");
+
+                // Step 2: Fetch with include_asset_scan_status=true
+                var collection = new ParameterCollection();
+                collection.Add("include_asset_scan_status", true);
+                ContentstackResponse fetchResponse = _stack.Asset(assetUID).Fetch(collection);
+
+                AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "FetchScan_Success", "FetchScan_Success");
+                Console.WriteLine($"✅ Fetch with include_asset_scan_status param: HTTP {(int)fetchResponse.StatusCode}");
+
+                var scanStatus = fetchResponse.OpenJsonObjectResponse()["asset"]?["_asset_scan_status"]?.ToString();
+                if (scanStatus != null)
+                {
+                    AssertLogger.IsTrue(
+                        Array.Exists(ValidScanStatuses, s => s == scanStatus),
+                        $"Expected valid scan status, got: {scanStatus}",
+                        "FetchScan_ValidEnum");
+                    Console.WriteLine($"✅ _asset_scan_status = {scanStatus}");
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Fetch asset with scan status param failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Happy path: POST /v3/assets with ParameterCollection containing include_asset_scan_status.
+        /// SDK must accept the param without throwing. Asset is NOT cleaned up.
+        /// Example (Python equiv): asset.add_param("include_asset_scan_status", True); asset.upload(file)
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test108_Should_Upload_Asset_With_ScanStatus_Param()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadAssetWithScanStatusParam");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                var collection = new ParameterCollection();
+                collection.Add("include_asset_scan_status", true);
+
+                var asset = new AssetModel("scanUploadTest.json", path, "application/json",
+                    title: "Scan Upload Test", description: "scan status upload test", parentUID: null, tags: "scan,upload");
+                ContentstackResponse response = _stack.Asset().Create(asset, collection);
+
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "UploadScan_Created", "UploadScan_Created");
+                var assetUID = response.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "UploadScan_AssetUID");
+                Console.WriteLine($"✅ Upload with include_asset_scan_status param accepted by SDK: uid={assetUID}");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Upload asset with scan status param failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Happy path: POST /v3/assets/{uid}/publish with api_version: 3.2 header.
+        /// Uses shared environment created in ClassInitialize.
+        /// Example (Python equiv): asset.add_header("api_version", "3.2"); asset.publish(data)
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test109_Should_Publish_Asset_With_ApiVersion_Header()
+        {
+            TestOutputLogger.LogContext("TestScenario", "PublishAssetWithApiVersionHeader");
+            if (string.IsNullOrEmpty(_scanTestPublishEnvUid))
+            {
+                Console.WriteLine("⚠️ Skipping Test109 — shared publish environment was not created in ClassInitialize");
+                return;
+            }
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                // Step 1: Create asset (not in cleanup list — stays visible in UI)
+                var asset = new AssetModel("scanPublishApiVersionTest.json", path, "application/json",
+                    title: "Scan Publish ApiVersion Test", description: "api version header test", parentUID: null, tags: "scan,publish,apiversion");
+                ContentstackResponse createResponse = _stack.Asset().Create(asset);
+                AssertLogger.IsTrue(createResponse.IsSuccessStatusCode, "PublishApiVersion_AssetCreated", "PublishApiVersion_AssetCreated");
+                var assetUID = createResponse.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "PublishApiVersion_AssetUID");
+                Console.WriteLine($"✅ Asset created: uid={assetUID}");
+
+                // Step 2: Publish with api_version: 3.2 to the shared environment
+                var publishDetails = new PublishUnpublishDetails
+                {
+                    Locales = new List<string> { "en-us" },
+                    Environments = new List<string> { _scanTestPublishEnvUid },
+                    Version = 1
+                };
+                ContentstackResponse publishResponse = _stack.Asset(assetUID).Publish(publishDetails, "3.2");
+
+                AssertLogger.IsTrue(publishResponse.IsSuccessStatusCode, "PublishApiVersion_Success", "PublishApiVersion_Success");
+                Console.WriteLine($"✅ Asset published with api_version: 3.2, uid={assetUID}");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Publish asset with api_version header failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Happy path: POST /v3/assets/{uid}/publish WITHOUT api_version header (default SDK behavior).
+        /// Verifies SDK works correctly when the optional header is omitted.
+        /// Example (Python equiv): asset.publish(data)  — no add_header call
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test110_Should_Publish_Asset_Without_ApiVersion_Header()
+        {
+            TestOutputLogger.LogContext("TestScenario", "PublishAssetWithoutApiVersionHeader");
+            if (string.IsNullOrEmpty(_scanTestPublishEnvUid))
+            {
+                Console.WriteLine("⚠️ Skipping Test110 — shared publish environment was not created in ClassInitialize");
+                return;
+            }
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                // Step 1: Create asset (not in cleanup list — stays visible in UI)
+                var asset = new AssetModel("scanPublishNoApiVersionTest.json", path, "application/json",
+                    title: "Scan Publish No ApiVersion Test", description: "no api version header test", parentUID: null, tags: "scan,publish,noapiversion");
+                ContentstackResponse createResponse = _stack.Asset().Create(asset);
+                AssertLogger.IsTrue(createResponse.IsSuccessStatusCode, "PublishNoApiVersion_AssetCreated", "PublishNoApiVersion_AssetCreated");
+                var assetUID = createResponse.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "PublishNoApiVersion_AssetUID");
+                Console.WriteLine($"✅ Asset created: uid={assetUID}");
+
+                // Step 2: Publish WITHOUT api_version header — omitting the optional param
+                var publishDetails = new PublishUnpublishDetails
+                {
+                    Locales = new List<string> { "en-us" },
+                    Environments = new List<string> { _scanTestPublishEnvUid },
+                    Version = 1
+                };
+                ContentstackResponse publishResponse = _stack.Asset(assetUID).Publish(publishDetails);
+
+                AssertLogger.IsTrue(publishResponse.IsSuccessStatusCode, "PublishNoApiVersion_Success", "PublishNoApiVersion_Success");
+                Console.WriteLine($"✅ Asset published without api_version header, uid={assetUID}");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Publish asset without api_version header failed", e.Message);
+            }
+        }
+
+        // ── Negative Path ──────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Negative path: GET /v3/assets/{uid} WITHOUT include_asset_scan_status param.
+        /// Verifies the field is absent from the response when param is not sent.
+        /// Example (Python equiv): asset.fetch()  — no add_param call
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test111_Should_Fetch_Asset_Without_ScanStatus_Param_Field_Absent()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FetchAssetWithoutScanStatusParamFieldAbsent");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                // Step 1: Create asset (not in cleanup list — stays visible in UI)
+                var asset = new AssetModel("scanFetchNegativeTest.json", path, "application/json",
+                    title: "Scan Fetch Negative Test", description: "no scan param test", parentUID: null, tags: "scan,negative");
+                ContentstackResponse createResponse = _stack.Asset().Create(asset);
+                AssertLogger.IsTrue(createResponse.IsSuccessStatusCode, "FetchNoParam_AssetCreated", "FetchNoParam_AssetCreated");
+                var assetUID = createResponse.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "FetchNoParam_AssetUID");
+
+                // Step 2: Fetch WITHOUT include_asset_scan_status param — field must be absent
+                ContentstackResponse fetchResponse = _stack.Asset(assetUID).Fetch();
+
+                AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "FetchNoParam_Success", "FetchNoParam_Success");
+                var assetNode = fetchResponse.OpenJsonObjectResponse()["asset"];
+                AssertLogger.IsTrue(
+                    assetNode?["_asset_scan_status"] == null,
+                    "_asset_scan_status must be absent when param is not sent",
+                    "FetchNoParam_FieldAbsent");
+                Console.WriteLine($"✅ _asset_scan_status correctly absent when param not sent, uid={assetUID}");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Fetch asset without scan status param (field absent) failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Negative path: GET /v3/assets WITHOUT include_asset_scan_status param.
+        /// Verifies the field is absent from every asset in the list response.
+        /// Example (Python equiv): stack.assets().find()  — no add_param call
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test112_Should_Find_Assets_Without_ScanStatus_Param_Field_Absent()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FindAssetsWithoutScanStatusParamFieldAbsent");
+            try
+            {
+                // No ParameterCollection — include_asset_scan_status must not appear in any asset
+                ContentstackResponse response = _stack.Asset().Query().Find();
+
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "FindNoParam_Success", "FindNoParam_Success");
+
+                var assets = response.OpenJsonObjectResponse()["assets"];
+                if (assets != null)
+                {
+                    foreach (var asset in assets.AsArray())
+                    {
+                        AssertLogger.IsTrue(
+                            asset?["_asset_scan_status"] == null,
+                            $"_asset_scan_status must be absent when param is not sent (uid={asset?["uid"]})",
+                            "FindNoParam_FieldAbsent");
+                    }
+                    Console.WriteLine($"✅ _asset_scan_status correctly absent in all assets when param not sent");
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Find assets without scan status param (field absent) failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Negative path: POST /v3/assets WITHOUT ParameterCollection.
+        /// Verifies include_asset_scan_status is absent from the create response when param is not sent.
+        /// Asset is NOT cleaned up — remains in stack UI for verification.
+        /// Example (Python equiv): stack.assets().upload(file)  — no add_param call
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test113_Should_Upload_Asset_Without_ScanStatus_Param_Field_Absent()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadAssetWithoutScanStatusParamFieldAbsent");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                // No ParameterCollection — include_asset_scan_status must not appear in response
+                var asset = new AssetModel("scanUploadNegativeTest.json", path, "application/json",
+                    title: "Scan Upload Negative Test", description: "no scan param upload test", parentUID: null, tags: "scan,upload,negative");
+                ContentstackResponse response = _stack.Asset().Create(asset);
+
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "UploadNoParam_Created", "UploadNoParam_Created");
+                var assetNode = response.OpenJsonObjectResponse()["asset"];
+                AssertLogger.IsNotNull(assetNode, "UploadNoParam_AssetNode");
+                AssertLogger.IsTrue(
+                    assetNode["_asset_scan_status"] == null,
+                    "_asset_scan_status must be absent in create response when param is not sent",
+                    "UploadNoParam_FieldAbsent");
+
+                Console.WriteLine($"✅ _asset_scan_status correctly absent in upload response, uid={assetNode["uid"]}");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Upload asset without scan status param (field absent) failed", e.Message);
             }
         }
 
