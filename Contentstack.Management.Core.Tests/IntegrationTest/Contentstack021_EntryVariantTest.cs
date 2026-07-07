@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Exceptions;
@@ -37,6 +38,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private static string _entryUid;
         private static string _variantUid;
         private static string _variantGroupUid;
+
+        private const int VariantGroupPollTimeoutSeconds = 90;
+        private const int VariantGroupPollIntervalSeconds = 5;
 
         #region Helper Methods
 
@@ -235,17 +239,25 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void TestInitialize()
         {
-            // Read the API key from appSettings.json
-            string apiKey = Contentstack.Config["Contentstack:Stack:api_key"];
-            
-            // Optional: Fallback to stackApiKey.txt if it's missing in appSettings.json
-            if (string.IsNullOrEmpty(apiKey))
+            // Always use the dynamically-created stack shared by the rest of the suite
+            // (matches Contentstack012_ContentTypeTest.cs and friends) rather than the
+            // static Contentstack:Stack:api_key from appSettings.json.
+            StackResponse response = StackResponse.getStack(_client.serializer);
+            string apiKey = response.Stack.APIKey;
+
+            string managementToken = null;
+            try
             {
-                StackResponse response = StackResponse.getStack(_client.serializer);
-                apiKey = response.Stack.APIKey;
+                managementToken = ManagementTokenResponse.getManagementToken(_client.serializer)?.Token?.Token;
             }
-            
-            _stack = _client.Stack(apiKey);
+            catch
+            {
+                // managementTokenInfo.txt missing (e.g. isolated test run) — fall back to session-token-only stack.
+            }
+
+            _stack = string.IsNullOrEmpty(managementToken)
+                ? _client.Stack(apiKey)
+                : _client.Stack(apiKey, managementToken);
         }
 
         [TestMethod]
@@ -254,21 +266,74 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "ProductBannerVariantLifecycle_Setup");
 
-            // 1. Ensure Variant Group exists
+            // 1. Ensure a Variant Group (with real Variants) exists on the dynamic stack.
             var collection = new global::Contentstack.Management.Core.Queryable.ParameterCollection();
             collection.Add("include_variant_info", "true");
             collection.Add("include_variant_count", "true");
 
-            var vgResponse = await _stack.VariantGroup().FindAsync(collection);
-            Console.WriteLine("Variant Groups Response: " + vgResponse.OpenResponse());
+            async Task<JsonArray> FindVariantGroupsAsync()
+            {
+                var response = await _stack.VariantGroup().FindAsync(collection);
+                Console.WriteLine("Variant Groups Response: " + response.OpenResponse());
+                return response.OpenJsonObjectResponse()["variant_groups"]?.AsArray();
+            }
 
-            var vgJsonObject = vgResponse.OpenJsonObjectResponse();
-            var groups = vgJsonObject["variant_groups"]?.AsArray();
+            var groups = await FindVariantGroupsAsync();
 
             if (groups == null || groups.Count == 0)
             {
-                Assert.Inconclusive("No variant groups found in the stack. Create one to run EntryVariant tests. Response was: " + vgResponse.OpenResponse());
-                return;
+                // No pre-existing variant group — drive the Personalize API to create a
+                // project/audience/experience on this stack, which auto-provisions a real
+                // Variant Group + Variants on the Content Management side.
+                try
+                {
+                    var personalize = new PersonalizeTestHelper(_client.contentstackOptions.Authtoken, Contentstack.Organization.Uid);
+                    long runId = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+                    string projectUid = await personalize.CreateProjectAsync(_stack.APIKey, $"DotNet SDK Integration Test Project {runId}");
+                    string audienceUid = await personalize.GetOrCreateDefaultAudienceAsync(projectUid, $"DotNet SDK Test Audience {runId}");
+                    string experienceUid = await personalize.CreateExperienceAsync(projectUid, audienceUid, $"DotNet SDK Test Experience {runId}");
+
+                    TestOutputLogger.LogContext("PersonalizeProjectUid", projectUid ?? "");
+                    TestOutputLogger.LogContext("PersonalizeAudienceUid", audienceUid ?? "");
+                    TestOutputLogger.LogContext("PersonalizeExperienceUid", experienceUid ?? "");
+
+                    var pollDeadline = DateTime.UtcNow.AddSeconds(VariantGroupPollTimeoutSeconds);
+                    while (DateTime.UtcNow < pollDeadline)
+                    {
+                        groups = await FindVariantGroupsAsync();
+                        if (groups != null && groups.Count > 0)
+                        {
+                            break;
+                        }
+                        await Task.Delay(TimeSpan.FromSeconds(VariantGroupPollIntervalSeconds));
+                    }
+
+                    if (groups == null || groups.Count == 0)
+                    {
+                        // Personalize setup succeeded but the CMS side never produced a
+                        // Variant Group in time — a real product/integration bug, not an
+                        // environment precondition, so fail loudly instead of silently
+                        // degrading to a hardcoded UID like this test used to.
+                        Assert.Fail(
+                            $"Personalize project/audience/experience were created (project={projectUid}, " +
+                            $"audience={audienceUid}, experience={experienceUid}) but no Variant Group appeared " +
+                            $"on the stack within {VariantGroupPollTimeoutSeconds}s.");
+                        return;
+                    }
+                }
+                catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Forbidden || ex.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    Assert.Inconclusive("Personalize is not enabled/entitled for this organization; cannot drive dynamic variant setup. " + ex.Message);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    // Environment/transient issue (network, unexpected schema, etc.) — don't
+                    // block the rest of the suite on this, but make it loudly diagnosable.
+                    Assert.Inconclusive("Personalize-driven variant setup failed unexpectedly: " + ex.Message);
+                    return;
+                }
             }
 
             _variantGroupUid = groups[0]?["uid"]?.ToString();
@@ -289,9 +354,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
             if (string.IsNullOrEmpty(_variantUid))
             {
-                // Fallback to demo UIDs if none are returned by the API so the test doesn't skip
-                _variantUid = "cs372c03252b23f623";
-                Console.WriteLine("Warning: The variant group had no variants. Using a hardcoded variant UID for testing: " + _variantUid);
+                Assert.Fail("Variant Group was found/created but contains no variants.");
+                return;
             }
 
             TestOutputLogger.LogContext("VariantGroup", _variantGroupUid);

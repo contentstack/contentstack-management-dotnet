@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Contentstack.Management.Core;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
+using Contentstack.Management.Core.Models.Token;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -1187,6 +1188,72 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             else
             {
                 AssertLogger.Fail($"Unexpected exception type for auth error: {ex.GetType().Name}", assertionName);
+            }
+        }
+
+        #endregion
+
+        #region Global management token (shared infrastructure for variant/personalize tests)
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test065_Should_Create_Management_Token()
+        {
+            TestOutputLogger.LogContext("TestScenario", "CreateGlobalManagementToken");
+            AssertStackApiKeyOrInconclusive();
+            try
+            {
+                Stack stack = _client.Stack(Contentstack.Stack.APIKey);
+                var model = new ManagementTokenModel
+                {
+                    Name = "DotNet SDK Integration Test Token",
+                    Description = "Shared management token used by the .NET SDK integration test suite",
+                    Scope = new List<TokenScope>
+                    {
+                        new TokenScope
+                        {
+                            Module = "content_type",
+                            ACL = new Dictionary<string, string> { { "read", "true" }, { "write", "true" } }
+                        },
+                        new TokenScope
+                        {
+                            Module = "entry",
+                            ACL = new Dictionary<string, string> { { "read", "true" }, { "write", "true" } }
+                        },
+                        new TokenScope
+                        {
+                            Module = "asset",
+                            ACL = new Dictionary<string, string> { { "read", "true" }, { "write", "true" } }
+                        },
+                        new TokenScope
+                        {
+                            Module = "environment",
+                            ACL = new Dictionary<string, string> { { "read", "true" }, { "write", "true" } }
+                        },
+                        new TokenScope
+                        {
+                            Module = "taxonomy",
+                            ACL = new Dictionary<string, string> { { "read", "true" }, { "write", "true" } }
+                        }
+                    }
+                };
+
+                ContentstackResponse contentstackResponse = stack.ManagementTokens().Create(model);
+
+                AssertLogger.IsTrue(contentstackResponse.IsSuccessStatusCode, $"Create management token failed: {contentstackResponse.OpenResponse()}", "CreateManagementTokenSuccess");
+
+                File.WriteAllText("./managementTokenInfo.txt", contentstackResponse.OpenResponse());
+
+                ManagementTokenResponse tokenResponse = contentstackResponse.OpenTResponse<ManagementTokenResponse>();
+                AssertLogger.IsNotNull(tokenResponse.Token, "tokenResponse.Token");
+                AssertLogger.IsNotNull(tokenResponse.Token.Uid, "tokenResponse.Token.Uid");
+                AssertLogger.IsNotNull(tokenResponse.Token.Token, "tokenResponse.Token.Token");
+
+                TestOutputLogger.LogContext("ManagementTokenUid", tokenResponse.Token.Uid ?? "");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail(e.Message);
             }
         }
 

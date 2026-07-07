@@ -194,13 +194,24 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             // Test001 / Test003 happened to run after the guard was evaluated.
             try
             {
-                string apiKey = Contentstack.Config["Contentstack:Stack:api_key"];
-                if (string.IsNullOrEmpty(apiKey))
+                // Always use the dynamically-created stack shared by the rest of the suite,
+                // rather than the static Contentstack:Stack:api_key from appSettings.json.
+                StackResponse stackResp = StackResponse.getStack(_client.serializer);
+                string apiKey = stackResp.Stack.APIKey;
+
+                string managementToken = null;
+                try
                 {
-                    StackResponse stackResp = StackResponse.getStack(_client.serializer);
-                    apiKey = stackResp.Stack.APIKey;
+                    managementToken = ManagementTokenResponse.getManagementToken(_client.serializer)?.Token?.Token;
                 }
-                var setupStack = _client.Stack(apiKey);
+                catch
+                {
+                    // managementTokenInfo.txt missing (e.g. isolated test run) — fall back to session-token-only stack.
+                }
+
+                var setupStack = string.IsNullOrEmpty(managementToken)
+                    ? _client.Stack(apiKey)
+                    : _client.Stack(apiKey, managementToken);
 
                 // Variant groups
                 var vgResponse = await setupStack.VariantGroup().FindAsync();
@@ -245,17 +256,25 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         [TestInitialize]
         public void TestInitialize()
         {
-            // Read the API key from appSettings.json
-            string apiKey = Contentstack.Config["Contentstack:Stack:api_key"];
-            
-            // Optional: Fallback to stackApiKey.txt if it's missing in appSettings.json
-            if (string.IsNullOrEmpty(apiKey))
+            // Always use the dynamically-created stack shared by the rest of the suite
+            // (matches Contentstack012_ContentTypeTest.cs and friends) rather than the
+            // static Contentstack:Stack:api_key from appSettings.json.
+            StackResponse response = StackResponse.getStack(_client.serializer);
+            string apiKey = response.Stack.APIKey;
+
+            string managementToken = null;
+            try
             {
-                StackResponse response = StackResponse.getStack(_client.serializer);
-                apiKey = response.Stack.APIKey;
+                managementToken = ManagementTokenResponse.getManagementToken(_client.serializer)?.Token?.Token;
             }
-            
-            _stack = _client.Stack(apiKey);
+            catch
+            {
+                // managementTokenInfo.txt missing (e.g. isolated test run) — fall back to session-token-only stack.
+            }
+
+            _stack = string.IsNullOrEmpty(managementToken)
+                ? _client.Stack(apiKey)
+                : _client.Stack(apiKey, managementToken);
         }
 
         #region Positive Test Cases
