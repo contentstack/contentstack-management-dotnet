@@ -1,0 +1,27 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script
+        src="https://unpkg.com/@contentstack/ui-extensions-sdk@2.2.3/dist/ui-extension-sdk.js"
+        integrity="sha512-LMktiFAj7j/AUFctMlgY8qmLrLIQVctwwCsnCXIWnvgF9JlanilvFbZxOCtPNB5eO3vp2Nhw9ED1UsWa+ltSvQ=="
+        crossorigin="anonymous"
+    ></script>
+    <link
+        rel="stylesheet"
+        type="text/css"
+        href="https://unpkg.com/@contentstack/ui-extensions-sdk/dist/ui-extension-sdk.css"
+        integrity="sha512-yPPI/jWiqPr0HIh+1A2QPP5p58sSYqbPoBykxIuBckT1vzGwNbrOmwYM03qGI4ffnxd7q4kkoDys0kdZzxYn9A=="
+        crossorigin="anonymous"
+    />
+</head>
+<body>
+    <div id="extension-container"></div>
+    <script>
+      ContentstackUIExtension.init().then(function(extension) {
+          extension.window.updateHeight(200);
+      }).catch(function(error) {
+          console.log(error);
+      });
+    </script>
+</body>
+</html>

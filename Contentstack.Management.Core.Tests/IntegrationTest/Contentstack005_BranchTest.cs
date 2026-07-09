@@ -193,7 +193,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.Inconclusive("Test004 did not create branch — skipping.");
             try
             {
-                ContentstackResponse response = _stack.Branch(_createdBranchUid).Fetch();
+                ContentstackResponse response = RetryOnBranchProvisioning(() => _stack.Branch(_createdBranchUid).Fetch());
                 var json = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(json, "response");
             }
@@ -212,7 +212,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 Assert.Inconclusive("Test005 did not create branch — skipping.");
             try
             {
-                ContentstackResponse response = await _stack.Branch(_createdBranchUidAsync).FetchAsync();
+                ContentstackResponse response = await RetryOnBranchProvisioningAsync(() => _stack.Branch(_createdBranchUidAsync).FetchAsync());
                 var json = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(json, "response");
             }
@@ -235,7 +235,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 var force = new ParameterCollection();
                 force.Add("force", true);
-                ContentstackResponse response = _stack.Branch(_createdBranchUid).Delete(force);
+                ContentstackResponse response = RetryOnBranchProvisioning(() => _stack.Branch(_createdBranchUid).Delete(force));
                 var json = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(json, "response");
                 _createdBranchUid = null;
@@ -257,7 +257,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 var force = new ParameterCollection();
                 force.Add("force", true);
-                ContentstackResponse response = await _stack.Branch(_createdBranchUidAsync).DeleteAsync(force);
+                ContentstackResponse response = await RetryOnBranchProvisioningAsync(() => _stack.Branch(_createdBranchUidAsync).DeleteAsync(force));
                 var json = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(json, "response");
                 _createdBranchUidAsync = null;
@@ -266,6 +266,51 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 AssertLogger.Fail(e.Message);
             }
+        }
+
+        // ---- Branch provisioning retry helpers ---------------------------------
+        // Branch creation is async server-side: POST /branches returns 201 immediately
+        // with `"deleted_at": "in-progress"` while the branch is still being provisioned.
+        // Fetch/Delete against a branch in that state returns a 422 "branch is not valid"
+        // error until the provisioning job completes, so retry with backoff instead of
+        // failing on the first attempt.
+
+        private static bool IsBranchProvisioningError(ContentstackErrorException ex)
+        {
+            return ex.StatusCode == (HttpStatusCode)422 && ex.Message != null &&
+                (ex.Message.Contains("Failed to fetch Branch") || ex.Message.Contains("Branch delete failed") || ex.Message.Contains("is not valid"));
+        }
+
+        private static ContentstackResponse RetryOnBranchProvisioning(Func<ContentstackResponse> action, int maxAttempts = 6, int delayMs = 1000)
+        {
+            for (int attempt = 1; attempt < maxAttempts; attempt++)
+            {
+                try
+                {
+                    return action();
+                }
+                catch (ContentstackErrorException ex) when (IsBranchProvisioningError(ex))
+                {
+                    Task.Delay(delayMs).Wait();
+                }
+            }
+            return action();
+        }
+
+        private static async Task<ContentstackResponse> RetryOnBranchProvisioningAsync(Func<Task<ContentstackResponse>> action, int maxAttempts = 6, int delayMs = 1000)
+        {
+            for (int attempt = 1; attempt < maxAttempts; attempt++)
+            {
+                try
+                {
+                    return await action();
+                }
+                catch (ContentstackErrorException ex) when (IsBranchProvisioningError(ex))
+                {
+                    await Task.Delay(delayMs);
+                }
+            }
+            return await action();
         }
 
         // ---- SDK validation tests (no API call) --------------------------------

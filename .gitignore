@@ -25,8 +25,8 @@ packages/
 */appSettings.json
 api_referece/*
 .sonarqube/
-*.html
 *.cobertura.xml
 integration-test-report_*.html
 *.zip
 .trx
+*.html
