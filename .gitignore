@@ -29,3 +29,4 @@ api_referece/*
 integration-test-report_*.html
 *.zip
 .trx
+*.html
