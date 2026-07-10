@@ -1,5 +1,23 @@
 # Changelog
 
+## [v1.0.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0)(2026-07-10)
+
+ - **Breaking Change**
+   - `Newtonsoft.Json` is no longer a dependency — all JSON serialisation now uses `System.Text.Json`
+   - `client.SerializerSettings` (`JsonSerializerSettings`) replaced by `client.SerializerOptions` (`JsonSerializerOptions`)
+   - `response.OpenJObjectResponse()` removed — use `response.OpenJsonObjectResponse()` (`JsonObject`) or `response.OpenTResponse<T>()` instead
+   - `JObjectParameterValue` now accepts `System.Text.Json.Nodes.JsonNode` instead of `Newtonsoft.Json.Linq.JObject`
+   - All `[JsonProperty]` attributes replaced with `[JsonPropertyName]`
+   - Requires **.NET 10** or later
+ - **New**
+   - **Branch management**: `Branch` model with `Create`, `CreateAsync`, `Fetch`, `FetchAsync`, `Delete`, `DeleteAsync`, and `Query` operations via `Stack.Branch(uid?)`
+   - **Multi-region endpoint resolution** via `Endpoint.GetContentstackEndpoint(region, service)` — 7 regions (NA, EU, AU, Azure-NA, Azure-EU, GCP-NA, GCP-EU) and 18 service keys
+   - **OAuth auto token refresh** wired into the request pipeline
+   - **PreviewToken** support — `Create` and `Delete` operations
+   - **Image format upload**: JPEG, AVIF, and multi-format asset upload coverage
+ - **Migration Guide**
+   - See [Migrating from Newtonsoft.Json to System.Text.Json](https://www.contentstack.com/docs/developers/sdks/content-management-sdk/dot-net/migrate-dotnet-management-sdk-from-newtonsoft.json-to-system.text.json) for the full upgrade path from v0.x.
+
 ## [v1.0.0-beta.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.2)(2026-06-22)
 
  - **Chore**
