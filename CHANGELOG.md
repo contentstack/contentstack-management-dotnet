@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.0.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0)(2026-07-10)
+## [v1.0.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0)(2026-07-13)
 
  - **Breaking Change**
    - `Newtonsoft.Json` is no longer a dependency — all JSON serialisation now uses `System.Text.Json`
