@@ -95,12 +95,39 @@ jobs:
           fi
 
           LATEST_VERSION="${LATEST_TAG#v}"
-          LATEST_VERSION="${LATEST_VERSION%%-*}"
-          if [ "$(printf '%s\n' "$LATEST_VERSION" "$PROJ_VERSION" | sort -V | tail -1)" != "$PROJ_VERSION" ]; then
-            echo "::error::Version ($PROJ_VERSION) must be greater than latest tag ($LATEST_TAG)."
-            exit 1
-          fi
-          if [ "$PROJ_VERSION" = "$LATEST_VERSION" ]; then
+
+          CMP=$(python3 <<PY
+          import re, sys
+
+          def parse(v):
+              m = re.match(r"^(\d+)\.(\d+)\.(\d+)(?:-(.+))?$", v)
+              if not m:
+                  print(f"::error::Invalid semver: {v}", file=sys.stderr)
+                  sys.exit(1)
+              major, minor, patch, pre = m.groups()
+              return (int(major), int(minor), int(patch)), pre
+
+          def compare(proj, latest):
+              proj_core, proj_pre = parse(proj)
+              latest_core, latest_pre = parse(latest)
+              if proj_core != latest_core:
+                  return 1 if proj_core > latest_core else -1
+              # Same core version: no-prerelease (a real release) outranks any prerelease.
+              if proj_pre is None and latest_pre is None:
+                  return 0
+              if proj_pre is None:
+                  return 1
+              if latest_pre is None:
+                  return -1
+              if proj_pre == latest_pre:
+                  return 0
+              return 1 if proj_pre > latest_pre else -1
+
+          print(compare("$PROJ_VERSION", "$LATEST_VERSION"))
+          PY
+          )
+
+          if [ "$CMP" -le 0 ]; then
             echo "::error::Version ($PROJ_VERSION) must be strictly greater than latest tag version ($LATEST_VERSION)."
             exit 1
           fi
