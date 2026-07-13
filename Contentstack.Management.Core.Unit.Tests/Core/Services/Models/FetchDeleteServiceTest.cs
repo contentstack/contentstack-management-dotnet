@@ -6,14 +6,13 @@ using Contentstack.Management.Core;
 using Contentstack.Management.Core.Services.Models;
 using Contentstack.Management.Core.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
 {
     [TestClass]
     public class FetchDeleteServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
             .Customize(new AutoMoqCustomization());
 
@@ -28,7 +27,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Should_Throw_On_Null_Serializer()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new FetchDeleteService(
-                null,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<string>()));
         }
@@ -37,7 +35,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Should_Throw_On_API_Key()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new FetchDeleteService(
-                serializer,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<string>()));
         }
@@ -46,7 +43,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Should_Throw_On_Resource_Path_Null()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new FetchDeleteService(
-                serializer,
                 new Management.Core.Models.Stack(null, _fixture.Create<string>()),
                 null));
         }
@@ -61,7 +57,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
 
             collection.Add(_fixture.Create<string>(), false);
             FetchDeleteService service = new FetchDeleteService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 resourcePath,
                 collection: collection);
@@ -75,7 +70,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Delete_Release_Should_Not_Include_Content_Type_Header()
         {
             var stack = new Management.Core.Models.Stack(null, _fixture.Create<string>());
-            var service = new FetchDeleteService(serializer, stack, "/releases/release_uid_123", "DELETE");
+            var service = new FetchDeleteService(stack, "/releases/release_uid_123", "DELETE");
 
             service.CreateHttpRequest(new HttpClient(), CreateConfig(_fixture));
 
@@ -86,7 +81,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Delete_Release_With_Path_Releases_Only_Should_Not_Include_Content_Type_Header()
         {
             var stack = new Management.Core.Models.Stack(null, _fixture.Create<string>());
-            var service = new FetchDeleteService(serializer, stack, "/releases", "DELETE");
+            var service = new FetchDeleteService(stack, "/releases", "DELETE");
 
             service.CreateHttpRequest(new HttpClient(), CreateConfig(_fixture));
 
@@ -97,7 +92,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Delete_Release_Items_Path_Should_Include_Content_Type_Header()
         {
             var stack = new Management.Core.Models.Stack(null, _fixture.Create<string>());
-            var service = new FetchDeleteService(serializer, stack, "/releases/release_uid/item", "DELETE");
+            var service = new FetchDeleteService(stack, "/releases/release_uid/item", "DELETE");
 
             service.CreateHttpRequest(new HttpClient(), CreateConfig(_fixture));
 
@@ -109,7 +104,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Fetch_Release_Should_Include_Content_Type_Header()
         {
             var stack = new Management.Core.Models.Stack(null, _fixture.Create<string>());
-            var service = new FetchDeleteService(serializer, stack, "/releases/release_uid_123", "GET");
+            var service = new FetchDeleteService(stack, "/releases/release_uid_123", "GET");
 
             service.CreateHttpRequest(new HttpClient(), CreateConfig(_fixture));
 
@@ -121,7 +116,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Delete_Non_Release_Resource_Should_Include_Content_Type_Header()
         {
             var stack = new Management.Core.Models.Stack(null, _fixture.Create<string>());
-            var service = new FetchDeleteService(serializer, stack, "/contenttypes/ct_uid", "DELETE");
+            var service = new FetchDeleteService(stack, "/contenttypes/ct_uid", "DELETE");
 
             service.CreateHttpRequest(new HttpClient(), CreateConfig(_fixture));
 

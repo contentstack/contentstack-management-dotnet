@@ -4,7 +4,7 @@ using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Stack;
 using Contentstack.Management.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Queryable;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
@@ -12,7 +12,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
     [TestClass]
     public class FetchStackServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture()
        .Customize(new AutoMoqCustomization());
 
@@ -27,7 +27,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Initialize_with_Serializer()
         {
             var stack = new Management.Core.Models.Stack(contentstackClient: null, apiKey: _fixture.Create<String>());
-            var fetchStackService = new FetchStackService(serializer, stack);
+            var fetchStackService = new FetchStackService(serializerOptions, stack);
 
             Assert.IsNotNull(fetchStackService);
             Assert.AreEqual(true, fetchStackService.UseQueryString);
@@ -40,7 +40,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var apiKey = _fixture.Create<string>();
             var stack = new Management.Core.Models.Stack(contentstackClient: null, apiKey);
-            var fetchStackService = new FetchStackService(serializer, stack);
+            var fetchStackService = new FetchStackService(serializerOptions, stack);
 
             Assert.IsNotNull(fetchStackService);
             Assert.AreEqual(true, fetchStackService.UseQueryString);
@@ -57,7 +57,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             var param = new ParameterCollection();
             param.Add("limit", 10);
 
-            var fetchStackService = new FetchStackService(serializer, stack, param);
+            var fetchStackService = new FetchStackService(serializerOptions, stack, param);
 
             Assert.IsNotNull(fetchStackService);
             Assert.AreEqual(true, fetchStackService.UseQueryString);

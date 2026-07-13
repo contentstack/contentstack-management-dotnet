@@ -6,13 +6,12 @@ using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
 {
     [TestClass]
     public class PublishUnpublishServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
        .Customize(new AutoMoqCustomization());
 
@@ -20,7 +19,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Should_Throw_On_Null_Serializer()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new PublishUnpublishService(
-                null,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<PublishUnpublishDetails>(),
                 _fixture.Create<string>(),
@@ -30,7 +28,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
         public void Should_Throw_On_API_Key()
         {
             Assert.ThrowsException<ArgumentNullException>(() => new PublishUnpublishService(
-                serializer,
                 new Management.Core.Models.Stack(null),
                 _fixture.Create<PublishUnpublishDetails>(),
                 _fixture.Create<string>(),
@@ -43,7 +40,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var apiKey = _fixture.Create<string>();
 
             Assert.ThrowsException<ArgumentNullException>(() => new PublishUnpublishService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 null,
                 _fixture.Create<string>(),
@@ -56,7 +52,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var apiKey = _fixture.Create<string>();
 
             Assert.ThrowsException<ArgumentNullException>(() => new PublishUnpublishService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 _fixture.Create<PublishUnpublishDetails>(),
                 null,
@@ -69,7 +64,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var apiKey = _fixture.Create<string>();
 
             Assert.ThrowsException<ArgumentNullException>(() => new PublishUnpublishService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 _fixture.Create<PublishUnpublishDetails>(),
                 _fixture.Create<string>(),
@@ -86,7 +80,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             details.Variants = null;
             details.VariantRules = null;
             PublishUnpublishService service = new PublishUnpublishService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 details,
                 resourcePath,
@@ -117,7 +110,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             details.VariantRules = null;
             var locale = _fixture.Create<string>();
             PublishUnpublishService service = new PublishUnpublishService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 details,
                 resourcePath,
@@ -146,7 +138,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var fieldName = _fixture.Create<string>();
 
             PublishUnpublishService service = new PublishUnpublishService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 new PublishUnpublishDetails(),
                 resourcePath,
@@ -165,7 +156,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             var fieldName = _fixture.Create<string>();
 
             PublishUnpublishService service = new PublishUnpublishService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 new PublishUnpublishDetails()
                 {
@@ -203,7 +193,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
                 }
             };
             PublishUnpublishService service = new PublishUnpublishService(
-                serializer,
                 new Management.Core.Models.Stack(null, apiKey),
                 details,
                 resourcePath,
@@ -211,7 +200,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             service.ContentBody();
 
             string expectedJson = "{\"entry\":{\"locales\":[\"en-us\"],\"environments\":[\"development\"],\"variants\":[{\"uid\":\"cs123\",\"version\":1}],\"variant_rules\":{\"publish_latest_base\":true,\"publish_latest_base_conditionally\":false}}}";
-            
+
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual(resourcePath, service.ResourcePath);

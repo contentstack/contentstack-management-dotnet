@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Tests.Helpers
 {
@@ -44,7 +44,7 @@ namespace Contentstack.Management.Core.Tests.Helpers
                 errors = _additionalFields
             };
 
-            var jsonContent = JsonConvert.SerializeObject(errorResponse);
+            var jsonContent = JsonSerializer.Serialize(errorResponse);
             var response = new HttpResponseMessage(_statusCode)
             {
                 Content = new StringContent(jsonContent, Encoding.UTF8, "application/json"),

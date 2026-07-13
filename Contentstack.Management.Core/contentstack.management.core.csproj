@@ -1,14 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- On non-Windows (e.g. macOS/Linux), build only netstandard2.0; .NET Framework (net471/net472) is Windows-only and reference assemblies are not available. -->
-  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
-    <TargetFrameworks>netstandard2.0;net471;net472</TargetFrameworks>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
-      <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    </PropertyGroup>
-    <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Title>Contentstack Management</Title>
     <Authors>Contentstack</Authors>
@@ -68,11 +62,55 @@
     <Folder Include="Models\CustomExtension\" />
     <Folder Include="Models\Token\" />
     <Folder Include="Runtime\Pipeline\RertyHandler\" />
+    <Folder Include="Endpoints\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Otp.NET" Version="1.4.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="..\Scripts\refresh-region.py">
+      <Pack>true</Pack>
+      <PackagePath>contentFiles/cs/any/Scripts/refresh-region.py</PackagePath>
+      <BuildAction>Content</BuildAction>
+      <CopyToOutput>false</CopyToOutput>
+    </Content>
+    <None Include="..\build\contentstack.management.csharp.targets">
+      <Pack>true</Pack>
+      <PackagePath>build/contentstack.management.csharp.targets</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- All model files re-enabled: STJ migration complete, no Newtonsoft references remain -->
+    
+    <!-- Re-enable core services for Client, User, Organization, Stack modules -->
+    <!-- DeleteReleaseItemService.cs - RE-ENABLED for Release module STJ migration -->
+    <!-- QueryService.cs - RE-ENABLED for ContentType listing -->
+    <!-- Re-enable essential model services for ContentType -->
+    <!-- GlobalFieldService.cs, GlobalFieldFetchDeleteService.cs - RE-ENABLED for Global Field module STJ migration -->
+    <!-- ImportExportService.cs, LocaleService.cs, LocalizationService.cs - RE-ENABLED for Entry module STJ migration -->
+    <!-- FetchReferencesService, CreateUpdateFolderService, UploadService, PublishUnpublishService - RE-ENABLED for Assets module -->
+    <!-- Services\Models\VariantContentTypeLinkService.cs - RE-ENABLED for VariantGroup module STJ migration -->
+    <!-- Versioning services - RE-ENABLED for Assets module -->
+    <!-- <Compile Remove="Services\Models\Versioning\**\*.cs" /> -->
+    <!-- CreateUpdateService, FetchDeleteService, DeleteService - RE-ENABLED for ContentType -->
+    <!-- StackOwnershipService.cs, StackShareService.cs, UpdateUserRoleService.cs - RE-ENABLED -->
+    <!-- OrgRoles.cs - RE-ENABLED -->
+
+    <!-- Re-enable Stack services for Stack module -->
+    <!-- Services\Stack\**\*.cs - RE-ENABLED -->
+    
+    <!-- FieldJsonConverter.cs - RE-ENABLED for ContentType Field support -->
+    
+    <!-- Stack.cs - RE-ENABLED -->
+    
+    <!-- Re-enable Query.cs for Stack module -->
+    <!-- Query.cs - RE-ENABLED -->
+    <!-- Keep ParameterCollection and QueryParamValue as they're needed by core services -->
+    
+    <!-- Temporarily exclude ContentstackClient methods that depend on excluded models -->
+    <!-- We'll need to comment out specific methods in ContentstackClient.cs -->
   </ItemGroup>
 </Project>

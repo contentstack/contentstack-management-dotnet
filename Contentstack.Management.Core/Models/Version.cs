@@ -8,9 +8,9 @@ namespace Contentstack.Management.Core.Models
 {
     public class Version
     {
-        internal Stack stack;
-        internal string resourcePath;
-        internal string fieldName;
+        internal Stack stack = null!;
+        internal string resourcePath = null!;
+        internal string fieldName = null!;
 
         public int? Number { get; set; }
 
@@ -22,43 +22,43 @@ namespace Contentstack.Management.Core.Models
             this.fieldName = fieldName;
         }
 
-        public virtual ContentstackResponse GetAll(ParameterCollection collection = null)
+        public virtual ContentstackResponse GetAll(ParameterCollection? collection = null)
         {
             ThrowIfVersionNumberNotEmpty();
 
-            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "GET", fieldName, collection);
+            var service = new VersionService(stack, this.resourcePath, "GET", fieldName, collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
-        public virtual Task<ContentstackResponse> GetAllAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> GetAllAsync(ParameterCollection? collection = null)
         {
             ThrowIfVersionNumberNotEmpty();
 
-            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "GET", fieldName, collection);
+            var service = new VersionService(stack, this.resourcePath, "GET", fieldName, collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<VersionService, ContentstackResponse>(service);
         }
 
-        public virtual ContentstackResponse Delete(string locale = null)
+        public virtual ContentstackResponse Delete(string? locale = null)
         {
             ThrowIfVersionNumberEmpty();
 
-            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "DELETE", fieldName);
+            var service = new VersionService(stack, this.resourcePath, "DELETE", fieldName, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
-        public virtual Task<ContentstackResponse> DeleteAsync(string locale = null)
+        public virtual Task<ContentstackResponse> DeleteAsync(string? locale = null)
         {
             ThrowIfVersionNumberEmpty();
 
-            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "DELETE", fieldName);
+            var service = new VersionService(stack, this.resourcePath, "DELETE", fieldName, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<VersionService, ContentstackResponse>(service);
         }
 
-        public virtual ContentstackResponse SetName(string name, string locale = null, bool force = false)
+        public virtual ContentstackResponse SetName(string name, string? locale = null, bool force = false)
         {
             ThrowIfVersionNumberEmpty();
 
-            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "POST", fieldName);
+            var service = new VersionService(stack, this.resourcePath, "POST", fieldName, stjOptions: stack.client.SerializerOptions);
             service.name = name;
             service.locale = locale;
             service.force = force;
@@ -66,11 +66,11 @@ namespace Contentstack.Management.Core.Models
             return stack.client.InvokeSync(service);
         }
 
-        public virtual Task<ContentstackResponse> SetNameAsync(string name, string locale = null, bool force = false)
+        public virtual Task<ContentstackResponse> SetNameAsync(string name, string? locale = null, bool force = false)
         {
             ThrowIfVersionNumberEmpty();
 
-            var service = new VersionService(stack.client.serializer, stack, this.resourcePath, "POST", fieldName);
+            var service = new VersionService(stack, this.resourcePath, "POST", fieldName, stjOptions: stack.client.SerializerOptions);
             service.name = name;
             service.locale = locale;
             service.force = force;

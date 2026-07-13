@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Net;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Models;
 
@@ -29,7 +28,7 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="serializer">The JSON serializer to use.</param>
         /// <param name="requestBody">The request body parameters for the OAuth token request.</param>
         /// <exception cref="ArgumentNullException">Thrown when serializer or requestBody is null.</exception>
-        internal OAuthTokenService(JsonSerializer serializer, Dictionary<string, string> requestBody) 
+        internal OAuthTokenService(JsonSerializerOptions serializer, Dictionary<string, string> requestBody) 
             : base(serializer)
         {
             if (requestBody == null)
@@ -69,7 +68,7 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="addAcceptMediaHeader">Whether to add accept media headers.</param>
         /// <param name="apiVersion">The API version to use.</param>
         /// <returns>The HTTP request for OAuth token operations.</returns>
-        public override IHttpRequest CreateHttpRequest(System.Net.Http.HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public override IHttpRequest CreateHttpRequest(System.Net.Http.HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             // Create a custom config with Developer Hub hostname for OAuth token operations
             // OAuth token endpoints don't use API versioning, so we set Version to empty
@@ -148,12 +147,12 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="codeVerifier">The PKCE code verifier (optional, for PKCE flow).</param>
         /// <returns>An OAuth token service configured for authorization code exchange.</returns>
         public static OAuthTokenService CreateForAuthorizationCode(
-            JsonSerializer serializer,
+            JsonSerializerOptions serializer,
             string authorizationCode,
             string clientId,
             string redirectUri,
-            string clientSecret = null,
-            string codeVerifier = null)
+            string? clientSecret = null,
+            string? codeVerifier = null)
         {
             if (string.IsNullOrEmpty(authorizationCode))
                 throw new ArgumentException("Authorization code cannot be null or empty.", nameof(authorizationCode));
@@ -196,7 +195,7 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="redirectUri">The redirect URI used in the original authorization request.</param>
         /// <returns>An OAuth token service configured for token refresh.</returns>
         public static OAuthTokenService CreateForTokenRefresh(
-            JsonSerializer serializer,
+            JsonSerializerOptions serializer,
             string refreshToken,
             string clientId,
             string redirectUri)
@@ -229,10 +228,10 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="clientSecret">The OAuth client secret (optional, for traditional OAuth flow).</param>
         /// <returns>An OAuth token service configured for token refresh.</returns>
         public static OAuthTokenService CreateForRefreshToken(
-            JsonSerializer serializer,
+            JsonSerializerOptions serializer,
             string refreshToken,
             string clientId,
-            string clientSecret = null)
+            string? clientSecret = null)
         {
             if (string.IsNullOrEmpty(refreshToken))
                 throw new ArgumentException("Refresh token cannot be null or empty.", nameof(refreshToken));

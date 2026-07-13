@@ -6,8 +6,8 @@ namespace Contentstack.Management.Core.Runtime.Contexts
 {
     public interface IRequestContext
     {
-        IContentstackService service { get; set; }
-        ContentstackClientOptions config { get; set; }
+        IContentstackService? service { get; set; }
+        ContentstackClientOptions? config { get; set; }
         int Retries { get; set; }
 
         /// <summary>

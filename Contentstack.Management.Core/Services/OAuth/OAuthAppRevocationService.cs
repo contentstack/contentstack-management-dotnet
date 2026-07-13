@@ -1,5 +1,5 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Http;
 
 namespace Contentstack.Management.Core.Services.OAuth
@@ -11,7 +11,7 @@ namespace Contentstack.Management.Core.Services.OAuth
     {
         private readonly string _appId;
         private readonly string _authorizationId;
-        private readonly string _organizationUid;
+        private readonly string? _organizationUid;
 
         /// <summary>
         /// Initializes a new instance of the OAuthAppRevocationService class.
@@ -20,7 +20,7 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="appId">The OAuth app ID.</param>
         /// <param name="authorizationId">The authorization ID to revoke.</param>
         /// <param name="organizationUid">The organization UID for OAuth operations.</param>
-        internal OAuthAppRevocationService(JsonSerializer serializer, string appId, string authorizationId, string organizationUid = null)
+        internal OAuthAppRevocationService(JsonSerializerOptions serializer, string appId, string authorizationId, string? organizationUid = null)
             : base(serializer)
         {
             if (string.IsNullOrEmpty(appId))
@@ -52,7 +52,7 @@ namespace Contentstack.Management.Core.Services.OAuth
         /// <param name="addAcceptMediaHeader">Whether to add accept media headers.</param>
         /// <param name="apiVersion">The API version to use.</param>
         /// <returns>The HTTP request for OAuth app revocation operations.</returns>
-        public override IHttpRequest CreateHttpRequest(System.Net.Http.HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public override IHttpRequest CreateHttpRequest(System.Net.Http.HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             // Create a custom config with Developer Hub hostname for OAuth app revocation operations
             // OAuth endpoints don't use API versioning, so we set Version to empty

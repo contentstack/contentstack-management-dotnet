@@ -1,5 +1,4 @@
-using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -8,9 +7,8 @@ namespace Contentstack.Management.Core.Models
     /// </summary>
     public class OAuthAppAuthorizationResponse
     {
-        
-        [JsonProperty("data")]
-        public OAuthAppAuthorizationData[] Data { get; set; }
+        [JsonPropertyName("data")]
+        public OAuthAppAuthorizationData[]? Data { get; set; }
     }
 
     /// <summary>
@@ -18,21 +16,17 @@ namespace Contentstack.Management.Core.Models
     /// </summary>
     public class OAuthAppAuthorizationData
     {
-        
-        [JsonProperty("authorization_uid")]
-        public string AuthorizationUid { get; set; }
+        [JsonPropertyName("authorization_uid")]
+        public string? AuthorizationUid { get; set; }
 
-        
-        [JsonProperty("user")]
-        public OAuthUser User { get; set; }
+        [JsonPropertyName("user")]
+        public OAuthUser? User { get; set; }
     }
 
-    
     public class OAuthUser
     {
-        
-        [JsonProperty("uid")]
-        public string Uid { get; set; }
+        [JsonPropertyName("uid")]
+        public string? Uid { get; set; }
     }
 }
 

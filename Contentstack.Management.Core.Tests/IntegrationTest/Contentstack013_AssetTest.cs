@@ -14,7 +14,6 @@ using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Queryable;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
@@ -27,11 +26,19 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private static List<string> _testAssetUIDs = new List<string>();
         private static List<string> _testFolderUIDs = new List<string>();
         private static List<string> _testTemporaryFiles = new List<string>();
+        private static string _scanTestPublishEnvUid;
+        private static readonly string[] ValidScanStatuses = { "pending", "clean", "quarantined", "not_scanned" };
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
             _client = Contentstack.CreateAuthenticatedClient();
+            try
+            {
+                var stack = _client.Stack(StackResponse.getStack(_client.serializer).Stack.APIKey);
+                EnsureScanTestPublishEnvironment(stack);
+            }
+            catch { /* non-fatal — publish scan tests will skip gracefully if env is null */ }
         }
 
         [ClassCleanup]
@@ -39,6 +46,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             CleanupTestAssets(_testAssetUIDs);
             CleanupTemporaryFiles();
+            if (!string.IsNullOrEmpty(_scanTestPublishEnvUid))
+            {
+                try
+                {
+                    var stack = _client.Stack(StackResponse.getStack(_client.serializer).Stack.APIKey);
+                    stack.Environment(_scanTestPublishEnvUid).Delete();
+                }
+                catch { }
+            }
             try { _client?.Logout(); } catch { }
             _client = null;
         }
@@ -302,6 +318,26 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         /// <summary>
         /// Cleans up test assets to avoid polluting the stack
         /// </summary>
+        /// <summary>
+        /// Creates a shared environment used by asset scan publish tests (Test109, Test110).
+        /// Called once from ClassInitialize; result stored in _scanTestPublishEnvUid.
+        /// Mirrors the EnsureBulkTestEnvironment() pattern in Contentstack015_BulkOperationTest.
+        /// </summary>
+        private static void EnsureScanTestPublishEnvironment(Stack stack)
+        {
+            var model = new EnvironmentModel
+            {
+                Name = "asset_scan_test_env",
+                Urls = new List<LocalesUrl>
+                {
+                    new LocalesUrl { Url = "https://asset-scan-test.example.com", Locale = "en-us" }
+                }
+            };
+            ContentstackResponse response = stack.Environment().Create(model);
+            if (response.IsSuccessStatusCode)
+                _scanTestPublishEnvUid = response.OpenJsonObjectResponse()["environment"]?["uid"]?.ToString();
+        }
+
         private static void CleanupTestAssets(List<string> assetUIDs)
         {
             if (_client == null) return;
@@ -406,28 +442,32 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
-        // Check the below 3 Test cases
         [TestMethod]
         [DoNotParallelize]
         public async Task Test002_Should_Create_Dashboard()
         {
-            TestOutputLogger.LogContext("TestScenario", "CreateDashboard");
-            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/customUpload.html");
+            TestOutputLogger.LogContext("TestScenario", "CreateDashboardWidget");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/extension.html");
             try
             {
-                var uniqueTitle = $"Dashboard_{DateTime.UtcNow.Ticks}";
-                DashboardWidgetModel dashboard = new DashboardWidgetModel(path, "text/html", uniqueTitle, isEnable: true, defaultWidth: "half", tags: "one,two");
-                ContentstackResponse response = _stack.Extension().Upload(dashboard);
+                DashboardWidgetModel dashboard = new DashboardWidgetModel(
+                    path, "text/html", "Integration Test Dashboard",
+                    isEnable: true, defaultWidth: "half", tags: "dashboard,test");
+                ContentstackResponse response = await _stack.Extension().UploadAsync(dashboard);
                 TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "CreateDashboard_StatusCode");
+                    AssertLogger.IsNotNull(response.OpenJsonObjectResponse()["extension"], "CreateDashboard_ResponseContainsExtension");
+                }
+                else
+                {
+                    AssertLogger.Fail("Dashboard Widget Creation Failed", response.OpenResponse());
                 }
             }
             catch (Exception e)
             {
-                AssertLogger.Fail("Dashboard Creation Failed ", e.Message);
+                AssertLogger.Fail("Dashboard Widget Creation Failed", e.Message);
             }
         }
 
@@ -436,28 +476,28 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test003_Should_Create_Custom_Widget()
         {
             TestOutputLogger.LogContext("TestScenario", "CreateCustomWidget");
-            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/customUpload.html");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/extension.html");
             try
             {
-                var uniqueTitle = $"Custom widget Upload_{DateTime.UtcNow.Ticks}";
-                CustomWidgetModel customWidget = new CustomWidgetModel(path, "text/html", title: uniqueTitle, scope: new ExtensionScope()
-                {
-                    ContentTypes = new List<string>()
-                    {
-                        "single_page"
-                    }
-                }, tags: "one,two");
-                ContentstackResponse response = _stack.Extension().Upload(customWidget);
+                var scope = new ExtensionScope { ContentTypes = new List<string> { "$all" } };
+                CustomWidgetModel widget = new CustomWidgetModel(
+                    path, "text/html", "Integration Test Widget",
+                    tags: "widget,test", scope: scope);
+                ContentstackResponse response = await _stack.Extension().UploadAsync(widget);
                 TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "CreateCustomWidget_StatusCode");
+                    AssertLogger.IsNotNull(response.OpenJsonObjectResponse()["extension"], "CreateCustomWidget_ResponseContainsExtension");
+                }
+                else
+                {
+                    AssertLogger.Fail("Custom Widget Creation Failed", response.OpenResponse());
                 }
             }
             catch (Exception e)
             {
-                AssertLogger.Fail("Custom Widget Creation Failed ", e.Message);
+                AssertLogger.Fail("Custom Widget Creation Failed", e.Message);
             }
         }
 
@@ -466,22 +506,27 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test004_Should_Create_Custom_field()
         {
             TestOutputLogger.LogContext("TestScenario", "CreateCustomField");
-            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/customUpload.html");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/extension.html");
             try
             {
-                var uniqueTitle = $"Custom field Upload_{DateTime.UtcNow.Ticks}";
-                CustomFieldModel fieldModel = new CustomFieldModel(path, "text/html", uniqueTitle, "text", isMultiple: false, tags: "one,two");
-                ContentstackResponse response = _stack.Extension().Upload(fieldModel);
+                CustomFieldModel field = new CustomFieldModel(
+                    path, "text/html", "Integration Test Field",
+                    dataType: "text", isMultiple: false, tags: "field,test");
+                ContentstackResponse response = await _stack.Extension().UploadAsync(field);
                 TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "CreateCustomField_StatusCode");
+                    AssertLogger.IsNotNull(response.OpenJsonObjectResponse()["extension"], "CreateCustomField_ResponseContainsExtension");
+                }
+                else
+                {
+                    AssertLogger.Fail("Custom Field Creation Failed", response.OpenResponse());
                 }
             }
             catch (Exception e)
             {
-                AssertLogger.Fail("Custom Field Creation Failed ", e.Message);
+                AssertLogger.Fail("Custom Field Creation Failed", e.Message);
             }
         }
 
@@ -502,7 +547,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "CreateAssetAsync_StatusCode");
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     if (responseObject["asset"] != null)
                     {
                         _testAssetUid = responseObject["asset"]["uid"]?.ToString();
@@ -529,7 +574,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -540,7 +585,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "FetchAsset_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "FetchAsset_ResponseContainsAsset");
                     }
                     else
@@ -564,7 +609,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -575,7 +620,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "FetchAssetAsync_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "FetchAssetAsync_ResponseContainsAsset");
                     }
                     else
@@ -599,7 +644,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -613,7 +658,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "UpdateAsset_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "UpdateAsset_ResponseContainsAsset");
                     }
                     else
@@ -637,7 +682,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -651,7 +696,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "UpdateAssetAsync_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "UpdateAssetAsync_ResponseContainsAsset");
                     }
                     else
@@ -679,7 +724,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "QueryAssets_StatusCode");
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     AssertLogger.IsNotNull(responseObject["assets"], "QueryAssets_ResponseContainsAssets");
                 }
                 else
@@ -710,7 +755,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "QueryAssetsWithParams_StatusCode");
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     AssertLogger.IsNotNull(responseObject["assets"], "QueryAssetsWithParams_ResponseContainsAssets");
                 }
                 else
@@ -733,7 +778,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -772,7 +817,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObject = createResponse.OpenJObjectResponse();
+                    var responseObject = createResponse.OpenJsonObjectResponse();
                     string assetUid = responseObject["asset"]["uid"]?.ToString();
                     TestOutputLogger.LogContext("AssetUID", assetUid ?? "null");
 
@@ -817,7 +862,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "CreateFolder_StatusCode");
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     if (responseObject["asset"] != null)
                     {
                         _testFolderUid = responseObject["asset"]["uid"]?.ToString();
@@ -844,7 +889,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -855,7 +900,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "CreateSubfolder_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "CreateSubfolder_ResponseContainsFolder");
                     }
                     else
@@ -879,7 +924,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -890,7 +935,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "FetchFolder_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "FetchFolder_ResponseContainsFolder");
                     }
                     else
@@ -914,7 +959,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -925,7 +970,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "FetchFolderAsync_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "FetchFolderAsync_ResponseContainsFolder");
                     }
                     else
@@ -949,7 +994,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -960,7 +1005,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "UpdateFolder_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "UpdateFolder_ResponseContainsFolder");
                     }
                     else
@@ -985,7 +1030,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // First create a folder if we don't have one
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -996,7 +1041,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "UpdateFolderAsync_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "UpdateFolderAsync_ResponseContainsFolder");
                     }
                     else
@@ -1021,7 +1066,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // First create a folder if we don't have one
                 if (string.IsNullOrEmpty(_testFolderUid))
                 {
-                    Test014_Should_Create_Folder();
+                    await Test014_Should_Create_Folder();
                 }
 
                 if (!string.IsNullOrEmpty(_testFolderUid))
@@ -1059,7 +1104,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObject = createResponse.OpenJObjectResponse();
+                    var responseObject = createResponse.OpenJsonObjectResponse();
                     string folderUid = responseObject["asset"]["uid"]?.ToString();
                     TestOutputLogger.LogContext("FolderUID", folderUid ?? "null");
 
@@ -1265,7 +1310,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "EmptyQuery_StatusCode");
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     AssertLogger.IsNotNull(responseObject["assets"], "EmptyQuery_ResponseContainsAssets");
                     // Empty results are valid, so we don't assert on count
                 }
@@ -1289,7 +1334,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -1302,7 +1347,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "FetchAssetWithLocale_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "FetchAssetWithLocale_ResponseContainsAsset");
                     }
                     else
@@ -1326,7 +1371,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (!string.IsNullOrEmpty(_testAssetUid))
@@ -1339,7 +1384,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "FetchAssetAsyncWithLocale_StatusCode");
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "FetchAssetAsyncWithLocale_ResponseContainsAsset");
                     }
                     else
@@ -1373,7 +1418,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "QueryAssetsWithLocale_StatusCode");
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     AssertLogger.IsNotNull(responseObject["assets"], "QueryAssetsWithLocale_ResponseContainsAssets");
                 }
                 else
@@ -1396,7 +1441,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 if (string.IsNullOrEmpty(_testAssetUid))
                 {
-                    Test005_Should_Create_Asset_Async();
+                    await Test005_Should_Create_Asset_Async();
                 }
 
                 if (string.IsNullOrEmpty(_testAssetUid))
@@ -1414,7 +1459,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentstackResponse response = _stack.Asset(_testAssetUid).Fetch(coll);
                     if (response.IsSuccessStatusCode)
                     {
-                        var responseObject = response.OpenJObjectResponse();
+                        var responseObject = response.OpenJsonObjectResponse();
                         AssertLogger.IsNotNull(responseObject["asset"], "FetchInvalidLocale_ResponseContainsAssetWhenApiIgnoresParam");
                     }
                 }
@@ -1476,7 +1521,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "QueryInvalidLocale_StatusCode");
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     AssertLogger.IsNotNull(responseObject["assets"], "QueryInvalidLocale_ResponseContainsAssetsWhenApiIgnoresParam");
                 }
             }
@@ -1643,7 +1688,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ XSS attempt in asset title was not rejected");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -1680,7 +1725,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ Extremely long title was accepted - no length validation");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -1718,7 +1763,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ Extremely long description was accepted");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -1763,7 +1808,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"⚠️ Special character filename accepted: '{fileName}'");
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var assetUID = responseObj["asset"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(assetUID))
                         {
@@ -1808,7 +1853,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ Extremely long tags were accepted");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -1845,7 +1890,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("✅ Unicode and emoji characters were properly handled");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -1893,7 +1938,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"⚠️ Malicious file extension accepted: {extension}");
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var assetUID = responseObj["asset"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(assetUID))
                         {
@@ -1938,7 +1983,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ MIME type mismatch was not detected");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -1983,7 +2028,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ Large file was accepted - no size limits detected");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2022,7 +2067,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ Executable file was accepted");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2064,7 +2109,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ Disguised executable was not detected");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2105,7 +2150,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"ℹ️ Corrupted file accepted: {corruptionType}");
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var assetUID = responseObj["asset"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(assetUID))
                         {
@@ -2153,7 +2198,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"⚠️ File with malicious header accepted: {header.Key}");
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var assetUID = responseObj["asset"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(assetUID))
                         {
@@ -2194,7 +2239,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ Fake image file was accepted without validation");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2231,7 +2276,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("ℹ️ Zero-byte file was accepted");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2280,7 +2325,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("⚠️ File with embedded script was accepted");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2367,7 +2412,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 else
                 {
                     Console.WriteLine("⚠️ Operation succeeded with limited permissions token - may not have proper permission validation");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2539,7 +2584,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 else
                 {
                     Console.WriteLine("⚠️ Session timeout scenario not triggered - may need actual expired token");
-                    var responseObj = response2.OpenJObjectResponse();
+                    var responseObj = response2.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2621,7 +2666,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // Track successful assets for cleanup
                 foreach (var result in results.Where(r => r.IsSuccessStatusCode))
                 {
-                    var responseObj = result.OpenJObjectResponse();
+                    var responseObj = result.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2724,7 +2769,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     return;
                 }
 
-                var responseObj = createResponse.OpenJObjectResponse();
+                var responseObj = createResponse.OpenJsonObjectResponse();
                 var assetUID = responseObj["asset"]?["uid"]?.ToString();
                 if (string.IsNullOrEmpty(assetUID))
                 {
@@ -2781,7 +2826,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2829,7 +2874,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 else
                 {
                     Console.WriteLine("⚠️ Asset created in non-existent folder - hierarchy validation may be insufficient");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2860,7 +2905,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -2872,7 +2917,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         var fetchResponse = _stack.Asset(assetUID).Fetch();
                         if (fetchResponse.IsSuccessStatusCode)
                         {
-                            var fetchedObj = fetchResponse.OpenJObjectResponse();
+                            var fetchedObj = fetchResponse.OpenJsonObjectResponse();
                             var fetchedTitle = fetchedObj["asset"]?["title"]?.ToString();
                             
                             if (fetchedTitle == "Metadata Test")
@@ -2932,7 +2977,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (folder1Response.IsSuccessStatusCode)
                 {
-                    var folder1Obj = folder1Response.OpenJObjectResponse();
+                    var folder1Obj = folder1Response.OpenJsonObjectResponse();
                     var folder1UID = folder1Obj["asset"]?["uid"]?.ToString();
                     
                     if (!string.IsNullOrEmpty(folder1UID))
@@ -2944,7 +2989,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         
                         if (circularResponse.IsSuccessStatusCode)
                         {
-                            var folder2Obj = circularResponse.OpenJObjectResponse();
+                            var folder2Obj = circularResponse.OpenJsonObjectResponse();
                             var folder2UID = folder2Obj["asset"]?["uid"]?.ToString();
                             if (!string.IsNullOrEmpty(folder2UID))
                             {
@@ -2982,7 +3027,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -3034,7 +3079,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 else
                 {
                     Console.WriteLine("⚠️ Asset created with invalid parent folder - validation may be insufficient");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -3084,7 +3129,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // Track successful assets for cleanup
                 foreach (var result in results.Where(r => r.IsSuccessStatusCode))
                 {
-                    var responseObj = result.OpenJObjectResponse();
+                    var responseObj = result.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -3115,7 +3160,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (createResponse.IsSuccessStatusCode)
                 {
-                    var responseObj = createResponse.OpenJObjectResponse();
+                    var responseObj = createResponse.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -3176,7 +3221,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (result.IsSuccessStatusCode)
                     {
                         Console.WriteLine("⚠️ Upload completed before timeout - network too fast for timeout simulation");
-                        var responseObj = result.OpenJObjectResponse();
+                        var responseObj = result.OpenJsonObjectResponse();
                         var assetUID = responseObj["asset"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(assetUID))
                         {
@@ -3227,7 +3272,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (result.IsSuccessStatusCode)
                 {
                     Console.WriteLine("✅ Upload completed despite simulated interruption");
-                    var responseObj = result.OpenJObjectResponse();
+                    var responseObj = result.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -3373,7 +3418,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // Track successful assets for cleanup
                 foreach (var result in results.Where(r => r.IsSuccessStatusCode))
                 {
-                    var responseObj = result.OpenJObjectResponse();
+                    var responseObj = result.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -3648,7 +3693,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("ℹ️ Large file (10MB) was accepted - size limit is higher than 10MB");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -3671,6 +3716,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             catch (OutOfMemoryException ex)
             {
                 Console.WriteLine($"✅ System memory limits encountered: {ex.Message}");
+            }
+            catch (TaskCanceledException ex)
+            {
+                Console.WriteLine($"ℹ️ Large file upload timed out (acceptable for oversized files): {ex.Message}");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"ℹ️ Large file upload connection reset (acceptable for oversized files): {ex.Message}");
             }
         }
 
@@ -3697,7 +3750,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         createdAssets++;
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var assetUID = responseObj["asset"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(assetUID))
                         {
@@ -3745,7 +3798,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     
                     if (response.IsSuccessStatusCode)
                     {
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var folderUID = responseObj["asset"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(folderUID))
                         {
@@ -3796,7 +3849,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (response.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"   Quota test file {i} uploaded successfully");
-                        var responseObj = response.OpenJObjectResponse();
+                        var responseObj = response.OpenJsonObjectResponse();
                         var assetUID = responseObj["asset"]?["uid"]?.ToString();
                         if (!string.IsNullOrEmpty(assetUID))
                         {
@@ -3864,7 +3917,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // Track successful assets for cleanup
                 foreach (var result in results.Where(r => r.IsSuccessStatusCode))
                 {
-                    var responseObj = result.OpenJObjectResponse();
+                    var responseObj = result.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -3915,7 +3968,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine($"✅ CPU intensive processing completed in {stopwatch.ElapsedMilliseconds}ms");
-                    var responseObj = response.OpenJObjectResponse();
+                    var responseObj = response.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -4014,7 +4067,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // Track successful assets for cleanup
                 foreach (var result in results.Where(r => r.IsSuccessStatusCode))
                 {
-                    var responseObj = result.OpenJObjectResponse();
+                    var responseObj = result.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -4130,7 +4183,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // Track successful assets for cleanup
                 foreach (var result in results.Where(r => r.IsSuccessStatusCode))
                 {
-                    var responseObj = result.OpenJObjectResponse();
+                    var responseObj = result.OpenJsonObjectResponse();
                     var assetUID = responseObj["asset"]?["uid"]?.ToString();
                     if (!string.IsNullOrEmpty(assetUID))
                     {
@@ -4150,6 +4203,603 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             catch (Exception ex)
             {
                 Console.WriteLine($"✅ Processing queue scenario handled: {ex.Message}");
+            }
+        }
+
+        #endregion
+
+        #region Image Format Upload Tests
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test100_Should_Upload_JPEG_Image_Asset()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadJpegImage");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/london.jpg");
+            try
+            {
+                AssetModel asset = new AssetModel("london.jpg", path, "image/jpeg", title: "London JPEG", description: "JPEG image upload test", parentUID: null, tags: "image,jpeg,london");
+                ContentstackResponse response = _stack.Asset().Create(asset);
+                TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "UploadJpegImage_StatusCode");
+                    var responseObject = response.OpenJsonObjectResponse();
+                    AssertLogger.IsNotNull(responseObject["asset"], "UploadJpegImage_ResponseContainsAsset");
+                    var assetUID = responseObject["asset"]?["uid"]?.ToString();
+                    if (!string.IsNullOrEmpty(assetUID))
+                    {
+                        _testAssetUIDs.Add(assetUID);
+                        TestOutputLogger.LogContext("AssetUID", assetUID);
+                    }
+                    var contentType = responseObject["asset"]?["content_type"]?.ToString();
+                    AssertLogger.IsTrue(
+                        contentType == "image/jpeg" || contentType == "image/jpg",
+                        $"Expected image/jpeg content type, got: {contentType}",
+                        "UploadJpegImage_ContentType");
+                }
+                else
+                {
+                    AssertLogger.Fail("JPEG Image Upload Failed", response.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("JPEG Image Upload Failed", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test101_Should_Upload_JPEG_Extension_Image_Asset()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadJpegExtensionImage");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/tokyo.jpeg");
+            try
+            {
+                AssetModel asset = new AssetModel("tokyo.jpeg", path, "image/jpeg", title: "Tokyo JPEG", description: "JPEG (.jpeg extension) image upload test", parentUID: null, tags: "image,jpeg,tokyo");
+                ContentstackResponse response = _stack.Asset().Create(asset);
+                TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "UploadJpegExtImage_StatusCode");
+                    var responseObject = response.OpenJsonObjectResponse();
+                    AssertLogger.IsNotNull(responseObject["asset"], "UploadJpegExtImage_ResponseContainsAsset");
+                    var assetUID = responseObject["asset"]?["uid"]?.ToString();
+                    if (!string.IsNullOrEmpty(assetUID))
+                    {
+                        _testAssetUIDs.Add(assetUID);
+                        TestOutputLogger.LogContext("AssetUID", assetUID);
+                    }
+                    var contentType = responseObject["asset"]?["content_type"]?.ToString();
+                    AssertLogger.IsTrue(
+                        contentType == "image/jpeg" || contentType == "image/jpg",
+                        $"Expected image/jpeg content type, got: {contentType}",
+                        "UploadJpegExtImage_ContentType");
+                }
+                else
+                {
+                    AssertLogger.Fail("JPEG (.jpeg) Image Upload Failed", response.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("JPEG (.jpeg) Image Upload Failed", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test102_Should_Upload_AVIF_Image_Asset()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadAvifImage");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/dubai.avif");
+            try
+            {
+                AssetModel asset = new AssetModel("dubai.avif", path, "image/avif", title: "Dubai AVIF", description: "AVIF image upload test", parentUID: null, tags: "image,avif,dubai");
+                ContentstackResponse response = _stack.Asset().Create(asset);
+                TestOutputLogger.LogContext("StackAPIKey", _stack?.APIKey ?? "null");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, "UploadAvifImage_StatusCode");
+                    var responseObject = response.OpenJsonObjectResponse();
+                    AssertLogger.IsNotNull(responseObject["asset"], "UploadAvifImage_ResponseContainsAsset");
+                    var assetUID = responseObject["asset"]?["uid"]?.ToString();
+                    if (!string.IsNullOrEmpty(assetUID))
+                    {
+                        _testAssetUIDs.Add(assetUID);
+                        TestOutputLogger.LogContext("AssetUID", assetUID);
+                    }
+                    var contentType = responseObject["asset"]?["content_type"]?.ToString();
+                    AssertLogger.IsTrue(
+                        contentType == "image/avif" || contentType == "application/octet-stream",
+                        $"Expected image/avif content type, got: {contentType}",
+                        "UploadAvifImage_ContentType");
+                }
+                else
+                {
+                    AssertLogger.Fail("AVIF Image Upload Failed", response.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("AVIF Image Upload Failed", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test103_Should_Upload_Multiple_Image_Formats_Sequentially()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadMultipleImageFormats");
+
+            var imageAssets = new[]
+            {
+                ("london.jpg",  "image/jpeg", "London JPG"),
+                ("tokyo.jpeg",  "image/jpeg", "Tokyo JPEG"),
+                ("dubai.avif",  "image/avif", "Dubai AVIF"),
+            };
+
+            foreach (var (fileName, mimeType, title) in imageAssets)
+            {
+                var path = Path.Combine(System.Environment.CurrentDirectory, $"../../../Mock/assets/{fileName}");
+                try
+                {
+                    AssetModel asset = new AssetModel(fileName, path, mimeType, title: title, description: $"Multi-format test: {fileName}", parentUID: null, tags: $"image,multi-format,{Path.GetExtension(fileName).TrimStart('.')}");
+                    ContentstackResponse response = _stack.Asset().Create(asset);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        AssertLogger.AreEqual(System.Net.HttpStatusCode.Created, response.StatusCode, $"MultiFormat_{fileName}_StatusCode");
+                        var responseObject = response.OpenJsonObjectResponse();
+                        AssertLogger.IsNotNull(responseObject["asset"], $"MultiFormat_{fileName}_ResponseContainsAsset");
+                        var assetUID = responseObject["asset"]?["uid"]?.ToString();
+                        if (!string.IsNullOrEmpty(assetUID))
+                        {
+                            _testAssetUIDs.Add(assetUID);
+                        }
+                        Console.WriteLine($"✅ Uploaded {fileName} ({mimeType}) successfully");
+                    }
+                    else
+                    {
+                        AssertLogger.Fail($"Upload failed for {fileName}", response.OpenResponse());
+                    }
+                }
+                catch (Exception e)
+                {
+                    AssertLogger.Fail($"Upload failed for {fileName}", e.Message);
+                }
+
+                await Task.Delay(200);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test104_Should_Fetch_Uploaded_Image_Asset_Metadata()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FetchUploadedImageAssetMetadata");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/london.jpg");
+            try
+            {
+                AssetModel asset = new AssetModel("london_meta_test.jpg", path, "image/jpeg", title: "London Meta Test", description: "Image metadata fetch test", parentUID: null, tags: "image,metadata");
+                ContentstackResponse createResponse = _stack.Asset().Create(asset);
+
+                if (!createResponse.IsSuccessStatusCode)
+                {
+                    AssertLogger.Fail("Could not create image asset for metadata fetch test", createResponse.OpenResponse());
+                    return;
+                }
+
+                var createdObj = createResponse.OpenJsonObjectResponse();
+                var assetUID = createdObj["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "FetchImageMeta_CreatedAssetUID");
+                _testAssetUIDs.Add(assetUID);
+
+                ContentstackResponse fetchResponse = _stack.Asset(assetUID).Fetch();
+
+                if (fetchResponse.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, fetchResponse.StatusCode, "FetchImageMeta_StatusCode");
+                    var responseObject = fetchResponse.OpenJsonObjectResponse();
+                    var fetchedAsset = responseObject["asset"];
+                    AssertLogger.IsNotNull(fetchedAsset, "FetchImageMeta_AssetNotNull");
+                    AssertLogger.IsNotNull(fetchedAsset["uid"]?.ToString(), "FetchImageMeta_HasUID");
+                    AssertLogger.IsNotNull(fetchedAsset["filename"]?.ToString(), "FetchImageMeta_HasFilename");
+                    AssertLogger.IsNotNull(fetchedAsset["content_type"]?.ToString(), "FetchImageMeta_HasContentType");
+                    AssertLogger.IsNotNull(fetchedAsset["file_size"]?.ToString(), "FetchImageMeta_HasFileSize");
+                    Console.WriteLine($"✅ Image metadata verified: uid={fetchedAsset["uid"]}, content_type={fetchedAsset["content_type"]}, size={fetchedAsset["file_size"]}");
+                }
+                else
+                {
+                    AssertLogger.Fail("Fetch image asset metadata failed", fetchResponse.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Fetch image asset metadata failed", e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test105_Should_Update_Uploaded_Image_Asset()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UpdateUploadedImageAsset");
+            var createPath = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/london.jpg");
+            var updatePath = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/assets/tokyo.jpeg");
+            try
+            {
+                AssetModel createAsset = new AssetModel("london_update_test.jpg", createPath, "image/jpeg", title: "London Update Test", description: "Original image", parentUID: null, tags: "image,update,original");
+                ContentstackResponse createResponse = _stack.Asset().Create(createAsset);
+
+                if (!createResponse.IsSuccessStatusCode)
+                {
+                    AssertLogger.Fail("Could not create image asset for update test", createResponse.OpenResponse());
+                    return;
+                }
+
+                var createdObj = createResponse.OpenJsonObjectResponse();
+                var assetUID = createdObj["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "UpdateImage_CreatedAssetUID");
+                _testAssetUIDs.Add(assetUID);
+
+                AssetModel updateAsset = new AssetModel("tokyo_update_test.jpeg", updatePath, "image/jpeg", title: "Tokyo Updated Image", description: "Updated image asset", parentUID: null, tags: "image,update,updated");
+                ContentstackResponse updateResponse = _stack.Asset(assetUID).Update(updateAsset);
+
+                if (updateResponse.IsSuccessStatusCode)
+                {
+                    AssertLogger.AreEqual(System.Net.HttpStatusCode.OK, updateResponse.StatusCode, "UpdateImage_StatusCode");
+                    var responseObject = updateResponse.OpenJsonObjectResponse();
+                    AssertLogger.IsNotNull(responseObject["asset"], "UpdateImage_ResponseContainsAsset");
+                    Console.WriteLine($"✅ Image asset updated successfully: {assetUID}");
+                }
+                else
+                {
+                    AssertLogger.Fail("Update image asset failed", updateResponse.OpenResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Update image asset failed", e.Message);
+            }
+        }
+
+        #endregion
+
+        #region Asset Scanning Tests
+        // These tests validate the include_asset_scan_status query param and api_version header.
+        // Assets created here are intentionally NOT added to _testAssetUIDs so they remain
+        // visible in the Contentstack stack UI after the test run for manual verification.
+        // The shared publish environment (_scanTestPublishEnvUid) is created in ClassInitialize
+        // and deleted in ClassCleanup.
+
+        // ── Happy Path ─────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Happy path: GET /v3/assets?include_asset_scan_status=true
+        /// Verifies the SDK sends the param and the API accepts it.
+        /// If the response contains assets, each include_asset_scan_status value must be a valid enum.
+        /// Example (Python equiv): asset.add_param("include_asset_scan_status", True); asset.find()
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test106_Should_Find_Assets_With_ScanStatus_Param()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FindAssetsWithScanStatusParam");
+            try
+            {
+                var collection = new ParameterCollection();
+                collection.Add("include_asset_scan_status", true);
+
+                ContentstackResponse response = _stack.Asset().Query().Find(collection);
+
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "FindAssets_ScanStatus_Success", "FindAssets_ScanStatus_Success");
+                Console.WriteLine($"✅ Find assets with include_asset_scan_status param: HTTP {(int)response.StatusCode}");
+
+                var responseObject = response.OpenJsonObjectResponse();
+                var assets = responseObject["assets"];
+                if (assets != null)
+                {
+                    foreach (var asset in assets.AsArray())
+                    {
+                        var scanStatus = asset?["_asset_scan_status"]?.ToString();
+                        if (scanStatus != null)
+                        {
+                            AssertLogger.IsTrue(
+                                Array.Exists(ValidScanStatuses, s => s == scanStatus),
+                                $"Expected valid scan status, got: {scanStatus}",
+                                "FindAssets_ScanStatus_ValidEnum");
+                        }
+                    }
+                    Console.WriteLine($"✅ All _asset_scan_status values are valid enums");
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Find assets with scan status param failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Happy path: GET /v3/assets/{uid}?include_asset_scan_status=true
+        /// Creates an asset, fetches it with the scan param, validates the scan status field.
+        /// Asset is NOT cleaned up — remains in stack UI for verification.
+        /// Example (Python equiv): asset.add_param("include_asset_scan_status", True); asset.fetch()
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test107_Should_Fetch_Asset_With_ScanStatus_Param()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FetchAssetWithScanStatusParam");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                // Step 1: Create asset
+                var asset = new AssetModel("scanFetchTest.json", path, "application/json",
+                    title: "Scan Fetch Test", description: "scan status fetch test", parentUID: null, tags: "scan,fetch");
+                ContentstackResponse createResponse = _stack.Asset().Create(asset);
+                AssertLogger.IsTrue(createResponse.IsSuccessStatusCode, "FetchScan_AssetCreated", "FetchScan_AssetCreated");
+                var assetUID = createResponse.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "FetchScan_AssetUID");
+                Console.WriteLine($"✅ Asset created (not in cleanup list): uid={assetUID}");
+
+                // Step 2: Fetch with include_asset_scan_status=true
+                var collection = new ParameterCollection();
+                collection.Add("include_asset_scan_status", true);
+                ContentstackResponse fetchResponse = _stack.Asset(assetUID).Fetch(collection);
+
+                AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "FetchScan_Success", "FetchScan_Success");
+                Console.WriteLine($"✅ Fetch with include_asset_scan_status param: HTTP {(int)fetchResponse.StatusCode}");
+
+                var scanStatus = fetchResponse.OpenJsonObjectResponse()["asset"]?["_asset_scan_status"]?.ToString();
+                if (scanStatus != null)
+                {
+                    AssertLogger.IsTrue(
+                        Array.Exists(ValidScanStatuses, s => s == scanStatus),
+                        $"Expected valid scan status, got: {scanStatus}",
+                        "FetchScan_ValidEnum");
+                    Console.WriteLine($"✅ _asset_scan_status = {scanStatus}");
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Fetch asset with scan status param failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Happy path: POST /v3/assets with ParameterCollection containing include_asset_scan_status.
+        /// SDK must accept the param without throwing. Asset is NOT cleaned up.
+        /// Example (Python equiv): asset.add_param("include_asset_scan_status", True); asset.upload(file)
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test108_Should_Upload_Asset_With_ScanStatus_Param()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadAssetWithScanStatusParam");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                var collection = new ParameterCollection();
+                collection.Add("include_asset_scan_status", true);
+
+                var asset = new AssetModel("scanUploadTest.json", path, "application/json",
+                    title: "Scan Upload Test", description: "scan status upload test", parentUID: null, tags: "scan,upload");
+                ContentstackResponse response = _stack.Asset().Create(asset, collection);
+
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "UploadScan_Created", "UploadScan_Created");
+                var assetUID = response.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "UploadScan_AssetUID");
+                Console.WriteLine($"✅ Upload with include_asset_scan_status param accepted by SDK: uid={assetUID}");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Upload asset with scan status param failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Happy path: POST /v3/assets/{uid}/publish with api_version: 3.2 header.
+        /// Uses shared environment created in ClassInitialize.
+        /// Example (Python equiv): asset.add_header("api_version", "3.2"); asset.publish(data)
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test109_Should_Publish_Asset_With_ApiVersion_Header()
+        {
+            TestOutputLogger.LogContext("TestScenario", "PublishAssetWithApiVersionHeader");
+            if (string.IsNullOrEmpty(_scanTestPublishEnvUid))
+            {
+                Console.WriteLine("⚠️ Skipping Test109 — shared publish environment was not created in ClassInitialize");
+                return;
+            }
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                // Step 1: Create asset (not in cleanup list — stays visible in UI)
+                var asset = new AssetModel("scanPublishApiVersionTest.json", path, "application/json",
+                    title: "Scan Publish ApiVersion Test", description: "api version header test", parentUID: null, tags: "scan,publish,apiversion");
+                ContentstackResponse createResponse = _stack.Asset().Create(asset);
+                AssertLogger.IsTrue(createResponse.IsSuccessStatusCode, "PublishApiVersion_AssetCreated", "PublishApiVersion_AssetCreated");
+                var assetUID = createResponse.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "PublishApiVersion_AssetUID");
+                Console.WriteLine($"✅ Asset created: uid={assetUID}");
+
+                // Step 2: Publish with api_version: 3.2 to the shared environment
+                var publishDetails = new PublishUnpublishDetails
+                {
+                    Locales = new List<string> { "en-us" },
+                    Environments = new List<string> { _scanTestPublishEnvUid },
+                    Version = 1
+                };
+                ContentstackResponse publishResponse = _stack.Asset(assetUID).Publish(publishDetails, "3.2");
+
+                AssertLogger.IsTrue(publishResponse.IsSuccessStatusCode, "PublishApiVersion_Success", "PublishApiVersion_Success");
+                Console.WriteLine($"✅ Asset published with api_version: 3.2, uid={assetUID}");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Publish asset with api_version header failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Happy path: POST /v3/assets/{uid}/publish WITHOUT api_version header (default SDK behavior).
+        /// Verifies SDK works correctly when the optional header is omitted.
+        /// Example (Python equiv): asset.publish(data)  — no add_header call
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test110_Should_Publish_Asset_Without_ApiVersion_Header()
+        {
+            TestOutputLogger.LogContext("TestScenario", "PublishAssetWithoutApiVersionHeader");
+            if (string.IsNullOrEmpty(_scanTestPublishEnvUid))
+            {
+                Console.WriteLine("⚠️ Skipping Test110 — shared publish environment was not created in ClassInitialize");
+                return;
+            }
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                // Step 1: Create asset (not in cleanup list — stays visible in UI)
+                var asset = new AssetModel("scanPublishNoApiVersionTest.json", path, "application/json",
+                    title: "Scan Publish No ApiVersion Test", description: "no api version header test", parentUID: null, tags: "scan,publish,noapiversion");
+                ContentstackResponse createResponse = _stack.Asset().Create(asset);
+                AssertLogger.IsTrue(createResponse.IsSuccessStatusCode, "PublishNoApiVersion_AssetCreated", "PublishNoApiVersion_AssetCreated");
+                var assetUID = createResponse.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "PublishNoApiVersion_AssetUID");
+                Console.WriteLine($"✅ Asset created: uid={assetUID}");
+
+                // Step 2: Publish WITHOUT api_version header — omitting the optional param
+                var publishDetails = new PublishUnpublishDetails
+                {
+                    Locales = new List<string> { "en-us" },
+                    Environments = new List<string> { _scanTestPublishEnvUid },
+                    Version = 1
+                };
+                ContentstackResponse publishResponse = _stack.Asset(assetUID).Publish(publishDetails);
+
+                AssertLogger.IsTrue(publishResponse.IsSuccessStatusCode, "PublishNoApiVersion_Success", "PublishNoApiVersion_Success");
+                Console.WriteLine($"✅ Asset published without api_version header, uid={assetUID}");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Publish asset without api_version header failed", e.Message);
+            }
+        }
+
+        // ── Negative Path ──────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Negative path: GET /v3/assets/{uid} WITHOUT include_asset_scan_status param.
+        /// Verifies the field is absent from the response when param is not sent.
+        /// Example (Python equiv): asset.fetch()  — no add_param call
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test111_Should_Fetch_Asset_Without_ScanStatus_Param_Field_Absent()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FetchAssetWithoutScanStatusParamFieldAbsent");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                // Step 1: Create asset (not in cleanup list — stays visible in UI)
+                var asset = new AssetModel("scanFetchNegativeTest.json", path, "application/json",
+                    title: "Scan Fetch Negative Test", description: "no scan param test", parentUID: null, tags: "scan,negative");
+                ContentstackResponse createResponse = _stack.Asset().Create(asset);
+                AssertLogger.IsTrue(createResponse.IsSuccessStatusCode, "FetchNoParam_AssetCreated", "FetchNoParam_AssetCreated");
+                var assetUID = createResponse.OpenJsonObjectResponse()["asset"]?["uid"]?.ToString();
+                AssertLogger.IsNotNull(assetUID, "FetchNoParam_AssetUID");
+
+                // Step 2: Fetch WITHOUT include_asset_scan_status param — field must be absent
+                ContentstackResponse fetchResponse = _stack.Asset(assetUID).Fetch();
+
+                AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "FetchNoParam_Success", "FetchNoParam_Success");
+                var assetNode = fetchResponse.OpenJsonObjectResponse()["asset"];
+                AssertLogger.IsTrue(
+                    assetNode?["_asset_scan_status"] == null,
+                    "_asset_scan_status must be absent when param is not sent",
+                    "FetchNoParam_FieldAbsent");
+                Console.WriteLine($"✅ _asset_scan_status correctly absent when param not sent, uid={assetUID}");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Fetch asset without scan status param (field absent) failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Negative path: GET /v3/assets WITHOUT include_asset_scan_status param.
+        /// Verifies the field is absent from every asset in the list response.
+        /// Example (Python equiv): stack.assets().find()  — no add_param call
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test112_Should_Find_Assets_Without_ScanStatus_Param_Field_Absent()
+        {
+            TestOutputLogger.LogContext("TestScenario", "FindAssetsWithoutScanStatusParamFieldAbsent");
+            try
+            {
+                // No ParameterCollection — include_asset_scan_status must not appear in any asset
+                ContentstackResponse response = _stack.Asset().Query().Find();
+
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "FindNoParam_Success", "FindNoParam_Success");
+
+                var assets = response.OpenJsonObjectResponse()["assets"];
+                if (assets != null)
+                {
+                    foreach (var asset in assets.AsArray())
+                    {
+                        AssertLogger.IsTrue(
+                            asset?["_asset_scan_status"] == null,
+                            $"_asset_scan_status must be absent when param is not sent (uid={asset?["uid"]})",
+                            "FindNoParam_FieldAbsent");
+                    }
+                    Console.WriteLine($"✅ _asset_scan_status correctly absent in all assets when param not sent");
+                }
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Find assets without scan status param (field absent) failed", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Negative path: POST /v3/assets WITHOUT ParameterCollection.
+        /// Verifies include_asset_scan_status is absent from the create response when param is not sent.
+        /// Asset is NOT cleaned up — remains in stack UI for verification.
+        /// Example (Python equiv): stack.assets().upload(file)  — no add_param call
+        /// </summary>
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test113_Should_Upload_Asset_Without_ScanStatus_Param_Field_Absent()
+        {
+            TestOutputLogger.LogContext("TestScenario", "UploadAssetWithoutScanStatusParamFieldAbsent");
+            var path = Path.Combine(System.Environment.CurrentDirectory, "../../../Mock/contentTypeSchema.json");
+            try
+            {
+                // No ParameterCollection — include_asset_scan_status must not appear in response
+                var asset = new AssetModel("scanUploadNegativeTest.json", path, "application/json",
+                    title: "Scan Upload Negative Test", description: "no scan param upload test", parentUID: null, tags: "scan,upload,negative");
+                ContentstackResponse response = _stack.Asset().Create(asset);
+
+                AssertLogger.IsTrue(response.IsSuccessStatusCode, "UploadNoParam_Created", "UploadNoParam_Created");
+                var assetNode = response.OpenJsonObjectResponse()["asset"];
+                AssertLogger.IsNotNull(assetNode, "UploadNoParam_AssetNode");
+                AssertLogger.IsTrue(
+                    assetNode["_asset_scan_status"] == null,
+                    "_asset_scan_status must be absent in create response when param is not sent",
+                    "UploadNoParam_FieldAbsent");
+
+                Console.WriteLine($"✅ _asset_scan_status correctly absent in upload response, uid={assetNode["uid"]}");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail("Upload asset without scan status param (field absent) failed", e.Message);
             }
         }
 

@@ -44,9 +44,9 @@ namespace Contentstack.Management.Core.Log
             this.Log(LogLevel.Info, string.Format(message, arguments), null);
         }
 
-        private void Log(LogLevel logLevel, string message, Exception ex)
+        private void Log(LogLevel logLevel, string message, Exception? ex)
         {
-            string formatted = null;
+            string? formatted = null;
 
             string loglevelString = logLevel.ToString().ToUpper();
             string dt = DateTime.UtcNow.ToLocalTime().ToString();

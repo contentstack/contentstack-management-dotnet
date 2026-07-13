@@ -99,15 +99,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
             };
 
             // Run multiple times to verify jitter is added
-            bool foundVariation = false;
             var firstDelay = calculator.CalculateNetworkRetryDelay(1, config);
-            
+
             for (int i = 0; i < 10; i++)
             {
                 var delay = calculator.CalculateNetworkRetryDelay(1, config);
                 if (delay != firstDelay)
                 {
-                    foundVariation = true;
                     break;
                 }
             }

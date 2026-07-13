@@ -5,7 +5,7 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models
 {
@@ -33,13 +33,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             Assert.IsNull(taxonomy.Uid);
             Assert.AreEqual("/taxonomies", taxonomy.resourcePath);
-            Assert.ThrowsException<InvalidOperationException>(() => taxonomy.Fetch());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => taxonomy.FetchAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => taxonomy.Update(_fixture.Create<TaxonomyModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => taxonomy.UpdateAsync(_fixture.Create<TaxonomyModel>()));
-            Assert.ThrowsException<InvalidOperationException>(() => taxonomy.Delete());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => taxonomy.DeleteAsync());
-            Assert.ThrowsException<InvalidOperationException>(() => taxonomy.Terms());
+            Assert.ThrowsException<ArgumentException>(() => taxonomy.Fetch());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => taxonomy.FetchAsync());
+            Assert.ThrowsException<ArgumentException>(() => taxonomy.Update(_fixture.Create<TaxonomyModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => taxonomy.UpdateAsync(_fixture.Create<TaxonomyModel>()));
+            Assert.ThrowsException<ArgumentException>(() => taxonomy.Delete());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => taxonomy.DeleteAsync());
+            Assert.ThrowsException<ArgumentException>(() => taxonomy.Terms());
             Assert.AreEqual(typeof(Query), taxonomy.Query().GetType());
         }
 
@@ -62,7 +62,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = _stack.Taxonomy().Create(_fixture.Create<TaxonomyModel>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await _stack.Taxonomy().CreateAsync(_fixture.Create<TaxonomyModel>());
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = _stack.Taxonomy().Query().Find();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -89,7 +89,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await _stack.Taxonomy().Query().FindAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = _stack.Taxonomy(_fixture.Create<string>()).Fetch();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -107,7 +107,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = await _stack.Taxonomy(_fixture.Create<string>()).FetchAsync();
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.AreEqual(_contentstackResponse.OpenJObjectResponse().ToString(), response.OpenJObjectResponse().ToString());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
         }
 
         [TestMethod]
@@ -136,22 +136,22 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Export_Throws_When_Uid_Is_Empty()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy().Export());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy().ExportAsync());
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy().Export());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy().ExportAsync());
         }
 
         [TestMethod]
         public void Locales_Throws_When_Uid_Is_Empty()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy().Locales());
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy().LocalesAsync());
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy().Locales());
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy().LocalesAsync());
         }
 
         [TestMethod]
         public void Localize_Throws_When_Uid_Is_Empty()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy().Localize(_fixture.Create<TaxonomyModel>()));
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy().LocalizeAsync(_fixture.Create<TaxonomyModel>()));
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy().Localize(_fixture.Create<TaxonomyModel>()));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy().LocalizeAsync(_fixture.Create<TaxonomyModel>()));
         }
 
         [TestMethod]
@@ -182,7 +182,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         public void Localize_When_Api_Returns_400_Returns_Unsuccessful_Response()
         {
             var httpMsg = MockResponse.Create(HttpStatusCode.BadRequest, null, "{\"error_message\":\"Invalid locale\",\"error_code\":400}");
-            var badResponse = new ContentstackResponse(httpMsg, JsonSerializer.Create(new JsonSerializerSettings()));
+            var badResponse = new ContentstackResponse(httpMsg, new JsonSerializerOptions());
             var client = new ContentstackClient();
             client.ContentstackPipeline.ReplaceHandler(new MockHttpHandler(badResponse));
             client.contentstackOptions.Authtoken = _fixture.Create<string>();

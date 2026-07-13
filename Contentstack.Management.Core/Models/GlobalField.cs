@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
 
@@ -6,9 +6,9 @@ namespace Contentstack.Management.Core.Models
 {
     public class GlobalField : BaseModel<ContentModelling>
     {
-        private readonly string apiVersion;
+        private readonly string? apiVersion;
 
-        internal GlobalField(Stack stack, string uid = null, string apiVersion = null)
+        internal GlobalField(Stack stack, string? uid = null, string? apiVersion = null)
             : base(stack, "global_field", uid)
         {
             resourcePath = uid == null ? "/global_fields" : $"/global_fields/{uid}";
@@ -43,10 +43,10 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Create(ContentModelling model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(ContentModelling model, ParameterCollection? collection = null)
         {
             ThrowIfUidNotEmpty();
-            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, collection: collection);
+            var service = new GlobalFieldService(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, apiVersion, collection: collection);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -62,11 +62,11 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> CreateAsync(ContentModelling model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(ContentModelling model, ParameterCollection? collection = null)
         {
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
-            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, collection: collection);
+            var service = new GlobalFieldService(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, apiVersion, collection: collection);
             return stack.client.InvokeAsync<GlobalFieldService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -82,10 +82,10 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Update(ContentModelling model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(ContentModelling model, ParameterCollection? collection = null)
         {
             ThrowIfUidEmpty();
-            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, "PUT", collection: collection);
+            var service = new GlobalFieldService(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, apiVersion, "PUT", collection: collection);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -101,11 +101,11 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IGlobalField for updating Content Type.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> UpdateAsync(ContentModelling model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(ContentModelling model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new GlobalFieldService(stack.client.serializer, stack, resourcePath, model, this.fieldName, apiVersion, "PUT", collection: collection);
+            var service = new GlobalFieldService(stack.client.SerializerOptions, stack, resourcePath, model, this.fieldName, apiVersion, "PUT", collection: collection);
             return stack.client.InvokeAsync<GlobalFieldService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -119,11 +119,11 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, collection: collection);
+            var service = new GlobalFieldFetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, apiVersion, collection: collection);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -137,11 +137,11 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, collection: collection);
+            var service = new GlobalFieldFetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, apiVersion, collection: collection);
             return stack.client.InvokeAsync<GlobalFieldFetchDeleteService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -155,11 +155,11 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, "DELETE", collection: collection);
+            var service = new GlobalFieldFetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, apiVersion, "DELETE", collection: collection);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -173,11 +173,11 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
-            var service = new GlobalFieldFetchDeleteService(stack.client.serializer, stack, resourcePath, apiVersion, "DELETE", collection: collection);
+            var service = new GlobalFieldFetchDeleteService(stack.client.SerializerOptions, stack, resourcePath, apiVersion, "DELETE", collection: collection);
             return stack.client.InvokeAsync<GlobalFieldFetchDeleteService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
     }

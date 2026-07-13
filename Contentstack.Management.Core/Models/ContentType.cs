@@ -5,7 +5,7 @@ namespace Contentstack.Management.Core.Models
 {
     public class ContentType: BaseModel<ContentModelling>
     {
-        internal ContentType(Stack stack, string uid) 
+        internal ContentType(Stack stack, string? uid)
             : base(stack, "content_type", uid)
         {
             resourcePath = uid == null ? "/content_types" : $"/content_types/{uid}";
@@ -39,7 +39,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override ContentstackResponse Create(ContentModelling model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(ContentModelling model, ParameterCollection? collection = null)
         {
             return base.Create(model, collection);
         }
@@ -56,7 +56,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> CreateAsync(ContentModelling model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(ContentModelling model, ParameterCollection? collection = null)
         {
             return base.CreateAsync(model, collection);
         }
@@ -73,7 +73,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override ContentstackResponse Update(ContentModelling model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(ContentModelling model, ParameterCollection? collection = null)
         {
             return base.Update(model, collection);
         }
@@ -90,7 +90,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IContentType for updating Content Type.</param>
         /// <returns></returns>
-        public override Task<ContentstackResponse> UpdateAsync(ContentModelling model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(ContentModelling model, ParameterCollection? collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
@@ -105,7 +105,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             return base.Fetch(collection);
         }
@@ -120,7 +120,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             return base.FetchAsync(collection);
         }
@@ -135,7 +135,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             return base.Delete(collection);
         }
@@ -150,7 +150,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             return base.DeleteAsync(collection);
         }
@@ -171,7 +171,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="uid">Optional entry uid for performing entry specific operation</param>
         /// <returns></returns>
-        public Entry Entry(string uid = null)
+        public Entry Entry(string? uid = null)
         {
             ThrowIfUidEmpty();
             return new Entry(stack, Uid, uid);

@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Encodings.Web;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models
 {
@@ -25,7 +26,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonConvert.SerializeObject(globalFieldRefs);
+            var json = JsonSerializer.Serialize(globalFieldRefs);
 
             Assert.IsTrue(json.Contains("\"uid\":\"referenced_global_field_uid\""));
             Assert.IsTrue(json.Contains("\"occurrence_count\":2"));
@@ -47,7 +48,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             }";
 
             
-            var globalFieldRefs = JsonConvert.DeserializeObject<GlobalFieldRefs>(json);
+            var globalFieldRefs = JsonSerializer.Deserialize<GlobalFieldRefs>(json);
 
             Assert.IsNotNull(globalFieldRefs);
             Assert.AreEqual("referenced_global_field_uid", globalFieldRefs.Uid);
@@ -72,7 +73,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonConvert.SerializeObject(globalFieldRefs);
+            var json = JsonSerializer.Serialize(globalFieldRefs);
 
             Assert.IsTrue(json.Contains("\"occurrence_count\":0"));
             Assert.IsTrue(json.Contains("\"isChild\":false"));
@@ -91,7 +92,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonConvert.SerializeObject(globalFieldRefs);
+            var json = JsonSerializer.Serialize(globalFieldRefs);
 
             Assert.IsTrue(json.Contains("\"occurrence_count\":100"));
             Assert.IsTrue(json.Contains("\"isChild\":true"));
@@ -119,7 +120,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonConvert.SerializeObject(globalFieldRefs);
+            var json = JsonSerializer.Serialize(globalFieldRefs);
 
             Assert.IsTrue(json.Contains("\"occurrence_count\":3"));
             Assert.IsTrue(json.Contains("\"schema.1\""));
@@ -145,7 +146,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             }";
 
             
-            var globalFieldRefs = JsonConvert.DeserializeObject<GlobalFieldRefs>(json);
+            var globalFieldRefs = JsonSerializer.Deserialize<GlobalFieldRefs>(json);
 
             Assert.IsNotNull(globalFieldRefs);
             Assert.AreEqual("complex_field", globalFieldRefs.Uid);
@@ -172,7 +173,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonConvert.SerializeObject(globalFieldRefs);
+            var json = JsonSerializer.Serialize(globalFieldRefs);
 
             Assert.IsTrue(json.Contains("\"paths\":null"));
         }
@@ -190,7 +191,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonConvert.SerializeObject(globalFieldRefs);
+            var json = JsonSerializer.Serialize(globalFieldRefs);
 
             Assert.IsTrue(json.Contains("\"paths\":[]"));
         }
@@ -207,7 +208,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             }";
 
             
-            var globalFieldRefs = JsonConvert.DeserializeObject<GlobalFieldRefs>(json);
+            var globalFieldRefs = JsonSerializer.Deserialize<GlobalFieldRefs>(json);
 
             Assert.IsNotNull(globalFieldRefs);
             Assert.AreEqual("test_field", globalFieldRefs.Uid);
@@ -228,7 +229,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             }";
 
             
-            var globalFieldRefs = JsonConvert.DeserializeObject<GlobalFieldRefs>(json);
+            var globalFieldRefs = JsonSerializer.Deserialize<GlobalFieldRefs>(json);
 
             Assert.IsNotNull(globalFieldRefs);
             Assert.AreEqual("test_field", globalFieldRefs.Uid);
@@ -251,7 +252,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             };
 
             
-            var json = JsonConvert.SerializeObject(globalFieldRefs);
+            var json = JsonSerializer.Serialize(globalFieldRefs);
 
             Assert.IsTrue(json.Contains("\"uid\":\"test-field_with_underscores.and.dots\""));
         }
@@ -268,7 +269,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             }";
 
             
-            var globalFieldRefs = JsonConvert.DeserializeObject<GlobalFieldRefs>(json);
+            var globalFieldRefs = JsonSerializer.Deserialize<GlobalFieldRefs>(json);
 
             Assert.IsNotNull(globalFieldRefs);
             Assert.AreEqual("test-field_with_underscores.and.dots", globalFieldRefs.Uid);
@@ -279,7 +280,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
         [TestMethod]
         public void Should_Serialize_GlobalFieldRefs_With_Unicode_Characters()
         {
-            
+
             var globalFieldRefs = new GlobalFieldRefs
             {
                 Uid = "test_field_中文",
@@ -288,8 +289,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
                 Paths = new List<string> { "schema.1" }
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRefs);
+            var options = new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+            var json = JsonSerializer.Serialize(globalFieldRefs, options);
 
             Assert.IsTrue(json.Contains("\"uid\":\"test_field_中文\""));
         }
@@ -306,7 +307,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             }";
 
             
-            var globalFieldRefs = JsonConvert.DeserializeObject<GlobalFieldRefs>(json);
+            var globalFieldRefs = JsonSerializer.Deserialize<GlobalFieldRefs>(json);
 
             Assert.IsNotNull(globalFieldRefs);
             Assert.AreEqual("test_field_中文", globalFieldRefs.Uid);

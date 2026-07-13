@@ -1,7 +1,64 @@
 # Changelog
 
+## [v1.0.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0)(2026-07-13)
 
-## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.9.0)
+ - **Breaking Change**
+   - `Newtonsoft.Json` is no longer a dependency — all JSON serialisation now uses `System.Text.Json`
+   - `client.SerializerSettings` (`JsonSerializerSettings`) replaced by `client.SerializerOptions` (`JsonSerializerOptions`)
+   - `response.OpenJObjectResponse()` removed — use `response.OpenJsonObjectResponse()` (`JsonObject`) or `response.OpenTResponse<T>()` instead
+   - `JObjectParameterValue` now accepts `System.Text.Json.Nodes.JsonNode` instead of `Newtonsoft.Json.Linq.JObject`
+   - All `[JsonProperty]` attributes replaced with `[JsonPropertyName]`
+   - Requires **.NET 10** or later
+ - **New**
+   - **Branch management**: `Branch` model with `Create`, `CreateAsync`, `Fetch`, `FetchAsync`, `Delete`, `DeleteAsync`, and `Query` operations via `Stack.Branch(uid?)`
+   - **Multi-region endpoint resolution** via `Endpoint.GetContentstackEndpoint(region, service)` — 7 regions (NA, EU, AU, Azure-NA, Azure-EU, GCP-NA, GCP-EU) and 18 service keys
+   - **OAuth auto token refresh** wired into the request pipeline
+   - **PreviewToken** support — `Create` and `Delete` operations
+   - **Image format upload**: JPEG, AVIF, and multi-format asset upload coverage
+ - **Migration Guide**
+   - See [Migrating from Newtonsoft.Json to System.Text.Json](https://www.contentstack.com/docs/developers/sdks/content-management-sdk/dot-net/migrate-dotnet-management-sdk-from-newtonsoft.json-to-system.text.json) for the full upgrade path from v0.x.
+
+## [v1.0.0-beta.2](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.2)(2026-06-22)
+
+ - **Chore**
+   - Replaced `Scripts/refresh-region.cs` with `Scripts/refresh-region.py` — prevents MSBuild from compiling the script as source code
+   - Added SSL fallback in `refresh-region.py` for macOS certificate verification failures
+   - Updated `contentstack.management.csharp.targets` and `contentstack.management.core.csproj` to package and deliver the `.py` script
+ - **Fix**
+   - Bulk operation tests: accept `401 Unauthorized` alongside `404/400` for invalid/expired job ID assertions
+   - Bulk operation tests: made workflow stage assignment non-fatal in `Test002` to prevent failures when workflow API is unavailable
+ - **Test**
+   - **Image format upload coverage**
+     - Added `Test100_Should_Upload_JPEG_Image_Asset` — uploads `london.jpg` via `image/jpeg` MIME type and verifies `Created` status and `content_type` in response
+     - Added `Test101_Should_Upload_JPEG_Extension_Image_Asset` — uploads `tokyo.jpeg` (`.jpeg` extension) and asserts `image/jpeg` content type
+     - Added `Test102_Should_Upload_AVIF_Image_Asset` — uploads `dubai.avif` via `image/avif` MIME type and accepts `image/avif` or `application/octet-stream` content type
+     - Added `Test103_Should_Upload_Multiple_Image_Formats_Sequentially` — uploads all three images in sequence and asserts `Created` on each
+     - Added `Test104_Should_Fetch_Uploaded_Image_Asset_Metadata` — creates a JPEG asset and fetches it back, asserting `uid`, `filename`, `content_type`, and `file_size` fields are present
+     - Added `Test105_Should_Update_Uploaded_Image_Asset` — creates a JPEG asset then replaces it with a different JPEG and verifies the `200 OK` update response
+     - Test image files (`london.jpg`, `tokyo.jpeg`, `dubai.avif`) live under `Contentstack.Management.Core.Tests/Mock/assets/`
+
+## [v1.0.0-beta.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0-beta.1)(2026-06-15)
+ - **Feat**
+   - **Branch support**
+     - Added `Branch` model with `Create`, `CreateAsync`, `Fetch`, `FetchAsync`, `Delete`, `DeleteAsync`, and `Query` operations
+     - `Stack.Branch(uid?)` accessor follows the same pattern as other stack resources
+ - **Breaking Change**
+   - **Complete migration from Newtonsoft.Json to System.Text.Json**
+     - `Newtonsoft.Json` is no longer a dependency — remove it from your project once your own code no longer references it directly
+     - `client.SerializerSettings` (`JsonSerializerSettings`) replaced by `client.SerializerOptions` (`JsonSerializerOptions`)
+     - `response.OpenJObjectResponse()` removed — use `response.OpenJsonObjectResponse()` (`JsonObject`) or `response.OpenTResponse<T>()` instead
+     - `JObjectParameterValue` now accepts `System.Text.Json.Nodes.JsonNode` instead of `Newtonsoft.Json.Linq.JObject`
+     - All `[JsonProperty]` attributes replaced with `[JsonPropertyName]`; `[JsonObject(ItemNullValueHandling)]` removed in favour of `DefaultIgnoreCondition = WhenWritingNull` on `SerializerOptions`
+     - All modules fully migrated to System.Text.Json: AuditLog, Branch, BulkOperation, ContentType, DeliveryToken, Entry, EntryVariant, Environment, Extension, GlobalField, Label, Locale, ManagementToken, Organization, Release, Role, Stack, Taxonomy, Term, User, VariantGroup, Webhook, and Workflow
+     - OAuth auto token refresh wired into the request pipeline
+     - Upgraded target framework to .NET 10
+ - **New:** Multi-region endpoint resolution via `Endpoint.GetContentstackEndpoint(region, service)` — resolves Contentstack service URLs for all 7 supported regions (NA, EU, AU, Azure-NA, Azure-EU, GCP-NA, GCP-EU) and 18 service keys (contentManagement, contentDelivery, auth, graphqlDelivery, preview, images, assets, automate, launch, developerHub, brandKit, genAI, personalizeManagement, personalizeEdge, composableStudio, assetManagement, and more).
+ - **New:** `omitHttps` flag strips the `https://` scheme from returned URLs — pass directly to `ContentstackClientOptions.Host` (e.g. `new ContentstackClientOptions { Host = Endpoint.GetContentstackEndpoint("eu", "contentManagement", omitHttps: true) }`).
+ - **New:** Case-insensitive region alias support — `"us"`, `"NA"`, `"AWS-NA"`, `"azure_na"` all resolve correctly to the same region.
+ - **New:** `regions.json` registry auto-downloaded from `artifacts.contentstack.com` on first use and cached on disk — no setup required. The SDK self-heals if the file is missing.
+ - **New:** `Scripts/refresh-region.cs` bundled inside the NuGet package — automatically placed in your project's `Scripts/` folder on first `dotnet build`. Run `dotnet run Scripts/refresh-region.cs` anytime to pull the latest regions from CDN.
+
+## [v0.10.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v0.10.0)
  - Feat
    - **Enhanced Error Handling and Test Coverage (DX-5436)**
      - Added comprehensive error handling across all models with enhanced `ContentstackErrorException`

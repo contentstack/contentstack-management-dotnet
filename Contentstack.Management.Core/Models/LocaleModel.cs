@@ -1,16 +1,19 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models
 {
-    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class LocaleModel
     {
-        [JsonProperty(propertyName: "name")]
-        public string Name { get; set; }
-        [JsonProperty(propertyName: "code")]
-        public string Code { get; set; }
-        [JsonProperty(propertyName: "fallback_locale")]
-        public string FallbackLocale { get; set; }
+        [JsonPropertyName("name")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Name { get; set; }
+
+        [JsonPropertyName("code")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Code { get; set; }
+
+        [JsonPropertyName("fallback_locale")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? FallbackLocale { get; set; }
     }
 }

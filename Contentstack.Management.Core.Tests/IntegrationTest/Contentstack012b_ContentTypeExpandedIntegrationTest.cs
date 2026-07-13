@@ -834,7 +834,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         private static string ParseExtensionUidFromUploadResponse(ContentstackResponse response)
         {
-            var jo = response.OpenJObjectResponse();
+            var jo = response.OpenJsonObjectResponse();
             var token = jo["extension"]?["uid"] ?? jo["uid"];
             return token?.ToString();
         }

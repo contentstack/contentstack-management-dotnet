@@ -91,7 +91,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                         Unique = true,
                         FieldMetadata = new FieldMetadata
                         {
-                            Default = "true"
+                            Default = System.Text.Json.JsonDocument.Parse("true").RootElement
                         }
                     },
                     new TextboxField
@@ -2403,7 +2403,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var jsonResponse = response.OpenJObjectResponse();
+                    var jsonResponse = response.OpenJsonObjectResponse();
                     
                     // Check if essential fields are present
                     var uid = jsonResponse?["global_field"]?["uid"]?.ToString();
@@ -2545,7 +2545,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var jsonResponse = response.OpenJObjectResponse();
+                    var jsonResponse = response.OpenJsonObjectResponse();
                     
                     // Check timestamp consistency
                     var createdAt = jsonResponse?["global_field"]?["created_at"]?.ToString();

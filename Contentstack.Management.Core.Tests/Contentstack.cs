@@ -11,8 +11,8 @@ using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Tests
 {
@@ -242,17 +242,15 @@ namespace Contentstack.Management.Core.Tests
             return client;
         }
 
-        public static T serialize<T>(JsonSerializer serializer, string filePath)
+        public static T serialize<T>(JsonSerializerOptions options, string filePath)
         {
             string response = GetResourceText(filePath);
-            JObject jObject = JObject.Parse(response);
-            return jObject.ToObject<T>(serializer);
+            return JsonSerializer.Deserialize<T>(response, options);
         }
-        public static T serializeArray<T>(JsonSerializer serializer, string filePath)
+        public static T serializeArray<T>(JsonSerializerOptions options, string filePath)
         {
             string response = GetResourceText(filePath);
-            JArray jObject = JArray.Parse(response);
-            return jObject.ToObject<T>(serializer);
+            return JsonSerializer.Deserialize<T>(response, options);
         }
 
         public static string GetResourceText(string resourceName)

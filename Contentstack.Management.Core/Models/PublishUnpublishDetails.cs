@@ -1,22 +1,20 @@
-using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Models
 {
     public class PublishUnpublishDetails
     {
-        public List<string> Locales { get; set; }
+        public List<string>? Locales { get; set; }
 
-        public List<string> Environments { get; set; }
+        public List<string>? Environments { get; set; }
 
-        public List<PublishVariant> Variants { get; set; }
+        public List<PublishVariant>? Variants { get; set; }
 
-        public PublishVariantRules VariantRules { get; set; }
+        public PublishVariantRules? VariantRules { get; set; }
 
         public int? Version { get; set; }
 
-        public string ScheduledAt { get; set; }
+        public string? ScheduledAt { get; set; }
 
     }
 }

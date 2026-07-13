@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Models;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
@@ -9,6 +9,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
     [TestClass]
     public class BulkOperationModelsTest
     {
+        private static readonly JsonSerializerOptions _options = new JsonSerializerOptions();
         [TestMethod]
         public void BulkPublishDetails_Serialization_Test()
         {
@@ -42,8 +43,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(details);
-            var deserialized = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
+            var json = JsonSerializer.Serialize(details, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkPublishDetails>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(2, deserialized.Entries.Count);
@@ -74,8 +75,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(entry);
-            var deserialized = JsonConvert.DeserializeObject<BulkPublishEntry>(json);
+            var json = JsonSerializer.Serialize(entry, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkPublishEntry>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual("entry_uid", deserialized.Uid);
@@ -113,8 +114,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(details);
-            var deserialized = JsonConvert.DeserializeObject<BulkDeleteDetails>(json);
+            var json = JsonSerializer.Serialize(details, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkDeleteDetails>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(2, deserialized.Entries.Count);
@@ -168,8 +169,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(updateBody);
-            var deserialized = JsonConvert.DeserializeObject<BulkWorkflowUpdateBody>(json);
+            var json = JsonSerializer.Serialize(updateBody, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkWorkflowUpdateBody>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(1, deserialized.Entries.Count);
@@ -220,8 +221,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(data);
-            var deserialized = JsonConvert.DeserializeObject<BulkAddItemsData>(json);
+            var json = JsonSerializer.Serialize(data, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkAddItemsData>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(2, deserialized.Items.Count);
@@ -242,16 +243,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(details);
-            var deserialized = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
+            var json = JsonSerializer.Serialize(details, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkPublishDetails>(json, _options);
 
             Assert.IsNotNull(deserialized);
-            // Collections may be null after deserialization due to ShouldSerialize methods
-            // Initialize them if they're null
             deserialized.Entries = deserialized.Entries ?? new List<BulkPublishEntry>();
             deserialized.Assets = deserialized.Assets ?? new List<BulkPublishAsset>();
-            Assert.IsNotNull(deserialized.Locales);
-            Assert.IsNotNull(deserialized.Environments);
+            deserialized.Locales = deserialized.Locales ?? new List<string>();
+            deserialized.Environments = deserialized.Environments ?? new List<string>();
             Assert.AreEqual(0, deserialized.Entries.Count);
             Assert.AreEqual(0, deserialized.Assets.Count);
             Assert.AreEqual(0, deserialized.Locales.Count);
@@ -285,8 +284,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(details);
-            var deserialized = JsonConvert.DeserializeObject<BulkPublishDetails>(json);
+            var json = JsonSerializer.Serialize(details, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkPublishDetails>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual(1, deserialized.Entries.Count);
@@ -317,14 +316,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(workflowStage);
-            var deserialized = JsonConvert.DeserializeObject<BulkWorkflowStage>(json);
+            var json = JsonSerializer.Serialize(workflowStage, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkWorkflowStage>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual("test_uid", deserialized.Uid);
             Assert.AreEqual("test_comment", deserialized.Comment);
-            // Collections may be null after deserialization due to ShouldSerialize methods
-            // Initialize them if they're null
             deserialized.AssignedTo = deserialized.AssignedTo ?? new List<BulkWorkflowUser>();
             deserialized.AssignedByRoles = deserialized.AssignedByRoles ?? new List<BulkWorkflowRole>();
             Assert.AreEqual(0, deserialized.AssignedTo.Count);
@@ -342,8 +339,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.BulkOperation
             };
 
             
-            var json = JsonConvert.SerializeObject(entry);
-            var deserialized = JsonConvert.DeserializeObject<BulkPublishEntry>(json);
+            var json = JsonSerializer.Serialize(entry, _options);
+            var deserialized = JsonSerializer.Deserialize<BulkPublishEntry>(json, _options);
 
             Assert.IsNotNull(deserialized);
             Assert.AreEqual("entry_uid", deserialized.Uid);

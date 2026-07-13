@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models
 {
@@ -12,25 +12,25 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The UID of the referenced global field.
         /// </summary>
-        [JsonProperty(propertyName: "uid")]
-        public string Uid { get; set; }
+        [JsonPropertyName("uid")]
+        public string? Uid { get; set; }
 
         /// <summary>
         /// The number of times this global field is referenced in the schema.
         /// </summary>
-        [JsonProperty(propertyName: "occurrence_count")]
+        [JsonPropertyName("occurrence_count")]
         public int OccurrenceCount { get; set; }
 
         /// <summary>
         /// Indicates whether this is a child reference.
         /// </summary>
-        [JsonProperty(propertyName: "isChild")]
+        [JsonPropertyName("isChild")]
         public bool IsChild { get; set; }
 
         /// <summary>
         /// Array of paths where this global field reference occurs in the schema.
         /// </summary>
-        [JsonProperty(propertyName: "paths")]
-        public List<string> Paths { get; set; }
+        [JsonPropertyName("paths")]
+        public List<string>? Paths { get; set; }
     }
 } 

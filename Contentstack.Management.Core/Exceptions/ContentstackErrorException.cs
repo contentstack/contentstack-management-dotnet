@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Exceptions
 {
@@ -26,22 +26,22 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// This is http response Header of REST request to Contentstack.
         /// </summary>
-        public HttpResponseHeaders Header { get; set; }
+        public HttpResponseHeaders? Header { get; set; }
 
         /// <summary>
         /// This is http response phrase code of REST request to Contentstack.
         /// </summary>
-        public string ReasonPhrase { get; set; }
+        public string? ReasonPhrase { get; set; }
 
         /// <summary>
         /// This is error message.
         /// </summary>
-        public new string Message { get; set; }
+        public new string? Message { get; set; }
 
         /// <summary>
         /// This is error message.
         /// </summary>
-        [JsonProperty("error_message")]
+        [JsonPropertyName("error_message")]
         public string ErrorMessage
         {
             get
@@ -58,14 +58,15 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// This is error code.
         /// </summary>
-        [JsonProperty("error_code")]
+        [JsonPropertyName("error_code")]
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
         public int ErrorCode { get; set; }
 
         /// <summary>
         /// Set of errors in detail.
         /// </summary>
-        [JsonProperty("errors")]
-        public Dictionary<string, object> Errors { get; set; }
+        [JsonPropertyName("errors")]
+        public Dictionary<string, object>? Errors { get; set; }
 
         /// <summary>
         /// Number of retry attempts made before this exception was thrown.
@@ -75,7 +76,7 @@ namespace Contentstack.Management.Core.Exceptions
         /// <summary>
         /// The original exception that caused this error, if this is a network error wrapped in an HTTP exception.
         /// </summary>
-        public Exception OriginalError { get; set; }
+        public Exception? OriginalError { get; set; }
 
         /// <summary>
         /// Indicates whether this error originated from a network failure.
@@ -85,14 +86,14 @@ namespace Contentstack.Management.Core.Exceptions
         public static ContentstackErrorException CreateException(HttpResponseMessage response)
         {
             var stringResponse = response.Content.ReadAsStringAsync().Result;
-            ContentstackErrorException exception = null;
+            ContentstackErrorException? exception = null;
             if (!string.IsNullOrEmpty(stringResponse))
             {
                 try
                 {
-                    exception = JObject.Parse(stringResponse).ToObject<ContentstackErrorException>();
+                    exception = JsonSerializer.Deserialize<ContentstackErrorException>(stringResponse) ?? new ContentstackErrorException();
                 }
-                catch (JsonReaderException)
+                catch (JsonException)
                 {
                     // Handle HTML error responses or other non-JSON content
                     exception = new ContentstackErrorException();
@@ -130,7 +131,7 @@ namespace Contentstack.Management.Core.Exceptions
                 exception = new ContentstackErrorException();
             }
 
-            exception.StatusCode = response.StatusCode;
+            exception!.StatusCode = response.StatusCode;
             exception.Header = response.Headers;
             exception.ReasonPhrase = response.ReasonPhrase;
             return exception;

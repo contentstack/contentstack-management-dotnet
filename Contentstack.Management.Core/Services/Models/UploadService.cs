@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Text.Json;
 using Contentstack.Management.Core.Abstractions;
 using Contentstack.Management.Core.Queryable;
-using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Services.Models
@@ -12,10 +12,10 @@ namespace Contentstack.Management.Core.Services.Models
     {
         private readonly IUploadInterface _uploadInterface;
         
-        internal UploadService(JsonSerializer serializer, Core.Models.Stack stack, string resourcePath, IUploadInterface uploadInterface, string httpMethod = "POST", ParameterCollection collection = null)
-            : base(serializer, stack: stack, collection)
+        internal UploadService(Core.Models.Stack stack, string resourcePath, IUploadInterface uploadInterface, string httpMethod = "POST", ParameterCollection? collection = null, JsonSerializerOptions? stjOptions = null)
+            : base(stjOptions ?? stack?.client?.SerializerOptions ?? new JsonSerializerOptions(), stack: stack, collection)
         {
-            if (stack.APIKey == null)
+            if (stack!.APIKey == null)
             {
                 throw new ArgumentNullException("stack", CSConstants.MissingAPIKey);
             }
@@ -41,7 +41,7 @@ namespace Contentstack.Management.Core.Services.Models
             HttpContent content = _uploadInterface.GetHttpContent();
 
             Headers.Remove("Content-Type");
-            this.Headers.Add("Content-Type", content.Headers.ContentType.ToString());
+            this.Headers.Add("Content-Type", content.Headers.ContentType!.ToString());
             content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(_uploadInterface.ContentType);
             this.Content = content;
         }

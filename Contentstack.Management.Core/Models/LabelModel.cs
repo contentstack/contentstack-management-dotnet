@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models
 {
-    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class LabelModel
     {
-        [JsonProperty(propertyName: "name")]
-        public string Name { get; set; }
-        [JsonProperty(propertyName: "parent")]
-        public List<string> Parent { get; set; }
-        [JsonProperty(propertyName: "content_types")]
-        public List<string> ContentTypes { get; set; }
+        [JsonPropertyName("name")]
+        public string? Name { get; set; }
+        [JsonPropertyName("parent")]
+        public List<string>? Parent { get; set; }
+        [JsonPropertyName("content_types")]
+        public List<string>? ContentTypes { get; set; }
     }
 }

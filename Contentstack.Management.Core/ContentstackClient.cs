@@ -1,7 +1,8 @@
 using System;
 using System.Net;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
@@ -27,12 +28,11 @@ namespace Contentstack.Management.Core
     /// </summary>
     public class ContentstackClient : IContentstackClient
     {
-        internal ContentstackRuntimePipeline ContentstackPipeline { get; set; }
+        internal ContentstackRuntimePipeline? ContentstackPipeline { get; set; }
         internal ContentstackClientOptions contentstackOptions;
-        internal JsonSerializer serializer => JsonSerializer.Create(SerializerSettings);
 
         #region Private
-        private HttpClient _httpClient;
+        private HttpClient _httpClient = null!;
         private bool _disposed = false;
 
         private string Version => "0.5.0";
@@ -40,18 +40,24 @@ namespace Contentstack.Management.Core
         
         // OAuth token storage
         private readonly Dictionary<string, OAuthTokens> _oauthTokens = new Dictionary<string, OAuthTokens>();
-        
         private bool _isRefreshingToken = false;
+        
         #endregion
 
 
         #region Public
 
-        public LogManager LogManager { get; set; }
+        public LogManager? LogManager { get; set; }
         /// <summary>
         /// Get and Set method for deserialization.
         /// </summary>
-        public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings();
+        public JsonSerializerOptions SerializerOptions { get; set; } = new JsonSerializerOptions();
+
+        /// <summary>
+        /// Compatibility property for models that haven't been migrated yet.
+        /// Returns SerializerOptions for backward compatibility.
+        /// </summary>
+        internal JsonSerializerOptions serializer => SerializerOptions;
 
         #endregion
 
@@ -125,7 +131,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         public ContentstackClient(
-            string authtoken = null,
+            string? authtoken = null,
             string host = "api.contentstack.io",
             int port = 443,
             string version = "v3",
@@ -133,9 +139,9 @@ namespace Contentstack.Management.Core
             long maxResponseContentBufferSize = CSConstants.ContentBufferSize,
             int timeout = 30,
             bool retryOnError = true,
-            string proxyHost = null,
+            string? proxyHost = null,
             int proxyPort = -1,
-            ICredentials proxyCredentials = null
+            ICredentials? proxyCredentials = null
             ) :
         this(new OptionsWrapper<ContentstackClientOptions>(new ContentstackClientOptions()
         {
@@ -155,7 +161,7 @@ namespace Contentstack.Management.Core
         { }
         #endregion
 
-        protected void Initialize(HttpClient httpClient = null)
+        protected void Initialize(HttpClient? httpClient = null)
         {
             if (httpClient != null)
             {
@@ -190,18 +196,14 @@ namespace Contentstack.Management.Core
                 }
             }
 
-            SerializerSettings.DateParseHandling = DateParseHandling.None;
-            SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-            SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            // Configure System.Text.Json options
+            SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            SerializerOptions.PropertyNameCaseInsensitive = true;
 
-            foreach (Type t in CsmJsonConverterAttribute.GetCustomAttribute(typeof(CsmJsonConverterAttribute)))
-            {
-                SerializerSettings.Converters.Add((JsonConverter)Activator.CreateInstance(t));
-            }
-            SerializerSettings.Converters.Add(new NodeJsonConverter());
-            SerializerSettings.Converters.Add(new TextNodeJsonConverter());
-            SerializerSettings.Converters.Add(new FieldJsonConverter());
+            SerializerOptions.Converters.Add(new FieldJsonConverter()); // Re-enabled for ContentType support
+            SerializerOptions.Converters.Add(new NodeJsonConverter());
+            SerializerOptions.Converters.Add(new TextNodeJsonConverter());
+            SerializerOptions.Converters.Add(new RuleJsonConverter());
         }
 
         protected void BuildPipeline()
@@ -225,10 +227,10 @@ namespace Contentstack.Management.Core
             {
                 httpClientHandler,
                 new RetryHandler(retryPolicy)
-            }, LogManager);
+            }, LogManager!);
         }
 
-        internal ContentstackResponse InvokeSync<TRequest>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null) where TRequest : IContentstackService
+        internal ContentstackResponse InvokeSync<TRequest>(TRequest request, bool addAcceptMediaHeader = false, string? apiVersion = null) where TRequest : IContentstackService
         {
             ThrowIfDisposed();
 
@@ -242,10 +244,10 @@ namespace Contentstack.Management.Core
                 },
                 new ResponseContext());
 
-            return (ContentstackResponse)ContentstackPipeline.InvokeSync(context, addAcceptMediaHeader, apiVersion).httpResponse;
+            return (ContentstackResponse)ContentstackPipeline!.InvokeSync(context, addAcceptMediaHeader, apiVersion).httpResponse!;
         }
 
-        internal async Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string apiVersion = null)
+        internal async Task<TResponse> InvokeAsync<TRequest, TResponse>(TRequest request, bool addAcceptMediaHeader = false, string? apiVersion = null)
             where TRequest : IContentstackService
             where TResponse : ContentstackResponse
         {
@@ -264,7 +266,7 @@ namespace Contentstack.Management.Core
                   service = request
               },
               new ResponseContext());
-            return await ContentstackPipeline.InvokeAsync<TResponse>(context, addAcceptMediaHeader, apiVersion);
+            return await ContentstackPipeline!.InvokeAsync<TResponse>(context, addAcceptMediaHeader, apiVersion);
         }
 
         #region Dispose methods
@@ -331,7 +333,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Organization" />.</returns>
-        public Organization Organization(string uid = null)
+        public Organization Organization(string? uid = null)
         {
             return new Organization(this, uid);
         }
@@ -344,12 +346,12 @@ namespace Contentstack.Management.Core
         /// <param name="managementToken">Stack Management token </param>
         /// <example>
         /// <pre><code>
-        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_KEY>");
         /// Stack Stack = client.Stack("<API_KEY>");
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Stack" />.</returns>
-        public Stack Stack(string apiKey = null, string managementToken = null, string branchUid = null)
+        public Stack Stack(string? apiKey = null, string? managementToken = null, string? branchUid = null)
         {
             return new Stack(this, apiKey, managementToken, branchUid);
         }
@@ -369,10 +371,10 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse" /></returns>
-        public ContentstackResponse Login(ICredentials credentials, string token = null, string mfaSecret = null)
+        public ContentstackResponse Login(ICredentials credentials, string? token = null, string? mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
-            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret);
+            LoginService Login = new LoginService(SerializerOptions, credentials, token, mfaSecret);
 
             return InvokeSync(Login);
         }
@@ -391,10 +393,10 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string token = null, string mfaSecret = null)
+        public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string? token = null, string? mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
-            LoginService Login = new LoginService(serializer, credentials, token, mfaSecret);
+            LoginService Login = new LoginService(SerializerOptions, credentials, token, mfaSecret);
 
             return InvokeAsync<LoginService, ContentstackResponse>(Login);
         }
@@ -431,10 +433,10 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse" /></returns>
-        public ContentstackResponse Logout(string authtoken = null)
+        public ContentstackResponse Logout(string? authtoken = null)
         {
-            string token = authtoken ?? contentstackOptions.Authtoken;
-            LogoutService logout = new LogoutService(serializer, token);
+            string? token = authtoken ?? contentstackOptions.Authtoken;
+            LogoutService logout = new LogoutService(SerializerOptions, token!);
 
             return InvokeSync(logout);
         }
@@ -449,10 +451,10 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> LogoutAsync(string authtoken = null)
+        public Task<ContentstackResponse> LogoutAsync(string? authtoken = null)
         {
-            string token = authtoken ?? contentstackOptions.Authtoken;
-            LogoutService logout = new LogoutService(serializer, token);
+            string? token = authtoken ?? contentstackOptions.Authtoken;
+            LogoutService logout = new LogoutService(SerializerOptions, token!);
 
             return InvokeAsync<LogoutService, ContentstackResponse>(logout);
         }
@@ -499,7 +501,7 @@ namespace Contentstack.Management.Core
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient();
         /// OAuthHandler oauthHandler = client.OAuth();
-        /// 
+        ///
         /// // Get authorization URL with default options
         /// string authUrl = oauthHandler.GetAuthorizationUrl();
         /// </code></pre>
@@ -579,7 +581,7 @@ namespace Contentstack.Management.Core
         /// This method should be called when logging out or switching authentication methods.
         /// </summary>
         /// <param name="clientId">The OAuth client ID to clear tokens for.</param>
-        public void ClearOAuthTokens(string clientId = null)
+        public void ClearOAuthTokens(string? clientId = null)
         {
             if (!string.IsNullOrEmpty(clientId))
             {
@@ -673,11 +675,11 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse GetUser(ParameterCollection collection = null)
+        public ContentstackResponse GetUser(ParameterCollection? collection = null)
         {
             ThrowIfNotLoggedIn();
 
-            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection);
+            GetLoggedInUserService getUser = new GetLoggedInUserService(SerializerOptions, collection);
 
             return InvokeSync(getUser);
         }
@@ -692,11 +694,11 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> GetUserAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> GetUserAsync(ParameterCollection? collection = null)
         {
             ThrowIfNotLoggedIn();
 
-            GetLoggedInUserService getUser = new GetLoggedInUserService(serializer, collection);
+            GetLoggedInUserService getUser = new GetLoggedInUserService(SerializerOptions, collection);
 
             return InvokeAsync<GetLoggedInUserService, ContentstackResponse>(getUser);
         }

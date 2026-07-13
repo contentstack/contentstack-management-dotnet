@@ -51,12 +51,12 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().Publish(publishDetails);
         /// </code></pre>
         /// </example>
-        public ContentstackResponse Publish(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string apiVersion = null)
+        public ContentstackResponse Publish(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string? apiVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkPublishService(_stack.client.serializer, _stack, details, skipWorkflowStage, approvals, isNested);
+            var service = new BulkPublishService(_stack.client.SerializerOptions, _stack, details, skipWorkflowStage, approvals, isNested);
             return _stack.client.InvokeSync(service, false, apiVersion);
         }
 
@@ -69,12 +69,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="isNested">Set to true for nested publish operations.</param>
         /// <param name="apiVersion">The API version to use.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> PublishAsync(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string apiVersion = null)
+        public Task<ContentstackResponse> PublishAsync(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string? apiVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkPublishService(_stack.client.serializer, _stack, details, skipWorkflowStage, approvals, isNested);
+            var service = new BulkPublishService(_stack.client.SerializerOptions, _stack, details, skipWorkflowStage, approvals, isNested);
             return _stack.client.InvokeAsync<BulkPublishService, ContentstackResponse>(service, false, apiVersion);
         }
 
@@ -109,12 +109,12 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().Unpublish(unpublishDetails);
         /// </code></pre>
         /// </example>
-        public ContentstackResponse Unpublish(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string apiVersion = null)
+        public ContentstackResponse Unpublish(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string? apiVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkUnpublishService(_stack.client.serializer, _stack, details, skipWorkflowStage, approvals, isNested);
+            var service = new BulkUnpublishService(_stack.client.SerializerOptions, _stack, details, skipWorkflowStage, approvals, isNested);
             return _stack.client.InvokeSync(service, false, apiVersion);
         }
 
@@ -127,12 +127,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="isNested">Set to true for nested unpublish operations.</param>
         /// <param name="apiVersion">The API version to use.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> UnpublishAsync(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string apiVersion = null)
+        public Task<ContentstackResponse> UnpublishAsync(BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false, string? apiVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkUnpublishService(_stack.client.serializer, _stack, details, skipWorkflowStage, approvals, isNested);
+            var service = new BulkUnpublishService(_stack.client.SerializerOptions, _stack, details, skipWorkflowStage, approvals, isNested);
             return _stack.client.InvokeAsync<BulkUnpublishService, ContentstackResponse>(service, false, apiVersion);
         }
 
@@ -166,7 +166,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkDeleteService(_stack.client.serializer, _stack, details);
+            var service = new BulkDeleteService(_stack.client.SerializerOptions, _stack, details);
             return _stack.client.InvokeSync(service);
         }
 
@@ -180,7 +180,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkDeleteService(_stack.client.serializer, _stack, details);
+            var service = new BulkDeleteService(_stack.client.SerializerOptions, _stack, details);
             return _stack.client.InvokeAsync<BulkDeleteService, ContentstackResponse>(service);
         }
 
@@ -219,7 +219,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkWorkflowUpdateService(_stack.client.serializer, _stack, updateBody);
+            var service = new BulkWorkflowUpdateService(_stack.client.SerializerOptions, _stack, updateBody);
             return _stack.client.InvokeSync(service);
         }
 
@@ -235,7 +235,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkWorkflowUpdateService(_stack.client.serializer, _stack, updateBody);
+            var service = new BulkWorkflowUpdateService(_stack.client.SerializerOptions, _stack, updateBody);
             return _stack.client.InvokeAsync<BulkWorkflowUpdateService, ContentstackResponse>(service);
         }
 
@@ -289,7 +289,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkAddItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            var service = new BulkAddItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -327,7 +327,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().AddItemsWithDeployment(deployData, "release_uid", "publish", new List<string> { "en-us" }, true, "2.0");
         /// </code></pre>
         /// </example>
-        public ContentstackResponse AddItemsWithDeployment(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        public ContentstackResponse AddItemsWithDeployment(BulkAddItemsData data, string releaseUid, string action, List<string>? locales = null, bool? reference = null, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -338,7 +338,7 @@ namespace Contentstack.Management.Core.Models
             data.Locale = locales;
             data.Reference = reference;
 
-            var service = new BulkAddItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            var service = new BulkAddItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -355,7 +355,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkAddItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            var service = new BulkAddItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkAddItemsService, ContentstackResponse>(service);
         }
 
@@ -370,7 +370,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="reference">Whether to include references. Only used when releaseUid is specified.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> AddItemsWithDeploymentAsync(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        public Task<ContentstackResponse> AddItemsWithDeploymentAsync(BulkAddItemsData data, string releaseUid, string action, List<string>? locales = null, bool? reference = null, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -381,7 +381,7 @@ namespace Contentstack.Management.Core.Models
             data.Locale = locales;
             data.Reference = reference;
 
-            var service = new BulkAddItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            var service = new BulkAddItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkAddItemsService, ContentstackResponse>(service);
         }
 
@@ -437,7 +437,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            var service = new BulkUpdateItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -475,7 +475,7 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().UpdateItemsWithDeployment(deployData, "release_uid", "publish", new List<string> { "en-us" }, true, "2.0");
         /// </code></pre>
         /// </example>
-        public ContentstackResponse UpdateItemsWithDeployment(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        public ContentstackResponse UpdateItemsWithDeployment(BulkAddItemsData data, string releaseUid, string action, List<string>? locales = null, bool? reference = null, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -486,7 +486,7 @@ namespace Contentstack.Management.Core.Models
             data.Locale = locales;
             data.Reference = reference;
 
-            var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            var service = new BulkUpdateItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -503,7 +503,7 @@ namespace Contentstack.Management.Core.Models
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            var service = new BulkUpdateItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkUpdateItemsService, ContentstackResponse>(service);
         }
 
@@ -518,7 +518,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="reference">Whether to include references. Only used when releaseUid is specified.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> UpdateItemsWithDeploymentAsync(BulkAddItemsData data, string releaseUid, string action, List<string> locales = null, bool? reference = null, string bulkVersion = null)
+        public Task<ContentstackResponse> UpdateItemsWithDeploymentAsync(BulkAddItemsData data, string releaseUid, string action, List<string>? locales = null, bool? reference = null, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
@@ -529,7 +529,7 @@ namespace Contentstack.Management.Core.Models
             data.Locale = locales;
             data.Reference = reference;
 
-            var service = new BulkUpdateItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            var service = new BulkUpdateItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkUpdateItemsService, ContentstackResponse>(service);
         }
 
@@ -547,14 +547,14 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().JobStatus("job_id", "1.0");
         /// </code></pre>
         /// </example>
-        public ContentstackResponse JobStatus(string jobId, string bulkVersion = null)
+        public ContentstackResponse JobStatus(string jobId, string? bulkVersion = null)
         {
             if (string.IsNullOrWhiteSpace(jobId)) throw new ArgumentNullException(nameof(jobId));
             
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkJobStatusService(_stack.client.serializer, _stack, jobId, bulkVersion);
+            var service = new BulkJobStatusService(_stack.client.SerializerOptions, _stack, jobId, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -564,14 +564,14 @@ namespace Contentstack.Management.Core.Models
         /// <param name="jobId">The ID of the job.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> JobStatusAsync(string jobId, string bulkVersion = null)
+        public Task<ContentstackResponse> JobStatusAsync(string jobId, string? bulkVersion = null)
         {
             if (string.IsNullOrWhiteSpace(jobId)) throw new ArgumentNullException(nameof(jobId));
             
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkJobStatusService(_stack.client.serializer, _stack, jobId, bulkVersion);
+            var service = new BulkJobStatusService(_stack.client.SerializerOptions, _stack, jobId, bulkVersion);
             return _stack.client.InvokeAsync<BulkJobStatusService, ContentstackResponse>(service);
         }
 
@@ -608,12 +608,12 @@ namespace Contentstack.Management.Core.Models
         /// ContentstackResponse response = stack.BulkOperation().ReleaseItems(releaseData);
         /// </code></pre>
         /// </example>
-        public ContentstackResponse ReleaseItems(BulkReleaseItemsData data, string bulkVersion = null)
+        public ContentstackResponse ReleaseItems(BulkReleaseItemsData data, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkReleaseItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            var service = new BulkReleaseItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
             return _stack.client.InvokeSync(service);
         }
 
@@ -623,12 +623,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="data">The release items data containing release, action, locale, reference, and items.</param>
         /// <param name="bulkVersion">The bulk version.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> ReleaseItemsAsync(BulkReleaseItemsData data, string bulkVersion = null)
+        public Task<ContentstackResponse> ReleaseItemsAsync(BulkReleaseItemsData data, string? bulkVersion = null)
         {
             _stack.ThrowIfNotLoggedIn();
             _stack.ThrowIfAPIKeyEmpty();
 
-            var service = new BulkReleaseItemsService(_stack.client.serializer, _stack, data, bulkVersion);
+            var service = new BulkReleaseItemsService(_stack.client.SerializerOptions, _stack, data, bulkVersion);
             return _stack.client.InvokeAsync<BulkReleaseItemsService, ContentstackResponse>(service);
         }
     }

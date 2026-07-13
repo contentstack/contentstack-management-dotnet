@@ -3,6 +3,6 @@
     public interface IExtensionInterface : IUploadInterface
     {
         string Title { get; set; }
-        string Tags { get; set; }
+        string? Tags { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using AutoFixture;
@@ -6,27 +6,26 @@ using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Stack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
 {
     [TestClass]
     public class StackShareServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
         private readonly IFixture _fixture = new Fixture()
         .Customize(new AutoMoqCustomization());
 
         [TestMethod]
         public void Should_Throw_On_Null_Serializer()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackShareService(null, new Management.Core.Models.Stack(null, _fixture.Create<string>())));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackShareService(new Management.Core.Models.Stack(null)));
         }
 
         [TestMethod]
         public void Should_Throw_On_Null_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackShareService(serializer, new Management.Core.Models.Stack(null)));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackShareService(new Management.Core.Models.Stack(null)));
         }
 
         [TestMethod]
@@ -34,7 +33,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var apiKey = _fixture.Create<string>();
 
-            var service = new StackShareService(serializer, new Management.Core.Models.Stack(null, apiKey));
+            var service = new StackShareService(new Management.Core.Models.Stack(null, apiKey));
             service.ContentBody();
 
             Assert.IsNotNull(service);
@@ -56,7 +55,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             foreach (string role in userInvitation.Roles)
                 roles.Add($"\"{role}\"");
 
-            var service = new StackShareService(serializer, new Management.Core.Models.Stack(null, apiKey));
+            var service = new StackShareService(new Management.Core.Models.Stack(null, apiKey));
             service.AddUsers(new List<UserInvitation>() { userInvitation });
             service.ContentBody();
 
@@ -73,7 +72,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
             var apiKey = _fixture.Create<string>();
             var email = _fixture.Create<string>();
 
-            var service = new StackShareService(serializer, new Management.Core.Models.Stack(null, apiKey));
+            var service = new StackShareService(new Management.Core.Models.Stack(null, apiKey));
             service.RemoveUsers(email);
             service.ContentBody();
 

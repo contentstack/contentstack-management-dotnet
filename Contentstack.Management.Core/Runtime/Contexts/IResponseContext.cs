@@ -5,6 +5,6 @@ namespace Contentstack.Management.Core.Runtime.Contexts
 {
     public interface IResponseContext
     {
-        IResponse httpResponse { get; set; }
+        IResponse? httpResponse { get; set; }
     }
 }

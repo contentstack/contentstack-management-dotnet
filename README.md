@@ -10,7 +10,9 @@ Note: By using CMA, you can execute GET requests for fetching content. However, 
 
 ### Prerequisite
 
-You need .NET installed on your machine to use the Contentstack .NET CMA SDK.
+You need .NET 10 or above installed on your machine to use the Contentstack .NET CMA SDK.
+
+> **Migrating from v0.x?** Version 1.0.0 replaces Newtonsoft.Json with System.Text.Json and changes several public API signatures (e.g. `OpenJObjectResponse()` → `OpenJsonObjectResponse()`, `SerializerSettings` → `SerializerOptions`). See the [migration guide](https://www.contentstack.com/docs/developers/sdks/content-management-sdk/dot-net/migrate-dotnet-management-sdk-from-newtonsoft.json-to-system.text.json) before upgrading.
 
 ### Installation
 Open the terminal and install the contentstack module via ‘Package Manager’ command
@@ -99,12 +101,80 @@ contentstackConfig.ProxyPort = 9000;
 contentstackConfig.ProxyCredentials = new NetworkCredential(userName: "username", password: "password");
 ContentstackClient client = new ContentstackClient(new OptionsWrapper<ContentstackClientOptions>(options));
 ```
+#### OAuth Authentication
+As an alternative to Authtoken/Management Token authentication, you can use OAuth 2.0:
+```c#
+ContentstackClient client = new ContentstackClient();
+var oauthOptions = new OAuthOptions
+{
+    AppId = "your-app-id",
+    ClientId = "your-client-id",
+    RedirectUri = "http://localhost:8184"
+};
+OAuthHandler oauthHandler = client.OAuth(oauthOptions);
+
+// Get authorization URL
+string authUrl = oauthHandler.GetAuthorizationUrl();
+
+// After user authorization, exchange code for tokens
+var tokens = await oauthHandler.ExchangeCodeForTokenAsync("authorization_code");
+```
+> Note: Once authenticated, the SDK automatically refreshes expired OAuth tokens before making API calls — no manual token refresh required.
+
+#### Branch Management
+Use the `Branch` model to create, fetch, delete, and query branches for a stack:
+```c#
+ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+
+// Create a branch
+BranchModel model = new BranchModel() { Uid = "my-branch", Source = "main" };
+ContentstackResponse createResponse = client.Stack("<API_KEY>").Branch().Create(model);
+
+// Fetch a branch
+ContentstackResponse fetchResponse = client.Stack("<API_KEY>").Branch("my-branch").Fetch();
+
+// Query all branches
+ContentstackResponse queryResponse = client.Stack("<API_KEY>").Branch().Query().Find();
+
+// Delete a branch
+ContentstackResponse deleteResponse = client.Stack("<API_KEY>").Branch("my-branch").Delete();
+```
+
+#### Preview Token
+Use `PreviewToken` to create or delete a Preview Token for a Delivery Token (compatible only with the `rest-preview.contentstack.com` endpoint):
+```c#
+ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+
+// Create a preview token
+PreviewTokenModel model = new PreviewTokenModel() { Name = "My Preview Token" };
+ContentstackResponse createResponse = client.Stack("<API_KEY>").PreviewToken("<DELIVERY_TOKEN_UID>").Create(model);
+
+// Delete a preview token
+ContentstackResponse deleteResponse = client.Stack("<API_KEY>").PreviewToken("<DELIVERY_TOKEN_UID>").Delete();
+```
+
+#### Multi-region Endpoint Resolution
+Use the `Endpoint` class to resolve Contentstack service URLs for any supported region without hardcoding hosts:
+```c#
+using Contentstack.Management.Core.Endpoints; // Endpoint
+
+// Resolve the Content Management endpoint for a region
+string url = Endpoint.GetContentstackEndpoint("us", "contentManagement");
+
+// Strip the https:// scheme — useful when passing the host directly to SDK configuration
+var options = new ContentstackClientOptions
+{
+    Host = Endpoint.GetContentstackEndpoint("eu", "contentManagement", omitHttps: true)
+};
+```
+
 #### Fetch Stack Detail
 Use the following lines of code to fetch your stack detail using this SDK:
 ```c#
 ContentstackResponse contentstackResponse = client.Stack("<API_KEY>").Fetch();
 
-var response = contentstackResponse.OpenJObjectResponse();
+var response = contentstackResponse.OpenJsonObjectResponse();
+string title = response["title"]?.GetValue<string>();
 // or
 StackResponse model = contentstackResponse.OpenTResponse<StackResponse>();
 ```
