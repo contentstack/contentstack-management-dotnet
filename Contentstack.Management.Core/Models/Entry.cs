@@ -2,22 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Text.Json;
 using Contentstack.Management.Core.Abstractions;
 using Contentstack.Management.Core.Queryable;
 using Contentstack.Management.Core.Services.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Contentstack.Management.Core.Models
 {
     public class Entry: BaseModel<IEntry>
     {
-        internal string contentTypeUid;
+        internal string contentTypeUid = null!;
 
-        internal Entry(Stack stack, string contentTyppe, string uid)
+        internal Entry(Stack stack, string? contentTyppe, string? uid)
             : base(stack, "entry", uid)
         {
-            contentTypeUid = contentTyppe;
+            contentTypeUid = contentTyppe!;
             resourcePath = uid == null ? $"/content_types/{contentTyppe}/entries" : $"/content_types/{contentTyppe}/entries/{uid}";
         }
 
@@ -42,7 +41,7 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="uid">The UID of the variant.</param>
         /// <returns>The <see cref="EntryVariant"/></returns>
-        public EntryVariant Variant(string uid = null)
+        public EntryVariant Variant(string? uid = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -78,7 +77,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IEntry for createing Entry.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Create(IEntry model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(IEntry model, ParameterCollection? collection = null)
         {
             return base.Create(model, collection);
         }
@@ -95,7 +94,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IEntry for createing Entry.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> CreateAsync(IEntry model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(IEntry model, ParameterCollection? collection = null)
         {
             return base.CreateAsync(model, collection);
         }
@@ -112,7 +111,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IEntry for updating entry.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Update(IEntry model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(IEntry model, ParameterCollection? collection = null)
         {
             return base.Update(model, collection);
         }
@@ -129,7 +128,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">IEntry for updating entry.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> UpdateAsync(IEntry model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(IEntry model, ParameterCollection? collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
@@ -144,7 +143,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             return base.Fetch(collection);
         }
@@ -159,7 +158,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             return base.FetchAsync(collection);
         }
@@ -174,7 +173,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             return base.Delete(collection);
         }
@@ -189,7 +188,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             return base.DeleteAsync(collection);
         }
@@ -211,10 +210,10 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new DeleteService<Dictionary<string, List<string>>>(stack.client.serializer, stack, resourcePath, "entry", new Dictionary<string, List<string>>()
+            var service = new DeleteService<Dictionary<string, List<string>>>(stack, resourcePath, "entry", new Dictionary<string, List<string>>()
             {
                 {"locales", locales }
-            });
+            }, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -235,10 +234,10 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new DeleteService<Dictionary<string, List<string>>>(stack.client.serializer, stack, resourcePath, "entry", new Dictionary<string, List<string>>()
+            var service = new DeleteService<Dictionary<string, List<string>>>(stack, resourcePath, "entry", new Dictionary<string, List<string>>()
             {
                 {"locales", locales }
-            });
+            }, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<DeleteService<Dictionary<string, List<string>>>, ContentstackResponse>(service);
         }
 
@@ -264,7 +263,7 @@ namespace Contentstack.Management.Core.Models
 
             collection.Add("locale", locale);
 
-            var service = new LocalizationService<IEntry>(stack.client.serializer, stack, resourcePath, model, "entry", collection);
+            var service = new LocalizationService<IEntry>(stack.client.SerializerOptions, stack, resourcePath, model, "entry", collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -290,7 +289,7 @@ namespace Contentstack.Management.Core.Models
 
             collection.Add("locale", locale);
 
-            var service = new LocalizationService<IEntry>(stack.client.serializer, stack, resourcePath, model, "entry", collection);
+            var service = new LocalizationService<IEntry>(stack.client.SerializerOptions, stack, resourcePath, model, "entry", collection);
             return stack.client.InvokeAsync<LocalizationService<IEntry>, ContentstackResponse>(service);
         }
 
@@ -314,7 +313,7 @@ namespace Contentstack.Management.Core.Models
 
             collection.Add("locale", locale);
 
-            var service = new LocalizationService<IEntry>(stack.client.serializer, stack, resourcePath, null, "entry", collection, true);
+            var service = new LocalizationService<IEntry>(stack.client.SerializerOptions, stack, resourcePath, null, "entry", collection, true);
             return stack.client.InvokeSync(service);
         }
 
@@ -338,7 +337,7 @@ namespace Contentstack.Management.Core.Models
 
             collection.Add("locale", locale);
 
-            var service = new LocalizationService<IEntry>(stack.client.serializer, stack, resourcePath, null, "entry", collection, true);
+            var service = new LocalizationService<IEntry>(stack.client.SerializerOptions, stack, resourcePath, null, "entry", collection, true);
             return stack.client.InvokeAsync<LocalizationService<IEntry>, ContentstackResponse>(service);
         }
 
@@ -357,7 +356,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new LocaleService(stack.client.serializer, stack, resourcePath);
+            var service = new LocaleService(stack.client.SerializerOptions, stack, resourcePath);
             return stack.client.InvokeSync(service);
         }
 
@@ -376,7 +375,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new LocaleService(stack.client.serializer, stack, resourcePath);
+            var service = new LocaleService(stack.client.SerializerOptions, stack, resourcePath);
             return stack.client.InvokeAsync<LocaleService, ContentstackResponse>(service);
         }
 
@@ -390,12 +389,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse References(ParameterCollection collection = null)
+        public ContentstackResponse References(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchReferencesService(stack, resourcePath, collection: collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -409,12 +408,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> ReferencesAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> ReferencesAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchReferencesService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchReferencesService(stack, resourcePath, collection: collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<FetchReferencesService, ContentstackResponse>(service);
         }
 
@@ -430,12 +429,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        public virtual ContentstackResponse Publish(PublishUnpublishDetails details, string? locale = null, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "entry", locale);
+            var service = new PublishUnpublishService(stack, details, $"{resourcePath}/publish", "entry", locale, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -451,12 +450,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The Task</returns>
-        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        public virtual Task<ContentstackResponse> PublishAsync(PublishUnpublishDetails details, string? locale = null, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/publish", "entry", locale);
+            var service = new PublishUnpublishService(stack, details, $"{resourcePath}/publish", "entry", locale, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -472,12 +471,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        public virtual ContentstackResponse Unpublish(PublishUnpublishDetails details, string? locale = null, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
+            var service = new PublishUnpublishService(stack, details, $"{resourcePath}/unpublish", "entry", locale, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service, apiVersion: apiVersion);
         }
 
@@ -493,12 +492,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="details">Publish/Unpublish details.</param>
         /// <param name="locale">Locale for entry to be publish</param>
         /// <returns>The Task</returns>
-        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string locale = null, string apiVersion = null)
+        public virtual Task<ContentstackResponse> UnpublishAsync(PublishUnpublishDetails details, string? locale = null, string? apiVersion = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new PublishUnpublishService(stack.client.serializer, stack, details, $"{resourcePath}/unpublish", "entry", locale);
+            var service = new PublishUnpublishService(stack, details, $"{resourcePath}/unpublish", "entry", locale, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<PublishUnpublishService, ContentstackResponse>(service, apiVersion: apiVersion);
         }
 
@@ -515,12 +514,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="filePath">Path to file you want to import</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Import(string filePath, ParameterCollection collection = null)
+        public ContentstackResponse Import(string filePath, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
 
             var text = File.ReadAllText(filePath);
-            var service = new ImportExportService(stack.client.serializer, stack, resourcePath, true, "POST", collection);
+            var service = new ImportExportService(stack.client.SerializerOptions, stack, resourcePath, true, "POST", collection);
             service.ByteContent = System.Text.Encoding.UTF8.GetBytes(text);
 
             return stack.client.InvokeSync(service);
@@ -539,13 +538,13 @@ namespace Contentstack.Management.Core.Models
         /// <param name="filePath">Path to file you want to import</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> ImportAsync(string filePath, ParameterCollection collection = null)
+        public Task<ContentstackResponse> ImportAsync(string filePath, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             var text = File.ReadAllText(filePath);
-            var service = new ImportExportService(stack.client.serializer, stack, resourcePath, isImport: true, "POST", collection);
+            var service = new ImportExportService(stack.client.SerializerOptions, stack, resourcePath, isImport: true, "POST", collection);
             service.ByteContent = System.Text.Encoding.UTF8.GetBytes(text);
             return stack.client.InvokeAsync<ImportExportService, ContentstackResponse>(service);
         }
@@ -562,23 +561,20 @@ namespace Contentstack.Management.Core.Models
         /// <param name="filePath">Path to file you want to export entry.</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Export(string filePath, ParameterCollection collection = null)
+        public ContentstackResponse Export(string filePath, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
             try
             {
-                var service = new ImportExportService(stack.client.serializer, stack, resourcePath, collection: collection);
+                var service = new ImportExportService(stack.client.SerializerOptions, stack, resourcePath, collection: collection);
                 ContentstackResponse response = stack.client.InvokeSync(service);
                 if (response.IsSuccessStatusCode)
                 {
-                    using (StreamWriter file = File.CreateText(filePath))
-                    using (JsonTextWriter writer = new JsonTextWriter(file))
-                    {
-                        JObject json = response.OpenJObjectResponse();
-                        json.WriteTo(writer);
-                    }
+                    var json = response.OpenJsonObjectResponse();
+                    var opts = new JsonSerializerOptions { WriteIndented = true };
+                    File.WriteAllText(filePath, json.ToJsonString(opts));
                 }
                 return response;
             } catch (Exception e)
@@ -601,7 +597,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model"><see cref="EntryWorkflowStage"/> object.</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse SetWorkflow(EntryWorkflowStage model, ParameterCollection collection = null)
+        public ContentstackResponse SetWorkflow(EntryWorkflowStage model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -609,7 +605,7 @@ namespace Contentstack.Management.Core.Models
             {
                 { "workflow_stage", model}
             };
-            var service = new CreateUpdateService<Dictionary<string, EntryWorkflowStage>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            var service = new CreateUpdateService<Dictionary<string, EntryWorkflowStage>>(stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -626,7 +622,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model"><see cref="EntryWorkflowStage"/> object.</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> SetWorkflowAsync(EntryWorkflowStage model, ParameterCollection collection = null)
+        public Task<ContentstackResponse> SetWorkflowAsync(EntryWorkflowStage model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -634,7 +630,7 @@ namespace Contentstack.Management.Core.Models
             {
                 { "workflow_stage", model}
             };
-            var service = new CreateUpdateService<Dictionary<string, EntryWorkflowStage>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            var service = new CreateUpdateService<Dictionary<string, EntryWorkflowStage>>(stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<CreateUpdateService<Dictionary<string, EntryWorkflowStage>>, ContentstackResponse>(service);
         }
 
@@ -651,7 +647,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="publishAction"><see cref="EntryPublishAction"/> object.</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns></returns>
-        public ContentstackResponse PublishRequest(EntryPublishAction publishAction, ParameterCollection collection = null)
+        public ContentstackResponse PublishRequest(EntryPublishAction publishAction, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -659,7 +655,7 @@ namespace Contentstack.Management.Core.Models
             {
                 { "publishing_rule", publishAction}
             };
-            var service = new CreateUpdateService<Dictionary<string, EntryPublishAction>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            var service = new CreateUpdateService<Dictionary<string, EntryPublishAction>>(stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
         /// <summary>
@@ -675,7 +671,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="publishAction"><see cref="EntryPublishAction"/> object.</param>
         /// <param name="collection">Query parameter.</param>
         /// <returns></returns>
-        public Task<ContentstackResponse> PublishRequestAsync(EntryPublishAction publishAction, ParameterCollection collection = null)
+        public Task<ContentstackResponse> PublishRequestAsync(EntryPublishAction publishAction, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
@@ -683,7 +679,7 @@ namespace Contentstack.Management.Core.Models
             {
                 { "publishing_rule", publishAction}
             };
-            var service = new CreateUpdateService<Dictionary<string, EntryPublishAction>>(stack.client.serializer, stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection);
+            var service = new CreateUpdateService<Dictionary<string, EntryPublishAction>>(stack, $"{resourcePath}/workflow", dict, "workflow", collection: collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<CreateUpdateService<Dictionary<string, EntryPublishAction>>, ContentstackResponse>(service);
         }
     }

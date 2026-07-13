@@ -629,7 +629,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.AreEqual(storedToken, client.contentstackOptions.Authtoken, "StoredTokenUnchanged");
                 AssertLogger.IsNotNull(response, "LogoutResponseReceived");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // If it fails, the stored token should still remain unchanged
                 AssertLogger.AreEqual(storedToken, client.contentstackOptions.Authtoken, "StoredTokenUnchangedAfterFailure");

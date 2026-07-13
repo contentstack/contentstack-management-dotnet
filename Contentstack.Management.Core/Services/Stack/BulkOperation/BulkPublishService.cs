@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Models;
 
 namespace Contentstack.Management.Core.Services.Stack.BulkOperation
@@ -18,14 +18,14 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
         /// <summary>
         /// Initializes a new instance of the <see cref="BulkPublishService"/> class.
         /// </summary>
-        /// <param name="serializer">The JSON serializer.</param>
+        /// <param name="serializerOptions">The JSON serializer options.</param>
         /// <param name="stack">The stack instance.</param>
         /// <param name="details">The publish details.</param>
         /// <param name="skipWorkflowStage">Whether to skip workflow stage checks.</param>
         /// <param name="approvals">Whether to include approvals.</param>
         /// <param name="isNested">Whether this is a nested operation.</param>
-        public BulkPublishService(JsonSerializer serializer, Contentstack.Management.Core.Models.Stack stack, BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false)
-            : base(serializer, stack)
+        public BulkPublishService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack stack, BulkPublishDetails details, bool skipWorkflowStage = false, bool approvals = false, bool isNested = false)
+            : base(serializerOptions, stack)
         {
             _details = details ?? throw new ArgumentNullException(nameof(details));
             _skipWorkflowStage = skipWorkflowStage;
@@ -60,7 +60,7 @@ namespace Contentstack.Management.Core.Services.Stack.BulkOperation
         {
             if (_details != null)
             {
-                var json = JsonConvert.SerializeObject(_details);
+                var json = JsonSerializer.Serialize(_details, SerializerOptions);
                 ByteContent = Encoding.UTF8.GetBytes(json);
             }
         }

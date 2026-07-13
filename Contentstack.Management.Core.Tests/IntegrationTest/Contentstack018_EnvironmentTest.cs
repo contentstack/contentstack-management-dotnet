@@ -8,7 +8,7 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
@@ -63,7 +63,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         private static string ParseEnvironmentName(ContentstackResponse response)
         {
-            var jo = response.OpenJObjectResponse();
+            var jo = response.OpenJsonObjectResponse();
             return jo?["environment"]?["name"]?.ToString();
         }
 
@@ -84,14 +84,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
-        private static bool EnvironmentsArrayContainsName(JArray environments, string name)
+        private static bool EnvironmentsArrayContainsName(JsonArray environments, string name)
         {
             if (environments == null || string.IsNullOrEmpty(name))
             {
                 return false;
             }
 
-            return environments.Any(e => e["name"]?.ToString() == name);
+            return environments.Any(e => e?["name"]?.GetValue<string>() == name);
         }
 
         #region A — Sync happy path
@@ -112,7 +112,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsNotNull(environmentName, "environment name");
                 AssertLogger.AreEqual(name, environmentName, "Parsed name should match request", "ParsedEnvironmentName");
 
-                var jo = response.OpenJObjectResponse();
+                var jo = response.OpenJsonObjectResponse();
                 AssertLogger.AreEqual(name, jo["environment"]?["name"]?.ToString(), "Response name should match", "EnvironmentName");
             }
             finally
@@ -135,12 +135,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsNotNull(environmentName, "name after create");
                 AssertLogger.AreEqual(name, environmentName, "Parsed name should match create request", "CreateNameMatch");
 
-                string expectedUid = createResponse.OpenJObjectResponse()?["environment"]?["uid"]?.ToString();
+                string expectedUid = createResponse.OpenJsonObjectResponse()?["environment"]?["uid"]?.ToString();
 
                 ContentstackResponse fetchResponse = _stack.Environment(name).Fetch();
                 AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "Fetch should succeed", "FetchSyncSuccess");
 
-                var env = fetchResponse.OpenJObjectResponse()?["environment"];
+                var env = fetchResponse.OpenJsonObjectResponse()?["environment"];
                 AssertLogger.AreEqual(name, env?["name"]?.ToString(), "Fetched name should match", "FetchedName");
                 AssertLogger.AreEqual(expectedUid, env?["uid"]?.ToString(), "Fetched uid should match create response", "FetchedUid");
             }
@@ -166,7 +166,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse queryResponse = _stack.Environment().Query().Find();
                 AssertLogger.IsTrue(queryResponse.IsSuccessStatusCode, "Query Find should succeed", "QueryFindSuccess");
 
-                var environments = queryResponse.OpenJObjectResponse()?["environments"] as JArray;
+                var environments = queryResponse.OpenJsonObjectResponse()?["environments"] as JsonArray;
                 AssertLogger.IsNotNull(environments, "environments array");
                 AssertLogger.IsTrue(
                     EnvironmentsArrayContainsName(environments, name),
@@ -202,7 +202,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse fetchResponse = _stack.Environment(updatedName).Fetch();
                 AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "Fetch after update should succeed", "FetchAfterUpdate");
-                var env = fetchResponse.OpenJObjectResponse()?["environment"];
+                var env = fetchResponse.OpenJsonObjectResponse()?["environment"];
                 AssertLogger.AreEqual(updatedName, env?["name"]?.ToString(), "Name should reflect update", "UpdatedName");
             }
             finally
@@ -261,7 +261,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsNotNull(environmentName, "environment name");
                 AssertLogger.AreEqual(name, environmentName, "Parsed name should match request", "ParsedEnvironmentName");
 
-                var jo = response.OpenJObjectResponse();
+                var jo = response.OpenJsonObjectResponse();
                 AssertLogger.AreEqual(name, jo["environment"]?["name"]?.ToString(), "Response name should match", "EnvironmentName");
             }
             finally
@@ -284,12 +284,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsNotNull(environmentName, "name after create");
                 AssertLogger.AreEqual(name, environmentName, "Parsed name should match create request", "CreateNameMatch");
 
-                string expectedUid = createResponse.OpenJObjectResponse()?["environment"]?["uid"]?.ToString();
+                string expectedUid = createResponse.OpenJsonObjectResponse()?["environment"]?["uid"]?.ToString();
 
                 ContentstackResponse fetchResponse = await _stack.Environment(name).FetchAsync();
                 AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "FetchAsync should succeed", "FetchAsyncSuccess");
 
-                var env = fetchResponse.OpenJObjectResponse()?["environment"];
+                var env = fetchResponse.OpenJsonObjectResponse()?["environment"];
                 AssertLogger.AreEqual(name, env?["name"]?.ToString(), "Fetched name should match", "FetchedName");
                 AssertLogger.AreEqual(expectedUid, env?["uid"]?.ToString(), "Fetched uid should match create response", "FetchedUid");
             }
@@ -315,7 +315,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse queryResponse = await _stack.Environment().Query().FindAsync();
                 AssertLogger.IsTrue(queryResponse.IsSuccessStatusCode, "Query FindAsync should succeed", "QueryFindAsyncSuccess");
 
-                var environments = queryResponse.OpenJObjectResponse()?["environments"] as JArray;
+                var environments = queryResponse.OpenJsonObjectResponse()?["environments"] as JsonArray;
                 AssertLogger.IsNotNull(environments, "environments array");
                 AssertLogger.IsTrue(
                     EnvironmentsArrayContainsName(environments, name),
@@ -351,7 +351,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 ContentstackResponse fetchResponse = await _stack.Environment(updatedName).FetchAsync();
                 AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "FetchAsync after update should succeed", "FetchAsyncAfterUpdate");
-                var env = fetchResponse.OpenJObjectResponse()?["environment"];
+                var env = fetchResponse.OpenJsonObjectResponse()?["environment"];
                 AssertLogger.AreEqual(updatedName, env?["name"]?.ToString(), "Name should reflect update", "UpdatedName");
             }
             finally
@@ -1651,7 +1651,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             catch (Exception ex)
             {
-                AssertLogger.IsTrue(ex is ContentstackErrorException || ex is Newtonsoft.Json.JsonException, 
+                AssertLogger.IsTrue(ex is ContentstackErrorException || ex is System.Text.Json.JsonException,
                     $"Expected JSON or API error: {ex.GetType().Name}", "JsonSerializationError");
             }
         }
@@ -1815,7 +1815,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     ContentstackResponse fetchResponse = await _stack.Environment(name).FetchAsync();
                     AssertLogger.IsTrue(fetchResponse.IsSuccessStatusCode, "Fetch after failed update should succeed", "FetchAfterFailedUpdate");
                     
-                    var env = fetchResponse.OpenJObjectResponse()?["environment"];
+                    var env = fetchResponse.OpenJsonObjectResponse()?["environment"];
                     AssertLogger.AreEqual(name, env?["name"]?.ToString(), "Name should be unchanged after failed update", "NameUnchangedAfterFailure");
                 }
             }
@@ -1873,7 +1873,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse queryResponse = await _stack.Environment().Query().FindAsync();
                 AssertLogger.IsTrue(queryResponse.IsSuccessStatusCode, "Large query should succeed", "LargeQuerySuccess");
                 
-                var environments = queryResponse.OpenJObjectResponse()?["environments"] as JArray;
+                var environments = queryResponse.OpenJsonObjectResponse()?["environments"] as JsonArray;
                 AssertLogger.IsNotNull(environments, "EnvironmentsArrayPresent");
                 
                 // Validate that we can handle large result sets without memory issues

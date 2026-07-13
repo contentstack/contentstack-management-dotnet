@@ -4,10 +4,11 @@ using System.Text;
 using System.Net.Http;
 using System.Collections.Generic;
 using Contentstack.Management.Core.Http;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Contentstack.Management.Core.Utils;
 using Contentstack.Management.Core.Queryable;
 using System.Net.Http.Headers;
+using Contentstack.Management.Core.Models;
 
 namespace Contentstack.Management.Core.Services
 {
@@ -23,18 +24,19 @@ namespace Contentstack.Management.Core.Services
         private bool _useQueryString = false;
 
         private bool _disposed = false;
-        private JsonSerializer _serializer { get; set; }
+        private JsonSerializerOptions _serializerOptions { get; set; }
 
         #endregion
 
         #region Constructor
-        internal ContentstackService(JsonSerializer serializer, Core.Models.Stack stack = null, ParameterCollection collection = null)
+        internal ContentstackService(JsonSerializerOptions serializerOptions, Contentstack.Management.Core.Models.Stack? stack = null, ParameterCollection? collection = null)
         {
-            if (serializer == null)
+            if (serializerOptions == null)
             {
-                throw new ArgumentNullException("serializer", CSConstants.JSONSerializerError);
+                throw new ArgumentNullException("serializerOptions", CSConstants.JSONSerializerError);
             }
 
+            // Restored Stack integration for STJ-only migration
             if (stack != null)
             {
                 if (!string.IsNullOrEmpty(stack.APIKey))
@@ -48,21 +50,22 @@ namespace Contentstack.Management.Core.Services
                 }
 
                 this.ManagementToken = stack.ManagementToken;
-            }else
+            }
+            else
             {
                 this.ManagementToken = null;
             }
             
             this.collection = collection ?? new ParameterCollection();
-            _serializer = serializer;
+            _serializerOptions = serializerOptions;
         }
         #endregion
 
-        public JsonSerializer Serializer
+        public JsonSerializerOptions SerializerOptions
         {
             get
             {
-                return _serializer;
+                return _serializerOptions;
             }
         }
 
@@ -112,11 +115,11 @@ namespace Contentstack.Management.Core.Services
             }
         }
 
-        public string ResourcePath { get; set; }
-        public byte[] ByteContent { get; set; }
-        public HttpContent Content { get; set; }
+        public string ResourcePath { get; set; } = null!;
+        public byte[]? ByteContent { get; set; }
+        public HttpContent? Content { get; set; }
         public string HttpMethod { get; set; } = "GET";
-        public string ManagementToken { get; set; }
+        public string? ManagementToken { get; set; }
 
         public void AddQueryResource(string queryResource, string value)
         {
@@ -135,7 +138,7 @@ namespace Contentstack.Management.Core.Services
         {
             ThrowIfDisposed();
 
-            string headerValue;
+            string? headerValue;
             if (headers.TryGetValue(headerName, out headerValue))
                 return headerValue;
 
@@ -160,7 +163,7 @@ namespace Contentstack.Management.Core.Services
             return true;
         }
 
-        public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string apiVersion = null)
+        public virtual IHttpRequest CreateHttpRequest(HttpClient httpClient, ContentstackClientOptions config, bool addAcceptMediaHeader = false, string? apiVersion = null)
         {
             ThrowIfDisposed();
 
@@ -197,7 +200,7 @@ namespace Contentstack.Management.Core.Services
             {
                 Headers["api_version"] = apiVersion;
             }
-            var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializer);
+            var contentstackHttpRequest = new ContentstackHttpRequest(httpClient, _serializerOptions);
             contentstackHttpRequest.Method = new HttpMethod(HttpMethod);
             contentstackHttpRequest.RequestUri = requestUri;
 

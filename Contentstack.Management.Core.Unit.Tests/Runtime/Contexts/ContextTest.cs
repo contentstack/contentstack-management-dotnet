@@ -1,17 +1,16 @@
-﻿using System;
+﻿using System.Text.Json;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Runtime.Contexts;
 using Contentstack.Management.Core.Services;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Runtime.Contexts
 {
     [TestClass]
     public class ContextTest
     {
-        private readonly JsonSerializer jsonSerializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private readonly JsonSerializerOptions jsonSerializer = new JsonSerializerOptions();
 
         [TestMethod]
         public void Initialize_ExecutionContext()

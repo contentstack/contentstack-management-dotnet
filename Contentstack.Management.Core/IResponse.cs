@@ -1,6 +1,5 @@
-﻿using System;
 using System.Net;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core
 {
@@ -10,7 +9,7 @@ namespace Contentstack.Management.Core
     public interface IResponse
     {
         long ContentLength { get; }
-        string ContentType { get; }
+        string? ContentType { get; }
         HttpStatusCode StatusCode { get; }
         bool IsSuccessStatusCode { get; }
         string[] GetHeaderNames();
@@ -19,8 +18,8 @@ namespace Contentstack.Management.Core
 
         string OpenResponse();
 
-        JObject OpenJObjectResponse();
+        JsonObject OpenJsonObjectResponse();
 
-        TResponse OpenTResponse<TResponse>();
+        TResponse? OpenTResponse<TResponse>();
     }
 }

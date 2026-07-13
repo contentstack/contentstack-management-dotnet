@@ -3,14 +3,14 @@ using AutoFixture;
 using Contentstack.Management.Core.Services.User;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
 {
     [TestClass]
     public class LogoutServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
         private readonly string _authtoken = "authtoken";
         private readonly IFixture _fixture = new Fixture();
 
@@ -23,15 +23,15 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Throw_On_Null_Authtoken()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new LogoutService(serializer, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new LogoutService(serializer, ""));
-            Assert.ThrowsException<ArgumentNullException>(() => new LogoutService(serializer, string.Empty));
+            Assert.ThrowsException<ArgumentNullException>(() => new LogoutService(serializerOptions, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new LogoutService(serializerOptions, ""));
+            Assert.ThrowsException<ArgumentNullException>(() => new LogoutService(serializerOptions, string.Empty));
         }
 
         [TestMethod]
         public void Should_Allow_Authtoken()
         {
-            LogoutService logoutService = new LogoutService(serializer, _authtoken);
+            LogoutService logoutService = new LogoutService(serializerOptions, _authtoken);
             Assert.IsNotNull(logoutService);
             
             Assert.AreEqual("DELETE", logoutService.HttpMethod);
@@ -41,7 +41,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Return_Null_Content_On_ContentBody_Call()
         {
-            LogoutService logoutService = new LogoutService(serializer, _authtoken);
+            LogoutService logoutService = new LogoutService(serializerOptions, _authtoken);
             logoutService.ContentBody();
             Assert.AreEqual(_authtoken, logoutService.Headers["authtoken"]);
             Assert.IsNotNull(logoutService);
@@ -51,7 +51,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Remove_Authtoken_From_Config_On_Success_Response()
         {
-            LogoutService logoutService = new LogoutService(serializer, _authtoken);
+            LogoutService logoutService = new LogoutService(serializerOptions, _authtoken);
             var config = new ContentstackClientOptions();
             config.Authtoken = _authtoken;
             ContentstackResponse httpResponse = MockResponse.CreateContentstackResponse("LogoutResponse.txt");
@@ -63,7 +63,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Not_Remove_Authtoken_From_Config_On_Success_Response_Different_Authtoken()
         {
-            LogoutService logoutService = new LogoutService(serializer, _authtoken);
+            LogoutService logoutService = new LogoutService(serializerOptions, _authtoken);
             var config = new ContentstackClientOptions();
             config.Authtoken = "_authtoken";
             ContentstackResponse httpResponse = MockResponse.CreateContentstackResponse("LogoutResponse.txt");

@@ -1,19 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
 using System.Net.Http;
 using System.Reflection;
-using System.Collections.Generic;
+using System.Text;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Utils
 {
     public class Utilities
     {
-        public static JsonSerializer GetJsonSerializer()
+        public static JsonSerializerOptions GetJsonSerializer()
         {
-            return JsonSerializer.Create(new JsonSerializerSettings());
+            return new JsonSerializerOptions();
         }
 
         public static string GetResourceText(string resourceName)

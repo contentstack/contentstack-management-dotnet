@@ -13,7 +13,7 @@ using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Unit.Tests.Mokes;
 using Contentstack.Management.Core.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services
 {
     [TestClass]

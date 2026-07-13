@@ -8,16 +8,16 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// User email-id for invitation
         /// </summary>
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// User uid for invitation
         /// </summary>
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
         /// <summary>
         /// List of roles Uid to be assigned to the user.
         /// </summary>
-        public List<string> Roles { get; set; }
+        public List<string>? Roles { get; set; }
     }
 }

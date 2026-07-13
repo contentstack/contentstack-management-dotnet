@@ -5,14 +5,14 @@ using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Services.Stack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
 {
     [TestClass]
     public class StackSettingsServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture()
         .Customize(new AutoMoqCustomization());
 
@@ -26,14 +26,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         [TestMethod]
         public void Should_Throw_On_Null_API_Key()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new StackSettingsService(serializer, new Management.Core.Models.Stack(null)));
+            Assert.ThrowsException<ArgumentNullException>(() => new StackSettingsService(serializerOptions, new Management.Core.Models.Stack(null)));
         }
 
         [TestMethod]
         public void Should_Initialize_With_Get_Method()
         {
             var apiKey = _fixture.Create<string>();
-            var service = new StackSettingsService(serializer, new Management.Core.Models.Stack(null, apiKey));
+            var service = new StackSettingsService(serializerOptions, new Management.Core.Models.Stack(null, apiKey));
             service.ContentBody();
 
             Assert.IsNotNull(service);
@@ -48,14 +48,14 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         {
             var apiKey = _fixture.Create<string>();
             var settings = _fixture.Create<StackSettings>();
-            var service = new StackSettingsService(serializer, new Management.Core.Models.Stack(null, apiKey), "POST", settings);
+            var service = new StackSettingsService(serializerOptions, new Management.Core.Models.Stack(null, apiKey), "POST", settings);
             service.ContentBody();
 
             Assert.IsNotNull(service);
             Assert.AreEqual("POST", service.HttpMethod);
             Assert.AreEqual("stacks/settings", service.ResourcePath);
             Assert.AreEqual(apiKey, service.Headers["api_key"]);
-            var json = JsonConvert.SerializeObject(settings);
+            var json = JsonSerializer.Serialize(settings);
 
             Assert.AreEqual($"{{\"stack_settings\":{json.ToString()}}}", Encoding.Default.GetString(service.ByteContent));
         }

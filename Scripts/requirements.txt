@@ -1,3 +1,0 @@
-# Required dependencies for Scripts directory
-# defusedxml: REQUIRED for secure XML parsing (prevents XXE vulnerabilities)
-defusedxml>=0.7.1

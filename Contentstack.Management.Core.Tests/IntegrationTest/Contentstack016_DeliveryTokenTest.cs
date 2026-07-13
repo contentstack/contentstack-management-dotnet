@@ -7,11 +7,11 @@ using Contentstack.Management.Core.Tests.Helpers;
 using Contentstack.Management.Core.Tests.Model;
 using Contentstack.Management.Core.Queryable;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 using System.Security.Cryptography;
 using System.Net;
 using Contentstack.Management.Core.Exceptions;
-using Newtonsoft.Json;
 using System.Threading;
 using System.Linq;
 
@@ -107,10 +107,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Create delivery token failed", "CreateDeliveryTokenSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
+                var responseObject = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
-                var tokenData = responseObject["token"] as JObject;
+                var tokenData = responseObject["token"] as JsonObject;
                 AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
                 AssertLogger.AreEqual(_testTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match", "TokenName");
                 AssertLogger.AreEqual(_testTokenModel.Description, tokenData["description"]?.ToString(), "Token description should match", "TokenDescription");
@@ -165,10 +165,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Async create delivery token failed", "AsyncCreateSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
+                var responseObject = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
-                var tokenData = responseObject["token"] as JObject;
+                var tokenData = responseObject["token"] as JsonObject;
                 AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
                 AssertLogger.AreEqual(asyncTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match", "AsyncTokenName");
 
@@ -204,10 +204,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Fetch delivery token failed", "FetchSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
+                var responseObject = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
-                var tokenData = responseObject["token"] as JObject;
+                var tokenData = responseObject["token"] as JsonObject;
                 AssertLogger.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match", "TokenUid");
                 AssertLogger.AreEqual(_testTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match", "TokenName");
                 AssertLogger.IsNotNull(tokenData["token"], "Token should have access token");
@@ -236,10 +236,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Async fetch delivery token failed", "AsyncFetchSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
+                var responseObject = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
-                var tokenData = responseObject["token"] as JObject;
+                var tokenData = responseObject["token"] as JsonObject;
                 AssertLogger.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match", "TokenUid");
                 AssertLogger.IsNotNull(tokenData["token"], "Token should have access token");
             }
@@ -293,10 +293,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Update delivery token failed", "UpdateSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
+                var responseObject = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
-                var tokenData = responseObject["token"] as JObject;
+                var tokenData = responseObject["token"] as JsonObject;
                 AssertLogger.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match", "TokenUid");
                 AssertLogger.AreEqual(updateModel.Name, tokenData["name"]?.ToString(), "Updated token name should match", "UpdatedTokenName");
                 AssertLogger.AreEqual(updateModel.Description, tokenData["description"]?.ToString(), "Updated token description should match", "UpdatedTokenDescription");
@@ -351,10 +351,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Async update delivery token failed", "AsyncUpdateSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
+                var responseObject = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(responseObject["token"], "Response should contain token object");
 
-                var tokenData = responseObject["token"] as JObject;
+                var tokenData = responseObject["token"] as JsonObject;
                 AssertLogger.AreEqual(_deliveryTokenUid, tokenData["uid"]?.ToString(), "Token UID should match", "TokenUid");
                 AssertLogger.AreEqual(updateModel.Name, tokenData["name"]?.ToString(), "Updated token name should match", "UpdatedTokenName");
 
@@ -382,10 +382,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Query delivery tokens failed", "QuerySuccess");
 
-                var responseObject = response.OpenJObjectResponse();
+                var responseObject = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(responseObject["tokens"], "Response should contain tokens array");
 
-                var tokens = responseObject["tokens"] as JArray;
+                var tokens = responseObject["tokens"] as JsonArray;
                 AssertLogger.IsTrue(tokens.Count > 0, "Should have at least one delivery token", "TokensCountGreaterThanZero");
 
                 bool foundTestToken = false;
@@ -428,10 +428,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Query delivery tokens with parameters failed", "QueryWithParamsSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
+                var responseObject = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(responseObject["tokens"], "Response should contain tokens array");
 
-                var tokens = responseObject["tokens"] as JArray;
+                var tokens = responseObject["tokens"] as JsonArray;
                 AssertLogger.IsTrue(tokens.Count <= 5, "Should respect limit parameter", "RespectLimitParam");
 
             }
@@ -483,14 +483,14 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Create multi-environment delivery token failed", "MultiEnvCreateSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
-                var tokenData = responseObject["token"] as JObject;
+                var responseObject = response.OpenJsonObjectResponse();
+                var tokenData = responseObject["token"] as JsonObject;
                 AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
 
                 string multiEnvTokenUid = tokenData["uid"]?.ToString();
                 TestOutputLogger.LogContext("MultiEnvTokenUid", multiEnvTokenUid ?? "");
 
-                var scope = tokenData["scope"] as JArray;
+                var scope = tokenData["scope"] as JsonArray;
                 AssertLogger.IsNotNull(scope, "Token should have scope");
                 AssertLogger.IsTrue(scope.Count > 0, "Token should have at least one scope", "ScopeCount");
 
@@ -546,15 +546,15 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Create complex scope delivery token failed", "ComplexScopeCreateSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
-                var tokenData = responseObject["token"] as JObject;
+                var responseObject = response.OpenJsonObjectResponse();
+                var tokenData = responseObject["token"] as JsonObject;
                 AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
 
                 string complexScopeTokenUid = tokenData["uid"]?.ToString();
                 TestOutputLogger.LogContext("ComplexScopeTokenUid", complexScopeTokenUid ?? "");
 
                 // Verify multiple scopes
-                var scope = tokenData["scope"] as JArray;
+                var scope = tokenData["scope"] as JsonArray;
                 AssertLogger.IsNotNull(scope, "Token should have scope");
                 AssertLogger.IsTrue(scope.Count >= 2, "Token should have multiple scopes", "ScopeCountMultiple");
 
@@ -610,13 +610,13 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Create UI structure delivery token failed", "UIStructureCreateSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
-                var tokenData = responseObject["token"] as JObject;
+                var responseObject = response.OpenJsonObjectResponse();
+                var tokenData = responseObject["token"] as JsonObject;
                 AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
                 AssertLogger.AreEqual(uiStructureTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match", "UITokenName");
 
                 // Verify the scope structure matches UI format
-                var scope = tokenData["scope"] as JArray;
+                var scope = tokenData["scope"] as JsonArray;
                 AssertLogger.IsNotNull(scope, "Token should have scope");
                 AssertLogger.IsTrue(scope.Count == 2, "Token should have 2 scope modules (environment and branch)", "UIScopeCount");
 
@@ -654,10 +654,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Async query delivery tokens failed: {response.OpenResponse()}", "AsyncQuerySuccess");
 
-                var responseObject = response.OpenJObjectResponse();
+                var responseObject = response.OpenJsonObjectResponse();
                 AssertLogger.IsNotNull(responseObject["tokens"], "Response should contain tokens array");
 
-                var tokens = responseObject["tokens"] as JArray;
+                var tokens = responseObject["tokens"] as JsonArray;
                 AssertLogger.IsTrue(tokens.Count > 0, "Should have at least one delivery token", "AsyncTokensCount");
 
                 bool foundTestToken = false;
@@ -717,8 +717,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Create token with empty description failed: {response.OpenResponse()}", "EmptyDescCreateSuccess");
 
-                var responseObject = response.OpenJObjectResponse();
-                var tokenData = responseObject["token"] as JObject;
+                var responseObject = response.OpenJsonObjectResponse();
+                var tokenData = responseObject["token"] as JsonObject;
                 AssertLogger.IsNotNull(tokenData["uid"], "Token should have UID");
                 AssertLogger.AreEqual(emptyDescTokenModel.Name, tokenData["name"]?.ToString(), "Token name should match", "EmptyDescTokenName");
 
@@ -947,8 +947,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Should accept token with whitespace name");
                 
                 // Get token UID for cleanup
-                var responseObject = response.OpenJObjectResponse();
-                var tokenData = responseObject["token"] as JObject;
+                var responseObject = response.OpenJsonObjectResponse();
+                var tokenData = responseObject["token"] as JsonObject;
                 string createdTokenUid = tokenData["uid"]?.ToString();
                 
                 // Verify name contains whitespace
@@ -999,8 +999,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Should accept token with special characters");
                 
                 // Get token UID for cleanup
-                var responseObject = response.OpenJObjectResponse();
-                var tokenData = responseObject["token"] as JObject;
+                var responseObject = response.OpenJsonObjectResponse();
+                var tokenData = responseObject["token"] as JsonObject;
                 string createdTokenUid = tokenData["uid"]?.ToString();
                 
                 // Verify name contains special characters
@@ -1690,7 +1690,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Should accept query with negative limit");
                 
                 // Server should return results even with negative limit
-                var tokens = response.OpenJObjectResponse()["tokens"];
+                var tokens = response.OpenJsonObjectResponse()["tokens"];
                 AssertLogger.IsNotNull(tokens, "Should return tokens array");
             }
             catch (ArgumentException ex)
@@ -1735,7 +1735,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Should accept query with large limit");
                 
                 // Server should return results even with excessive limit
-                var tokens = response.OpenJObjectResponse()["tokens"];
+                var tokens = response.OpenJsonObjectResponse()["tokens"];
                 AssertLogger.IsNotNull(tokens, "Should return tokens array");
             }
             catch (ArgumentException ex)
@@ -1789,7 +1789,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 AssertLogger.IsTrue(response.IsSuccessStatusCode, "Should accept async query with negative limit");
                 
                 // Server should return results even with negative limit
-                var tokens = response.OpenJObjectResponse()["tokens"];
+                var tokens = response.OpenJsonObjectResponse()["tokens"];
                 AssertLogger.IsNotNull(tokens, "Should return tokens array");
             }
             catch (ArgumentException ex)
@@ -1912,8 +1912,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     if (createResponse.IsSuccessStatusCode)
                     {
                         // Clean up the test token if created
-                        var responseObject = createResponse.OpenJObjectResponse();
-                        var tokenData = responseObject["token"] as JObject;
+                        var responseObject = createResponse.OpenJsonObjectResponse();
+                        var tokenData = responseObject["token"] as JsonObject;
                         string tokenUid = tokenData["uid"]?.ToString();
                         
                         if (!string.IsNullOrEmpty(tokenUid))
@@ -2004,7 +2004,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseObject = response.OpenJObjectResponse();
+                    var responseObject = response.OpenJsonObjectResponse();
                     AssertLogger.IsNotNull(responseObject, "Response should be parseable even if large");
                 }
             }
@@ -2176,7 +2176,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var tokensResponse = _stack.DeliveryToken().Query().Find();
                 if (tokensResponse.IsSuccessStatusCode)
                 {
-                    var tokens = tokensResponse.OpenJObjectResponse()["tokens"] as JArray;
+                    var tokens = tokensResponse.OpenJsonObjectResponse()["tokens"] as JsonArray;
                     if (tokens?.Count > 0)
                     {
                         foreach (var token in tokens)
@@ -2229,7 +2229,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var tokensResponse = _stack.DeliveryToken().Query().Find();
                 if (tokensResponse.IsSuccessStatusCode)
                 {
-                    var tokens = tokensResponse.OpenJObjectResponse()["tokens"] as JArray;
+                    var tokens = tokensResponse.OpenJsonObjectResponse()["tokens"] as JsonArray;
                     if (tokens?.Count > 0)
                     {
                         foreach (var token in tokens)
@@ -2265,7 +2265,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var environmentsResponse = _stack.Environment().Query().Find();
                 if (environmentsResponse.IsSuccessStatusCode)
                 {
-                    var environments = environmentsResponse.OpenJObjectResponse()["environments"] as JArray;
+                    var environments = environmentsResponse.OpenJsonObjectResponse()["environments"] as JsonArray;
                     if (environments?.Count > 0)
                     {
                         foreach (var env in environments)
@@ -2592,8 +2592,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseObject = response.OpenJObjectResponse();
-                    var tokenData = responseObject["token"] as JObject;
+                    var responseObject = response.OpenJsonObjectResponse();
+                    var tokenData = responseObject["token"] as JsonObject;
                     return tokenData["uid"]?.ToString();
                 }
             }
@@ -2630,7 +2630,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                     response = _stack.Environment().Query().Find();
                     if (response.IsSuccessStatusCode)
                     {
-                        var environments = response.OpenJObjectResponse()["environments"] as JArray;
+                        var environments = response.OpenJsonObjectResponse()["environments"] as JsonArray;
                         if (environments?.Count > 0)
                         {
                             Console.WriteLine($"Test environment {envUid} already exists");
@@ -2664,7 +2664,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
                 if (queryResponse.IsSuccessStatusCode)
                 {
-                    var environments = queryResponse.OpenJObjectResponse()["environments"] as JArray;
+                    var environments = queryResponse.OpenJsonObjectResponse()["environments"] as JsonArray;
                     if (environments?.Count > 0)
                     {
                         // Find the environment with matching name

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Encodings.Web;
 using AutoFixture;
 using Contentstack.Management.Core.Models.Fields;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
 {
@@ -11,11 +13,15 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
     public class GlobalFieldReferenceValidationTest
     {
         private readonly IFixture _fixture = new Fixture();
+        private static readonly JsonSerializerOptions _unicodeOptions = new JsonSerializerOptions
+        {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
 
         [TestMethod]
         public void Should_Validate_GlobalFieldReference_With_Valid_Data()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Valid Product Reference",
@@ -32,7 +38,6 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 }
             };
 
-             
             Assert.IsNotNull(globalFieldRef);
             Assert.AreEqual("global_field", globalFieldRef.DataType);
             Assert.IsFalse(string.IsNullOrEmpty(globalFieldRef.ReferenceTo));
@@ -42,7 +47,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Handle_GlobalFieldReference_With_Empty_DisplayName()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "",
@@ -55,8 +60,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 NonLocalizable = false
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+
+            var json = JsonSerializer.Serialize(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"display_name\":\"\""));
             Assert.AreEqual("", globalFieldRef.DisplayName);
@@ -65,7 +70,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Handle_GlobalFieldReference_With_Null_DisplayName()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = null,
@@ -78,10 +83,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 NonLocalizable = false
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
 
-            // Null values are ignored due to ItemNullValueHandling = NullValueHandling.Ignore
+            var json = JsonSerializer.Serialize(globalFieldRef);
+
+            // Null values are ignored via [JsonIgnore(Condition = WhenWritingNull)] on the property
             Assert.IsFalse(json.Contains("\"display_name\""));
             Assert.IsNull(globalFieldRef.DisplayName);
         }
@@ -89,7 +94,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Handle_GlobalFieldReference_With_Empty_Uid()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Test Field",
@@ -102,8 +107,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 NonLocalizable = false
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+
+            var json = JsonSerializer.Serialize(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"uid\":\"\""));
             Assert.AreEqual("", globalFieldRef.Uid);
@@ -112,7 +117,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Handle_GlobalFieldReference_With_Null_Uid()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Test Field",
@@ -125,10 +130,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 NonLocalizable = false
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
 
-            // Null values are ignored due to ItemNullValueHandling = NullValueHandling.Ignore
+            var json = JsonSerializer.Serialize(globalFieldRef);
+
+            // Null values are ignored via [JsonIgnore(Condition = WhenWritingNull)] on the property
             Assert.IsFalse(json.Contains("\"uid\""));
             Assert.IsNull(globalFieldRef.Uid);
         }
@@ -136,7 +141,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Handle_GlobalFieldReference_With_Empty_ReferenceTo()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Test Field",
@@ -149,8 +154,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 NonLocalizable = false
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+
+            var json = JsonSerializer.Serialize(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"reference_to\":\"\""));
             Assert.AreEqual("", globalFieldRef.ReferenceTo);
@@ -159,7 +164,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Handle_GlobalFieldReference_With_Null_ReferenceTo()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Test Field",
@@ -172,10 +177,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 NonLocalizable = false
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
 
-            // Null values are ignored due to ItemNullValueHandling = NullValueHandling.Ignore
+            var json = JsonSerializer.Serialize(globalFieldRef);
+
+            // Null values are ignored via [JsonIgnore(Condition = WhenWritingNull)] on the property
             Assert.IsFalse(json.Contains("\"reference_to\""));
             Assert.IsNull(globalFieldRef.ReferenceTo);
         }
@@ -183,7 +188,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Handle_GlobalFieldReference_With_Null_FieldMetadata()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Test Field",
@@ -197,10 +202,10 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 FieldMetadata = null
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
 
-            // Null values are ignored due to ItemNullValueHandling = NullValueHandling.Ignore
+            var json = JsonSerializer.Serialize(globalFieldRef);
+
+            // Null values are ignored via [JsonIgnore(Condition = WhenWritingNull)] on the property
             Assert.IsFalse(json.Contains("\"field_metadata\""));
             Assert.IsNull(globalFieldRef.FieldMetadata);
         }
@@ -208,7 +213,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Handle_GlobalFieldReference_With_Empty_FieldMetadata()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Test Field",
@@ -222,8 +227,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 FieldMetadata = new FieldMetadata()
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+
+            var json = JsonSerializer.Serialize(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"field_metadata\""));
             Assert.IsNotNull(globalFieldRef.FieldMetadata);
@@ -232,7 +237,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Validate_GlobalFieldReference_With_Special_Characters_In_Uid()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Special Characters Test",
@@ -245,8 +250,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 NonLocalizable = false
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+
+            var json = JsonSerializer.Serialize(globalFieldRef);
 
             Assert.IsTrue(json.Contains("\"uid\":\"test-field_with_underscores.and.dots\""));
             Assert.IsTrue(json.Contains("\"reference_to\":\"referenced-field_with_underscores.and.dots\""));
@@ -257,7 +262,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Validate_GlobalFieldReference_With_Unicode_Characters()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Unicode Test 中文",
@@ -270,8 +275,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 NonLocalizable = false
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+
+            var json = JsonSerializer.Serialize(globalFieldRef, _unicodeOptions);
 
             Assert.IsTrue(json.Contains("\"display_name\":\"Unicode Test 中文\""));
             Assert.IsTrue(json.Contains("\"uid\":\"test_field_中文\""));
@@ -284,7 +289,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Validate_GlobalFieldReference_With_Long_Strings()
         {
-            
+
             var longString = new string('a', 1000);
             var globalFieldRef = new GlobalFieldReference
             {
@@ -302,8 +307,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 }
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+
+            var json = JsonSerializer.Serialize(globalFieldRef);
 
             Assert.IsTrue(json.Contains($"\"display_name\":\"{longString}\""));
             Assert.IsTrue(json.Contains($"\"uid\":\"{longString}\""));
@@ -339,7 +344,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
 
             foreach (var combo in combinations)
             {
-                
+
                 var globalFieldRef = new GlobalFieldReference
                 {
                     DisplayName = "Boolean Test",
@@ -352,8 +357,8 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                     NonLocalizable = combo.NonLocalizable
                 };
 
-                
-                var json = JsonConvert.SerializeObject(globalFieldRef);
+
+                var json = JsonSerializer.Serialize(globalFieldRef);
 
                 Assert.AreEqual(combo.Mandatory, globalFieldRef.Mandatory);
                 Assert.AreEqual(combo.Multiple, globalFieldRef.Multiple);
@@ -370,7 +375,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Validate_GlobalFieldReference_With_Complex_FieldMetadata()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Complex Metadata Test",
@@ -393,12 +398,12 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 }
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+
+            var json = JsonSerializer.Serialize(globalFieldRef);
 
             Assert.IsNotNull(globalFieldRef.FieldMetadata);
             Assert.AreEqual("Complex metadata description", globalFieldRef.FieldMetadata.Description);
-            Assert.AreEqual("default_value", globalFieldRef.FieldMetadata.DefaultValue);
+            Assert.AreEqual("default_value", globalFieldRef.FieldMetadata.DefaultValue?.ToString());
             Assert.AreEqual(3, globalFieldRef.FieldMetadata.Version);
             Assert.IsTrue(globalFieldRef.FieldMetadata.AllowRichText);
             Assert.IsFalse(globalFieldRef.FieldMetadata.Multiline);
@@ -418,7 +423,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
         [TestMethod]
         public void Should_Validate_GlobalFieldReference_Data_Type_Is_Always_GlobalField()
         {
-            
+
             var globalFieldRef = new GlobalFieldReference
             {
                 DisplayName = "Data Type Test",
@@ -431,11 +436,11 @@ namespace Contentstack.Management.Core.Unit.Tests.Models.Fields
                 NonLocalizable = false
             };
 
-            
-            var json = JsonConvert.SerializeObject(globalFieldRef);
+
+            var json = JsonSerializer.Serialize(globalFieldRef);
 
             Assert.AreEqual("global_field", globalFieldRef.DataType);
             Assert.IsTrue(json.Contains("\"data_type\":\"global_field\""));
         }
     }
-} 
+}

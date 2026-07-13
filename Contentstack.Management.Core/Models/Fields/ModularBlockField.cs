@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Models.Fields
 {
     public class ModularBlockField : Field
     {
-        [JsonProperty(propertyName: "blocks")]
-        public List<Block> blocks { get; set; }
+        [JsonPropertyName("blocks")]
+        public List<Block>? blocks { get; set; }
     }
 
     public class Block
     {
-        [JsonProperty(propertyName: "title")]
-        public string Title { get; set; }
-        [JsonProperty(propertyName: "uid")]
-        public string Uid { get; set; }
-        [JsonProperty(propertyName: "autoEdit")]
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
+        [JsonPropertyName("uid")]
+        public string? Uid { get; set; }
+        [JsonPropertyName("autoEdit")]
         public bool AutoEdit { get; set; }
-        [JsonProperty(propertyName: "blockType")]
+        [JsonPropertyName("blockType")]
         public bool BlockType { get; set; }
-        [JsonProperty(propertyName: "schema")]
-        public List<Field> Schema { get; set; }
+        [JsonPropertyName("schema")]
+        public List<Field>? Schema { get; set; }
     }
 }

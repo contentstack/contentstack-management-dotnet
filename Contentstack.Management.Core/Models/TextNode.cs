@@ -1,10 +1,8 @@
 ﻿using System;
-using Newtonsoft.Json;
 using Contentstack.Management.Core.Utils;
 
 namespace Contentstack.Management.Core.Models
 {
-    [JsonConverter(typeof(TextNodeJsonConverter))]
     public class TextNode: Node
     {
         public bool bold { get; set; }
@@ -15,6 +13,6 @@ namespace Contentstack.Management.Core.Models
         public bool subscript { get; set; }
         public bool superscript { get; set; }
         public bool @break { get; set; }
-        public string text { get; set; }
+        public string? text { get; set; }
     }
 }

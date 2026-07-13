@@ -5,13 +5,13 @@ using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Models;
 using Contentstack.Management.Core.Unit.Tests.Models.ContentModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
 {
     [TestClass]
     public class LocalizationServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializer = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture()
        .Customize(new AutoMoqCustomization());
 
@@ -97,7 +97,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Models
             Assert.IsNotNull(service);
             Assert.AreEqual("PUT", service.HttpMethod);
             Assert.AreEqual(resourcePath, service.ResourcePath);
-            Assert.AreEqual($"{{\"{fieldName}\": {{\"title\":\"{model.Title}\"}}}}", Encoding.Default.GetString(service.ByteContent));
+            Assert.AreEqual($"{{\"{fieldName}\":{{\"title\":\"{model.Title}\"}}}}", Encoding.Default.GetString(service.ByteContent));
         }
         [TestMethod]
         public void Should_Unlocalize_Should_Have_Blank_Content()

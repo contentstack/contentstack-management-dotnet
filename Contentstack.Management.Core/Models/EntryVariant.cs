@@ -11,16 +11,16 @@ namespace Contentstack.Management.Core.Models
     /// </summary>
     public class EntryVariant
     {
-        internal Stack stack;
-        internal string resourcePath;
+        internal Stack stack = null!;
+        internal string resourcePath = null!;
 
         /// <summary>
         /// Gets the UID of the variant.
         /// </summary>
-        public string Uid { get; private set; }
+        public string? Uid { get; private set; }
 
         #region Constructor
-        internal EntryVariant(Stack stack, string contentTypeUid, string entryUid, string uid = null)
+        internal EntryVariant(Stack stack, string contentTypeUid, string? entryUid, string? uid = null)
         {
             if (stack == null)
             {
@@ -44,7 +44,7 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="collection">Query parameters.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Find(ParameterCollection collection = null)
+        public ContentstackResponse Find(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -62,7 +62,7 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="collection">Query parameters.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> FindAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> FindAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidNotEmpty();
@@ -81,12 +81,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model">The variant entry data including _variant metadata.</param>
         /// <param name="collection">Query parameters.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Create(object model, ParameterCollection collection = null)
+        public ContentstackResponse Create(object model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<object>(stack.client.serializer, stack, resourcePath, model, "entry", "PUT", collection: collection);
+            var service = new CreateUpdateService<object>(stack, resourcePath, model, "entry", "PUT", collection: collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -96,12 +96,12 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model">The variant entry data including _variant metadata.</param>
         /// <param name="collection">Query parameters.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> CreateAsync(object model, ParameterCollection collection = null)
+        public Task<ContentstackResponse> CreateAsync(object model, ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateService<object>(stack.client.serializer, stack, resourcePath, model, "entry", "PUT", collection: collection);
+            var service = new CreateUpdateService<object>(stack, resourcePath, model, "entry", "PUT", collection: collection, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<CreateUpdateService<object>, ContentstackResponse>(service);
         }
 
@@ -111,7 +111,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model">The variant entry data including _variant metadata.</param>
         /// <param name="collection">Query parameters.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Update(object model, ParameterCollection collection = null)
+        public ContentstackResponse Update(object model, ParameterCollection? collection = null)
         {
             return Create(model, collection);
         }
@@ -122,7 +122,7 @@ namespace Contentstack.Management.Core.Models
         /// <param name="model">The variant entry data including _variant metadata.</param>
         /// <param name="collection">Query parameters.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> UpdateAsync(object model, ParameterCollection collection = null)
+        public Task<ContentstackResponse> UpdateAsync(object model, ParameterCollection? collection = null)
         {
             return CreateAsync(model, collection);
         }
@@ -132,12 +132,12 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="collection">Query parameters.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Fetch(ParameterCollection collection = null)
+        public ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -146,12 +146,12 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="collection">Query parameters.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -160,12 +160,12 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="collection">Query parameters.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public ContentstackResponse Delete(ParameterCollection collection = null)
+        public ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE", collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE", collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -174,12 +174,12 @@ namespace Contentstack.Management.Core.Models
         /// </summary>
         /// <param name="collection">Query parameters.</param>
         /// <returns>The Task.</returns>
-        public Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE", collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE", collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 

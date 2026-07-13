@@ -11,13 +11,13 @@ namespace Contentstack.Management.Core.Models
 {
     public class Stack
     {
-        internal ContentstackClient client;
-        public string APIKey { get; private set; }
-        public string ManagementToken { get; private set; }
-        public string BranchUid { get; private set; }
+        internal ContentstackClient client = null!;
+        public string? APIKey { get; private set; }
+        public string? ManagementToken { get; private set; }
+        public string? BranchUid { get; private set; }
 
         #region Constructor
-        public Stack(ContentstackClient contentstackClient, string apiKey = null, string managementToken = null, string branchUid = null)
+        public Stack(ContentstackClient contentstackClient, string? apiKey = null, string? managementToken = null, string? branchUid = null)
         {
             client = contentstackClient;
             APIKey = apiKey;
@@ -39,12 +39,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse GetAll(ParameterCollection parameters = null)
+        public ContentstackResponse GetAll(ParameterCollection? parameters = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
 
-            var service = new FetchStackService(client.serializer, this, parameters);
+            var service = new FetchStackService(client.SerializerOptions, this, parameters);
 
             return client.InvokeSync(service);
         }
@@ -61,12 +61,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> GetAllAsync(ParameterCollection parameters = null)
+        public Task<ContentstackResponse> GetAllAsync(ParameterCollection? parameters = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
 
-            var service = new FetchStackService(client.serializer, this, parameters);
+            var service = new FetchStackService(client.SerializerOptions, this, parameters);
 
             return client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
         }
@@ -83,12 +83,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse Fetch(ParameterCollection parameters = null)
+        public ContentstackResponse Fetch(ParameterCollection? parameters = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new FetchStackService(client.serializer, this, parameters);
+            var service = new FetchStackService(client.SerializerOptions, this, parameters);
             return client.InvokeSync(service);
         }
 
@@ -104,12 +104,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> FetchAsync(ParameterCollection parameters = null)
+        public Task<ContentstackResponse> FetchAsync(ParameterCollection? parameters = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new FetchStackService(client.serializer, this, parameters);
+            var service = new FetchStackService(client.SerializerOptions, this, parameters);
 
             return client.InvokeAsync<FetchStackService, ContentstackResponse>(service);
         }
@@ -131,7 +131,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackOwnershipService(client.serializer, this, email);
+            var service = new StackOwnershipService(this, email, client.SerializerOptions);
 
             return client.InvokeSync(service);
         }
@@ -153,7 +153,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackOwnershipService(client.serializer, this, email);
+            var service = new StackOwnershipService(this, email, client.SerializerOptions);
 
             return client.InvokeAsync<StackOwnershipService, ContentstackResponse>(service);
         }
@@ -173,7 +173,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse Create(string name, string masterLocale, string organisationUid, string description = null)
+        public ContentstackResponse Create(string name, string masterLocale, string organisationUid, string? description = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
@@ -181,7 +181,7 @@ namespace Contentstack.Management.Core.Models
             ThrowInvalideLocale(masterLocale);
             ThrowInvalideOrganizationUid(organisationUid);
 
-            var service = new StackCreateUpdateService(client.serializer, this, name, masterLocale, description, organizationUid: organisationUid);
+            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, masterLocale, description, organizationUid: organisationUid);
 
             return client.InvokeSync(service);
         }
@@ -201,7 +201,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> CreateAsync(string name, string masterLocale, string organisationUid, string description = null)
+        public Task<ContentstackResponse> CreateAsync(string name, string masterLocale, string organisationUid, string? description = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyNotEmpty();
@@ -209,7 +209,7 @@ namespace Contentstack.Management.Core.Models
             ThrowInvalideLocale(masterLocale);
             ThrowInvalideOrganizationUid(organisationUid);
 
-            var service = new StackCreateUpdateService(client.serializer, this, name, masterLocale, description, organizationUid: organisationUid);
+            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, masterLocale, description, organizationUid: organisationUid);
 
             return client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
         }
@@ -229,13 +229,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
-        public ContentstackResponse Update(string name, string description = null)
+        public ContentstackResponse Update(string name, string? description = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
             ThrowInvalideName(name);
 
-            var service = new StackCreateUpdateService(client.serializer, this, name, description: description);
+            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, description: description);
 
             return client.InvokeSync(service);
         }
@@ -255,13 +255,13 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task</returns>
-        public Task<ContentstackResponse> UpdateAsync(string name, string description = null)
+        public Task<ContentstackResponse> UpdateAsync(string name, string? description = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
             ThrowInvalideName(name);
 
-            var service = new StackCreateUpdateService(client.serializer, this, name, description: description);
+            var service = new StackCreateUpdateService(client.SerializerOptions, this, name, description: description);
 
             return client.InvokeAsync<StackCreateUpdateService, ContentstackResponse>(service);
         }
@@ -290,7 +290,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new UpdateUserRoleService(client.serializer, this, usersRole);
+            var service = new UpdateUserRoleService(this, usersRole, client.SerializerOptions);
 
             return client.InvokeSync(service);
         }
@@ -319,7 +319,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new UpdateUserRoleService(client.serializer, this, usersRole);
+            var service = new UpdateUserRoleService(this, usersRole, client.SerializerOptions);
 
             return client.InvokeAsync<UpdateUserRoleService, ContentstackResponse>(service);
         }
@@ -340,7 +340,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.serializer, this);
+            var service = new StackSettingsService(client.SerializerOptions, this);
 
             return client.InvokeSync(service);
         }
@@ -361,7 +361,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.serializer, this);
+            var service = new StackSettingsService(client.SerializerOptions, this);
 
             return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
@@ -382,7 +382,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.serializer, this, "POST", new StackSettings()
+            var service = new StackSettingsService(client.SerializerOptions, this, "POST", new StackSettings()
             {
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
@@ -408,7 +408,7 @@ namespace Contentstack.Management.Core.Models
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
-            var service = new StackSettingsService(client.serializer, this, "POST", new StackSettings()
+            var service = new StackSettingsService(client.SerializerOptions, this, "POST", new StackSettings()
             {
                 StackVariables = new Dictionary<string, object>(),
                 DiscreteVariables = new Dictionary<string, object>(),
@@ -438,7 +438,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("settings", CSConstants.StackSettingsRequired);
             }
 
-            var service = new StackSettingsService(client.serializer, this, "POST", settings);
+            var service = new StackSettingsService(client.SerializerOptions, this, "POST", settings);
 
             return client.InvokeSync(service);
         }
@@ -462,7 +462,7 @@ namespace Contentstack.Management.Core.Models
             {
                 throw new ArgumentNullException("settings", CSConstants.StackSettingsRequired);
             }
-            var service = new StackSettingsService(client.serializer, this, "POST", settings);
+            var service = new StackSettingsService(client.SerializerOptions, this, "POST", settings);
 
             return client.InvokeAsync<StackSettingsService, ContentstackResponse>(service);
         }
@@ -492,7 +492,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("invitations", CSConstants.InvitationsRequired);
             }
 
-            var service = new StackShareService(client.serializer, this);
+            var service = new StackShareService(this, client.SerializerOptions);
             service.AddUsers(invitations);
 
             return client.InvokeSync(service);
@@ -523,7 +523,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("invitations", CSConstants.InvitationsRequired);
             }
 
-            var service = new StackShareService(client.serializer, this);
+            var service = new StackShareService(this, client.SerializerOptions);
             service.AddUsers(invitations);
 
             return client.InvokeAsync<StackShareService, ContentstackResponse>(service);
@@ -549,7 +549,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
 
-            var service = new StackShareService(client.serializer, this);
+            var service = new StackShareService(this, client.SerializerOptions);
             service.RemoveUsers(email);
 
             return client.InvokeSync(service);
@@ -576,7 +576,7 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException("email", CSConstants.EmailRequired);
             }
 
-            var service = new StackShareService(client.serializer, this);
+            var service = new StackShareService(this, client.SerializerOptions);
             service.RemoveUsers(email);
 
             return client.InvokeAsync<StackShareService, ContentstackResponse>(service);
@@ -594,7 +594,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="code">Locale code fot language</param>
         /// <returns>The <see cref="Models.Locale"/></returns>
-        public Locale Locale(string code = null)
+        public Locale Locale(string? code = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -615,13 +615,14 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.ContentType"/></returns>
-        public ContentType ContentType(string uid = null)
+        public ContentType ContentType(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new ContentType(this, uid);
         }
+
         /// <summary>
         /// <see cref="Models.Asset"/> efer to all the media files (images, videos, PDFs, audio files, and so on) uploaded in your Contentstack repository for future use. 
         /// </summary>
@@ -634,7 +635,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Asset"/></returns>
-        public Asset Asset(string uid = null)
+        public Asset Asset(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -654,7 +655,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.GlobalField" /></returns>
-        public GlobalField GlobalField(string uid = null, string apiVersion = null)
+        public GlobalField GlobalField(string? uid = null, string? apiVersion = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -663,7 +664,7 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// <see cref="Models.Extension" /> let you create custom fields and custom widgets that lets you customize Contentstack's default UI and behavior. 
+        /// <see cref="Models.Extension" /> let you create custom fields and custom widgets that lets you customize Contentstack's default UI and behavior.
         /// </summary>
         /// <param name="uid">Optional, extension uid.</param>
         /// <example>
@@ -674,7 +675,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Extension" /></returns>
-        public Extension Extension(string uid = null)
+        public Extension Extension(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -683,7 +684,7 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// <see cref="Models.Label" /> allow you to group a collection of content within a stack. Using labels you can group content types that need to work together. 
+        /// <see cref="Models.Label" /> allow you to group a collection of content within a stack. Using labels you can group content types that need to work together.
         /// </summary>
         /// <param name="uid">Optional, label uid.</param>
         /// <example>
@@ -694,7 +695,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Label" /></returns>
-        public Label Label(string uid = null)
+        public Label Label(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -715,7 +716,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Taxonomy" /></returns>
-        public Taxonomy Taxonomy(string uid = null)
+        public Taxonomy Taxonomy(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -735,7 +736,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Environment" /></returns>
-        public Environment Environment(string uid = null)
+        public Environment Environment(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -744,7 +745,27 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
-        /// You can use <see cref="Models.Token.DeliveryToken" /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
+        /// Branches allow you to isolate and easily manage your “in-progress” work from your stable, live work.
+        /// </summary>
+        /// <param name="uid">Optional, branch uid.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// ContentstackResponse response = stack.Branch().Query().Limit(2).Skip(2).Find();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Branch" /></returns>
+        public Branch Branch(string? uid = null)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new Branch(this, uid);
+        }
+
+        /// <summary>
+        /// You can use <see cref=”Models.Token.DeliveryToken” /> to authenticate Content Delivery API (CDA) requests and retrieve the published content of an environment.
         /// </summary>
         /// <param name="uid">Optional, delivery token uid.</param>
         /// <example>
@@ -755,7 +776,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Token.DeliveryToken" /></returns>
-        public DeliveryToken DeliveryToken(string uid = null)
+        public DeliveryToken DeliveryToken(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -775,12 +796,38 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Token.ManagementToken" /></returns>
-        public ManagementToken ManagementTokens(string uid = null)
+        public ManagementToken ManagementTokens(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
 
             return new ManagementToken(this, uid);
+        }
+
+        /// <summary>
+        /// Preview Tokens provide access to retrieve website details within the Live Preview panel.
+        /// They are scoped to a specific Delivery Token and are compatible only with the rest-preview.contentstack.com endpoint.
+        /// Both Create and Delete operate on the same endpoint — no separate preview token uid is required.
+        /// </summary>
+        /// <param name="deliveryTokenUid">The UID of the Delivery Token this Preview Token is associated with.</param>
+        /// <example>
+        /// <pre><code>
+        /// ContentstackClient client = new ContentstackClient("<AUTHTOKEN>", "<API_HOST>");
+        /// Stack stack = client.Stack("<API_KEY>");
+        /// // Create a preview token
+        /// PreviewTokenModel model = new PreviewTokenModel() { Name = "My Preview Token" };
+        /// ContentstackResponse createResponse = stack.PreviewToken("<DELIVERY_TOKEN_UID>").Create(model);
+        /// // Delete the preview token
+        /// ContentstackResponse deleteResponse = stack.PreviewToken("<DELIVERY_TOKEN_UID>").Delete();
+        /// </code></pre>
+        /// </example>
+        /// <returns>The <see cref="Models.Token.PreviewToken" /></returns>
+        public PreviewToken PreviewToken(string deliveryTokenUid)
+        {
+            ThrowIfNotLoggedIn();
+            ThrowIfAPIKeyEmpty();
+
+            return new PreviewToken(this, deliveryTokenUid);
         }
 
         /// <summary>
@@ -795,7 +842,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Release" /></returns>
-        public Role Role(string uid = null)
+        public Role Role(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -815,7 +862,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Release" /></returns>
-        public Release Release(string uid = null)
+        public Release Release(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -836,7 +883,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.Workflow" /></returns>
-        public Workflow Workflow(string uid = null)
+        public Workflow Workflow(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -857,7 +904,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.PublishQueue" /></returns>
-        public PublishQueue PublishQueue(string uid = null)
+        public PublishQueue PublishQueue(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -876,7 +923,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>
-        public Webhook Webhook(string uid = null)
+        public Webhook Webhook(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -896,7 +943,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.AuditLog" /></returns>
-        public AuditLog AuditLog(string uid = null)
+        public AuditLog AuditLog(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -917,7 +964,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="Models.VariantGroup" /></returns>
-        public VariantGroup VariantGroup(string uid = null)
+        public VariantGroup VariantGroup(string? uid = null)
         {
             ThrowIfNotLoggedIn();
             ThrowIfAPIKeyEmpty();
@@ -954,6 +1001,7 @@ namespace Contentstack.Management.Core.Models
 
             return new BulkOperation(this);
         }
+        // End of temporarily commented resource methods
         #endregion
 
         #region Throw Error

@@ -8,25 +8,25 @@ namespace Contentstack.Management.Core.Models
 {
     public class AssetModel: IUploadInterface
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string ParentUID { get; set; }
-        public string Tags { get; set; }
-        public string FileName { get; set; }
-        public string ContentType { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
+        public string? ParentUID { get; set; }
+        public string? Tags { get; set; }
+        public string FileName { get; set; } = null!;
+        public string ContentType { get; set; } = null!;
 
-        internal ByteArrayContent byteArray;
+        internal ByteArrayContent byteArray = null!;
 
-        public AssetModel(string fileName, string filePath, string contentType, string title = null, string description = null, string parentUID = null, string tags = null):
+        public AssetModel(string fileName, string filePath, string contentType, string? title = null, string? description = null, string? parentUID = null, string? tags = null):
             this(fileName, File.OpenRead(filePath), contentType, title, description, parentUID, tags){ }
 
-        public AssetModel(string fileName, Stream stream, string contentType, string title = null, string description = null, string parentUID = null, string tags = null):
+        public AssetModel(string fileName, Stream stream, string contentType, string? title = null, string? description = null, string? parentUID = null, string? tags = null):
             this(fileName, getBytes(stream), contentType, title, description, parentUID, tags){ }
 
-        public AssetModel(string fileName, byte[] bytes, string contentType, string title = null, string description = null, string parentUID = null, string tags = null) :
+        public AssetModel(string fileName, byte[] bytes, string contentType, string? title = null, string? description = null, string? parentUID = null, string? tags = null) :
             this(fileName, getByteArray(bytes), contentType, title, description, parentUID, tags){ }
 
-        public AssetModel(string fileName, ByteArrayContent byteArray, string contentType, string title = null, string description = null, string parentUID = null, string tags = null)
+        public AssetModel(string fileName, ByteArrayContent byteArray, string contentType, string? title = null, string? description = null, string? parentUID = null, string? tags = null)
         {
             if (fileName == null)
             {
@@ -50,7 +50,7 @@ namespace Contentstack.Management.Core.Models
         static private byte[] getBytes(Stream stream)
         {
             byte[] bytes = new byte[stream.Length];
-            stream.Read(bytes, 0, (int)stream.Length);
+            stream.ReadExactly(bytes, 0, (int)stream.Length);
             return bytes;
         }
 

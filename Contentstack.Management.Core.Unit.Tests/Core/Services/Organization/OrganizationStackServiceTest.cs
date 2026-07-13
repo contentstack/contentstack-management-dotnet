@@ -3,14 +3,14 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Contentstack.Management.Core.Services.Organization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
 {
     [TestClass]
     public class OrganizationStackServiceTest
     {
-        private JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings());
+        private JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
         private readonly IFixture _fixture = new Fixture()
         .Customize(new AutoMoqCustomization());
 
@@ -23,7 +23,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         [TestMethod]
         public void Should_Throw_On_Null_UID()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new OrganizationStackService(serializer, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new OrganizationStackService(serializerOptions, null));
 
         }
 
@@ -31,7 +31,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Organization
         public void Should_Initialize_with_Organization_Uid()
         {
             var orgUid = _fixture.Create<string>();
-            var service = new OrganizationStackService(serializer, orgUid);
+            var service = new OrganizationStackService(serializerOptions, orgUid);
 
             Assert.IsNotNull(service);
             Assert.AreEqual("GET", service.HttpMethod);

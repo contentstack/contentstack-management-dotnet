@@ -1,21 +1,20 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Contentstack.Management.Core.Unit.Tests.Mokes.Model
 {
     public class StackModel
     {
-        [JsonProperty("api_key")]
+        [JsonPropertyName("api_key")]
         public string APIKey { get; set; }
 
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        [JsonProperty("master_locale")]
+        [JsonPropertyName("master_locale")]
         public string MasterLocale { get; set; }
 
-        [JsonProperty("org_uid")]
+        [JsonPropertyName("org_uid")]
         public string OrgUid { get; set; }
     }
 
@@ -26,7 +25,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes.Model
 
     public class Response
     {
-        [JsonProperty("notice")]
+        [JsonPropertyName("notice")]
         public string Notice { get; set; }
     }
 }

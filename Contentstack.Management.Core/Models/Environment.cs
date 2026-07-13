@@ -5,7 +5,7 @@ namespace Contentstack.Management.Core.Models
 {
     public class Environment : BaseModel<EnvironmentModel>
     {
-        internal Environment(Stack stack, string uid = null)
+        internal Environment(Stack stack, string? uid = null)
            : base(stack, "environment", uid)
         {
             resourcePath = uid == null ? "/environments" : $"/environments/{uid}";
@@ -39,7 +39,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Environment Model for creating Environment.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Create(EnvironmentModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Create(EnvironmentModel model, ParameterCollection? collection = null)
         {
             return base.Create(model, collection);
         }
@@ -56,7 +56,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Environment Model for creating Environment.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> CreateAsync(EnvironmentModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> CreateAsync(EnvironmentModel model, ParameterCollection? collection = null)
         {
             return base.CreateAsync(model, collection);
         }
@@ -73,7 +73,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Environment Model for creating Environment.</param>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Update(EnvironmentModel model, ParameterCollection collection = null)
+        public override ContentstackResponse Update(EnvironmentModel model, ParameterCollection? collection = null)
         {
             return base.Update(model, collection);
         }
@@ -90,7 +90,7 @@ namespace Contentstack.Management.Core.Models
         /// </example>
         /// <param name="model">Environment Model for creating Environment.</param>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> UpdateAsync(EnvironmentModel model, ParameterCollection collection = null)
+        public override Task<ContentstackResponse> UpdateAsync(EnvironmentModel model, ParameterCollection? collection = null)
         {
             return base.UpdateAsync(model, collection);
         }
@@ -105,7 +105,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Fetch(ParameterCollection collection = null)
+        public override ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             return base.Fetch(collection);
         }
@@ -120,7 +120,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             return base.FetchAsync(collection);
         }
@@ -135,7 +135,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public override ContentstackResponse Delete(ParameterCollection collection = null)
+        public override ContentstackResponse Delete(ParameterCollection? collection = null)
         {
             return base.Delete(collection);
         }
@@ -150,7 +150,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection collection = null)
+        public override Task<ContentstackResponse> DeleteAsync(ParameterCollection? collection = null)
         {
             return base.DeleteAsync(collection);
         }

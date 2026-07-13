@@ -8,13 +8,13 @@ namespace Contentstack.Management.Core.Models
 {
     public class Folder
     {
-        internal Stack stack;
-        internal string resourcePath;
+        internal Stack stack = null!;
+        internal string resourcePath = null!;
 
-        public string Uid { get; set; }
+        public string? Uid { get; set; }
 
 
-        internal Folder(Stack stack, string uid = null)
+        internal Folder(Stack stack, string? uid = null)
         {
             stack.ThrowIfAPIKeyEmpty();
 
@@ -22,6 +22,7 @@ namespace Contentstack.Management.Core.Models
             Uid = uid;
             resourcePath = uid == null ? "/assets/folders" : $"/assets/folders/{uid}";
         }
+
 
         /// <summary>
         /// The Create a folder call is used to create an asset folder and/or add a parent folder to it.
@@ -35,11 +36,11 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Create(string name, string parentUid = null)
+        public virtual ContentstackResponse Create(string name, string? parentUid = null)
         {
             ThrowIfUidNotEmpty();
 
-            var service = new CreateUpdateFolderService(stack.client.serializer, stack, name, null, parentUid);
+            var service = new CreateUpdateFolderService(stack, name, null, parentUid, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -55,12 +56,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
-        public virtual Task<ContentstackResponse> CreateAsync(string name, string parentUid = null)
+        public virtual Task<ContentstackResponse> CreateAsync(string name, string? parentUid = null)
         {
             ThrowIfUidNotEmpty();
             stack.ThrowIfNotLoggedIn();
 
-            var service = new CreateUpdateFolderService(stack.client.serializer, stack, name, null, parentUid);
+            var service = new CreateUpdateFolderService(stack, name, null, parentUid, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<CreateUpdateFolderService, ContentstackResponse>(service);
         }
 
@@ -76,11 +77,11 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Update(string name, string parentUid = null)
+        public virtual ContentstackResponse Update(string name, string? parentUid = null)
         {
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateFolderService(stack.client.serializer, stack, name, null, parentUid);
+            var service = new CreateUpdateFolderService(stack, name, null, parentUid, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeSync(service);
         }
 
@@ -96,12 +97,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> UpdateAsync(string name, string parentUid = null)
+        public virtual Task<ContentstackResponse> UpdateAsync(string name, string? parentUid = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new CreateUpdateFolderService(stack.client.serializer, stack, name, null, parentUid);
+            var service = new CreateUpdateFolderService(stack, name, null, parentUid, stjOptions: stack.client.SerializerOptions);
             return stack.client.InvokeAsync<CreateUpdateFolderService, ContentstackResponse>(service);
         }
 
@@ -116,12 +117,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual ContentstackResponse Fetch(ParameterCollection collection = null)
+        public virtual ContentstackResponse Fetch(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeSync(service);
         }
 
@@ -136,12 +137,12 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/>.</returns>
-        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection collection = null)
+        public virtual Task<ContentstackResponse> FetchAsync(ParameterCollection? collection = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, collection: collection);
+            var service = new FetchDeleteService(stack, resourcePath, collection: collection);
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
@@ -161,7 +162,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE");
             return stack.client.InvokeSync(service);
         }
 
@@ -181,7 +182,7 @@ namespace Contentstack.Management.Core.Models
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            var service = new FetchDeleteService(stack.client.serializer, stack, resourcePath, "DELETE");
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE");
             return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
         }
 
