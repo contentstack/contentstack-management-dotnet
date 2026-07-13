@@ -40,13 +40,14 @@ namespace Contentstack.Management.Core.Models
         /// The Variant on Entry will allow to fetch, create, update or delete entry variants.
         /// </summary>
         /// <param name="uid">The UID of the variant.</param>
+        /// <param name="branchUid">The UID of the branch to target for this variant. When omitted, falls back to the Stack's configured branch.</param>
         /// <returns>The <see cref="EntryVariant"/></returns>
-        public EntryVariant Variant(string? uid = null)
+        public EntryVariant Variant(string? uid = null, string? branchUid = null)
         {
             stack.ThrowIfNotLoggedIn();
             ThrowIfUidEmpty();
 
-            return new EntryVariant(stack, contentTypeUid, Uid, uid);
+            return new EntryVariant(stack, contentTypeUid, Uid, uid, branchUid);
         }
 
         /// <summary>

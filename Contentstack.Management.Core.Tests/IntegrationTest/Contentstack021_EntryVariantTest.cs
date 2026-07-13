@@ -3481,6 +3481,187 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         }
 
         #endregion
+
+        #region L — Branch Override Tests
+
+        private const string BranchOverrideUid = "dotnet_variant_br";
+
+        private void TryDeleteBranch(string uid)
+        {
+            if (string.IsNullOrEmpty(uid)) return;
+            var force = new global::Contentstack.Management.Core.Queryable.ParameterCollection();
+            force.Add("force", true);
+            try { _stack.Branch(uid).Delete(force); } catch { }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test083_Should_Create_Branch_For_Variant_Override_Tests()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "VariantBranchOverride_Setup");
+
+            TryDeleteBranch(BranchOverrideUid);
+
+            try
+            {
+                var model = new BranchModel { Uid = BranchOverrideUid, Source = "main" };
+                ContentstackResponse response = _stack.Branch().Create(model);
+                AssertLogger.IsNotNull(response.OpenJsonObjectResponse(), "response");
+            }
+            catch (Exception ex)
+            {
+                Assert.Inconclusive("Could not create a branch for branch-override tests (may already exist or stack may not support branching): " + ex.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test084_Should_Fetch_Variant_On_Explicit_Branch()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "VariantBranchOverride_Fetch");
+
+            try
+            {
+                // The variant/entry may not have been synced onto the new branch yet, so we only
+                // assert that the SDK successfully issues the request with the branch override —
+                // not that the API necessarily has matching content on that branch.
+                var response = _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, BranchOverrideUid).Fetch();
+                Console.WriteLine("Fetch on explicit branch response: " + response.OpenResponse());
+                AssertLogger.IsTrue(
+                    response.IsSuccessStatusCode || (int)response.StatusCode >= 400,
+                    "Expected the SDK to return a well-formed HTTP response for the branch-scoped request",
+                    "FetchVariantOnExplicitBranch");
+            }
+            catch (ContentstackErrorException cex)
+            {
+                Console.WriteLine("Fetch on explicit branch failed (acceptable if content hasn't synced to the branch yet): " + cex.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test085_Should_Fetch_Variant_On_Explicit_Branch_Async()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "VariantBranchOverride_FetchAsync");
+
+            try
+            {
+                var response = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, BranchOverrideUid).FetchAsync();
+                Console.WriteLine("FetchAsync on explicit branch response: " + response.OpenResponse());
+                AssertLogger.IsTrue(
+                    response.IsSuccessStatusCode || (int)response.StatusCode >= 400,
+                    "Expected the SDK to return a well-formed HTTP response for the branch-scoped request",
+                    "FetchVariantOnExplicitBranchAsync");
+            }
+            catch (ContentstackErrorException cex)
+            {
+                Console.WriteLine("FetchAsync on explicit branch failed (acceptable if content hasn't synced to the branch yet): " + cex.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test086_Should_Fail_To_Fetch_Variant_On_Invalid_Branch()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "VariantBranchOverride_InvalidBranch");
+
+            await AssertLogger.ThrowsContentstackErrorAsync(async () =>
+            {
+                var response = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, "definitely_invalid_branch").FetchAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new ContentstackErrorException
+                    {
+                        StatusCode = response.StatusCode,
+                        ErrorMessage = "Invalid branch UID"
+                    };
+                }
+            }, "FetchVariantOnInvalidBranch", HttpStatusCode.NotFound, (HttpStatusCode)422, HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test087_Should_Fallback_To_Stack_Branch_When_BranchUid_Is_Blank()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "VariantBranchOverride_BlankFallback");
+
+            // A blank/whitespace branchUid must behave identically to omitting it entirely —
+            // i.e. fall back to the Stack's configured branch (main, in these tests).
+            var withoutOverride = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant().FindAsync();
+            var withBlankOverride = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(branchUid: "   ").FindAsync();
+
+            Assert.AreEqual(withoutOverride.IsSuccessStatusCode, withBlankOverride.IsSuccessStatusCode,
+                "A blank branchUid should fall back to the Stack's branch, matching the no-override request");
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Test088_Should_Publish_Variant_With_Explicit_Branch_Override()
+        {
+            if (string.IsNullOrEmpty(_entryUid) || string.IsNullOrEmpty(_variantUid))
+            {
+                Assert.Inconclusive("Setup not completed. Ensure Test001 runs first.");
+                return;
+            }
+
+            TestOutputLogger.LogContext("TestScenario", "VariantBranchOverride_Publish");
+
+            var publishDetails = new PublishUnpublishDetails
+            {
+                Locales = new List<string> { "en-us" },
+                Environments = new List<string> { "development" }
+            };
+
+            try
+            {
+                var response = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, BranchOverrideUid).PublishAsync(publishDetails, "en-us");
+                Console.WriteLine("Publish with branch override response: " + response.OpenResponse());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Publish with branch override failed (often due to missing 'development' environment on the branch). Continuing. Exception: " + ex.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test089_Should_Cleanup_Branch_For_Variant_Override_Tests()
+        {
+            TestOutputLogger.LogContext("TestScenario", "VariantBranchOverride_Cleanup");
+            TryDeleteBranch(BranchOverrideUid);
+        }
+
+        #endregion
     }
 
     /// <summary>

@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.1.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.1.0)(2026-07-13)
+
+ - **New**
+   - **Branch override for Entry Variants**: `Entry.Variant(uid?, branchUid?)` accepts an optional `branchUid` so a single variant call (`Find`, `Create`, `Update`, `Fetch`, `Delete`) can target a branch other than the `Stack`'s configured one, by overriding the `branch` request header. Passing `null`/whitespace falls back to the Stack's own branch.
+   - **Publish/Unpublish for Entry Variants**: `EntryVariant.Publish`/`PublishAsync` and `EntryVariant.Unpublish`/`UnpublishAsync`, matching the same `PublishUnpublishDetails` contract as `Entry.Publish`/`Unpublish`, and respecting the same branch override.
+
 ## [v1.0.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.0.0)(2026-07-13)
 
  - **Breaking Change**
