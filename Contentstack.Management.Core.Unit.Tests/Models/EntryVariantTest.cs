@@ -159,7 +159,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
 
             EntryVariant variant = new EntryVariant(_stack, ctUid, entryUid, branchUid: branchUid);
 
-            Assert.IsNotNull(variant);
+            Assert.AreEqual(branchUid, variant.branchUid);
         }
 
         [TestMethod]
