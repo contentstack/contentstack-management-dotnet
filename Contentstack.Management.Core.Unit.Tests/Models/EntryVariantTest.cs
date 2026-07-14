@@ -249,7 +249,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             ContentstackResponse response = variant.Publish(details);
 
             Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
-            Assert.IsTrue(details.Variants.Exists(v => v.Uid == uid && v.Version == 1));
+            Assert.IsTrue(details.Variants.Exists(v => v.Uid == uid));
         }
 
         [TestMethod]

@@ -288,7 +288,7 @@ namespace Contentstack.Management.Core.Models
 
             if (!details.Variants.Exists(v => v.Uid == this.Uid))
             {
-                details.Variants.Add(new PublishVariant { Uid = this.Uid, Version = details.Version });
+                details.Variants.Add(new PublishVariant { Uid = this.Uid });
             }
         }
 

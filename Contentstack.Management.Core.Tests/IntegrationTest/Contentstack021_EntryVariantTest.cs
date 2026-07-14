@@ -3540,8 +3540,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var response = _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, BranchOverrideUid).Fetch();
                 Console.WriteLine("Fetch on explicit branch response: " + response.OpenResponse());
                 AssertLogger.IsTrue(
-                    response.IsSuccessStatusCode || (int)response.StatusCode >= 400,
-                    "Expected the SDK to return a well-formed HTTP response for the branch-scoped request",
+                    response.IsSuccessStatusCode,
+                    "Expected a 2xx response when fetching a variant with a valid branch override (errors would have thrown ContentstackErrorException)",
                     "FetchVariantOnExplicitBranch");
             }
             catch (ContentstackErrorException cex)
@@ -3567,8 +3567,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 var response = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, BranchOverrideUid).FetchAsync();
                 Console.WriteLine("FetchAsync on explicit branch response: " + response.OpenResponse());
                 AssertLogger.IsTrue(
-                    response.IsSuccessStatusCode || (int)response.StatusCode >= 400,
-                    "Expected the SDK to return a well-formed HTTP response for the branch-scoped request",
+                    response.IsSuccessStatusCode,
+                    "Expected a 2xx response when fetching a variant with a valid branch override (errors would have thrown ContentstackErrorException)",
                     "FetchVariantOnExplicitBranchAsync");
             }
             catch (ContentstackErrorException cex)
