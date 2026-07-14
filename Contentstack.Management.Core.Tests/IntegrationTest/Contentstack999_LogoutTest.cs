@@ -3,14 +3,254 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Exceptions;
+using Contentstack.Management.Core.Models;
 using Contentstack.Management.Core.Tests.Helpers;
+using Contentstack.Management.Core.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text.Json.Nodes;
 
 namespace Contentstack.Management.Core.Tests.IntegrationTest
 {
     [TestClass]
     public class Contentstack999_LogoutTest
     {
+        /// <summary>
+        /// Wipes all content from the dynamically-created stack before the Logout-behavior
+        /// tests below run, using a dedicated client so it can't interfere with those tests'
+        /// assertions about Authtoken state. The stack itself is kept (no Stack.Delete() exists
+        /// in this SDK) — only its content is removed, via query-and-delete-everything-found
+        /// since content here was created by many independent test classes with no shared
+        /// tracked-UID list.
+        /// </summary>
+        [ClassInitialize]
+        public static async Task ClassInitialize(TestContext context)
+        {
+            ContentstackClient cleanupClient = null;
+            try
+            {
+                cleanupClient = Contentstack.CreateAuthenticatedClient();
+
+                StackResponse stackResponse = StackResponse.getStack(cleanupClient.serializer);
+                string apiKey = stackResponse.Stack.APIKey;
+
+                string managementToken = null;
+                try
+                {
+                    managementToken = ManagementTokenResponse.getManagementToken(cleanupClient.serializer)?.Token?.Token;
+                }
+                catch
+                {
+                    // managementTokenInfo.txt missing — fall back to session-token-only stack.
+                }
+
+                Stack stack = string.IsNullOrEmpty(managementToken)
+                    ? cleanupClient.Stack(apiKey)
+                    : cleanupClient.Stack(apiKey, managementToken);
+
+                // Order matters: content types before taxonomies (taxonomies may be referenced
+                // by content type schema fields); management token deleted last (in case any
+                // step above ends up authenticated via it).
+                await CleanupAllContentTypes(stack);
+                await CleanupAllTaxonomies(stack);
+                await LogUncleanableVariantGroups(stack);
+                await CleanupAllAssets(stack);
+                await CleanupAllEnvironments(stack);
+                await CleanupAllReleases(stack);
+                await CleanupAllDeliveryTokens(stack);
+                await CleanupManagementToken(stack, managementToken);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Stack-wide cleanup failed unexpectedly: {ex.Message}");
+            }
+            finally
+            {
+                try { cleanupClient?.Logout(); } catch { }
+            }
+        }
+
+        private static async Task CleanupAllContentTypes(Stack stack)
+        {
+            try
+            {
+                // ContentType.Delete() cascade-deletes the content type's entries too, so a
+                // separate entry-deletion pass is unnecessary.
+                var response = await stack.ContentType().Query().FindAsync();
+                var contentTypes = response.OpenJsonObjectResponse()["content_types"]?.AsArray();
+                if (contentTypes == null) return;
+
+                foreach (var ct in contentTypes)
+                {
+                    string uid = ct?["uid"]?.ToString();
+                    if (string.IsNullOrEmpty(uid)) continue;
+                    try { await stack.ContentType(uid).DeleteAsync(); }
+                    catch (Exception ex) { Console.WriteLine($"Cleanup: failed to delete content type '{uid}': {ex.Message}"); }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cleanup: failed to query content types: {ex.Message}");
+            }
+        }
+
+        private static async Task CleanupAllTaxonomies(Stack stack)
+        {
+            try
+            {
+                var response = await stack.Taxonomy().Query().FindAsync();
+                var taxonomies = response.OpenJsonObjectResponse()["taxonomies"]?.AsArray();
+                if (taxonomies == null) return;
+
+                foreach (var taxonomy in taxonomies)
+                {
+                    string uid = taxonomy?["uid"]?.ToString();
+                    if (string.IsNullOrEmpty(uid)) continue;
+                    try { await stack.Taxonomy(uid).DeleteAsync(); }
+                    catch (Exception ex) { Console.WriteLine($"Cleanup: failed to delete taxonomy '{uid}': {ex.Message}"); }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cleanup: failed to query taxonomies: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// VariantGroup has no Delete API in this SDK (only Find/LinkContentTypes/
+        /// UnlinkContentTypes) — these groups are provisioned by Personalize Experiences,
+        /// and this SDK has no Personalize wrapper either. Full cleanup of Personalize-
+        /// provisioned variant groups is a known limitation; this just logs what's left
+        /// behind so it's visible rather than silently incomplete.
+        /// </summary>
+        private static async Task LogUncleanableVariantGroups(Stack stack)
+        {
+            try
+            {
+                var response = await stack.VariantGroup().FindAsync();
+                var groups = response.OpenJsonObjectResponse()["variant_groups"]?.AsArray();
+                if (groups == null || groups.Count == 0) return;
+
+                Console.WriteLine(
+                    $"Cleanup: {groups.Count} variant group(s) remain on the stack and could not be " +
+                    "deleted (VariantGroup has no Delete API in this SDK; these are Personalize-provisioned).");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cleanup: failed to query variant groups: {ex.Message}");
+            }
+        }
+
+        private static async Task CleanupAllAssets(Stack stack)
+        {
+            try
+            {
+                var response = await stack.Asset().Query().FindAsync();
+                var assets = response.OpenJsonObjectResponse()["assets"]?.AsArray();
+                if (assets == null) return;
+
+                foreach (var asset in assets)
+                {
+                    string uid = asset?["uid"]?.ToString();
+                    if (string.IsNullOrEmpty(uid)) continue;
+                    try { await stack.Asset(uid).DeleteAsync(); }
+                    catch (Exception ex) { Console.WriteLine($"Cleanup: failed to delete asset '{uid}': {ex.Message}"); }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cleanup: failed to query assets: {ex.Message}");
+            }
+        }
+
+        private static async Task CleanupAllEnvironments(Stack stack)
+        {
+            try
+            {
+                var response = await stack.Environment().Query().FindAsync();
+                var environments = response.OpenJsonObjectResponse()["environments"]?.AsArray();
+                if (environments == null) return;
+
+                foreach (var environment in environments)
+                {
+                    string uid = environment?["uid"]?.ToString();
+                    if (string.IsNullOrEmpty(uid)) continue;
+                    try { await stack.Environment(uid).DeleteAsync(); }
+                    catch (Exception ex) { Console.WriteLine($"Cleanup: failed to delete environment '{uid}': {ex.Message}"); }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cleanup: failed to query environments: {ex.Message}");
+            }
+        }
+
+        private static async Task CleanupAllReleases(Stack stack)
+        {
+            try
+            {
+                var response = await stack.Release().Query().FindAsync();
+                var releases = response.OpenJsonObjectResponse()["releases"]?.AsArray();
+                if (releases == null) return;
+
+                foreach (var release in releases)
+                {
+                    string uid = release?["uid"]?.ToString();
+                    if (string.IsNullOrEmpty(uid)) continue;
+                    try { await stack.Release(uid).DeleteAsync(); }
+                    catch (Exception ex) { Console.WriteLine($"Cleanup: failed to delete release '{uid}': {ex.Message}"); }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cleanup: failed to query releases: {ex.Message}");
+            }
+        }
+
+        private static async Task CleanupAllDeliveryTokens(Stack stack)
+        {
+            try
+            {
+                var response = await stack.DeliveryToken().Query().FindAsync();
+                var tokens = response.OpenJsonObjectResponse()["tokens"]?.AsArray();
+                if (tokens == null) return;
+
+                foreach (var token in tokens)
+                {
+                    string uid = token?["uid"]?.ToString();
+                    if (string.IsNullOrEmpty(uid)) continue;
+                    try { await stack.DeliveryToken(uid).DeleteAsync(); }
+                    catch (Exception ex) { Console.WriteLine($"Cleanup: failed to delete delivery token '{uid}': {ex.Message}"); }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cleanup: failed to query delivery tokens: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Deletes the one global management token created for this run (see
+        /// Contentstack003_StackTest.Test065_Should_Create_Management_Token), last — in case
+        /// any prior cleanup step above ends up authenticated via this same token.
+        /// </summary>
+        private static async Task CleanupManagementToken(Stack stack, string managementToken)
+        {
+            if (string.IsNullOrEmpty(managementToken)) return;
+
+            try
+            {
+                var tokenInfo = ManagementTokenResponse.getManagementToken(stack.client.SerializerOptions);
+                string uid = tokenInfo?.Token?.Uid;
+                if (string.IsNullOrEmpty(uid)) return;
+
+                await stack.ManagementTokens(uid).DeleteAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cleanup: failed to delete management token: {ex.Message}");
+            }
+        }
+
         private static ContentstackClient CreateClientWithLogging()
         {
             var handler = new LoggingHttpHandler();

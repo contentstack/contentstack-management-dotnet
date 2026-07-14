@@ -10,7 +10,7 @@ namespace Contentstack.Management.Core.Models.Token
         public string Name { get; set; }
         [JsonPropertyName("description")]
         public string Description { get; set; }
-        [JsonPropertyName("Scope")]
+        [JsonPropertyName("scope")]
         public List<TokenScope> Scope { get; set; }
         [JsonPropertyName("expires_on")]
         public string ExpiresOn { get; set; }
