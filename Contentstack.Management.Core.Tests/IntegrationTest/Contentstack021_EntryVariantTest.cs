@@ -3645,11 +3645,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 var response = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, BranchOverrideUid).PublishAsync(publishDetails, "en-us");
+                AssertLogger.IsNotNull(response, "response");
                 Console.WriteLine("Publish with branch override response: " + response.OpenResponse());
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Publish with branch override failed (often due to missing 'development' environment on the branch). Continuing. Exception: " + ex.Message);
+                Assert.Inconclusive("Publish with branch override failed (often due to missing 'development' environment on the branch): " + ex.Message);
             }
         }
 
