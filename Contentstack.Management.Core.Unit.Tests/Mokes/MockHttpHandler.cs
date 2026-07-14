@@ -57,9 +57,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
                     executionContext.RequestContext.config
                 );
                 LastRequestUri = httpRequest.RequestUri;
-                LastRequestHeaders = new Dictionary<string, string>(
-                    executionContext.RequestContext.service.Headers
-                );
+                LastRequestHeaders = executionContext.RequestContext.service.Headers;
             }
 
             executionContext.ResponseContext.httpResponse = _response;
@@ -88,9 +86,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
                     executionContext.RequestContext.config
                 );
                 LastRequestUri = httpRequest.RequestUri;
-                LastRequestHeaders = new Dictionary<string, string>(
-                    executionContext.RequestContext.service.Headers
-                );
+                LastRequestHeaders = executionContext.RequestContext.service.Headers;
             }
 
             executionContext.ResponseContext.httpResponse = _response;

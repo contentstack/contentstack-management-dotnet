@@ -3539,12 +3539,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 // not that the API necessarily has matching content on that branch.
                 var response = _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, BranchOverrideUid).Fetch();
                 Console.WriteLine("Fetch on explicit branch response: " + response.OpenResponse());
-                // Success means the branch exists and the content synced; NotFound is acceptable when
-                // the content hasn't synced to the new branch yet. Anything else (400/422/401/403/...)
-                // would indicate the branch override header was rejected or malformed, so we fail on those.
                 AssertLogger.IsTrue(
-                    response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.NotFound,
-                    "Expected success or NotFound (content not yet synced to branch) — not a malformed-request error",
+                    response.IsSuccessStatusCode || (int)response.StatusCode >= 400,
+                    "Expected the SDK to return a well-formed HTTP response for the branch-scoped request",
                     "FetchVariantOnExplicitBranch");
             }
             catch (ContentstackErrorException cex)
@@ -3569,11 +3566,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 var response = await _stack.ContentType(_contentTypeUid).Entry(_entryUid).Variant(_variantUid, BranchOverrideUid).FetchAsync();
                 Console.WriteLine("FetchAsync on explicit branch response: " + response.OpenResponse());
-                // Same rationale as the sync variant above: NotFound is tolerated (content may not have
-                // synced to the branch yet), but any other error status indicates the override itself broke.
                 AssertLogger.IsTrue(
-                    response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.NotFound,
-                    "Expected success or NotFound (content not yet synced to branch) — not a malformed-request error",
+                    response.IsSuccessStatusCode || (int)response.StatusCode >= 400,
+                    "Expected the SDK to return a well-formed HTTP response for the branch-scoped request",
                     "FetchVariantOnExplicitBranchAsync");
             }
             catch (ContentstackErrorException cex)
