@@ -281,7 +281,7 @@ namespace Contentstack.Management.Core.Models
         {
             if (details == null)
             {
-                return;
+                throw new ArgumentNullException(nameof(details));
             }
 
             details.Variants ??= new System.Collections.Generic.List<PublishVariant>();
