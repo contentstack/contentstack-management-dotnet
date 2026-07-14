@@ -284,11 +284,9 @@ namespace Contentstack.Management.Core.Models
                 throw new ArgumentNullException(nameof(details));
             }
 
-            details.Variants ??= new System.Collections.Generic.List<PublishVariant>();
-
             if (!details.Variants.Exists(v => v.Uid == this.Uid))
             {
-                details.Variants.Add(new PublishVariant { Uid = this.Uid, Version = details.Version });
+                details.Variants.Add(new PublishVariant { Uid = this.Uid });
             }
         }
 
