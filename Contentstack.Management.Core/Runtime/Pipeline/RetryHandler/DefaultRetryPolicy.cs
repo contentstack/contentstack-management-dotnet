@@ -134,19 +134,20 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
 
         internal override void WaitBeforeRetry(IExecutionContext executionContext)
         {
+            WaitBeforeRetryAsync(executionContext).GetAwaiter().GetResult();
+        }
+
+        internal override async System.Threading.Tasks.Task WaitBeforeRetryAsync(IExecutionContext executionContext)
+        {
             if (retryConfiguration == null)
             {
-                // Fallback to old behavior
-                System.Threading.Tasks.Task.Delay(retryDelay.Milliseconds).Wait();
+                await System.Threading.Tasks.Task.Delay(retryDelay);
                 return;
             }
 
             var requestContext = executionContext.RequestContext;
             TimeSpan delay;
 
-            // Determine delay based on error type
-            // We need to check the last exception, but we don't have it here
-            // So we'll use a heuristic: if network retries > 0, use network delay
             if (requestContext.NetworkRetryCount > 0)
             {
                 delay = delayCalculator.CalculateNetworkRetryDelay(
@@ -155,15 +156,13 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
             }
             else
             {
-                // HTTP retry - we'll use the last exception if available
-                // For now, use base delay with exponential backoff
                 delay = delayCalculator.CalculateHttpRetryDelay(
                     requestContext.HttpRetryCount,
                     retryConfiguration,
                     null);
             }
 
-            System.Threading.Tasks.Task.Delay(delay).Wait();
+            await System.Threading.Tasks.Task.Delay(delay);
         }
 
         /// <summary>

@@ -32,6 +32,11 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
 
         public abstract bool RetryLimitExceeded(IExecutionContext excutionContext);
         internal abstract void WaitBeforeRetry(IExecutionContext executionContext);
+        internal virtual Task WaitBeforeRetryAsync(IExecutionContext executionContext)
+        {
+            WaitBeforeRetry(executionContext);
+            return Task.CompletedTask;
+        }
     }
 }
 
