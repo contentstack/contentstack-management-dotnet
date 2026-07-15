@@ -3514,9 +3514,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ContentstackResponse response = _stack.Branch().Create(model);
                 AssertLogger.IsNotNull(response.OpenJsonObjectResponse(), "response");
             }
+            catch (ContentstackErrorException cex) when (
+                cex.StatusCode == HttpStatusCode.Conflict ||
+                cex.StatusCode == (HttpStatusCode)422)
+            {
+                // Branch already exists from a previous run — that is fine for our purposes.
+                Console.WriteLine($"Branch '{BranchOverrideUid}' already exists (HTTP {(int)cex.StatusCode}); continuing.");
+            }
             catch (Exception ex)
             {
-                Assert.Inconclusive("Could not create a branch for branch-override tests (may already exist or stack may not support branching): " + ex.Message);
+                Assert.Inconclusive("Could not create a branch for branch-override tests (branching may not be enabled on this stack): " + ex.Message);
             }
         }
 
