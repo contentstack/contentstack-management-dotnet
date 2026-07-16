@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.1.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.1.0)(2026-07-13)
+## [v1.1.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.1.0)(2026-07-20)
 
  - **New**
    - **Branch override for Entry Variants**: `Entry.Variant(uid?, branchUid?)` accepts an optional `branchUid` so a single variant call (`Find`, `Create`, `Update`, `Fetch`, `Delete`) can target a branch other than the `Stack`'s configured one, by overriding the `branch` request header. Passing `null`/whitespace falls back to the Stack's own branch.
