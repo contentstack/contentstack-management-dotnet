@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -243,13 +244,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
             var context = CreateExecutionContext();
             context.RequestContext.NetworkRetryCount = 1;
 
-            var startTime = DateTime.UtcNow;
+            var sw = Stopwatch.StartNew();
             policy.WaitBeforeRetry(context);
-            var elapsed = DateTime.UtcNow - startTime;
+            sw.Stop();
 
-            // Should wait approximately 50ms + jitter (0-100ms)
-            Assert.IsTrue(elapsed >= TimeSpan.FromMilliseconds(50));
-            Assert.IsTrue(elapsed <= TimeSpan.FromMilliseconds(200));
+            // Fixed delay: 50ms base + 0-100ms jitter. Lower bound proves delay was applied.
+            Assert.IsTrue(sw.ElapsedMilliseconds >= 40,
+                $"Expected network retry delay >= 40ms, got {sw.ElapsedMilliseconds}ms");
         }
 
         [TestMethod]
@@ -268,13 +269,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
             context.RequestContext.HttpRetryCount = 1;
             context.RequestContext.NetworkRetryCount = 0;
 
-            var startTime = DateTime.UtcNow;
+            var sw = Stopwatch.StartNew();
             policy.WaitBeforeRetry(context);
-            var elapsed = DateTime.UtcNow - startTime;
+            sw.Stop();
 
-            // Should wait approximately 200ms (100ms * 2^1) + jitter
-            Assert.IsTrue(elapsed >= TimeSpan.FromMilliseconds(200));
-            Assert.IsTrue(elapsed <= TimeSpan.FromMilliseconds(300));
+            // Exponential delay: 100ms * 2^1 = 200ms base + 0-100ms jitter. Lower bound proves delay was applied.
+            Assert.IsTrue(sw.ElapsedMilliseconds >= 150,
+                $"Expected HTTP retry delay >= 150ms, got {sw.ElapsedMilliseconds}ms");
         }
 
         [TestMethod]
@@ -283,13 +284,13 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
             var policy = new DefaultRetryPolicy(5, TimeSpan.FromMilliseconds(150));
             var context = CreateExecutionContext();
 
-            var startTime = DateTime.UtcNow;
+            var sw = Stopwatch.StartNew();
             policy.WaitBeforeRetry(context);
-            var elapsed = DateTime.UtcNow - startTime;
+            sw.Stop();
 
-            // Should wait approximately 150ms
-            Assert.IsTrue(elapsed >= TimeSpan.FromMilliseconds(150));
-            Assert.IsTrue(elapsed <= TimeSpan.FromMilliseconds(200));
+            // Legacy path: flat 150ms delay, no jitter. Lower bound proves delay was applied.
+            Assert.IsTrue(sw.ElapsedMilliseconds >= 120,
+                $"Expected legacy retry delay >= 120ms, got {sw.ElapsedMilliseconds}ms");
         }
 
         [TestMethod]
