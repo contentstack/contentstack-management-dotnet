@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using Contentstack.Management.Core;
@@ -285,12 +286,21 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
             handler.LogManager = LogManager.EmptyLogger;
 
             var context = CreateExecutionContext();
-            var startTime = DateTime.UtcNow;
+            // Use Stopwatch for higher-resolution elapsed time measurement.
+            // DateTime.UtcNow has ~15ms resolution on Windows CI runners, which makes
+            // a tight 50ms assertion unreliable. Stopwatch uses QueryPerformanceCounter
+            // and is immune to system clock resolution.
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             await handler.InvokeAsync<ContentstackResponse>(context);
-            var elapsed = DateTime.UtcNow - startTime;
+            stopwatch.Stop();
 
-            // Should have waited at least 50ms + jitter
-            Assert.IsTrue(elapsed >= TimeSpan.FromMilliseconds(50));
+            // The configured delay is 50ms (Fixed strategy, no exponential multiplier).
+            // We assert >= 30ms rather than >= 50ms to provide a 20ms margin of safety
+            // against OS timer resolution variance on Windows CI (system timer fires at
+            // ~15.6ms intervals, so Task.Delay(50) can return as early as ~46ms).
+            // A reading below 30ms would definitively indicate the delay path was skipped.
+            Assert.IsTrue(stopwatch.Elapsed >= TimeSpan.FromMilliseconds(30),
+                $"Expected network retry delay of at least 30ms, but elapsed was {stopwatch.Elapsed.TotalMilliseconds:F1}ms");
         }
 
         [TestMethod]
@@ -313,12 +323,17 @@ namespace Contentstack.Management.Core.Unit.Tests.Runtime.Pipeline.RetryHandler
             handler.LogManager = LogManager.EmptyLogger;
 
             var context = CreateExecutionContext();
-            var startTime = DateTime.UtcNow;
+            // Use Stopwatch for higher-resolution elapsed time measurement.
+            // See InvokeAsync_Applies_NetworkRetryDelay for full explanation.
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             await handler.InvokeAsync<ContentstackResponse>(context);
-            var elapsed = DateTime.UtcNow - startTime;
+            stopwatch.Stop();
 
-            // Should have waited at least 50ms + jitter
-            Assert.IsTrue(elapsed >= TimeSpan.FromMilliseconds(50));
+            // The configured base delay is 50ms with exponential backoff (retryCount=0 on first retry,
+            // so effective delay = 50ms * 2^0 = 50ms). Assert >= 30ms for the same OS timer margin.
+            // A reading below 30ms would definitively indicate the delay path was skipped.
+            Assert.IsTrue(stopwatch.Elapsed >= TimeSpan.FromMilliseconds(30),
+                $"Expected HTTP retry delay of at least 30ms, but elapsed was {stopwatch.Elapsed.TotalMilliseconds:F1}ms");
         }
 
         [TestMethod]

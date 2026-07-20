@@ -91,7 +91,7 @@ namespace Contentstack.Management.Core.Runtime.Pipeline.RetryHandler
                     }
                 }
 
-                this.RetryPolicy.WaitBeforeRetry(executionContext);
+                await this.RetryPolicy.WaitBeforeRetryAsync(executionContext);
 
             } while (shouldRetry == true);
 

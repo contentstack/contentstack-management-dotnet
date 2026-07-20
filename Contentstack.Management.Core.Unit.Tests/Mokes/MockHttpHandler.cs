@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Http;
 using Contentstack.Management.Core.Internal;
@@ -40,6 +41,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
         public ILogManager LogManager { get; set; }
         public IPipelineHandler InnerHandler { get; set; }
         public Uri LastRequestUri { get; private set; }
+        public IDictionary<string, string> LastRequestHeaders { get; private set; }
 
         public async Task<T> InvokeAsync<T>(
             IExecutionContext executionContext,
@@ -55,6 +57,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
                     executionContext.RequestContext.config
                 );
                 LastRequestUri = httpRequest.RequestUri;
+                LastRequestHeaders = new Dictionary<string, string>(executionContext.RequestContext.service.Headers);
             }
 
             executionContext.ResponseContext.httpResponse = _response;
@@ -83,6 +86,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Mokes
                     executionContext.RequestContext.config
                 );
                 LastRequestUri = httpRequest.RequestUri;
+                LastRequestHeaders = new Dictionary<string, string>(executionContext.RequestContext.service.Headers);
             }
 
             executionContext.ResponseContext.httpResponse = _response;
