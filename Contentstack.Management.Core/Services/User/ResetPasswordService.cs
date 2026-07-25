@@ -11,6 +11,7 @@ namespace Contentstack.Management.Core.Services.User
         private readonly string _password;
         private readonly string _confirmPassword;
 
+        // deepcode ignore NoHardcodedCredentials: false positive - method signature/parameter names, no actual hardcoded credential
         internal ResetPasswordService(JsonSerializerOptions serializerOptions, string resetPasswordToken, string password, string confirmPassword) : base(serializerOptions)
         {
             if (string.IsNullOrEmpty(resetPasswordToken))

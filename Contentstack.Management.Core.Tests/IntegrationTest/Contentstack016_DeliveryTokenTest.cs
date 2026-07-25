@@ -27,6 +27,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private DeliveryTokenModel _testTokenModel;
 
         // Constants for error testing
+        // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
         private const string NonExistentTokenUid = "blt00000000000000000000";
         private const string InvalidTokenUid = "invalid-uid-format";
         private const string MalformedTokenUid = "!@#$%^&*()";

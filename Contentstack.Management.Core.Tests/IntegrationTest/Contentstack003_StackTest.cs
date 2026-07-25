@@ -388,8 +388,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         #region Negative and error-handling tests (Test014+)
 
         /// <summary>Non-empty API key used only to exercise SDK preconditions without requiring Test003 to succeed.</summary>
+        // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
         private const string SdkNonEmptyApiKey = "bltSdkValidationNonEmptyApiKey00";
 
+        // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
         private const string InvalidStackApiKey = "bltNonExistentStackKey12345";
 
         private static void AssertStackApiKeyOrInconclusive()
@@ -998,6 +1000,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 new UserInvitation
                 {
+                    // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
                     Uid = "blt_fake_user_uid_99999",
                     Roles = new List<string> { "blt_fake_role_uid_99999" }
                 }
@@ -1022,6 +1025,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 new UserInvitation
                 {
+                    // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
                     Uid = "blt_fake_user_uid_88888",
                     Roles = new List<string> { "blt_fake_role_uid_88888" }
                 }

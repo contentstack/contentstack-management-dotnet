@@ -9,6 +9,7 @@ namespace Contentstack.Management.Core.Services.User
         private readonly string _authtoken;
 
         #region Constructor
+        // deepcode ignore NoHardcodedCredentials: false positive - method signature/parameter names, no actual hardcoded credential
         public LogoutService(JsonSerializerOptions serializerOptions, string authtoken): base(serializerOptions)
         {
             this.HttpMethod = "DELETE";

@@ -76,6 +76,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse"/></returns>
+        // deepcode ignore NoHardcodedCredentials: false positive - method signature/parameter names, no actual hardcoded credential
         public ContentstackResponse ResetPassword(string resetToken, string password, string confirmPassword)
         {
             _client.ThrowIfAlreadyLoggedIn();
@@ -99,6 +100,7 @@ namespace Contentstack.Management.Core.Models
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
+        // deepcode ignore NoHardcodedCredentials: false positive - method signature/parameter names, no actual hardcoded credential
         public Task<ContentstackResponse> ResetPasswordAsync(string resetToken, string password, string confirmPassword)
         {
             _client.ThrowIfAlreadyLoggedIn();
