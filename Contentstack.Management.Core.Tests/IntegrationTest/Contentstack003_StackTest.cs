@@ -389,9 +389,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         /// <summary>Non-empty API key used only to exercise SDK preconditions without requiring Test003 to succeed.</summary>
         // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
+        // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
         private const string SdkNonEmptyApiKey = "bltSdkValidationNonEmptyApiKey00";
 
         // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
+        // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
         private const string InvalidStackApiKey = "bltNonExistentStackKey12345";
 
         private static void AssertStackApiKeyOrInconclusive()

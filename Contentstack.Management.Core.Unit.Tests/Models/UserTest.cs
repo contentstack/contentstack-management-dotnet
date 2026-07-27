@@ -11,6 +11,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
     public class UserTest
     {
         private ContentstackClient client;
+        // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
         private readonly NetworkCredential credentials = new NetworkCredential("mock_user", "mock_pasword");
         private readonly IFixture _fixture = new Fixture();
 

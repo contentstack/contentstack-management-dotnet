@@ -9,6 +9,7 @@ namespace Contentstack.Management.Core.Unit.Tests
     {
         readonly string Host = "10.0.0.1";
         readonly int Port = 20;
+        // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
         readonly string UserName= "test_user_name";
         // deepcode ignore NoHardcodedPasswords: test fixture value, not a real secret
         readonly string Password = "password";
