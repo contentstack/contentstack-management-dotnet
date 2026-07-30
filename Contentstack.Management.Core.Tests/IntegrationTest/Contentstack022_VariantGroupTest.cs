@@ -1660,6 +1660,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             var expiredTokenClient = new ContentstackClient(new ContentstackClientOptions()
             {
                 Host = _client.contentstackOptions.Host,
+                // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
                 Authtoken = "blt_expired_token_simulation_12345"
             });
             var expiredStack = expiredTokenClient.Stack(_stack.APIKey);
@@ -1700,6 +1701,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             var limitedPermClient = new ContentstackClient(new ContentstackClientOptions()
             {
                 Host = _client.contentstackOptions.Host,
+                // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
                 Authtoken = "blt_limited_permissions_token_12345"
             });
             var limitedStack = limitedPermClient.Stack(_stack.APIKey);
@@ -1767,6 +1769,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             var shortLivedClient = new ContentstackClient(new ContentstackClientOptions()
             {
                 Host = _client.contentstackOptions.Host,
+                // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
                 Authtoken = "blt_short_lived_token_12345"
             });
             var shortLivedStack = shortLivedClient.Stack(_stack.APIKey);

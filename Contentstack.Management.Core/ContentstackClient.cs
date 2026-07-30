@@ -371,6 +371,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse" /></returns>
+        // deepcode ignore NoHardcodedCredentials: false positive - method signature/parameter names, no actual hardcoded credential
         public ContentstackResponse Login(ICredentials credentials, string? token = null, string? mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
@@ -393,6 +394,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
+        // deepcode ignore NoHardcodedCredentials: false positive - method signature/parameter names, no actual hardcoded credential
         public Task<ContentstackResponse> LoginAsync(ICredentials credentials, string? token = null, string? mfaSecret = null)
         {
             ThrowIfAlreadyLoggedIn();
@@ -433,6 +435,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The <see cref="ContentstackResponse" /></returns>
+        // deepcode ignore NoHardcodedCredentials: false positive - method signature/parameter names, no actual hardcoded credential
         public ContentstackResponse Logout(string? authtoken = null)
         {
             string? token = authtoken ?? contentstackOptions.Authtoken;
@@ -451,6 +454,7 @@ namespace Contentstack.Management.Core
         /// </code></pre>
         /// </example>
         /// <returns>The Task.</returns>
+        // deepcode ignore NoHardcodedCredentials: false positive - method signature/parameter names, no actual hardcoded credential
         public Task<ContentstackResponse> LogoutAsync(string? authtoken = null)
         {
             string? token = authtoken ?? contentstackOptions.Authtoken;

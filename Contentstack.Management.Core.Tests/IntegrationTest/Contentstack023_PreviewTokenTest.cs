@@ -27,6 +27,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private Stack _stack;
         private string _deliveryTokenUid;
 
+        // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
         private const string NonExistentTokenUid = "blt00000000000000000000";
         private const string InvalidTokenUid = "invalid-uid-format";
 

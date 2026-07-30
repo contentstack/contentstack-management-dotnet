@@ -65,7 +65,7 @@
     <Folder Include="Endpoints\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Otp.NET" Version="1.4.0" />
+    <PackageReference Include="Otp.NET" Version="1.4.1" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
   </ItemGroup>
   

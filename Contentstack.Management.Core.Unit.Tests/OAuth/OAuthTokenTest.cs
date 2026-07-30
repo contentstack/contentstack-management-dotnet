@@ -242,6 +242,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
         public void OAuthTokens_WithAllProperties_ShouldSetCorrectly()
         {
             
+            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
             var accessToken = "test-access-token";
             var refreshToken = "test-refresh-token";
             var organizationUid = "test-org-uid";

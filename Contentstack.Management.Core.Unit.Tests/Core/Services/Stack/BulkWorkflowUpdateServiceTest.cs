@@ -54,6 +54,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Create_Service_With_Stack_Having_API_Key()
         {
             var updateBody = new BulkWorkflowUpdateBody();
+            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
             var apiKey = "test-api-key";
             var stack = new Management.Core.Models.Stack(null, apiKey);
             var service = new BulkWorkflowUpdateService(serializer, stack, updateBody);
@@ -93,6 +94,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Create_Service_With_All_Stack_Parameters()
         {
             var updateBody = new BulkWorkflowUpdateBody();
+            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
             var apiKey = "test-api-key";
             var managementToken = "test-management-token";
             var branchUid = "test-branch-uid";
