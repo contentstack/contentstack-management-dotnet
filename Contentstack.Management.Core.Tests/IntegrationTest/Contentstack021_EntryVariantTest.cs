@@ -488,6 +488,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
             TestOutputLogger.LogContext("TestScenario", "ProductBannerVariantLifecycle_Create_Negative");
 
+            // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
             var invalidEntryUid = "blt_invalid_entry_uid";
             var variantData = new { banner_color = "Navy Blue", _variant = new { _change_set = new[] { "banner_color" } } };
 
@@ -1241,6 +1242,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Test031_Should_Validate_Variant_Stack_Isolation_Sync");
 
             // Attempt to access variant using different stack context
+            // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
             var differentStackKey = "blt_fake_stack_key_12345";
             var differentStack = _client.Stack(differentStackKey);
 
@@ -1485,6 +1487,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
             TestOutputLogger.LogContext("TestScenario", "Test037_Should_Validate_Variant_Stack_Isolation_Async");
 
+            // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
             var differentStackKey = "blt_fake_stack_key_async_12345";
             var differentStack = _client.Stack(differentStackKey);
 
@@ -1859,6 +1862,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Test046_Should_Accept_Operations_With_Broken_Dependencies_Sync");
 
             // API is permissive with broken references - ignores invalid reference fields
+            // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
             var deletedEntryUid = "blt_deleted_entry_12345";
             
             var variantDataWithBrokenRefs = new
@@ -2222,6 +2226,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Test054_Should_Accept_Operations_With_Broken_Dependencies_Async");
 
             // API is permissive with broken references - ignores invalid reference fields
+            // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
             var deletedEntryUid = "blt_deleted_entry_async_12345";
             
             var variantDataWithBrokenRefs = new

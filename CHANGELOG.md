@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.1.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.1.1)(2026-07-30)
+
+ - **Fix**
+   - **Snyk security fixes**: Updated vulnerable dependency versions in `contentstack.management.aspnetcore.csproj` and test project files
+   - **Deepcode / static-analysis suppressions**: Added `// deepcode ignore` comments on hardcoded-credential patterns in test files (integration/unit tests) — credentials are test fixtures, not production secrets
+
 ## [v1.1.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.1.0)(2026-07-20)
 
  - **New**

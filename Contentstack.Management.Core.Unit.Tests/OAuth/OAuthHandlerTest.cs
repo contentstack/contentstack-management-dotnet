@@ -215,6 +215,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ClientId = "test-client-id",
                 RedirectUri = "https://example.com/callback",
                 ResponseType = "code",
+                // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
                 ClientSecret = "test-secret"
             };
             var handler = new OAuthHandler(_client, traditionalOptions);

@@ -189,6 +189,7 @@ namespace Contentstack.Management.Core
         #endregion
 
         #region Token Setter Methods
+        // deepcode ignore NoHardcodedCredentials: false positive - method signature/parameter names, no actual hardcoded credential
         public void SetAccessToken(string token)
         {
             if (string.IsNullOrEmpty(token))
@@ -197,6 +198,7 @@ namespace Contentstack.Management.Core
             UpdateTokenProperty((t, v) => t.AccessToken = v, token);
         }
 
+        // deepcode ignore NoHardcodedCredentials: false positive - method signature/parameter names, no actual hardcoded credential
         public void SetRefreshToken(string token)
         {
             if (string.IsNullOrEmpty(token))

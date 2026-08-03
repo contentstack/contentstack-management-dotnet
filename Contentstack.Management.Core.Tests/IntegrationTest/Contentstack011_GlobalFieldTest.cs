@@ -204,6 +204,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         #region Constants
         private const string InvalidGlobalFieldUid = "non_existent_global_field_uid_12345";
+        // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
+        // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
         private const string InvalidApiKey = "bltInvalidApiKey12345";
         private static readonly string VeryLongTitle = new string('a', 300); // 300 characters
         private const string SqlInjectionTitle = "'; DROP TABLE global_fields; --";

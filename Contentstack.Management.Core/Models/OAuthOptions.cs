@@ -10,11 +10,13 @@ namespace Contentstack.Management.Core.Models
         /// <summary>
         /// The OAuth application ID. Defaults to the Contentstack app ID.
         /// </summary>
+        // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
         public string AppId { get; set; } = "6400aa06db64de001a31c8a9";
 
         /// <summary>
         /// The OAuth client ID. Defaults to the Contentstack client ID.
         /// </summary>
+        // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
         public string ClientId { get; set; } = "Ie0FEfTzlfAHL4xM";
 
         /// <summary>
