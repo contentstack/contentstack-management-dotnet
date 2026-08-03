@@ -6492,6 +6492,249 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
+        [TestMethod]
+        public void Test280_Should_Publish_Taxonomy()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test280_Should_Publish_Taxonomy");
+            if (string.IsNullOrEmpty(_testLocaleCode))
+            {
+                AssertLogger.Inconclusive("No non-master locale available; skipping publish test.");
+                return;
+            }
+
+            // Look up an environment from the stack to use as a publish target.
+            ContentstackResponse envResp = _stack.Environments().Query().Find();
+            if (!envResp.IsSuccessStatusCode)
+            {
+                AssertLogger.Inconclusive("Could not fetch environments; skipping publish test.");
+                return;
+            }
+            var envJson = envResp.OpenJsonObjectResponse();
+            var envArray = envJson["environments"] as System.Text.Json.Nodes.JsonArray;
+            if (envArray == null || envArray.Count == 0)
+            {
+                AssertLogger.Inconclusive("No environments on stack; skipping publish test.");
+                return;
+            }
+            string envName = envArray[0]?["name"]?.ToString();
+            if (string.IsNullOrEmpty(envName))
+            {
+                AssertLogger.Inconclusive("Could not read environment name; skipping publish test.");
+                return;
+            }
+
+            var model = new TaxonomyPublishModel
+            {
+                Locales = new List<string> { _testLocaleCode },
+                Environments = new List<string> { envName },
+                Items = new List<TaxonomyPublishItem> { new TaxonomyPublishItem { Uid = _taxonomyUid } }
+            };
+            ContentstackResponse response = _stack.Taxonomy().Publish(model);
+            // 403 = taxonomy_publish feature not enabled on this stack — treat as inconclusive.
+            if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                AssertLogger.Inconclusive("taxonomy_publish feature not enabled on this stack; skipping.");
+                return;
+            }
+            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Publish failed: {response.OpenResponse()}", "PublishTaxonomySuccess");
+        }
+
+        [TestMethod]
+        public async Task Test281_Should_Publish_Taxonomy_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test281_Should_Publish_Taxonomy_Async");
+            if (string.IsNullOrEmpty(_testLocaleCode))
+            {
+                AssertLogger.Inconclusive("No non-master locale available; skipping async publish test.");
+                return;
+            }
+
+            ContentstackResponse envResp = _stack.Environments().Query().Find();
+            if (!envResp.IsSuccessStatusCode) { AssertLogger.Inconclusive("Could not fetch environments."); return; }
+            var envArray = envResp.OpenJsonObjectResponse()["environments"] as System.Text.Json.Nodes.JsonArray;
+            if (envArray == null || envArray.Count == 0) { AssertLogger.Inconclusive("No environments on stack."); return; }
+            string envName = envArray[0]?["name"]?.ToString();
+            if (string.IsNullOrEmpty(envName)) { AssertLogger.Inconclusive("Could not read environment name."); return; }
+
+            var model = new TaxonomyPublishModel
+            {
+                Locales = new List<string> { _testLocaleCode },
+                Environments = new List<string> { envName },
+                Items = new List<TaxonomyPublishItem> { new TaxonomyPublishItem { Uid = _taxonomyUid } }
+            };
+            ContentstackResponse response = await _stack.Taxonomy().PublishAsync(model);
+            if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                AssertLogger.Inconclusive("taxonomy_publish feature not enabled on this stack; skipping.");
+                return;
+            }
+            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"PublishAsync failed: {response.OpenResponse()}", "PublishTaxonomyAsyncSuccess");
+        }
+
+        [TestMethod]
+        public void Test282_Should_Unpublish_Taxonomy()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test282_Should_Unpublish_Taxonomy");
+            if (string.IsNullOrEmpty(_testLocaleCode))
+            {
+                AssertLogger.Inconclusive("No non-master locale available; skipping unpublish test.");
+                return;
+            }
+
+            ContentstackResponse envResp = _stack.Environments().Query().Find();
+            if (!envResp.IsSuccessStatusCode) { AssertLogger.Inconclusive("Could not fetch environments."); return; }
+            var envArray = envResp.OpenJsonObjectResponse()["environments"] as System.Text.Json.Nodes.JsonArray;
+            if (envArray == null || envArray.Count == 0) { AssertLogger.Inconclusive("No environments on stack."); return; }
+            string envName = envArray[0]?["name"]?.ToString();
+            if (string.IsNullOrEmpty(envName)) { AssertLogger.Inconclusive("Could not read environment name."); return; }
+
+            var model = new TaxonomyPublishModel
+            {
+                Locales = new List<string> { _testLocaleCode },
+                Environments = new List<string> { envName },
+                Items = new List<TaxonomyPublishItem> { new TaxonomyPublishItem { Uid = _taxonomyUid } }
+            };
+            ContentstackResponse response = _stack.Taxonomy().Unpublish(model);
+            if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                AssertLogger.Inconclusive("taxonomy_publish feature not enabled on this stack; skipping.");
+                return;
+            }
+            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Unpublish failed: {response.OpenResponse()}", "UnpublishTaxonomySuccess");
+        }
+
+        [TestMethod]
+        public async Task Test283_Should_Unpublish_Taxonomy_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test283_Should_Unpublish_Taxonomy_Async");
+            if (string.IsNullOrEmpty(_testLocaleCode))
+            {
+                AssertLogger.Inconclusive("No non-master locale available; skipping async unpublish test.");
+                return;
+            }
+
+            ContentstackResponse envResp = _stack.Environments().Query().Find();
+            if (!envResp.IsSuccessStatusCode) { AssertLogger.Inconclusive("Could not fetch environments."); return; }
+            var envArray = envResp.OpenJsonObjectResponse()["environments"] as System.Text.Json.Nodes.JsonArray;
+            if (envArray == null || envArray.Count == 0) { AssertLogger.Inconclusive("No environments on stack."); return; }
+            string envName = envArray[0]?["name"]?.ToString();
+            if (string.IsNullOrEmpty(envName)) { AssertLogger.Inconclusive("Could not read environment name."); return; }
+
+            var model = new TaxonomyPublishModel
+            {
+                Locales = new List<string> { _testLocaleCode },
+                Environments = new List<string> { envName },
+                Items = new List<TaxonomyPublishItem> { new TaxonomyPublishItem { Uid = _taxonomyUid } }
+            };
+            ContentstackResponse response = await _stack.Taxonomy().UnpublishAsync(model);
+            if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                AssertLogger.Inconclusive("taxonomy_publish feature not enabled on this stack; skipping.");
+                return;
+            }
+            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"UnpublishAsync failed: {response.OpenResponse()}", "UnpublishTaxonomyAsyncSuccess");
+        }
+
+        [TestMethod]
+        public void Test284_Should_Unlocalize_Taxonomy()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test284_Should_Unlocalize_Taxonomy");
+            if (string.IsNullOrEmpty(_testLocaleCode))
+            {
+                AssertLogger.Inconclusive("No non-master locale available; skipping taxonomy unlocalize test.");
+                return;
+            }
+
+            // Ensure the taxonomy is localized first so unlocalize has something to remove.
+            var localizeModel = new TaxonomyModel { Name = "Taxonomy For Unlocalize" };
+            var localizeColl = new ParameterCollection();
+            localizeColl.Add("locale", _testLocaleCode);
+            _stack.Taxonomy(_taxonomyUid).Localize(localizeModel, localizeColl);
+
+            ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Unlocalize(_testLocaleCode);
+            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Unlocalize failed: {response.OpenResponse()}", "UnlocalizeTaxonomySuccess");
+        }
+
+        [TestMethod]
+        public async Task Test285_Should_Unlocalize_Taxonomy_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test285_Should_Unlocalize_Taxonomy_Async");
+            if (string.IsNullOrEmpty(_asyncTestLocaleCode))
+            {
+                AssertLogger.Inconclusive("No second non-master locale available; skipping async unlocalize test.");
+                return;
+            }
+
+            var localizeModel = new TaxonomyModel { Name = "Taxonomy For Unlocalize Async" };
+            var localizeColl = new ParameterCollection();
+            localizeColl.Add("locale", _asyncTestLocaleCode);
+            await _stack.Taxonomy(_taxonomyUid).LocalizeAsync(localizeModel, localizeColl);
+
+            ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).UnlocalizeAsync(_asyncTestLocaleCode);
+            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"UnlocalizeAsync failed: {response.OpenResponse()}", "UnlocalizeTaxonomyAsyncSuccess");
+        }
+
+        [TestMethod]
+        public void Test286_Should_Unlocalize_Term()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test286_Should_Unlocalize_Term");
+            if (string.IsNullOrEmpty(_testLocaleCode) || string.IsNullOrEmpty(_rootTermUid))
+            {
+                AssertLogger.Inconclusive("No non-master locale or root term available; skipping term unlocalize test.");
+                return;
+            }
+
+            // Localize the term first so unlocalize has something to remove.
+            var localizeModel = new TermModel { Name = "Root Term For Unlocalize" };
+            var localizeColl = new ParameterCollection();
+            localizeColl.Add("locale", _testLocaleCode);
+            _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).Localize(localizeModel, localizeColl);
+
+            ContentstackResponse response = _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).Unlocalize(_testLocaleCode);
+            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Term Unlocalize failed: {response.OpenResponse()}", "UnlocalizeTermSuccess");
+        }
+
+        [TestMethod]
+        public async Task Test287_Should_Unlocalize_Term_Async()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test287_Should_Unlocalize_Term_Async");
+            if (string.IsNullOrEmpty(_asyncTestLocaleCode) || string.IsNullOrEmpty(_rootTermUid))
+            {
+                AssertLogger.Inconclusive("No second non-master locale or root term available; skipping async term unlocalize test.");
+                return;
+            }
+
+            var localizeModel = new TermModel { Name = "Root Term For Unlocalize Async" };
+            var localizeColl = new ParameterCollection();
+            localizeColl.Add("locale", _asyncTestLocaleCode);
+            await _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).LocalizeAsync(localizeModel, localizeColl);
+
+            ContentstackResponse response = await _stack.Taxonomy(_taxonomyUid).Terms(_rootTermUid).UnlocalizeAsync(_asyncTestLocaleCode);
+            AssertLogger.IsTrue(response.IsSuccessStatusCode, $"Term UnlocalizeAsync failed: {response.OpenResponse()}", "UnlocalizeTermAsyncSuccess");
+        }
+
+        [TestMethod]
+        public void Test288_Should_Throw_When_Publish_With_Uid_Set()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test288_Should_Throw_When_Publish_With_Uid_Set");
+            var model = new TaxonomyPublishModel
+            {
+                Locales = new List<string> { "en-us" },
+                Environments = new List<string> { "development" },
+                Items = new List<TaxonomyPublishItem> { new TaxonomyPublishItem { Uid = _taxonomyUid } }
+            };
+            AssertLogger.ThrowsException<InvalidOperationException>(
+                () => _stack.Taxonomy(_taxonomyUid).Publish(model), "PublishWithUidSet");
+        }
+
+        [TestMethod]
+        public void Test289_Should_Throw_When_Unlocalize_Without_Uid()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Test289_Should_Throw_When_Unlocalize_Without_Uid");
+            AssertLogger.ThrowsException<ArgumentException>(
+                () => _stack.Taxonomy().Unlocalize("en-us"), "UnlocalizeWithoutUid");
+        }
+
         private static Stack GetStack()
         {
             StackResponse response = StackResponse.getStack(_client.serializer);
