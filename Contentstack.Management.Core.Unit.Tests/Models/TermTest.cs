@@ -174,5 +174,31 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().Localize(_fixture.Create<TermModel>()));
             Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().LocalizeAsync(_fixture.Create<TermModel>()));
         }
+
+        [TestMethod]
+        public void Unlocalize_Throws_When_Term_Uid_Is_Empty()
+        {
+            string taxonomyUid = _fixture.Create<string>();
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().Unlocalize("hi-in"));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy(taxonomyUid).Terms().UnlocalizeAsync("hi-in"));
+        }
+
+        [TestMethod]
+        public void Should_Unlocalize_Term()
+        {
+            string taxonomyUid = _fixture.Create<string>();
+            string termUid = _fixture.Create<string>();
+            ContentstackResponse response = _stack.Taxonomy(taxonomyUid).Terms(termUid).Unlocalize("hi-in");
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Unlocalize_Term_Async()
+        {
+            string taxonomyUid = _fixture.Create<string>();
+            string termUid = _fixture.Create<string>();
+            ContentstackResponse response = await _stack.Taxonomy(taxonomyUid).Terms(termUid).UnlocalizeAsync("hi-in");
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+        }
     }
 }

@@ -185,6 +185,72 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
+        /// Publish one or more taxonomies to the specified environments and locales.
+        /// Call on a collection-level instance (no UID set).
+        /// </summary>
+        public ContentstackResponse Publish(TaxonomyPublishModel model, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidNotEmpty();
+            return stack.client.InvokeSync(
+                new TaxonomyPublishService<TaxonomyPublishModel>(stack, resourcePath + "/publish", model, collection));
+        }
+
+        /// <summary>Publish one or more taxonomies asynchronously.</summary>
+        public Task<ContentstackResponse> PublishAsync(TaxonomyPublishModel model, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidNotEmpty();
+            return stack.client.InvokeAsync<TaxonomyPublishService<TaxonomyPublishModel>, ContentstackResponse>(
+                new TaxonomyPublishService<TaxonomyPublishModel>(stack, resourcePath + "/publish", model, collection));
+        }
+
+        /// <summary>
+        /// Unpublish one or more taxonomies from the specified environments and locales.
+        /// Call on a collection-level instance (no UID set).
+        /// </summary>
+        public ContentstackResponse Unpublish(TaxonomyPublishModel model, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidNotEmpty();
+            return stack.client.InvokeSync(
+                new TaxonomyPublishService<TaxonomyPublishModel>(stack, resourcePath + "/unpublish", model, collection));
+        }
+
+        /// <summary>Unpublish one or more taxonomies asynchronously.</summary>
+        public Task<ContentstackResponse> UnpublishAsync(TaxonomyPublishModel model, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidNotEmpty();
+            return stack.client.InvokeAsync<TaxonomyPublishService<TaxonomyPublishModel>, ContentstackResponse>(
+                new TaxonomyPublishService<TaxonomyPublishModel>(stack, resourcePath + "/unpublish", model, collection));
+        }
+
+        /// <summary>
+        /// Remove a locale variant of this taxonomy.
+        /// Requires a UID (instance-level). Locale is required.
+        /// </summary>
+        public ContentstackResponse Unlocalize(string locale, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var coll = collection ?? new ParameterCollection();
+            coll.Add("locale", locale);
+            return stack.client.InvokeSync(new FetchDeleteService(stack, resourcePath, "DELETE", coll));
+        }
+
+        /// <summary>Remove a locale variant of this taxonomy asynchronously.</summary>
+        public Task<ContentstackResponse> UnlocalizeAsync(string locale, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var coll = collection ?? new ParameterCollection();
+            coll.Add("locale", locale);
+            return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(
+                new FetchDeleteService(stack, resourcePath, "DELETE", coll));
+        }
+
+        /// <summary>
         /// Get Terms instance for this taxonomy. When termUid is provided, returns a single-term context; otherwise collection for query/create.
         /// </summary>
         /// <param name="termUid">Optional term UID. If null, returns Terms for querying all terms or creating.</param>

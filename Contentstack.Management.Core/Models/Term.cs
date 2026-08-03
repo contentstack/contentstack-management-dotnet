@@ -205,6 +205,30 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
+        /// Remove a locale variant of this term.
+        /// Requires a UID (instance-level). Locale is required.
+        /// </summary>
+        public ContentstackResponse Unlocalize(string locale, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var coll = collection ?? new ParameterCollection();
+            coll.Add("locale", locale);
+            return stack.client.InvokeSync(new FetchDeleteService(stack, resourcePath, "DELETE", coll));
+        }
+
+        /// <summary>Remove a locale variant of this term asynchronously.</summary>
+        public Task<ContentstackResponse> UnlocalizeAsync(string locale, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var coll = collection ?? new ParameterCollection();
+            coll.Add("locale", locale);
+            return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(
+                new FetchDeleteService(stack, resourcePath, "DELETE", coll));
+        }
+
+        /// <summary>
         /// Search terms across all taxonomies. GET /taxonomies/$all/terms with typeahead query param. Callable only when no specific term UID is set.
         /// </summary>
         /// <param name="typeahead">Search string for typeahead.</param>
