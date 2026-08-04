@@ -205,6 +205,32 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
+        /// Unlocalize a term from the given locale. DELETE /taxonomies/{uid}/terms/{term_uid}?locale=...
+        /// </summary>
+        public ContentstackResponse Unlocalize(string locale, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var coll = collection ?? new ParameterCollection();
+            coll.Add("locale", locale);
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE", coll);
+            return stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// Unlocalize a term asynchronously.
+        /// </summary>
+        public Task<ContentstackResponse> UnlocalizeAsync(string locale, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var coll = collection ?? new ParameterCollection();
+            coll.Add("locale", locale);
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE", coll);
+            return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
         /// Search terms across all taxonomies. GET /taxonomies/$all/terms with typeahead query param. Callable only when no specific term UID is set.
         /// </summary>
         /// <param name="typeahead">Search string for typeahead.</param>

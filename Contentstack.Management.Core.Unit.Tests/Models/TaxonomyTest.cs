@@ -194,5 +194,108 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
             Assert.IsFalse(response.IsSuccessStatusCode);
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
+
+        [TestMethod]
+        public void Publish_Throws_When_Uid_Is_Set()
+        {
+            var details = new TaxonomyPublishDetails { Locales = new System.Collections.Generic.List<string> { "en-us" } };
+            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy(_fixture.Create<string>()).Publish(details));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy(_fixture.Create<string>()).PublishAsync(details));
+        }
+
+        [TestMethod]
+        public void Unpublish_Throws_When_Uid_Is_Set()
+        {
+            var details = new TaxonomyPublishDetails { Locales = new System.Collections.Generic.List<string> { "en-us" } };
+            Assert.ThrowsException<InvalidOperationException>(() => _stack.Taxonomy(_fixture.Create<string>()).Unpublish(details));
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _stack.Taxonomy(_fixture.Create<string>()).UnpublishAsync(details));
+        }
+
+        [TestMethod]
+        public void Unlocalize_Throws_When_Uid_Is_Empty()
+        {
+            Assert.ThrowsException<ArgumentException>(() => _stack.Taxonomy().Unlocalize("hi-in"));
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => _stack.Taxonomy().UnlocalizeAsync("hi-in"));
+        }
+
+        [TestMethod]
+        public void Should_Publish_Taxonomy()
+        {
+            var details = new TaxonomyPublishDetails
+            {
+                Locales = new System.Collections.Generic.List<string> { "en-us" },
+                Environments = new System.Collections.Generic.List<string> { "production" },
+                Items = new System.Collections.Generic.List<TaxonomyPublishItem> { new TaxonomyPublishItem { Uid = "tax_uid" } }
+            };
+            ContentstackResponse response = _stack.Taxonomy().Publish(details);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Publish_Taxonomy_Async()
+        {
+            var details = new TaxonomyPublishDetails
+            {
+                Locales = new System.Collections.Generic.List<string> { "en-us" },
+                Environments = new System.Collections.Generic.List<string> { "production" },
+                Items = new System.Collections.Generic.List<TaxonomyPublishItem> { new TaxonomyPublishItem { Uid = "tax_uid" } }
+            };
+            ContentstackResponse response = await _stack.Taxonomy().PublishAsync(details);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Unpublish_Taxonomy()
+        {
+            var details = new TaxonomyPublishDetails
+            {
+                Locales = new System.Collections.Generic.List<string> { "en-us" },
+                Environments = new System.Collections.Generic.List<string> { "production" },
+                Items = new System.Collections.Generic.List<TaxonomyPublishItem> { new TaxonomyPublishItem { Uid = "tax_uid" } }
+            };
+            ContentstackResponse response = _stack.Taxonomy().Unpublish(details);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Unpublish_Taxonomy_Async()
+        {
+            var details = new TaxonomyPublishDetails
+            {
+                Locales = new System.Collections.Generic.List<string> { "en-us" },
+                Environments = new System.Collections.Generic.List<string> { "production" },
+                Items = new System.Collections.Generic.List<TaxonomyPublishItem> { new TaxonomyPublishItem { Uid = "tax_uid" } }
+            };
+            ContentstackResponse response = await _stack.Taxonomy().UnpublishAsync(details);
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public void Should_Unlocalize_Taxonomy()
+        {
+            string uid = _fixture.Create<string>();
+            ContentstackResponse response = _stack.Taxonomy(uid).Unlocalize("hi-in");
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task Should_Unlocalize_Taxonomy_Async()
+        {
+            string uid = _fixture.Create<string>();
+            ContentstackResponse response = await _stack.Taxonomy(uid).UnlocalizeAsync("hi-in");
+
+            Assert.AreEqual(_contentstackResponse.OpenResponse(), response.OpenResponse());
+            Assert.AreEqual(_contentstackResponse.OpenJsonObjectResponse().ToString(), response.OpenJsonObjectResponse().ToString());
+        }
     }
 }

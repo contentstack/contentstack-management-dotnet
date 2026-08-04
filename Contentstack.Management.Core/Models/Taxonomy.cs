@@ -161,6 +161,76 @@ namespace Contentstack.Management.Core.Models
         }
 
         /// <summary>
+        /// Publish one or more taxonomies. POST /taxonomies/publish (collection-level, no uid required).
+        /// </summary>
+        public ContentstackResponse Publish(TaxonomyPublishDetails details, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidNotEmpty();
+            var service = new TaxonomyPublishService(stack, details, "/taxonomies/publish", collection);
+            return stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// Publish one or more taxonomies asynchronously.
+        /// </summary>
+        public Task<ContentstackResponse> PublishAsync(TaxonomyPublishDetails details, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidNotEmpty();
+            var service = new TaxonomyPublishService(stack, details, "/taxonomies/publish", collection);
+            return stack.client.InvokeAsync<TaxonomyPublishService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// Unpublish one or more taxonomies. POST /taxonomies/unpublish (collection-level, no uid required).
+        /// </summary>
+        public ContentstackResponse Unpublish(TaxonomyPublishDetails details, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidNotEmpty();
+            var service = new TaxonomyPublishService(stack, details, "/taxonomies/unpublish", collection);
+            return stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// Unpublish one or more taxonomies asynchronously.
+        /// </summary>
+        public Task<ContentstackResponse> UnpublishAsync(TaxonomyPublishDetails details, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidNotEmpty();
+            var service = new TaxonomyPublishService(stack, details, "/taxonomies/unpublish", collection);
+            return stack.client.InvokeAsync<TaxonomyPublishService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
+        /// Unlocalize a taxonomy from the given locale. DELETE /taxonomies/{uid}?locale=...
+        /// </summary>
+        public ContentstackResponse Unlocalize(string locale, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var coll = collection ?? new ParameterCollection();
+            coll.Add("locale", locale);
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE", coll);
+            return stack.client.InvokeSync(service);
+        }
+
+        /// <summary>
+        /// Unlocalize a taxonomy asynchronously.
+        /// </summary>
+        public Task<ContentstackResponse> UnlocalizeAsync(string locale, ParameterCollection? collection = null)
+        {
+            stack.ThrowIfNotLoggedIn();
+            ThrowIfUidEmpty();
+            var coll = collection ?? new ParameterCollection();
+            coll.Add("locale", locale);
+            var service = new FetchDeleteService(stack, resourcePath, "DELETE", coll);
+            return stack.client.InvokeAsync<FetchDeleteService, ContentstackResponse>(service);
+        }
+
+        /// <summary>
         /// Import taxonomy. POST /taxonomies/import with multipart form (taxonomy file).
         /// </summary>
         public ContentstackResponse Import(TaxonomyImportModel model, ParameterCollection? collection = null)
