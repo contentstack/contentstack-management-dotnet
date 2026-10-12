@@ -320,7 +320,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test012_Should_Throw_When_Query_Called_With_Uid()
         {
             TestOutputLogger.LogContext("TestScenario", "Branch_Query_WithUid_Throws");
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
                 _stack.Branch("some-uid").Query());
         }
 
@@ -329,7 +329,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test013_Should_Throw_When_Fetch_Called_Without_Uid()
         {
             TestOutputLogger.LogContext("TestScenario", "Branch_Fetch_NoUid_Throws_Sync");
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 _stack.Branch().Fetch());
         }
 
@@ -338,7 +338,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test014_Should_Throw_When_FetchAsync_Called_Without_Uid()
         {
             TestOutputLogger.LogContext("TestScenario", "Branch_Fetch_NoUid_Throws_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentException>(() =>
                 _stack.Branch().FetchAsync());
         }
 
@@ -347,7 +347,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test015_Should_Throw_When_Delete_Called_Without_Uid()
         {
             TestOutputLogger.LogContext("TestScenario", "Branch_Delete_NoUid_Throws_Sync");
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 _stack.Branch().Delete());
         }
 
@@ -356,7 +356,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test016_Should_Throw_When_DeleteAsync_Called_Without_Uid()
         {
             TestOutputLogger.LogContext("TestScenario", "Branch_Delete_NoUid_Throws_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentException>(() =>
                 _stack.Branch().DeleteAsync());
         }
 
@@ -365,7 +365,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test017_Should_Throw_When_Create_Called_With_Uid()
         {
             TestOutputLogger.LogContext("TestScenario", "Branch_Create_WithUid_Throws_Sync");
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
                 _stack.Branch("some-uid").Create(new BranchModel()));
         }
 
@@ -374,7 +374,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test018_Should_Throw_When_CreateAsync_Called_With_Uid()
         {
             TestOutputLogger.LogContext("TestScenario", "Branch_Create_WithUid_Throws_Async");
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            await Assert.ThrowsExactlyAsync<InvalidOperationException>(() =>
                 _stack.Branch("some-uid").CreateAsync(new BranchModel()));
         }
 
