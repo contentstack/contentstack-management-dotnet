@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Contentstack.Management.Core.Exceptions;
 using Contentstack.Management.Core.Models;
@@ -24,6 +27,16 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         private const string TestBranchUidAsync = "dotnet_int_br_a"; // max 15 chars, alphanumeric+underscore
         private const string NonExistentBranchUid = "dotnet_no_br";
 
+        // publish_config.environments: names (not UIDs) that must exist on the test stack.
+        // Set these to two real environment names on the stack before running the live suite.
+        private const string EnvironmentOne = "development";
+        private const string EnvironmentTwo = "staging";
+        private const string UnknownEnvironment = "dotnet_no_env_99999";
+        private const string EnvTwoBranchUid = "dotnet_env_two";     // max 15 chars, alphanumeric+underscore
+        private const string EnvNoneBranchUid = "dotnet_env_none";   // max 15 chars, alphanumeric+underscore
+        private const string EnvUnknownBranchUid = "dotnet_env_unk"; // max 15 chars, alphanumeric+underscore
+        private const string EnvMixBranchUid = "dotnet_env_mix";     // max 15 chars, alphanumeric+underscore
+
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
@@ -34,6 +47,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             // Best-effort cleanup of any branches left over from a previous test run
             TryDeleteBranch(TestBranchUid);
             TryDeleteBranch(TestBranchUidAsync);
+            TryDeleteBranch(EnvTwoBranchUid);
+            TryDeleteBranch(EnvNoneBranchUid);
+            TryDeleteBranch(EnvUnknownBranchUid);
+            TryDeleteBranch(EnvMixBranchUid);
         }
 
         [ClassCleanup]
@@ -41,6 +58,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TryDeleteBranch(_createdBranchUid);
             TryDeleteBranch(_createdBranchUidAsync);
+            TryDeleteBranch(EnvTwoBranchUid);
+            TryDeleteBranch(EnvNoneBranchUid);
+            TryDeleteBranch(EnvUnknownBranchUid);
+            TryDeleteBranch(EnvMixBranchUid);
 
             try { _client?.Logout(); } catch { }
             _client = null;
@@ -504,7 +525,131 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
         }
 
+        // ---- Create with publish_config.environments ---------------------------
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test026_Should_Create_Branch_With_Two_Environment_Names()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Branch_Create_TwoEnvironments");
+            try
+            {
+                var model = NewEnvironmentBranch(EnvTwoBranchUid, EnvironmentOne, EnvironmentTwo);
+                ContentstackResponse response = _stack.Branch().Create(model);
+                AssertLogger.IsNotNull(response.OpenJsonObjectResponse(), "response");
+                AssertEnvironmentsEqual(response, "Branch_Create_TwoEnvironments", EnvironmentOne, EnvironmentTwo);
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail(e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test027_Should_Create_Branch_With_Empty_Environment_List()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Branch_Create_EmptyEnvironments");
+            try
+            {
+                var model = NewEnvironmentBranch(EnvNoneBranchUid);
+                ContentstackResponse response = _stack.Branch().Create(model);
+                AssertLogger.IsNotNull(response.OpenJsonObjectResponse(), "response");
+                // [] must read back as an empty list (present, not null), so assert it is not null first
+                AssertEnvironmentsEqual(response, "Branch_Create_EmptyEnvironments");
+            }
+            catch (Exception e)
+            {
+                AssertLogger.Fail(e.Message);
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test028_Should_Reject_Create_With_Unknown_Environment_Name()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Branch_Create_UnknownEnvironment");
+            var model = NewEnvironmentBranch(EnvUnknownBranchUid, UnknownEnvironment);
+            try
+            {
+                _stack.Branch().Create(model);
+                AssertLogger.Fail("Expected API error for an unknown environment name");
+            }
+            catch (ContentstackErrorException ex)
+            {
+                AssertEnvironmentRejected(ex, EnvUnknownBranchUid, "Branch_Create_UnknownEnvironment");
+            }
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void Test029_Should_Reject_Create_With_Mix_Of_Valid_And_Unknown_Environment_Names()
+        {
+            TestOutputLogger.LogContext("TestScenario", "Branch_Create_MixedEnvironments");
+            var model = NewEnvironmentBranch(EnvMixBranchUid, EnvironmentOne, UnknownEnvironment);
+            try
+            {
+                _stack.Branch().Create(model);
+                AssertLogger.Fail("Expected API error for a mix of valid and unknown environment names");
+            }
+            catch (ContentstackErrorException ex)
+            {
+                AssertEnvironmentRejected(ex, EnvMixBranchUid, "Branch_Create_MixedEnvironments");
+            }
+        }
+
         // ---- Helper methods ---------------------------------------------------
+
+        private static BranchModel NewEnvironmentBranch(string uid, params string[] environments)
+        {
+            return new BranchModel
+            {
+                Uid = uid,
+                Source = SourceBranch,
+                PublishConfig = new BranchPublishConfigModel { Environments = new List<string>(environments) }
+            };
+        }
+
+        private static List<string> EnvironmentsOf(ContentstackResponse response)
+        {
+            JsonNode node = response.OpenJsonObjectResponse()["branch"]?["publish_config"]?["environments"];
+            return node?.AsArray().Select(n => n!.GetValue<string>()).ToList();
+        }
+
+        private static void AssertEnvironmentsEqual(ContentstackResponse response, string assertionName, params string[] expected)
+        {
+            List<string> names = EnvironmentsOf(response);
+            AssertLogger.IsNotNull(names, "publish_config.environments");
+            AssertLogger.IsTrue(
+                names.SequenceEqual(expected),
+                $"Expected environments [{string.Join(", ", expected)}] but got [{string.Join(", ", names)}]",
+                assertionName);
+        }
+
+        private static void AssertEnvironmentRejected(ContentstackErrorException ex, string uid, string assertionName)
+        {
+            AssertLogger.IsTrue(
+                ex.StatusCode == (HttpStatusCode)422,
+                $"Expected 422, got {(int)ex.StatusCode} ({ex.StatusCode})",
+                assertionName);
+            AssertLogger.IsTrue(
+                ex.Errors != null && ex.Errors.ContainsKey("publish_config.environments"),
+                "Expected the API error to be keyed publish_config.environments",
+                assertionName);
+
+            // No branch may be created when the request is rejected
+            bool exists;
+            try
+            {
+                _stack.Branch(uid).Fetch();
+                exists = true;
+            }
+            catch (ContentstackErrorException)
+            {
+                exists = false;
+            }
+            AssertLogger.IsTrue(!exists, "A rejected create must not leave a branch behind", assertionName);
+        }
 
         private static void AssertBranchApiError(ContentstackErrorException ex, string assertionName)
         {
