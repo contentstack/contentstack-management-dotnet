@@ -1,3 +1,4 @@
+using Contentstack.Management.Core.Unit.Tests.Helpers;
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Contentstack.Management.Core.Models;
@@ -49,8 +50,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ClientId = "test-client-id",
                 RedirectUri = "https://example.com/callback",
                 ResponseType = "code",
-                // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-                ClientSecret = "test-secret"
+                ClientSecret = TestSecrets.Token()
                 // UsePkce is automatically false when ClientSecret is provided
             };
             var isValid = options.IsValid();
