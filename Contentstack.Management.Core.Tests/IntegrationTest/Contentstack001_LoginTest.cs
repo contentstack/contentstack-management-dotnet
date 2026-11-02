@@ -29,8 +29,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "WrongCredentials");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("mock_user", "mock_pasword");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
             
             try
             {
@@ -51,8 +50,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "WrongCredentialsAsync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("mock_user", "mock_pasword");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -220,10 +218,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "InvalidMfaSecret");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            string invalidMfaSecret = "INVALID_BASE32_SECRET!@#";
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
+            string invalidMfaSecret = TestSecrets.InvalidBase32Secret();
             
             try
             {
@@ -246,10 +242,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "ValidMfaSecret");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            string validMfaSecret = "JBSWY3DPEHPK3PXP";
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
+            string validMfaSecret = TestSecrets.Base32Secret();
             
             try
             {
@@ -278,10 +272,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "ValidMfaSecretAsync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            string validMfaSecret = "JBSWY3DPEHPK3PXP";
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
+            string validMfaSecret = TestSecrets.Base32Secret();
             
             try
             {
@@ -310,10 +302,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "ExplicitTokenOverMfa");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            string validMfaSecret = "JBSWY3DPEHPK3PXP";
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
+            string validMfaSecret = TestSecrets.Base32Secret();
             string explicitToken = "123456";
             
             try
@@ -431,10 +421,8 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "InvalidMfaSecretAsync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test_user", "test_password");
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            string invalidMfaSecret = "INVALID_BASE32_SECRET!@#";
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
+            string invalidMfaSecret = TestSecrets.InvalidBase32Secret();
 
             try
             {
@@ -537,8 +525,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "EmptyMfaSecretSync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("mock_user", "mock_password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -561,8 +548,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "NullMfaSecretAsync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("mock_user", "mock_password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -602,8 +588,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "EmptyPasswordSync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("user@example.com", "");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = AssertLogger.ThrowsContentstackError(() =>
                 client.Login(credentials), "EmptyPassword", HttpStatusCode.UnprocessableEntity);
@@ -633,8 +618,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "EmptyPasswordAsync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("user@example.com", "");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = await AssertLogger.ThrowsContentstackErrorAsync(() =>
                 client.LoginAsync(credentials), "EmptyPasswordAsync", HttpStatusCode.UnprocessableEntity);
@@ -700,8 +684,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "NetworkTimeoutSync");
             ContentstackClient client = CreateClientWithMockError(NetworkErrorType.Timeout);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -728,8 +711,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "NetworkTimeoutAsync");
             ContentstackClient client = CreateClientWithMockError(NetworkErrorType.Timeout);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -756,8 +738,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "ConnectionRefusedSync");
             ContentstackClient client = CreateClientWithMockError(NetworkErrorType.ConnectionRefused);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             AssertLogger.ThrowsException<HttpRequestException>(() =>
                 client.Login(credentials), "ConnectionRefused");
@@ -769,8 +750,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "ConnectionRefusedAsync");
             ContentstackClient client = CreateClientWithMockError(NetworkErrorType.ConnectionRefused);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             await AssertLogger.ThrowsExceptionAsync<HttpRequestException>(() =>
                 client.LoginAsync(credentials), "ConnectionRefusedAsync");
@@ -782,8 +762,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "DnsFailureSync");
             ContentstackClient client = CreateClientWithMockError(NetworkErrorType.DnsFailure);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             AssertLogger.ThrowsException<HttpRequestException>(() =>
                 client.Login(credentials), "DnsFailure");
@@ -795,8 +774,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "DnsFailureAsync");
             ContentstackClient client = CreateClientWithMockError(NetworkErrorType.DnsFailure);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             await AssertLogger.ThrowsExceptionAsync<HttpRequestException>(() =>
                 client.LoginAsync(credentials), "DnsFailureAsync");
@@ -816,8 +794,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "RequestCancellationSync");
             ContentstackClient client = CreateClientWithTimeout(100);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -871,8 +848,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Http401UnauthorizedSync");
             ContentstackClient client = CreateClientWithHttpStatus(HttpStatusCode.Unauthorized, 
                 "Authentication failed. Please check your credentials.", 401);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = AssertLogger.ThrowsContentstackError(() =>
                 client.Login(credentials), "Unauthorized", HttpStatusCode.Unauthorized);
@@ -888,8 +864,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Http401UnauthorizedAsync");
             ContentstackClient client = CreateClientWithHttpStatus(HttpStatusCode.Unauthorized,
                 "Authentication failed. Please check your credentials.", 401);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = await AssertLogger.ThrowsContentstackErrorAsync(() =>
                 client.LoginAsync(credentials), "UnauthorizedAsync", HttpStatusCode.Unauthorized);
@@ -905,8 +880,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Http403ForbiddenSync");
             ContentstackClient client = CreateClientWithHttpStatus(HttpStatusCode.Forbidden,
                 "Access denied. Insufficient permissions.", 403);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = AssertLogger.ThrowsContentstackError(() =>
                 client.Login(credentials), "Forbidden", HttpStatusCode.Forbidden);
@@ -922,8 +896,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Http403ForbiddenAsync");
             ContentstackClient client = CreateClientWithHttpStatus(HttpStatusCode.Forbidden,
                 "Access denied. Insufficient permissions.", 403);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = await AssertLogger.ThrowsContentstackErrorAsync(() =>
                 client.LoginAsync(credentials), "ForbiddenAsync", HttpStatusCode.Forbidden);
@@ -939,8 +912,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Http429TooManyRequestsSync");
             ContentstackClient client = CreateClientWithHttpStatus(HttpStatusCode.TooManyRequests,
                 "Rate limit exceeded. Please try again later.", 429);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = AssertLogger.ThrowsContentstackError(() =>
                 client.Login(credentials), "TooManyRequests", HttpStatusCode.TooManyRequests);
@@ -956,8 +928,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Http429TooManyRequestsAsync");
             ContentstackClient client = CreateClientWithHttpStatus(HttpStatusCode.TooManyRequests,
                 "Rate limit exceeded. Please try again later.", 429);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = await AssertLogger.ThrowsContentstackErrorAsync(() =>
                 client.LoginAsync(credentials), "TooManyRequestsAsync", HttpStatusCode.TooManyRequests);
@@ -973,8 +944,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Http500InternalServerErrorSync");
             ContentstackClient client = CreateClientWithHttpStatusNoRetry(HttpStatusCode.InternalServerError,
                 "Internal server error occurred.", 500);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = AssertLogger.ThrowsContentstackError(() =>
                 client.Login(credentials), "InternalServerError", HttpStatusCode.InternalServerError);
@@ -990,8 +960,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "Http500InternalServerErrorAsync");
             ContentstackClient client = CreateClientWithHttpStatusNoRetry(HttpStatusCode.InternalServerError,
                 "Internal server error occurred.", 500);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = await AssertLogger.ThrowsContentstackErrorAsync(() =>
                 client.LoginAsync(credentials), "InternalServerErrorAsync", HttpStatusCode.InternalServerError);
@@ -1020,8 +989,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "MalformedJsonSync");
             ContentstackClient client = CreateClientWithMalformedResponse("{ invalid json }");
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -1048,8 +1016,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "MalformedJsonAsync");
             ContentstackClient client = CreateClientWithMalformedResponse("{ invalid json }");
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -1076,8 +1043,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "EmptyResponseSync");
             ContentstackClient client = CreateClientWithMalformedResponse("", HttpStatusCode.OK);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -1108,8 +1074,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "EmptyResponseAsync");
             ContentstackClient client = CreateClientWithMalformedResponse("", HttpStatusCode.OK);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -1148,8 +1113,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ""status"": ""success""
             }";
             ContentstackClient client = CreateClientWithMalformedResponse(unexpectedResponse, HttpStatusCode.OK);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             try
             {
@@ -1201,8 +1165,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
                 ""large_data"": ""{largeData}""
             }}";
             ContentstackClient client = CreateClientWithMalformedResponse(largeResponse, HttpStatusCode.BadRequest);
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
 
             var ex = AssertLogger.ThrowsContentstackError(() =>
                 client.Login(credentials), "LargeResponse", HttpStatusCode.BadRequest);
@@ -1528,8 +1491,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "TotpTokenFormatSync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
             
             // Test various TOTP token formats
             string[] tokenFormats = {
@@ -1574,8 +1536,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "TotpTokenFormatAsync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
             
             // Test numeric edge cases
             string[] numericTokens = {
@@ -1609,8 +1570,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "MfaSecretEdgeCasesSync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
             
             // Test MFA secret edge cases
             string[] edgeCaseSecrets = {
@@ -1653,13 +1613,11 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "BothTokenAndMfaSync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
             
             // Test providing both explicit token and MFA secret
             string explicitToken = "123456";
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            string mfaSecret = "JBSWY3DPEHPK3PXP";
+            string mfaSecret = TestSecrets.Base32Secret();
             
             try
             {
@@ -1683,8 +1641,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "BothTokenAndMfaAsync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
             
             // Test providing both with different combinations
             var testCases = new[]
@@ -1718,16 +1675,12 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "MfaSecretCaseSync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
             
             // Test case sensitivity in MFA secrets
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            string upperSecret = "JBSWY3DPEHPK3PXP";
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            string lowerSecret = "jbswy3dpehpk3pxp";
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            string mixedSecret = "JbSwY3dPeHpK3pXp";
+            string upperSecret = TestSecrets.Base32Secret();
+            string lowerSecret = upperSecret.ToLowerInvariant();
+            string mixedSecret = TestSecrets.MixedCase(upperSecret);
             
             string[] secrets = { upperSecret, lowerSecret, mixedSecret };
             
@@ -1761,8 +1714,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "MfaBoundaryConditionsSync");
             ContentstackClient client = CreateClientWithLogging();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            NetworkCredential credentials = new NetworkCredential("test@example.com", "password");
+            NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
             
             // Test boundary conditions for MFA parameters
             var boundaryTests = new[]
@@ -1814,8 +1766,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             }
             
             // Use invalid credentials to test concurrent error handling
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            var credentials = new NetworkCredential("concurrent_test", "invalid_password");
+            var credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
             
             try
             {
@@ -1874,8 +1825,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 ("NullCredentials", () => CreateClientWithLogging().LoginAsync(null)),
                 ("EmptyCredentials", () => CreateClientWithLogging().LoginAsync(new NetworkCredential("", ""))),
-                // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-                ("InvalidCredentials", () => CreateClientWithLogging().LoginAsync(new NetworkCredential("invalid", "invalid"))),
+                ("InvalidCredentials", () => CreateClientWithLogging().LoginAsync(new NetworkCredential(TestSecrets.Username, TestSecrets.Password))),
                 ("NetworkError", () => CreateClientWithMockError(NetworkErrorType.Timeout, 100).LoginAsync(new NetworkCredential("test", "test"))),
                 ("HttpError", () => CreateClientWithHttpStatusNoRetry(HttpStatusCode.InternalServerError).LoginAsync(new NetworkCredential("test", "test"))),
                 ("MalformedResponse", () => CreateClientWithMalformedResponse("invalid json").LoginAsync(new NetworkCredential("test", "test")))

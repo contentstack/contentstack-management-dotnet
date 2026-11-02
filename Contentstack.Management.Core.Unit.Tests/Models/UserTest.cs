@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Contentstack.Management.Core.Unit.Tests.Helpers;
+using System;
 using System.Net;
 using AutoFixture;
 using Contentstack.Management.Core.Models;
@@ -11,8 +12,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Models
     public class UserTest
     {
         private ContentstackClient client;
-        // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-        private readonly NetworkCredential credentials = new NetworkCredential("mock_user", "mock_pasword");
+        private readonly NetworkCredential credentials = new NetworkCredential(TestSecrets.Username, TestSecrets.Password);
         private readonly IFixture _fixture = new Fixture();
 
         [TestInitialize]
