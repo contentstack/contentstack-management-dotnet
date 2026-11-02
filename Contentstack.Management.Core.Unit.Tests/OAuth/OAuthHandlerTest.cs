@@ -1,3 +1,4 @@
+using Contentstack.Management.Core.Unit.Tests.Helpers;
 using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -215,8 +216,7 @@ namespace Contentstack.Management.Core.Unit.Tests.OAuth
                 ClientId = "test-client-id",
                 RedirectUri = "https://example.com/callback",
                 ResponseType = "code",
-                // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-                ClientSecret = "test-secret"
+                ClientSecret = TestSecrets.Token()
             };
             var handler = new OAuthHandler(_client, traditionalOptions);
             var authUrl = handler.AuthorizeAsync().Result;

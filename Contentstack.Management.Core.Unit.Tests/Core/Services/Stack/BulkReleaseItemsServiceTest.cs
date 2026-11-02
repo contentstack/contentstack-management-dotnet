@@ -1,3 +1,4 @@
+using Contentstack.Management.Core.Unit.Tests.Helpers;
 using System;
 using System.Text;
 using AutoFixture;
@@ -100,8 +101,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Create_Service_With_Stack_Having_API_Key()
         {
             var data = new BulkReleaseItemsData();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            var apiKey = "test-api-key";
+            var apiKey = TestSecrets.Token();
             var stack = new Management.Core.Models.Stack(null, apiKey);
             var service = new BulkReleaseItemsService(serializer, stack, data);
 
@@ -140,8 +140,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.Stack
         public void Should_Create_Service_With_All_Stack_Parameters()
         {
             var data = new BulkReleaseItemsData();
-            // deepcode ignore NoHardcodedCredentials: test fixture value, not a real secret
-            var apiKey = "test-api-key";
+            var apiKey = TestSecrets.Token();
             var managementToken = "test-management-token";
             var branchUid = "test-branch-uid";
             var stack = new Management.Core.Models.Stack(null, apiKey, managementToken, branchUid);

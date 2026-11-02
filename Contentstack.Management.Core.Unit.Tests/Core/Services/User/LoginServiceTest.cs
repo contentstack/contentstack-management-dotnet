@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Contentstack.Management.Core.Unit.Tests.Helpers;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -13,7 +14,9 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
     [TestClass]
     public class LoginServiceTest
     {
-        ICredentials credentials = new NetworkCredential("name", "password");
+        static readonly string Username = TestSecrets.Username;
+        static readonly string Password = TestSecrets.Password;
+        ICredentials credentials = new NetworkCredential(Username, Password);
         JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
 
         [TestMethod]
@@ -37,7 +40,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
             Assert.IsNotNull(loginService);
             Assert.AreEqual("POST", loginService.HttpMethod);
             Assert.AreEqual("user-session", loginService.ResourcePath);
-            Assert.AreEqual("{\"user\":{\"email\":\"name\",\"password\":\"password\"}}", Encoding.Default.GetString(loginService.ByteContent));
+            Assert.AreEqual("{\"user\":{\"email\":\"" + Username + "\",\"password\":\"" + Password + "\"}}", Encoding.Default.GetString(loginService.ByteContent));
         }
 
         [TestMethod]
@@ -47,22 +50,22 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
             loginService.ContentBody();
 
             Assert.IsNotNull(loginService);
-            Assert.AreEqual("{\"user\":{\"email\":\"name\",\"password\":\"password\",\"tfa_token\":\"token\"}}", Encoding.Default.GetString(loginService.ByteContent));
+            Assert.AreEqual("{\"user\":{\"email\":\"" + Username + "\",\"password\":\"" + Password + "\",\"tfa_token\":\"token\"}}", Encoding.Default.GetString(loginService.ByteContent));
         }
 
         [TestMethod]
         public void Should_Allow_Credentials_With_MfaSecret()
         {
 
-            string testMfaSecret = "JBSWY3DPEHPK3PXP"; // Base32 encoded "Hello!"
+            string testMfaSecret = TestSecrets.Base32Secret(); // Base32 encoded "Hello!"
             var loginService = new LoginService(serializerOptions, credentials, null, testMfaSecret);
             loginService.ContentBody();
 
             Assert.IsNotNull(loginService);
             var contentString = Encoding.Default.GetString(loginService.ByteContent);
             
-            Assert.IsTrue(contentString.Contains("\"email\":\"name\""));
-            Assert.IsTrue(contentString.Contains("\"password\":\"password\""));
+            Assert.IsTrue(contentString.Contains("\"email\":\"" + Username + "\""));
+            Assert.IsTrue(contentString.Contains("\"password\":\"" + Password + "\""));
             Assert.IsTrue(contentString.Contains("\"tfa_token\":"));
             
             // Verify the tfa_token is not null or empty in the JSON
@@ -73,7 +76,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Generate_TOTP_Token_When_MfaSecret_Provided()
         {
-            string testMfaSecret = "JBSWY3DPEHPK3PXP"; // Base32 encoded "Hello!"
+            string testMfaSecret = TestSecrets.Base32Secret(); // Base32 encoded "Hello!"
             var loginService1 = new LoginService(serializerOptions, credentials, null, testMfaSecret);
             var loginService2 = new LoginService(serializerOptions, credentials, null, testMfaSecret);
             
@@ -102,8 +105,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         [TestMethod]
         public void Should_Prefer_Explicit_Token_Over_MfaSecret()
         {
-            string testMfaSecret = "JBSWY3DPEHPK3PXP";
-            // file deepcode ignore NoHardcodedCredentials/test: random test token
+            string testMfaSecret = TestSecrets.Base32Secret();
             string explicitToken = "123456";
             
             var loginService = new LoginService(serializerOptions, credentials, explicitToken, testMfaSecret);
@@ -120,7 +122,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
         public void Should_Throw_Exception_For_Invalid_Base32_MfaSecret()
         {
             // Invalid Base32 secret (contains invalid characters)
-            string invalidMfaSecret = "INVALID_BASE32_123!@#";
+            string invalidMfaSecret = TestSecrets.InvalidBase32Secret();
             
             var loginService = new LoginService(serializerOptions, credentials, null, invalidMfaSecret);
         }
@@ -135,7 +137,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
             
             // Should not contain tfa_token when MFA secret is empty
             Assert.IsFalse(contentString.Contains("\"tfa_token\":"));
-            Assert.AreEqual("{\"user\":{\"email\":\"name\",\"password\":\"password\"}}", contentString);
+            Assert.AreEqual("{\"user\":{\"email\":\"" + Username + "\",\"password\":\"" + Password + "\"}}", contentString);
         }
 
         [TestMethod]
@@ -148,7 +150,7 @@ namespace Contentstack.Management.Core.Unit.Tests.Core.Services.User
             
             // Should not contain tfa_token when MFA secret is null
             Assert.IsFalse(contentString.Contains("\"tfa_token\":"));
-            Assert.AreEqual("{\"user\":{\"email\":\"name\",\"password\":\"password\"}}", contentString);
+            Assert.AreEqual("{\"user\":{\"email\":\"" + Username + "\",\"password\":\"" + Password + "\"}}", contentString);
         }
 
         [TestMethod]

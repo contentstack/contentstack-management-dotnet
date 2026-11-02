@@ -19,7 +19,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         /// <summary>
         /// UID that should not exist on any stack (for negative-path tests).
         /// </summary>
-        // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
         private const string NonExistentRoleUid = "blt0000000000000000";
 
         private static ContentstackClient _client;
@@ -1643,7 +1642,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             var invalidClient = new ContentstackClient(new ContentstackClientOptions()
             {
                 Host = _client.contentstackOptions.Host,
-                // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
                 Authtoken = "blt_invalid_token_format"
             });
             
@@ -2002,7 +2000,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 // Attempt to access role using different stack context
-                // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
                 var differentStackKey = "blt_fake_stack_key_12345";
                 var differentStack = _client.Stack(differentStackKey);
                 
@@ -2138,7 +2135,6 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 // Attempt to access role using different stack context
-                // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
                 var differentStackKey = "blt_fake_stack_key_async_12345";
                 var differentStack = _client.Stack(differentStackKey);
                 
