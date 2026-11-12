@@ -36,7 +36,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             _client = Contentstack.CreateAuthenticatedClient();
         }
 
-        [ClassCleanup(ClassCleanupBehavior.EndOfClass)]
+        [ClassCleanup]
         public static void ClassCleanup()
         {
             try { _client?.Logout(); } catch { }

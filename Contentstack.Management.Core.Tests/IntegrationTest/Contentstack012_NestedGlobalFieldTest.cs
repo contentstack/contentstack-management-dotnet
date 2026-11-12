@@ -1317,7 +1317,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "FetchNestedGlobalField_EmptyUID");
 
-            Assert.ThrowsException<ArgumentException>(
+            Assert.ThrowsExactly<ArgumentException>(
                 () => _stack.GlobalField("").Fetch(),
                 "Expected ArgumentException for empty UID");
         }
@@ -1329,7 +1329,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "UpdateNestedGlobalField_EmptyUID");
             var updateModel = CreateNestedGlobalFieldModel();
 
-            Assert.ThrowsException<ArgumentException>(
+            Assert.ThrowsExactly<ArgumentException>(
                 () => _stack.GlobalField("").Update(updateModel),
                 "Expected ArgumentException for empty UID");
         }
@@ -1340,7 +1340,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "DeleteNestedGlobalField_EmptyUID");
 
-            Assert.ThrowsException<ArgumentException>(
+            Assert.ThrowsExactly<ArgumentException>(
                 () => _stack.GlobalField("").Delete(),
                 "Expected ArgumentException for empty UID");
         }
@@ -1352,7 +1352,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TestOutputLogger.LogContext("TestScenario", "CreateNestedGlobalField_UIDSet");
             var model = CreateNestedGlobalFieldModel();
 
-            Assert.ThrowsException<InvalidOperationException>(
+            Assert.ThrowsExactly<InvalidOperationException>(
                 () => _stack.GlobalField("some_uid").Create(model),
                 "Expected InvalidOperationException when UID is set for create operation");
         }
@@ -1363,7 +1363,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         {
             TestOutputLogger.LogContext("TestScenario", "QueryNestedGlobalField_UIDSet");
 
-            Assert.ThrowsException<InvalidOperationException>(
+            Assert.ThrowsExactly<InvalidOperationException>(
                 () => _stack.GlobalField("some_uid").Query().Find(),
                 "Expected InvalidOperationException when UID is set for query operation");
         }

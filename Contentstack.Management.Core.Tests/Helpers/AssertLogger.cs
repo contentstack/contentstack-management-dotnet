@@ -138,7 +138,9 @@ namespace Contentstack.Management.Core.Tests.Helpers
         public static void Fail(string message, params object[] parameters)
         {
             TestOutputLogger.LogAssertion("Fail", "N/A", message ?? "", false);
-            Assert.Fail(message, parameters);
+            // MSTest 4 removed Assert.Fail(string, params object[]); it formatted the message
+            // with the parameters, so format here to preserve that behaviour.
+            Assert.Fail(parameters is { Length: > 0 } ? string.Format(message, parameters) : message);
         }
 
         public static void Inconclusive(string message)

@@ -410,7 +410,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             {
                 Host = "api.contentstack.io"
             });
-            var ex = Assert.ThrowsException<InvalidOperationException>(() =>
+            var ex = Assert.ThrowsExactly<InvalidOperationException>(() =>
                 unauthenticatedClient.Stack().GetAll());
             AssertLogger.IsTrue(
                 ex.Message.IndexOf("not logged in", StringComparison.OrdinalIgnoreCase) >= 0,
@@ -444,7 +444,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test016_Should_Throw_When_GetAll_With_Stack_Api_Key_Set()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_GetAll_InvalidApiKeyContext");
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).GetAll());
         }
 
@@ -453,7 +453,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test017_Should_Throw_When_GetAllAsync_With_Stack_Api_Key_Set()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_GetAllAsync_InvalidApiKeyContext");
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            await Assert.ThrowsExactlyAsync<InvalidOperationException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).GetAllAsync());
         }
 
@@ -462,7 +462,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test018_Should_Throw_When_Create_With_Stack_Api_Key_Set()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Create_InvalidApiKeyContext");
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).Create(_stackName, _locale, _org.Uid));
         }
 
@@ -471,7 +471,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test019_Should_Throw_When_CreateAsync_With_Stack_Api_Key_Set()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_CreateAsync_InvalidApiKeyContext");
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            await Assert.ThrowsExactlyAsync<InvalidOperationException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).CreateAsync(_stackName, _locale, _org.Uid));
         }
 
@@ -482,7 +482,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test020_Should_Throw_When_Create_With_Invalid_Name_Sync(string invalidName)
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Create_InvalidName_Sync");
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 _client.Stack().Create(invalidName, _locale, _org.Uid));
         }
 
@@ -493,7 +493,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test021_Should_Throw_When_CreateAsync_With_Invalid_Name(string invalidName)
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Create_InvalidName_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(() =>
                 _client.Stack().CreateAsync(invalidName, _locale, _org.Uid));
         }
 
@@ -504,7 +504,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test020b_Should_Throw_When_Create_With_Invalid_Locale_Sync(string invalidLocale)
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Create_InvalidLocale_Sync");
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 _client.Stack().Create(_stackName, invalidLocale, _org.Uid));
         }
 
@@ -515,7 +515,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test021b_Should_Throw_When_CreateAsync_With_Invalid_Locale(string invalidLocale)
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Create_InvalidLocale_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(() =>
                 _client.Stack().CreateAsync(_stackName, invalidLocale, _org.Uid));
         }
 
@@ -526,7 +526,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test020c_Should_Throw_When_Create_With_Invalid_OrgUid_Sync(string invalidOrg)
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Create_InvalidOrg_Sync");
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 _client.Stack().Create(_stackName, _locale, invalidOrg));
         }
 
@@ -537,7 +537,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test021c_Should_Throw_When_CreateAsync_With_Invalid_OrgUid(string invalidOrg)
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Create_InvalidOrg_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(() =>
                 _client.Stack().CreateAsync(_stackName, _locale, invalidOrg));
         }
 
@@ -546,7 +546,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test022_Should_Throw_When_Fetch_Without_Api_Key_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Fetch_MissingApiKey_Sync");
-            Assert.ThrowsException<InvalidOperationException>(() => _client.Stack().Fetch());
+            Assert.ThrowsExactly<InvalidOperationException>(() => _client.Stack().Fetch());
         }
 
         [TestMethod]
@@ -554,7 +554,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test023_Should_Throw_When_FetchAsync_Without_Api_Key()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Fetch_MissingApiKey_Async");
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _client.Stack().FetchAsync());
+            await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _client.Stack().FetchAsync());
         }
 
         [TestMethod]
@@ -562,7 +562,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test024_Should_Throw_When_Update_Without_Api_Key_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Update_MissingApiKey_Sync");
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
                 _client.Stack().Update(_updatestackName));
         }
 
@@ -571,7 +571,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test025_Should_Throw_When_UpdateAsync_Without_Api_Key()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Update_MissingApiKey_Async");
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            await Assert.ThrowsExactlyAsync<InvalidOperationException>(() =>
                 _client.Stack().UpdateAsync(_updatestackName));
         }
 
@@ -582,7 +582,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test026_Should_Throw_When_Update_With_Invalid_Name_Sync(string invalidName)
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Update_InvalidName_Sync");
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).Update(invalidName));
         }
 
@@ -593,7 +593,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test027_Should_Throw_When_UpdateAsync_With_Invalid_Name(string invalidName)
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Update_InvalidName_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).UpdateAsync(invalidName));
         }
 
@@ -602,7 +602,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test028_Should_Throw_When_Settings_Without_Api_Key()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Settings_MissingApiKey_Sync");
-            Assert.ThrowsException<InvalidOperationException>(() => _client.Stack().Settings());
+            Assert.ThrowsExactly<InvalidOperationException>(() => _client.Stack().Settings());
         }
 
         [TestMethod]
@@ -610,7 +610,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test029_Should_Throw_When_SettingsAsync_Without_Api_Key()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Settings_MissingApiKey_Async");
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _client.Stack().SettingsAsync());
+            await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _client.Stack().SettingsAsync());
         }
 
         [TestMethod]
@@ -618,7 +618,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test030_Should_Throw_When_ResetSettings_Without_Api_Key_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_ResetSettings_MissingApiKey_Sync");
-            Assert.ThrowsException<InvalidOperationException>(() => _client.Stack().ResetSettings());
+            Assert.ThrowsExactly<InvalidOperationException>(() => _client.Stack().ResetSettings());
         }
 
         [TestMethod]
@@ -626,7 +626,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test031_Should_Throw_When_ResetSettingsAsync_Without_Api_Key()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_ResetSettings_MissingApiKey_Async");
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _client.Stack().ResetSettingsAsync());
+            await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _client.Stack().ResetSettingsAsync());
         }
 
         [TestMethod]
@@ -634,7 +634,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test032_Should_Throw_When_AddSettings_Null_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_AddSettings_Null_Sync");
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).AddSettings(null));
         }
 
@@ -643,7 +643,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test033_Should_Throw_When_AddSettingsAsync_Null()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_AddSettings_Null_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).AddSettingsAsync(null));
         }
 
@@ -836,7 +836,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test045_Should_Throw_When_Share_Invitations_Null_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Share_NullInvitations_Sync");
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).Share(null));
         }
 
@@ -845,7 +845,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test046_Should_Throw_When_ShareAsync_Invitations_Null()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_Share_NullInvitations_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).ShareAsync(null));
         }
 
@@ -854,7 +854,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test047_Should_Throw_When_UnShare_Email_Null_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_UnShare_NullEmail_Sync");
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).UnShare(null));
         }
 
@@ -863,7 +863,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test048_Should_Throw_When_UnShareAsync_Email_Null()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_UnShare_NullEmail_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).UnShareAsync(null));
         }
 
@@ -956,7 +956,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test053_Should_Throw_When_UpdateUserRole_Null_List_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_UpdateUserRole_Null_Sync");
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).UpdateUserRole(null));
         }
 
@@ -965,7 +965,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test054_Should_Throw_When_UpdateUserRoleAsync_Null_List()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_UpdateUserRole_Null_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).UpdateUserRoleAsync(null));
         }
 
@@ -1074,7 +1074,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test059_Should_Throw_When_TransferOwnership_Email_Null_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_TransferOwnership_NullEmail_Sync");
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).TransferOwnership(null));
         }
 
@@ -1083,7 +1083,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test060_Should_Throw_When_TransferOwnershipAsync_Email_Null()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_TransferOwnership_NullEmail_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).TransferOwnershipAsync(null));
         }
 
@@ -1092,7 +1092,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public void Test061_Should_Throw_When_TransferOwnership_Email_Empty_Sync()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_TransferOwnership_EmptyEmail_Sync");
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).TransferOwnership(string.Empty));
         }
 
@@ -1101,7 +1101,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
         public async Task Test062_Should_Throw_When_TransferOwnershipAsync_Email_Empty()
         {
             TestOutputLogger.LogContext("TestScenario", "Stack_TransferOwnership_EmptyEmail_Async");
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(() =>
                 _client.Stack(SdkNonEmptyApiKey).TransferOwnershipAsync(string.Empty));
         }
 

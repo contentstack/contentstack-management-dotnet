@@ -1292,7 +1292,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 releaseUid = CreateTestRelease();
-                Assert.ThrowsException<ArgumentNullException>(() => _stack.Release(releaseUid).Clone(null, _testReleaseDescription));
+                Assert.ThrowsExactly<ArgumentNullException>(() => _stack.Release(releaseUid).Clone(null, _testReleaseDescription));
             }
             finally
             {
@@ -1311,7 +1311,7 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             try
             {
                 releaseUid = await CreateTestReleaseAsync();
-                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _stack.Release(releaseUid).CloneAsync(null, _testReleaseDescription));
+                await Assert.ThrowsExactlyAsync<ArgumentNullException>(() => _stack.Release(releaseUid).CloneAsync(null, _testReleaseDescription));
             }
             finally
             {
