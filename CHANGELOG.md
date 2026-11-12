@@ -7,7 +7,7 @@
    - **Branch fetch**: a fetched `BranchModel` carries `PublishConfig.Environments` as the API returns it; it is `null` when the API omits it.
  - **Test**
    - Unit tests for the branch create body with two names, `[]` and unset (through `Create` and `CreateAsync`), a mocked 422 rejection, and fetched branch deserialization.
-   - Integration tests for create with two names, `[]`, an unknown name and a mix (written; not run in this change).
+   - Integration tests for create with two names, `[]`, an unknown name and a mix. The test class now creates two uniquely named environments on the stack and deletes them afterwards, because the `development` and `staging` names it used before do not exist on the stack the suite creates, so the two-name case failed with a 422. Run live against the NA prod API, the four environment-list cases pass.
 
 ## [v1.1.1](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.1.1)(2026-07-30)
 

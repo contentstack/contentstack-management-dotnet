@@ -29,8 +29,10 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
 
         // publish_config.environments: names (not UIDs) that must exist on the test stack.
         // Set these to two real environment names on the stack before running the live suite.
-        private const string EnvironmentOne = "development";
-        private const string EnvironmentTwo = "staging";
+        private static readonly string EnvironmentOne = "dotnet_brenv_" + Guid.NewGuid().ToString("N").Substring(0,6);
+        private static string _envOneUid;
+        private static readonly string EnvironmentTwo = "dotnet_brenv_" + Guid.NewGuid().ToString("N").Substring(0,6);
+        private static string _envTwoUid;
         private const string UnknownEnvironment = "dotnet_no_env_99999";
         private const string EnvTwoBranchUid = "dotnet_env_two";     // max 15 chars, alphanumeric+underscore
         private const string EnvNoneBranchUid = "dotnet_env_none";   // max 15 chars, alphanumeric+underscore
@@ -43,6 +45,9 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             _client = Contentstack.CreateAuthenticatedClient();
             StackResponse response = StackResponse.getStack(_client.serializer);
             _stack = _client.Stack(response.Stack.APIKey);
+
+            _envOneUid = CreateTestEnvironment(EnvironmentOne);
+            _envTwoUid = CreateTestEnvironment(EnvironmentTwo);
 
             // Best-effort cleanup of any branches left over from a previous test run
             TryDeleteBranch(TestBranchUid);
@@ -63,8 +68,22 @@ namespace Contentstack.Management.Core.Tests.IntegrationTest
             TryDeleteBranch(EnvUnknownBranchUid);
             TryDeleteBranch(EnvMixBranchUid);
 
+            try { if (_envOneUid != null) _stack.Environment(_envOneUid).Delete(); } catch { }
+            try { if (_envTwoUid != null) _stack.Environment(_envTwoUid).Delete(); } catch { }
+
             try { _client?.Logout(); } catch { }
             _client = null;
+        }
+
+        private static string CreateTestEnvironment(string name)
+        {
+            var model = new EnvironmentModel
+            {
+                Name = name,
+                Urls = new List<LocalesUrl> { new LocalesUrl { Locale = "en-us", Url = "https://example.com" } }
+            };
+            ContentstackResponse r = _stack.Environment().Create(model);
+            return r.IsSuccessStatusCode ? r.OpenJsonObjectResponse()["environment"]?["uid"]?.ToString() : null;
         }
 
         private static void TryDeleteBranch(string uid)
