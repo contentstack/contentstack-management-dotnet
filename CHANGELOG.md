@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.2.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.2.0)(2026-10-28)
+## [v1.2.0](https://github.com/contentstack/contentstack-management-dotnet/tree/v1.2.0)(2026-11-12)
 
  - **New**
    - **Branch create: optional environment list**: `BranchModel.PublishConfig` (`BranchPublishConfigModel`, with `Environments` as a list of environment names, not UIDs) lets `Branch.Create` / `CreateAsync` clone only the listed environments. `[]` clones none; leaving `PublishConfig` unset clones all environments, as before. The list is sent unchanged; an unknown name or a mix rejects with the API's 422 error (`ContentstackErrorException`, message, error code and errors unchanged) and no branch is created.
