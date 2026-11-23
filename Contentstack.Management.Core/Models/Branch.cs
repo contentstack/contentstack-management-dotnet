@@ -32,11 +32,15 @@ namespace Contentstack.Management.Core.Models
 
         /// <summary>
         /// The Create branch call creates a new branch in a stack.
+        /// Set <see cref="BranchModel.PublishConfig"/> with <see cref="BranchPublishConfigModel.Environments"/> (environment names, not UIDs) to choose which environments the branch clones:
+        /// a list of names clones only those environments; an empty list clones none; leaving <c>PublishConfig</c> unset clones all environments, as before.
+        /// The list is sent unchanged. The SDK does not validate the names or limit the list length. An unknown name, or any other validation failure,
+        /// throws <see cref="Contentstack.Management.Core.Exceptions.ContentstackErrorException"/> carrying the API's error message, error code and errors, and no branch is created.
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("&lt;AUTHTOKEN&gt;", "&lt;API_HOST&gt;");
-        /// BranchModel model = new BranchModel() { Uid = "my-branch", Source = "main" };
+        /// BranchModel model = new BranchModel() { Uid = "my-branch", Source = "main", PublishConfig = new BranchPublishConfigModel() { Environments = new List&lt;string&gt; { "development", "staging" } } };
         /// ContentstackResponse contentstackResponse = client.Stack("&lt;API_KEY&gt;").Branch().Create(model);
         /// </code></pre>
         /// </example>
@@ -49,11 +53,15 @@ namespace Contentstack.Management.Core.Models
 
         /// <summary>
         /// The Create branch call creates a new branch in a stack.
+        /// Set <see cref="BranchModel.PublishConfig"/> with <see cref="BranchPublishConfigModel.Environments"/> (environment names, not UIDs) to choose which environments the branch clones:
+        /// a list of names clones only those environments; an empty list clones none; leaving <c>PublishConfig</c> unset clones all environments, as before.
+        /// The list is sent unchanged. The SDK does not validate the names or limit the list length. An unknown name, or any other validation failure,
+        /// throws <see cref="Contentstack.Management.Core.Exceptions.ContentstackErrorException"/> carrying the API's error message, error code and errors, and no branch is created.
         /// </summary>
         /// <example>
         /// <pre><code>
         /// ContentstackClient client = new ContentstackClient("&lt;AUTHTOKEN&gt;", "&lt;API_HOST&gt;");
-        /// BranchModel model = new BranchModel() { Uid = "my-branch", Source = "main" };
+        /// BranchModel model = new BranchModel() { Uid = "my-branch", Source = "main", PublishConfig = new BranchPublishConfigModel() { Environments = new List&lt;string&gt; { "development", "staging" } } };
         /// ContentstackResponse contentstackResponse = await client.Stack("&lt;API_KEY&gt;").Branch().CreateAsync(model);
         /// </code></pre>
         /// </example>
